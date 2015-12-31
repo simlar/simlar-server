@@ -22,6 +22,24 @@
 package org.simlar.simlarserver;
 
 public final class SimlarId {
+    private final String simlarId;
+
+    private SimlarId(final String simlarId) {
+        this.simlarId = simlarId;
+    }
+
+    public String get() {
+        return simlarId;
+    }
+
+    public static SimlarId create(final String simlarId) {
+        if (!check(simlarId)) {
+            return null;
+        }
+
+        return new SimlarId(simlarId);
+    }
+
     public static boolean check(final String str) {
         if (str == null || str.isEmpty()) {
             return false;

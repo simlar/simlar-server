@@ -22,6 +22,8 @@
 package org.simlar.simlarserver;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -52,5 +54,11 @@ public final class SimlarIdTest {
         assertFalse(SimlarId.check(" *0001*"));
         assertFalse(SimlarId.check("*0001 *"));
         assertFalse(SimlarId.check(" *0001* "));
+    }
+
+    @Test
+    public void testSimlarIdCreate() {
+        assertNull(SimlarId.create("*"));
+        assertNotNull(SimlarId.create("*0007*"));
     }
 }
