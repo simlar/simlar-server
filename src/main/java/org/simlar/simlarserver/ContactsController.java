@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -89,10 +90,31 @@ public final class ContactsController {
         }
     }
 
-    @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.GET, produces = "application/xml")
+    /**
+     * This method handles http post requests. You may test it with:
+     * <blockquote>
+     * curl --data "login=*0001*&password=xxxxxx&contacts=*0002*|*0003*" http://localhost:8080/get-contacts-status.xml
+     * </blockquote>
+     *
+     * @param login
+     *            the requesting user's simlarId
+     * @param password
+     *            the hash of the requesting user's password md5(simlarId + ":"
+     *            + domain + ":" + password);
+     * @param contacts
+     *            pipe separated list of simlarIds
+     * @return
+     */
+    @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = "application/xml")
     @ResponseBody
-    public XmlContacts getContactStatus() {
-        logger.info(REQUEST_URL_CONTACTS_STATUS + " requested");
-        return new XmlContacts(Arrays.asList(new XmlContact("*0001*", 0), new XmlContact("*0002*", 0)));
+    public XmlContacts getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
+        logger.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + "\"");
+
+        final List<XmlContact> xmlContactList = new ArrayList<>();
+        for (final String contact : contacts.split("\\|")) {
+            xmlContactList.add(new XmlContact(contact.trim(), 0));
+        }
+
+        return new XmlContacts(xmlContactList);
     }
 }
