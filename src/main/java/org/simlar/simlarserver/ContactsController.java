@@ -99,6 +99,15 @@ public final class ContactsController {
         private int    id;
         private String message;
 
+        public XmlError() {
+            // needed for JAXBContext
+        }
+
+        public XmlError(final int id, final String message) {
+            this.id = id;
+            this.message = message;
+        }
+
         @XmlAttribute
         public int getId() {
             return id;
@@ -135,8 +144,14 @@ public final class ContactsController {
      */
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = "application/xml")
     @ResponseBody
-    public XmlContacts getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
+    public Object getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
         logger.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + "\"");
+
+        final SimlarId simlarId = SimlarId.create(login);
+        if (simlarId == null) {
+            logger.info(REQUEST_URL_CONTACTS_STATUS + " requested with no simlarId: login=\"" + login + "\"");
+            return new XmlError(20, "wrong credentials");
+        }
 
         final List<XmlContact> xmlContactList = new ArrayList<>();
         for (final String contact : contacts.split("\\|")) {
