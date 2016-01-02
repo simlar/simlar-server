@@ -36,7 +36,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public final class ContactsController {
-    private static final Logger logger = Logger.getLogger(ContactsController.class.getName());
+    public static final String  REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
+    private static final Logger logger                      = Logger.getLogger(ContactsController.class.getName());
 
     public static final class XmlContact {
         private String simlarId;
@@ -88,10 +89,10 @@ public final class ContactsController {
         }
     }
 
-    @RequestMapping(value = "/get-contacts-status.xml", method = RequestMethod.GET, produces = "application/xml")
+    @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.GET, produces = "application/xml")
     @ResponseBody
     public XmlContacts getContactStatus() {
-        logger.info("get-contacts-status.xml requested");
+        logger.info(REQUEST_URL_CONTACTS_STATUS + " requested");
         return new XmlContacts(Arrays.asList(new XmlContact("*0001*", 0), new XmlContact("*0002*", 0)));
     }
 }
