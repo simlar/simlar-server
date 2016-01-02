@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import java.io.StringReader;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,21 +44,32 @@ public final class ContactsControllerTest {
     @Value("${local.server.port}")
     private int port;
 
-    private String requestContactStatus(final String login, final String password, final String contacts) {
+    @SuppressWarnings("unchecked")
+    private <T> T requestContactStatus(final Class<T> responseClass, final String login, final String password, final String contacts) {
         final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<String, String>();
         parameter.add("login", login);
         parameter.add("password", password);
         parameter.add("contacts", contacts);
 
-        return (new RestTemplate()).postForObject("http://localhost:" + port + ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter, String.class);
+        final String result = (new RestTemplate()).postForObject("http://localhost:" + port + ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter,
+                String.class);
+
+        if (result == null) {
+            return null;
+        }
+
+        try {
+            return (T) JAXBContext.newInstance(responseClass).createUnmarshaller().unmarshal(new StringReader(result));
+        } catch (final JAXBException e) {
+            return null;
+        } catch (final ClassCastException e) {
+            return null;
+        }
     }
 
     @Test
-    public void receiveContactsStatus() throws Exception {
-        final String result = requestContactStatus("*0001*", "xxxxxx", "*0002*|*0003*");
-        assertNotNull(result);
-
-        final XmlContacts contacts = (XmlContacts) JAXBContext.newInstance(XmlContacts.class).createUnmarshaller().unmarshal(new StringReader(result));
+    public void receiveContactsStatus() {
+        final XmlContacts contacts = requestContactStatus(XmlContacts.class, "*0001*", "xxxxxx", "*0002*|*0003*");
         assertNotNull(contacts);
         assertNotNull(contacts.getContacts());
         assertEquals(2, contacts.getContacts().size());
@@ -68,11 +80,8 @@ public final class ContactsControllerTest {
     }
 
     @Test
-    public void loginWithNoSimlarId() throws Exception {
-        final String result = requestContactStatus("*", "xxxxxx", "*0002*|*0003*");
-        assertNotNull(result);
-
-        final XmlError error = (XmlError) JAXBContext.newInstance(XmlError.class).createUnmarshaller().unmarshal(new StringReader(result));
+    public void loginWithNoSimlarId() {
+        final XmlError error = requestContactStatus(XmlError.class, "*", "xxxxxx", "*0002*|*0003*");
         assertNotNull(error);
         assertEquals(20, error.getId());
     }
