@@ -94,6 +94,30 @@ public final class ContactsController {
         }
     }
 
+    @XmlRootElement(name = "error")
+    public static final class XmlError {
+        private int    id;
+        private String message;
+
+        @XmlAttribute
+        public int getId() {
+            return id;
+        }
+
+        public void setId(final int id) {
+            this.id = id;
+        }
+
+        @XmlAttribute
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(final String message) {
+            this.message = message;
+        }
+    }
+
     /**
      * This method handles http post requests. You may test it with:
      * <blockquote>

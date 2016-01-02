@@ -26,6 +26,7 @@ import javax.xml.bind.JAXBContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.ContactsController.XmlContacts;
+import org.simlar.simlarserver.ContactsController.XmlError;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -42,15 +43,18 @@ public final class ContactsControllerTest {
     @Value("${local.server.port}")
     private int port;
 
+    private String requestContactStatus(final String login, final String password, final String contacts) {
+        final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<String, String>();
+        parameter.add("login", login);
+        parameter.add("password", password);
+        parameter.add("contacts", contacts);
+
+        return (new RestTemplate()).postForObject("http://localhost:" + port + ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter, String.class);
+    }
+
     @Test
     public void receiveContactsStatus() throws Exception {
-        final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<String, String>();
-        parameter.add("login", "*0001*");
-        parameter.add("password", "xxxxxx");
-        parameter.add("contacts", "*0002*|*0003*");
-
-        final String result = (new RestTemplate()).postForObject("http://localhost:" + port + ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter,
-                String.class);
+        final String result = requestContactStatus("*0001*", "xxxxxx", "*0002*|*0003*");
         assertNotNull(result);
 
         final XmlContacts contacts = (XmlContacts) JAXBContext.newInstance(XmlContacts.class).createUnmarshaller().unmarshal(new StringReader(result));
@@ -61,5 +65,15 @@ public final class ContactsControllerTest {
         assertEquals(0, contacts.getContacts().get(0).getStatus());
         assertEquals("*0003*", contacts.getContacts().get(1).getSimlarId());
         assertEquals(0, contacts.getContacts().get(1).getStatus());
+    }
+
+    @Test
+    public void loginWithNoSimlarId() throws Exception {
+        final String result = requestContactStatus("*", "xxxxxx", "*0002*|*0003*");
+        assertNotNull(result);
+
+        final XmlError error = (XmlError) JAXBContext.newInstance(XmlError.class).createUnmarshaller().unmarshal(new StringReader(result));
+        assertNotNull(error);
+        assertEquals(20, error.getId());
     }
 }
