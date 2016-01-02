@@ -44,6 +44,10 @@ public final class ContactsController {
         private String simlarId;
         private int    status;
 
+        public XmlContact() {
+            // needed for JAXBContext
+        }
+
         public XmlContact(final String simlarId, final int status) {
             this.simlarId = simlarId;
             this.status = status;
