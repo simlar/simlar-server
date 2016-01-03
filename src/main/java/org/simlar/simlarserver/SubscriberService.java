@@ -44,7 +44,8 @@ public final class SubscriberService {
             return false;
         }
 
-        final Subscriber subscriber = new Subscriber(simlarId.get(), DOMAIN, password, "", "", "");
+        final Subscriber subscriber = new Subscriber(simlarId.get(), DOMAIN, password, "", Hash.md5(simlarId.get() + ":" + DOMAIN + ":" + password),
+                Hash.md5(simlarId.get() + "@" + DOMAIN + ":" + DOMAIN + ":" + password));
         return subscriberRepository.save(subscriber) != null;
     }
 
