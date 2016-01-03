@@ -24,10 +24,12 @@ import java.io.StringReader;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.ContactsController.XmlContacts;
 import org.simlar.simlarserver.ContactsController.XmlError;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -41,8 +43,17 @@ import org.springframework.web.client.RestTemplate;
 @WebIntegrationTest(randomPort = true)
 public final class ContactsControllerTest {
 
+    private static final String SIMLAR_ID1               = "*0001*";
+    private static final String SIMLAR_ID1_PASSWORD      = "x1fg6hk78";
+    private static final String SIMLAR_ID2               = "*0002*";
+    private static final String SIMLAR_ID2_PASSWORD      = "fdfho21j3";
+    private static final String SIMLAR_ID_NOT_REGISTERED = "*0003*";
+
     @Value("${local.server.port}")
-    private int port;
+    private int                 port;
+
+    @Autowired
+    private SubscriberService   subscriberService;
 
     @SuppressWarnings("unchecked")
     private <T> T requestContactStatus(final Class<T> responseClass, final String login, final String password, final String contacts) {
@@ -67,15 +78,21 @@ public final class ContactsControllerTest {
         }
     }
 
+    @Before
+    public void init() {
+        subscriberService.save(SimlarId.create(SIMLAR_ID1), SIMLAR_ID1_PASSWORD);
+        subscriberService.save(SimlarId.create(SIMLAR_ID2), SIMLAR_ID2_PASSWORD);
+    }
+
     @Test
     public void receiveContactsStatus() {
-        final XmlContacts contacts = requestContactStatus(XmlContacts.class, "*0001*", "xxxxxx", "*0002*|*0003*");
+        final XmlContacts contacts = requestContactStatus(XmlContacts.class, SIMLAR_ID1, SIMLAR_ID1_PASSWORD, SIMLAR_ID2 + "|" + SIMLAR_ID_NOT_REGISTERED);
         assertNotNull(contacts);
         assertNotNull(contacts.getContacts());
         assertEquals(2, contacts.getContacts().size());
-        assertEquals("*0002*", contacts.getContacts().get(0).getSimlarId());
-        assertEquals(0, contacts.getContacts().get(0).getStatus());
-        assertEquals("*0003*", contacts.getContacts().get(1).getSimlarId());
+        assertEquals(SIMLAR_ID2, contacts.getContacts().get(0).getSimlarId());
+        assertEquals(1, contacts.getContacts().get(0).getStatus());
+        assertEquals(SIMLAR_ID_NOT_REGISTERED, contacts.getContacts().get(1).getSimlarId());
         assertEquals(0, contacts.getContacts().get(1).getStatus());
     }
 

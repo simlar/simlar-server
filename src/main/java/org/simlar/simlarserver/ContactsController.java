@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,8 +38,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public final class ContactsController {
-    public static final String  REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
-    private static final Logger logger                      = Logger.getLogger(ContactsController.class.getName());
+    public static final String      REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
+    private static final Logger     logger                      = Logger.getLogger(ContactsController.class.getName());
+
+    private final SubscriberService subscriberService;
 
     public static final class XmlContact {
         private String simlarId;
@@ -127,6 +130,11 @@ public final class ContactsController {
         }
     }
 
+    @Autowired
+    public ContactsController(final SubscriberService subscriberService) {
+        this.subscriberService = subscriberService;
+    }
+
     /**
      * This method handles http post requests. You may test it with:
      * <blockquote>
@@ -155,7 +163,8 @@ public final class ContactsController {
 
         final List<XmlContact> xmlContactList = new ArrayList<>();
         for (final String contact : contacts.split("\\|")) {
-            xmlContactList.add(new XmlContact(contact.trim(), 0));
+            final String contactSimlarId = contact.trim();
+            xmlContactList.add(new XmlContact(contactSimlarId, subscriberService.getStatus(contactSimlarId)));
         }
 
         return new XmlContacts(xmlContactList);
