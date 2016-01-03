@@ -34,5 +34,6 @@ public final class HashTest {
         assertEquals("f5dde2f01afd1bde593063832c84e5e1", Hash.md5("*0002*:sip.simlar.org:fgklgor4223"));
         assertEquals("9d58ebf2d3c31b4c0b3d3411e5a7e237", Hash.md5("*0001*@sip.simlar.org:sip.simlar.org:dfk4kgo34k"));
         assertEquals("9f7917d320a27ac068b56019aa11ba6a", Hash.md5("*0002*@sip.simlar.org:sip.simlar.org:sdp45p6hpplk"));
+        assertEquals("1ee89de73dccb07194b19a25fdfad653", Hash.md5("*0001*::sp4mv02fvu"));
     }
 }

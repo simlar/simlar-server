@@ -21,12 +21,16 @@
 
 package org.simlar.simlarserver;
 
+import java.util.List;
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class SubscriberService {
     private static final String        DOMAIN = "";
+    private static final Logger        logger = Logger.getLogger(SubscriberService.class.getName());
 
     private final SubscriberRepository subscriberRepository;
 
@@ -49,11 +53,32 @@ public final class SubscriberService {
         return subscriberRepository.save(subscriber) != null;
     }
 
+    public boolean checkCredentials(final String simlarId, final String ha1) {
+        if (!SimlarId.check(simlarId)) {
+            return false;
+        }
+
+        if (ha1 == null || ha1.isEmpty()) {
+            return false;
+        }
+
+        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId, DOMAIN);
+        if (savedHa1s == null || savedHa1s.isEmpty()) {
+            return false;
+        }
+
+        if (savedHa1s.size() != 1) {
+            logger.severe("found more than 1 subscriber for simlarID=" + simlarId);
+        }
+
+        return ha1.equals(savedHa1s.get(0));
+    }
+
     public int getStatus(final String simlarId) {
         if (!SimlarId.check(simlarId)) {
             return 0;
         }
 
-        return subscriberRepository.findByUsernameAndDomain(simlarId, DOMAIN).isEmpty() ? 0 : 1;
+        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId, DOMAIN).isEmpty() ? 0 : 1;
     }
 }

@@ -23,8 +23,10 @@ package org.simlar.simlarserver;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;;
 
 public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
-    List<Subscriber> findByUsernameAndDomain(final String username, final String domain);
+    @Query("SELECT ha1 FROM Subscriber WHERE username = ?1 AND domain = ?2")
+    List<String> findHa1ByUsernameAndDomain(final String username, final String domain);
 }

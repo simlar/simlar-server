@@ -49,9 +49,27 @@ public final class SubscriberServiceTest {
         assertTrue(subscriberService.save(SimlarId.create(simlarId), "FdUfFjH34gd3"));
     }
 
+    @Test
+    public void checkCredentials() {
+        final String simlarId = "*0001*";
+        final String password = "sp4mv02fvu";
+        final String ha1 = "1ee89de73dccb07194b19a25fdfad653";
+
+        assertFalse(subscriberService.checkCredentials("*", ha1));
+        assertFalse(subscriberService.checkCredentials(simlarId, ha1));
+        assertTrue(subscriberService.save(SimlarId.create(simlarId), password));
+        assertFalse(subscriberService.checkCredentials("*", ha1));
+        assertFalse(subscriberService.checkCredentials(simlarId, password));
+        assertTrue(subscriberService.checkCredentials(simlarId, ha1));
+        assertFalse(subscriberService.checkCredentials(null, null));
+        assertFalse(subscriberService.checkCredentials(null, ha1));
+        assertFalse(subscriberService.checkCredentials(simlarId, null));
+    }
+
+    @Test
     public void getStatus() {
-        final String simlarIdSaved = "*0001*";
-        final String simlarIdNotSaved = "*0002*";
+        final String simlarIdSaved = "*0002*";
+        final String simlarIdNotSaved = "*0003*";
         final String noSimlarId = "*";
 
         assertEquals(0, subscriberService.getStatus(null));
