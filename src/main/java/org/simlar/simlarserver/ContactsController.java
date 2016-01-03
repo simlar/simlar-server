@@ -155,9 +155,8 @@ public final class ContactsController {
     public Object getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
         logger.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + "\"");
 
-        final SimlarId simlarId = SimlarId.create(login);
-        if (simlarId == null) {
-            logger.info(REQUEST_URL_CONTACTS_STATUS + " requested with no simlarId: login=\"" + login + "\"");
+        if (!subscriberService.checkCredentials(login, password)) {
+            logger.info(REQUEST_URL_CONTACTS_STATUS + " requested with wrong credentials: login=\"" + login + "\"");
             return new XmlError(20, "wrong credentials");
         }
 

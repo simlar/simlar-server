@@ -102,4 +102,11 @@ public final class ContactsControllerTest {
         assertNotNull(error);
         assertEquals(20, error.getId());
     }
+
+    @Test
+    public void loginWithWrongCredentials() {
+        final XmlError error = requestContactStatus(XmlError.class, SIMLAR_ID1, "xxxxxx", "*0002*|*0003*");
+        assertNotNull(error);
+        assertEquals(20, error.getId());
+    }
 }
