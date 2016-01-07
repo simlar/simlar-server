@@ -50,7 +50,22 @@ public final class SubscriberService {
 
         final Subscriber subscriber = new Subscriber(simlarId.get(), DOMAIN, password, "", Hash.md5(simlarId.get() + ":" + DOMAIN + ":" + password),
                 Hash.md5(simlarId.get() + "@" + DOMAIN + ":" + DOMAIN + ":" + password));
+
+        subscriber.setId(findSubscriberId(simlarId));
         return subscriberRepository.save(subscriber) != null;
+    }
+
+    private Long findSubscriberId(final SimlarId simlarId) {
+        final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), DOMAIN);
+        if (ids == null || ids.isEmpty()) {
+            return null;
+        }
+
+        if (ids.size() != 1) {
+            logger.severe("found more than 1 subscriber for simlarID=" + simlarId);
+        }
+
+        return ids.get(0);
     }
 
     public boolean checkCredentials(final String simlarId, final String ha1) {

@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.StringReader;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -42,9 +43,11 @@ import org.springframework.web.client.RestTemplate;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest(randomPort = true)
 public final class ContactsControllerTest {
+    private static final Logger logger                   = Logger.getLogger(ContactsControllerTest.class.getName());
 
     private static final String SIMLAR_ID1               = "*0001*";
     private static final String SIMLAR_ID1_PASSWORD      = "x1fg6hk78";
+    private static final String SIMLAR_ID1_PASSWORD_HASH = "5c3d66f5a3928cca2821d711a2c016bb";
     private static final String SIMLAR_ID2               = "*0002*";
     private static final String SIMLAR_ID2_PASSWORD      = "fdfho21j3";
     private static final String SIMLAR_ID_NOT_REGISTERED = "*0003*";
@@ -72,8 +75,10 @@ public final class ContactsControllerTest {
         try {
             return (T) JAXBContext.newInstance(responseClass).createUnmarshaller().unmarshal(new StringReader(result));
         } catch (final JAXBException e) {
+            logger.severe("JAXBException: for postResult: " + result);
             return null;
         } catch (final ClassCastException e) {
+            logger.severe("ClassCastException for postResult: " + result);
             return null;
         }
     }
@@ -86,7 +91,7 @@ public final class ContactsControllerTest {
 
     @Test
     public void receiveContactsStatus() {
-        final XmlContacts contacts = requestContactStatus(XmlContacts.class, SIMLAR_ID1, SIMLAR_ID1_PASSWORD, SIMLAR_ID2 + "|" + SIMLAR_ID_NOT_REGISTERED);
+        final XmlContacts contacts = requestContactStatus(XmlContacts.class, SIMLAR_ID1, SIMLAR_ID1_PASSWORD_HASH, SIMLAR_ID2 + "|" + SIMLAR_ID_NOT_REGISTERED);
         assertNotNull(contacts);
         assertNotNull(contacts.getContacts());
         assertEquals(2, contacts.getContacts().size());
