@@ -49,6 +49,13 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+ }
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.9'
 }
