@@ -24,6 +24,7 @@ package org.simlar.simlarserver;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.simlar.simlarserver.utils.Hash;
 
 public final class HashTest {
     @Test

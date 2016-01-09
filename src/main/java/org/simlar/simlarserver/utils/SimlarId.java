@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.utils;
 
 public final class SimlarId {
     private final String simlarId;

@@ -27,6 +27,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.simlar.simlarserver.utils.SimlarId;
 
 public final class SimlarIdTest {
     @Test
