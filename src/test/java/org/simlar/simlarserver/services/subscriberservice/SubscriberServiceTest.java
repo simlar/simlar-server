@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.services.subscriberservice;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -27,6 +27,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

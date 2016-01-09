@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.ContactsController.XmlContacts;
 import org.simlar.simlarserver.ContactsController.XmlError;
+import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;

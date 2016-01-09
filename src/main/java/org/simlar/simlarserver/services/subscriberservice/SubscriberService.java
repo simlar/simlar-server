@@ -19,11 +19,15 @@
  *
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.services.subscriberservice;
 
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.simlar.simlarserver.Hash;
+import org.simlar.simlarserver.SimlarId;
+import org.simlar.simlarserver.Subscriber;
+import org.simlar.simlarserver.SubscriberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
