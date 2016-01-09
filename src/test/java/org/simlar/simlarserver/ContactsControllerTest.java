@@ -51,7 +51,7 @@ public final class ContactsControllerTest {
         parameter.add("password", password);
         parameter.add("contacts", contacts);
 
-        final String result = (new RestTemplate()).postForObject("http://localhost:" + port + ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter,
+        final String result = new RestTemplate().postForObject("http://localhost:" + port + ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter,
                 String.class);
 
         if (result == null) {
