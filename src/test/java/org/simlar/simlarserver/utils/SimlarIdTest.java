@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.utils;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
