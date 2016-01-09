@@ -40,19 +40,23 @@ public final class SubscriberService {
     }
 
     public boolean save(final SimlarId simlarId, final String password) {
-        if (simlarId == null) {
+        if (simlarId == null || password == null || password.isEmpty()) {
             return false;
         }
 
-        if (password == null || password.isEmpty()) {
-            return false;
-        }
-
-        final Subscriber subscriber = new Subscriber(simlarId.get(), DOMAIN, password, "", Hash.md5(simlarId.get() + ":" + DOMAIN + ":" + password),
-                Hash.md5(simlarId.get() + "@" + DOMAIN + ":" + DOMAIN + ":" + password));
+        final Subscriber subscriber = new Subscriber(simlarId.get(), DOMAIN, password, "", createHashHa1(simlarId, password),
+                createHasjHa1b(simlarId, password));
 
         subscriber.setId(findSubscriberId(simlarId));
         return subscriberRepository.save(subscriber) != null;
+    }
+
+    private String createHashHa1(final SimlarId simlarId, final String password) {
+        return Hash.md5(simlarId.get() + ":" + DOMAIN + ":" + password);
+    }
+
+    private String createHasjHa1b(final SimlarId simlarId, final String password) {
+        return Hash.md5(simlarId.get() + "@" + DOMAIN + ":" + DOMAIN + ":" + password);
     }
 
     private Long findSubscriberId(final SimlarId simlarId) {
