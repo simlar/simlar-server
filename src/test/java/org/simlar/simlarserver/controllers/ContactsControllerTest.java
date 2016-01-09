@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.controllers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -28,8 +28,9 @@ import javax.xml.bind.JAXBException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simlar.simlarserver.ContactsController.XmlContacts;
-import org.simlar.simlarserver.ContactsController.XmlError;
+import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.controllers.ContactsController.XmlContacts;
+import org.simlar.simlarserver.controllers.ContactsController.XmlError;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;

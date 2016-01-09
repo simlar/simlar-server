@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
