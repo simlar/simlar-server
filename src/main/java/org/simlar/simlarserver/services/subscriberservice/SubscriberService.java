@@ -26,8 +26,8 @@ import java.util.logging.Logger;
 
 import org.simlar.simlarserver.Hash;
 import org.simlar.simlarserver.SimlarId;
-import org.simlar.simlarserver.Subscriber;
-import org.simlar.simlarserver.SubscriberRepository;
+import org.simlar.simlarserver.database.models.Subscriber;
+import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
