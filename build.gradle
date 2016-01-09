@@ -23,6 +23,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: 'war'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 
@@ -46,6 +47,7 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("junit:junit:4.12")
     runtime("mysql:mysql-connector-java:5.1.38")
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
 
 tasks.withType(FindBugs) {
