@@ -41,10 +41,6 @@ public final class SimlarId {
     }
 
     public static boolean check(final String str) {
-        if (str == null || str.isEmpty()) {
-            return false;
-        }
-
-        return str.matches("\\*\\d+\\*");
+        return str != null && !str.isEmpty() && str.matches("\\*\\d+\\*");
     }
 }
