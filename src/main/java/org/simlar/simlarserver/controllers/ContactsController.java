@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public final class ContactsController {
+final class ContactsController {
     public static final String      REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
     private static final Logger     logger                      = Logger.getLogger(ContactsController.class.getName());
 
@@ -62,7 +62,8 @@ public final class ContactsController {
      *            + domain + ":" + password);
      * @param contacts
      *            pipe separated list of simlarIds
-     * @return
+     * @return XmlError or xmlContactList
+     *            error message or contact list in xml
      */
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = "application/xml")
     @ResponseBody
