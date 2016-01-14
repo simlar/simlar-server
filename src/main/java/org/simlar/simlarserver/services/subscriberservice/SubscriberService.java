@@ -39,7 +39,7 @@ public final class SubscriberService {
     private final SubscriberRepository subscriberRepository;
 
     @Autowired
-    public SubscriberService(final SubscriberRepository subscriberRepository) {
+    private SubscriberService(final SubscriberRepository subscriberRepository) {
         this.subscriberRepository = subscriberRepository;
     }
 
@@ -49,7 +49,7 @@ public final class SubscriberService {
         }
 
         final Subscriber subscriber = new Subscriber(simlarId.get(), DOMAIN, password, "", createHashHa1(simlarId, password),
-                createHasjHa1b(simlarId, password));
+                createHashHa1b(simlarId, password));
 
         subscriber.setId(findSubscriberId(simlarId));
         return subscriberRepository.save(subscriber) != null;
@@ -59,7 +59,7 @@ public final class SubscriberService {
         return Hash.md5(simlarId.get() + ":" + DOMAIN + ":" + password);
     }
 
-    private String createHasjHa1b(final SimlarId simlarId, final String password) {
+    private String createHashHa1b(final SimlarId simlarId, final String password) {
         return Hash.md5(simlarId.get() + "@" + DOMAIN + ":" + DOMAIN + ":" + password);
     }
 
