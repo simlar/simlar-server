@@ -117,4 +117,16 @@ public final class ContactsControllerTest {
         assertTrue(loginWithWrongCredentials(SIMLAR_ID1, null));
         assertTrue(loginWithWrongCredentials(SIMLAR_ID1, "xxxxxxx"));
     }
+
+    private boolean loginWithEmptyContactList(final String contactList) {
+        final XmlContacts response= requestContactStatus(XmlContacts.class, SIMLAR_ID1, SIMLAR_ID1_PASSWORD_HASH, contactList);
+        return response != null && response.getContacts() == null;
+    }
+
+    @Test
+    public void loginWithEmptyContactList() {
+        assertTrue(loginWithEmptyContactList(null));
+        assertTrue(loginWithEmptyContactList(""));
+        assertTrue(loginWithEmptyContactList(SIMLAR_ID2 + " " + SIMLAR_ID_NOT_REGISTERED));
+    }
 }

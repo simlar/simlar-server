@@ -26,9 +26,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 import org.simlar.simlarserver.xml.XmlError;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -77,9 +79,14 @@ final class ContactsController {
         }
 
         final List<XmlContact> xmlContactList = new ArrayList<>();
-        for (final String contact : contacts.split("\\|")) {
-            final String contactSimlarId = contact.trim();
-            xmlContactList.add(new XmlContact(contactSimlarId, subscriberService.getStatus(contactSimlarId)));
+
+        if (contacts != null) {
+            for (final String contact : contacts.split("\\|")) {
+                final SimlarId contactSimlarId = SimlarId.create(contact.trim());
+                if (contactSimlarId != null) {
+                    xmlContactList.add(new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)));
+                }
+            }
         }
 
         return new XmlContacts(xmlContactList);

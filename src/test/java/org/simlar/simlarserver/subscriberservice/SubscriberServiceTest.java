@@ -71,19 +71,16 @@ public final class SubscriberServiceTest {
 
     @Test
     public void getStatus() {
-        final String simlarIdSaved = "*0002*";
-        final String simlarIdNotSaved = "*0003*";
-        final String noSimlarId = "*";
+        final SimlarId simlarIdSaved = SimlarId.create("*0002*");
+        final SimlarId simlarIdNotSaved = SimlarId.create("*0003*");
 
         assertEquals(0, subscriberService.getStatus(null));
         assertEquals(0, subscriberService.getStatus(simlarIdSaved));
         assertEquals(0, subscriberService.getStatus(simlarIdNotSaved));
-        assertEquals(0, subscriberService.getStatus(noSimlarId));
-        assertTrue(subscriberService.save(SimlarId.create(simlarIdSaved), "xxxxx"));
+        assertTrue(subscriberService.save(simlarIdSaved, "xxxxx"));
         assertEquals(1, subscriberService.getStatus(simlarIdSaved));
         assertEquals(0, subscriberService.getStatus(simlarIdNotSaved));
-        assertEquals(0, subscriberService.getStatus(noSimlarId));
-        assertTrue(subscriberService.save(SimlarId.create(simlarIdSaved), "as234f2dsd"));
+        assertTrue(subscriberService.save(simlarIdSaved, "as234f2dsd"));
         assertEquals(1, subscriberService.getStatus(simlarIdSaved));
     }
 }
