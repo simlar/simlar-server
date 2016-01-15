@@ -63,7 +63,7 @@ public final class ContactsControllerTest {
 
     @SuppressWarnings("unchecked")
     private <T> T requestContactStatus(final Class<T> responseClass, final String login, final String password, final String contacts) {
-        final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<String, String>();
+        final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
         parameter.add("login", login);
         parameter.add("password", password);
         parameter.add("contacts", contacts);
