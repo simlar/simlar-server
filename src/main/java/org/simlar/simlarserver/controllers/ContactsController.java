@@ -80,13 +80,8 @@ final class ContactsController {
 
         final List<XmlContact> xmlContactList = new ArrayList<>();
 
-        if (contacts != null) {
-            for (final String contact : contacts.split("\\|")) {
-                final SimlarId contactSimlarId = SimlarId.create(contact.trim());
-                if (contactSimlarId != null) {
-                    xmlContactList.add(new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)));
-                }
-            }
+        for (final SimlarId contactSimlarId : SimlarId.parsePipeSeparatedSimlarIds(contacts)) {
+            xmlContactList.add(new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)));
         }
 
         return new XmlContacts(xmlContactList);
