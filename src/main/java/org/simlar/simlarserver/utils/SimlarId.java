@@ -28,16 +28,16 @@ public final class SimlarId {
         this.simlarId = simlarId;
     }
 
-    public String get() {
-        return simlarId;
-    }
-
     public static SimlarId create(final String simlarId) {
         if (!check(simlarId)) {
             return null;
         }
 
         return new SimlarId(simlarId);
+    }
+
+    public String get() {
+        return simlarId;
     }
 
     public static boolean check(final String str) {
