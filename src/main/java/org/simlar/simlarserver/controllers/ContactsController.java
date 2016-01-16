@@ -25,11 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.xml.XmlContact;
+import org.simlar.simlarserver.xml.XmlContacts;
+import org.simlar.simlarserver.xml.XmlError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,92 +43,6 @@ public final class ContactsController {
 
     private final SubscriberService subscriberService;
 
-    public static final class XmlContact {
-        private String simlarId;
-        private int    status;
-
-        public XmlContact() {
-            // needed for JAXBContext
-        }
-
-        public XmlContact(final String simlarId, final int status) {
-            this.simlarId = simlarId;
-            this.status = status;
-        }
-
-        @XmlAttribute(name = "id")
-        public String getSimlarId() {
-            return simlarId;
-        }
-
-        public void setSimlarId(final String simlarId) {
-            this.simlarId = simlarId;
-        }
-
-        @XmlAttribute
-        public int getStatus() {
-            return status;
-        }
-
-        public void setStatus(final int status) {
-            this.status = status;
-        }
-    }
-
-    @XmlRootElement(name = "contacts")
-    public static final class XmlContacts {
-        private List<XmlContact> contacts;
-
-        public XmlContacts() {
-            // needed for JAXBContext
-        }
-
-        public XmlContacts(final List<XmlContact> contacts) {
-            this.contacts = contacts;
-        }
-
-        @XmlElement(name = "contact")
-        public List<XmlContact> getContacts() {
-            return contacts;
-        }
-
-        public void setContacts(final List<XmlContact> contacts) {
-            this.contacts = contacts;
-        }
-    }
-
-    @XmlRootElement(name = "error")
-    public static final class XmlError {
-        private int    id;
-        private String message;
-
-        public XmlError() {
-            // needed for JAXBContext
-        }
-
-        public XmlError(final int id, final String message) {
-            this.id = id;
-            this.message = message;
-        }
-
-        @XmlAttribute
-        public int getId() {
-            return id;
-        }
-
-        public void setId(final int id) {
-            this.id = id;
-        }
-
-        @XmlAttribute
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(final String message) {
-            this.message = message;
-        }
-    }
 
     @Autowired
     public ContactsController(final SubscriberService subscriberService) {
@@ -158,7 +71,7 @@ public final class ContactsController {
 
         if (!subscriberService.checkCredentials(login, password)) {
             logger.info(REQUEST_URL_CONTACTS_STATUS + " requested with wrong credentials: login=\"" + login + "\"");
-            return new XmlError(20, "wrong credentials");
+            return XmlError.wrongCredentials();
         }
 
         final List<XmlContact> xmlContactList = new ArrayList<>();
