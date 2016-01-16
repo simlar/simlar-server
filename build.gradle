@@ -57,3 +57,9 @@ tasks.withType(FindBugs) {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.9'
 }
+
+idea {
+    module {
+        excludeDirs += file('ides')
+    }
+}
