@@ -27,6 +27,7 @@ import org.simlar.simlarserver.database.models.Subscriber;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+@SuppressWarnings("SameParameterValue")
 public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
     @Query("SELECT ha1 FROM Subscriber WHERE username = ?1 AND domain = ?2")
     List<String> findHa1ByUsernameAndDomain(final String username, final String domain);
