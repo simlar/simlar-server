@@ -77,7 +77,7 @@ public final class SubscriberServiceTest {
         assertEquals(0, subscriberService.getStatus(null));
         assertEquals(0, subscriberService.getStatus(simlarIdSaved));
         assertEquals(0, subscriberService.getStatus(simlarIdNotSaved));
-        assertTrue(subscriberService.save(simlarIdSaved, "xxxxx"));
+        assertTrue(subscriberService.save(simlarIdSaved, "xxxxxx"));
         assertEquals(1, subscriberService.getStatus(simlarIdSaved));
         assertEquals(0, subscriberService.getStatus(simlarIdNotSaved));
         assertTrue(subscriberService.save(simlarIdSaved, "as234f2dsd"));
