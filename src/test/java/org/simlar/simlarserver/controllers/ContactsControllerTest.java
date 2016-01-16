@@ -107,7 +107,7 @@ public final class ContactsControllerTest {
 
     private boolean loginWithWrongCredentials(final String username, final String password) {
         final XmlError error = requestContactStatus(XmlError.class, username, password, "*0002*|*0003*");
-        return error != null && error.getId() == 20;
+        return error != null && error.getId() == 10;
     }
 
     @Test

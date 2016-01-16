@@ -40,7 +40,7 @@ public final class XmlError {
 
 
     public static XmlError wrongCredentials() {
-        return new XmlError(20, "wrong credentials");
+        return new XmlError(10, "wrong credentials");
     }
 
     @XmlAttribute
