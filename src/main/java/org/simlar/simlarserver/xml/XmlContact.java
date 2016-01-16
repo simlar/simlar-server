@@ -27,6 +27,7 @@ public final class XmlContact {
     private String simlarId;
     private int    status;
 
+    @SuppressWarnings("unused")
     public XmlContact() {
         // needed for JAXBContext
     }
@@ -41,6 +42,7 @@ public final class XmlContact {
         return simlarId;
     }
 
+    @SuppressWarnings("unused")
     public void setSimlarId(final String simlarId) {
         this.simlarId = simlarId;
     }
@@ -50,6 +52,7 @@ public final class XmlContact {
         return status;
     }
 
+    @SuppressWarnings("unused")
     public void setStatus(final int status) {
         this.status = status;
     }
