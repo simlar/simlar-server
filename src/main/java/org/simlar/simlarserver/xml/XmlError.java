@@ -52,15 +52,18 @@ public final class XmlError {
         return id;
     }
 
+    @SuppressWarnings("unused")
     public void setId(final int id) {
         this.id = id;
     }
 
+    @SuppressWarnings("unused")
     @XmlAttribute
     public String getMessage() {
         return message;
     }
 
+    @SuppressWarnings("unused")
     public void setMessage(final String message) {
         this.message = message;
     }
