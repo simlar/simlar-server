@@ -30,6 +30,7 @@ import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 import org.simlar.simlarserver.xml.XmlError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -65,7 +66,7 @@ final class ContactsController {
      * @return XmlError or xmlContactList
      *            error message or contact list in xml
      */
-    @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = "application/xml")
+    @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
     public Object getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
         logger.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + "\"");
