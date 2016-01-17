@@ -43,6 +43,10 @@ public final class XmlError {
         return new XmlError(10, "wrong credentials");
     }
 
+    public static XmlError unknownStructure() {
+        return new XmlError(1, "unknown structure");
+    }
+
     @XmlAttribute
     public int getId() {
         return id;
