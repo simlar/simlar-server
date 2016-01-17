@@ -23,9 +23,10 @@ package org.simlar.simlarserver.utils;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -64,8 +65,8 @@ public final class SimlarIdTest {
         assertNotNull(SimlarId.create("*0007*"));
     }
 
-    private Set<SimlarId> parsePipeSeparatedSimlarIdsNotNull(final String str) {
-        final Set<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(str);
+    private List<SimlarId> parsePipeSeparatedSimlarIdsNotNull(final String str) {
+        final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(str);
         assertNotNull(simlarIds);
         return simlarIds;
     }
@@ -77,11 +78,19 @@ public final class SimlarIdTest {
         assertEquals(0, parsePipeSeparatedSimlarIdsNotNull("*").size());
         assertEquals(0, parsePipeSeparatedSimlarIdsNotNull("|||").size());
         assertEquals(0, parsePipeSeparatedSimlarIdsNotNull("*  *|pp|*").size());
+        //assertEquals(Collections.EMPTY_LIST, parsePipeSeparatedSimlarIdsNotNull("*1*|pp|*"));
+    }
+
+    private List<SimlarId> createSimlarIds(final List<String> simlarIds) {
+        final List<SimlarId> retVal = new ArrayList<>();
+        for (final String simlarIdStr : simlarIds) {
+            retVal.add(SimlarId.create(simlarIdStr));
+        }
+        return retVal;
     }
 
     private void compareSimlarIds(final List<String> expected, final String str) {
-        final List<String> simlarIds = parsePipeSeparatedSimlarIdsNotNull(str).stream().map(SimlarId::get).collect(Collectors.toList());
-        assertEquals("failed to parse: " + str, expected, simlarIds);
+        assertEquals("failed to parse: " + str, createSimlarIds(expected), parsePipeSeparatedSimlarIdsNotNull(str));
     }
 
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
