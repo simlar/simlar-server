@@ -20,9 +20,9 @@
 
 package org.simlar.simlarserver.utils;
 
+import org.springframework.util.DigestUtils;
+
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public final class Hash {
 
@@ -31,20 +31,8 @@ public final class Hash {
     }
 
     public static String md5(final String string) {
-        if (string == null) {
-            return "";
-        }
-
         try {
-            final MessageDigest digest = MessageDigest.getInstance("md5");
-            digest.update(string.getBytes("UTF-8"));
-            final StringBuilder stringBuilder = new StringBuilder();
-            for (final byte b : digest.digest()) {
-                stringBuilder.append(String.format("%02x", b));
-            }
-            return stringBuilder.toString();
-        } catch (final NoSuchAlgorithmException e) {
-            return "";
+            return string == null ? "" : DigestUtils.md5DigestAsHex(string.getBytes("UTF-8"));
         } catch (final UnsupportedEncodingException e) {
             return "";
         }
