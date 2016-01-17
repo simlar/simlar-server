@@ -30,6 +30,8 @@ import org.simlar.simlarserver.utils.Hash;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 @Component
 public final class SubscriberService {
@@ -44,7 +46,7 @@ public final class SubscriberService {
     }
 
     public boolean save(final SimlarId simlarId, final String password) {
-        if (simlarId == null || password == null || password.isEmpty()) {
+        if (simlarId == null || StringUtils.isEmpty(password)) {
             return false;
         }
 
@@ -65,7 +67,7 @@ public final class SubscriberService {
 
     private Long findSubscriberId(final SimlarId simlarId) {
         final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), DOMAIN);
-        if (ids == null || ids.isEmpty()) {
+        if (CollectionUtils.isEmpty(ids)) {
             return null;
         }
 
@@ -81,12 +83,12 @@ public final class SubscriberService {
             return false;
         }
 
-        if (ha1 == null || ha1.isEmpty()) {
+        if (StringUtils.isEmpty(ha1)) {
             return false;
         }
 
         final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId, DOMAIN);
-        if (savedHa1s == null || savedHa1s.isEmpty()) {
+        if (CollectionUtils.isEmpty(savedHa1s)) {
             return false;
         }
 
