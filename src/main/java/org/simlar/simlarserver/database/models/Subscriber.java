@@ -25,35 +25,39 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "subscriber", uniqueConstraints = { @UniqueConstraint(columnNames = { "username", "domain" }) })
+@Table(name = "subscriber",
+        uniqueConstraints = { @UniqueConstraint(name = "account_idx", columnNames = { "username", "domain" }) },
+        indexes = {@Index(name = "username_idx",  columnList="username", unique = false) })
 public class Subscriber {
     @Id
     @GeneratedValue
+    @Column(nullable = false, columnDefinition = "int(10)")
     private Long   id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String domain;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String email_address;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String ha1;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String ha1b;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 64)
     private String rpid;
 
     protected Subscriber() {
