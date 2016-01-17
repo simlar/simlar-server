@@ -82,7 +82,6 @@ public final class ErrorControllerTest {
         final String result = new RestTemplate().getForObject("http://localhost:" + port + "/" + requestUrl, String.class);
         assertNotNull(result);
 
-
         try {
             final XmlError xmlError = (XmlError)JAXBContext.newInstance(XmlError.class).createUnmarshaller().unmarshal(new StringReader(result));
             return xmlError != null && xmlError.getId() == 1;
