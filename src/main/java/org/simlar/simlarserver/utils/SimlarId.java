@@ -21,6 +21,8 @@
 
 package org.simlar.simlarserver.utils;
 
+import org.springframework.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -47,7 +49,7 @@ public final class SimlarId {
     }
 
     public static boolean check(final String str) {
-        return str != null && !str.isEmpty() && str.matches("\\*\\d+\\*");
+        return StringUtils.hasText(str) && str.matches("\\*\\d+\\*");
     }
 
     public static List<SimlarId> parsePipeSeparatedSimlarIds(final String str) {
