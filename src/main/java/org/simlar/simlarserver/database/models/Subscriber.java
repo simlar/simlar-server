@@ -34,6 +34,7 @@ import javax.persistence.UniqueConstraint;
         uniqueConstraints = { @UniqueConstraint(name = "account_idx", columnNames = { "username", "domain" }) },
         indexes = {@Index(name = "username_idx",  columnList="username", unique = false) })
 public class Subscriber {
+
     @Id
     @GeneratedValue
     @Column(nullable = false, columnDefinition = "int(10)")
@@ -60,6 +61,7 @@ public class Subscriber {
     @Column(nullable = true, length = 64)
     private String rpid;
 
+    @SuppressWarnings("unused")
     protected Subscriber() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
@@ -75,67 +77,7 @@ public class Subscriber {
         this.ha1b = ha1b;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void setId(final Long id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(final String username) {
-        this.username = username;
-    }
-
-    public String getDomain() {
-        return domain;
-    }
-
-    public void setDomain(final String domain) {
-        this.domain = domain;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(final String password) {
-        this.password = password;
-    }
-
-    public String getEmail_address() {
-        return email_address;
-    }
-
-    public void setEmail_address(final String email_address) {
-        this.email_address = email_address;
-    }
-
-    public String getHa1() {
-        return ha1;
-    }
-
-    public void setHa1(final String ha1) {
-        this.ha1 = ha1;
-    }
-
-    public String getHa1b() {
-        return ha1b;
-    }
-
-    public void setHa1b(final String ha1b) {
-        this.ha1b = ha1b;
-    }
-
-    public String getRpid() {
-        return rpid;
-    }
-
-    public void setRpid(final String rpid) {
-        this.rpid = rpid;
     }
 }
