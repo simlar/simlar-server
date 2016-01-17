@@ -36,7 +36,7 @@ import org.springframework.util.StringUtils;
 @Component
 public final class SubscriberService {
     private static final String        DOMAIN = "";
-    private static final Logger        logger = Logger.getLogger(SubscriberService.class.getName());
+    private static final Logger        LOGGER = Logger.getLogger(SubscriberService.class.getName());
 
     private final SubscriberRepository subscriberRepository;
 
@@ -72,7 +72,7 @@ public final class SubscriberService {
         }
 
         if (ids.size() != 1) {
-            logger.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
         return ids.get(0);
@@ -93,7 +93,7 @@ public final class SubscriberService {
         }
 
         if (savedHa1s.size() != 1) {
-            logger.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
         return ha1.equals(savedHa1s.get(0));

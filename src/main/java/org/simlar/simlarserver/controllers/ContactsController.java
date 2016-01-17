@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 final class ContactsController {
     public static final String      REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
-    private static final Logger     logger                      = Logger.getLogger(ContactsController.class.getName());
+    private static final Logger     LOGGER                      = Logger.getLogger(ContactsController.class.getName());
 
     private final SubscriberService subscriberService;
 
@@ -70,10 +70,10 @@ final class ContactsController {
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
     public Object getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
-        logger.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + "\"");
+        LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + "\"");
 
         if (!subscriberService.checkCredentials(login, password)) {
-            logger.info(REQUEST_URL_CONTACTS_STATUS + " requested with wrong credentials: login=\"" + login + "\"");
+            LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with wrong credentials: login=\"" + login + "\"");
             return XmlError.wrongCredentials();
         }
 

@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 @ControllerAdvice
 @Controller
 final class ErrorController {
-    private static final Logger logger = Logger.getLogger(ErrorController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ErrorController.class.getName());
 
     private static void log(final HttpServletRequest request, final Exception exception) {
         final StringBuilder message = new StringBuilder();
@@ -52,7 +52,7 @@ final class ErrorController {
         if (exception != null) {
             message.append(" exception").append(exception);
         }
-        logger.severe(message.toString());
+        LOGGER.severe(message.toString());
     }
 
     @RequestMapping(path = "*", produces = MediaType.APPLICATION_XML_VALUE)
@@ -72,7 +72,7 @@ final class ErrorController {
         try {
             JAXBContext.newInstance(XmlError.class).createMarshaller().marshal(XmlError.unknownStructure(), writer);
         } catch (final JAXBException e) {
-            logger.severe("xmlParse error: " + e);
+            LOGGER.severe("xmlParse error: " + e);
         }
         return writer.toString();
     }
