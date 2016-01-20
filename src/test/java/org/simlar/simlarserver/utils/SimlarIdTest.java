@@ -85,14 +85,13 @@ public final class SimlarIdTest {
         assertParsePipeSeparatedSimlarIds(Collections.emptyList(), "*  *|pp|*");
     }
 
-    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     @Test
     public void testParsePipeSeparatedSimlarIds() {
         final String s1 = "*0001*";
         final String s2 = "*0002*";
 
-        assertParsePipeSeparatedSimlarIds(Arrays.asList(s1), s1);
-        assertParsePipeSeparatedSimlarIds(Arrays.asList(s1), s1 + "|" + s1);
+        assertParsePipeSeparatedSimlarIds(Collections.singletonList(s1), s1);
+        assertParsePipeSeparatedSimlarIds(Collections.singletonList(s1), s1 + "|" + s1);
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), s1 + "|" + s2);
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), "sdfvbd|"  + s1 + " |" + s2);
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), "  "  + s1 + " |" + s2);
