@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.StringWriter;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ControllerAdvice
@@ -72,7 +73,7 @@ final class ErrorController {
         try {
             JAXBContext.newInstance(XmlError.class).createMarshaller().marshal(XmlError.unknownStructure(), writer);
         } catch (final JAXBException e) {
-            LOGGER.severe("xmlParse error: " + e);
+            LOGGER.log(Level.SEVERE, "xmlParse error: ", e);
         }
         return writer.toString();
     }
