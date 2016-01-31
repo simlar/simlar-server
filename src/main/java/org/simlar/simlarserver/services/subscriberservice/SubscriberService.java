@@ -58,11 +58,11 @@ public final class SubscriberService {
     }
 
     private String createHashHa1(final SimlarId simlarId, final String password) {
-        return Hash.md5(simlarId.get() + ":" + DOMAIN + ":" + password);
+        return Hash.md5(simlarId.get() + ':' + DOMAIN + ':' + password);
     }
 
     private String createHashHa1b(final SimlarId simlarId, final String password) {
-        return Hash.md5(simlarId.get() + "@" + DOMAIN + ":" + DOMAIN + ":" + password);
+        return Hash.md5(simlarId.get() + '@' + DOMAIN + ':' + DOMAIN + ':' + password);
     }
 
     private Long findSubscriberId(final SimlarId simlarId) {
