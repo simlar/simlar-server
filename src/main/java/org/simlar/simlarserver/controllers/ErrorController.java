@@ -45,9 +45,9 @@ final class ErrorController {
         if (request == null) {
             message.append(" no request object");
         } else {
-            message.append(" URL='").append(request.getRequestURL()).append("'");
-            message.append(" IP='").append(request.getRemoteAddr()).append("'");
-            message.append(" User-Agent='").append(request.getHeader("User-Agent")).append("'");
+            message.append(" URL='").append(request.getRequestURL()).append('\'');
+            message.append(" IP='").append(request.getRemoteAddr()).append('\'');
+            message.append(" User-Agent='").append(request.getHeader("User-Agent")).append('\'');
         }
 
         if (exception != null) {
