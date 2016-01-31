@@ -119,7 +119,7 @@ public final class ContactsControllerTest {
     }
 
     private boolean loginWithEmptyContactList(final String contactList) {
-        final XmlContacts response= requestContactStatus(XmlContacts.class, SIMLAR_ID1, SIMLAR_ID1_PASSWORD_HASH, contactList);
+        final XmlContacts response = requestContactStatus(XmlContacts.class, SIMLAR_ID1, SIMLAR_ID1_PASSWORD_HASH, contactList);
         return response != null && response.getContacts() == null;
     }
 
