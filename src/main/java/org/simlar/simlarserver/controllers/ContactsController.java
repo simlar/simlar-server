@@ -70,10 +70,10 @@ final class ContactsController {
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
     public Object getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
-        LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + "\"");
+        LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + '\"');
 
         if (!subscriberService.checkCredentials(login, password)) {
-            LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with wrong credentials: login=\"" + login + "\"");
+            LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with wrong credentials: login=\"" + login + '\"');
             return XmlError.wrongCredentials();
         }
 
