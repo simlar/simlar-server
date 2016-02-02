@@ -21,6 +21,8 @@
 
 package org.simlar.simlarserver.database.models;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+@SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
 @Entity
 @Table(name = "subscriber",
         uniqueConstraints = { @UniqueConstraint(name = "account_idx", columnNames = { "username", "domain" }) },
