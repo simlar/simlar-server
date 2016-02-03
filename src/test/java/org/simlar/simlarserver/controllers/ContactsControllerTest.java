@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.StringReader;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
@@ -32,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
+import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 import org.simlar.simlarserver.xml.XmlError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,14 +97,15 @@ public final class ContactsControllerTest {
 
     @Test
     public void receiveContactsStatus() {
-        final XmlContacts contacts = requestContactStatus(XmlContacts.class, SIMLAR_ID1, SIMLAR_ID1_PASSWORD_HASH, SIMLAR_ID2 + "|" + SIMLAR_ID_NOT_REGISTERED);
+        final XmlContacts xmlContacts = requestContactStatus(XmlContacts.class, SIMLAR_ID1, SIMLAR_ID1_PASSWORD_HASH, SIMLAR_ID2 + "|" + SIMLAR_ID_NOT_REGISTERED);
+        assertNotNull(xmlContacts);
+        final List<XmlContact> contacts = xmlContacts.getContacts();
         assertNotNull(contacts);
-        assertNotNull(contacts.getContacts());
-        assertEquals(2, contacts.getContacts().size());
-        assertEquals(SIMLAR_ID2, contacts.getContacts().get(0).getSimlarId());
-        assertEquals(1, contacts.getContacts().get(0).getStatus());
-        assertEquals(SIMLAR_ID_NOT_REGISTERED, contacts.getContacts().get(1).getSimlarId());
-        assertEquals(0, contacts.getContacts().get(1).getStatus());
+        assertEquals(2, contacts.size());
+        assertEquals(SIMLAR_ID2, contacts.get(0).getSimlarId());
+        assertEquals(1, contacts.get(0).getStatus());
+        assertEquals(SIMLAR_ID_NOT_REGISTERED, contacts.get(1).getSimlarId());
+        assertEquals(0, contacts.get(1).getStatus());
     }
 
     private boolean loginWithWrongCredentials(final String username, final String password) {
