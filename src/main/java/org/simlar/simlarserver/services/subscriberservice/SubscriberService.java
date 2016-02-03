@@ -29,16 +29,19 @@ import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.utils.Hash;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 @Component
 public final class SubscriberService {
-    private static final String        DOMAIN = "";
     private static final Logger        LOGGER = Logger.getLogger(SubscriberService.class.getName());
 
     private final SubscriberRepository subscriberRepository;
+
+    @Value("${domain:}")
+    private String domain;
 
     @Autowired
     private SubscriberService(final SubscriberRepository subscriberRepository) {
@@ -50,7 +53,7 @@ public final class SubscriberService {
             return false;
         }
 
-        final Subscriber subscriber = new Subscriber(simlarId.get(), DOMAIN, password, "", createHashHa1(simlarId, password),
+        final Subscriber subscriber = new Subscriber(simlarId.get(), domain, password, "", createHashHa1(simlarId, password),
                 createHashHa1b(simlarId, password));
 
         subscriber.setId(findSubscriberId(simlarId));
@@ -58,15 +61,15 @@ public final class SubscriberService {
     }
 
     private String createHashHa1(final SimlarId simlarId, final String password) {
-        return Hash.md5(simlarId.get() + ':' + DOMAIN + ':' + password);
+        return Hash.md5(simlarId.get() + ':' + domain + ':' + password);
     }
 
     private String createHashHa1b(final SimlarId simlarId, final String password) {
-        return Hash.md5(simlarId.get() + '@' + DOMAIN + ':' + DOMAIN + ':' + password);
+        return Hash.md5(simlarId.get() + '@' + domain + ':' + domain + ':' + password);
     }
 
     private Long findSubscriberId(final SimlarId simlarId) {
-        final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), DOMAIN);
+        final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), domain);
         if (CollectionUtils.isEmpty(ids)) {
             return null;
         }
@@ -87,7 +90,7 @@ public final class SubscriberService {
             return false;
         }
 
-        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId, DOMAIN);
+        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId, domain);
         if (CollectionUtils.isEmpty(savedHa1s)) {
             return false;
         }
@@ -104,6 +107,6 @@ public final class SubscriberService {
             return 0;
         }
 
-        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), DOMAIN).isEmpty() ? 0 : 1;
+        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), domain).isEmpty() ? 0 : 1;
     }
 }
