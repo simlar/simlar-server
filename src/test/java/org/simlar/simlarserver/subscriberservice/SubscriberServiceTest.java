@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
@@ -52,6 +53,7 @@ public final class SubscriberServiceTest {
         assertTrue(subscriberService.save(SimlarId.create(simlarId), "FdUfFjH34gd3"));
     }
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void checkCredentials() {
         final String simlarId = "*0001*";
