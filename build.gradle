@@ -51,8 +51,7 @@ dependencies {
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
-    findbugs configurations.findbugsPlugins.dependencies
-    findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.6.0")
+    findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.2.1")
 }
 
 findbugs {
