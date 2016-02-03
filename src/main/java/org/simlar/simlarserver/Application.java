@@ -35,7 +35,7 @@ public class Application extends SpringBootServletInitializer {
         return application.sources(Application.class);
     }
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         SpringApplication.run(Application.class, args);
     }
 }
