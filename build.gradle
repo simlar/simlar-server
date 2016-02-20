@@ -36,6 +36,10 @@ buildscript {
     }
 }
 
+war {
+    baseName = 'simlar-server'
+}
+
 repositories {
     mavenCentral()
 }
