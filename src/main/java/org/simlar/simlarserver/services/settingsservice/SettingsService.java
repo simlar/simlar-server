@@ -35,6 +35,9 @@ public class SettingsService implements ApplicationListener<ContextRefreshedEven
     @Value("${domain:}")
     private String domain;
 
+    @Value("${info.app.version:}")
+    private String version;
+
     @Value("${spring.datasource.url:}")
     private String datasource;
 
@@ -45,6 +48,6 @@ public class SettingsService implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(final ContextRefreshedEvent event) {
-        LOGGER.info("started on domain '" + domain + "' and dataSource '" + datasource + '\'');
+        LOGGER.info("started on domain '" + domain + "', dataSource '" + datasource + "' and version '" + version + '\'');
     }
 }
