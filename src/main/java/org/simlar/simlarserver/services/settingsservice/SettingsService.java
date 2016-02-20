@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 
 @Component
 public class SettingsService implements ApplicationListener<ContextRefreshedEvent> {
-    private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SettingsService.class.getName());
 
     @Value("${domain:}")
     private String domain;

@@ -26,10 +26,10 @@ import java.util.logging.Logger;
 
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
+import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.utils.Hash;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -38,13 +38,12 @@ import org.springframework.util.StringUtils;
 public final class SubscriberService {
     private static final Logger        LOGGER = Logger.getLogger(SubscriberService.class.getName());
 
+    private final SettingsService settingsService;
     private final SubscriberRepository subscriberRepository;
 
-    @Value("${domain:}")
-    private String domain;
-
     @Autowired
-    private SubscriberService(final SubscriberRepository subscriberRepository) {
+    private SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository) {
+        this.settingsService = settingsService;
         this.subscriberRepository = subscriberRepository;
     }
 
@@ -53,7 +52,7 @@ public final class SubscriberService {
             return false;
         }
 
-        final Subscriber subscriber = new Subscriber(simlarId.get(), domain, password, "", createHashHa1(simlarId, password),
+        final Subscriber subscriber = new Subscriber(simlarId.get(), settingsService.getDomain(), password, "", createHashHa1(simlarId, password),
                 createHashHa1b(simlarId, password));
 
         subscriber.setId(findSubscriberId(simlarId));
@@ -61,15 +60,15 @@ public final class SubscriberService {
     }
 
     private String createHashHa1(final SimlarId simlarId, final String password) {
-        return Hash.md5(simlarId.get() + ':' + domain + ':' + password);
+        return Hash.md5(simlarId.get() + ':' + settingsService.getDomain() + ':' + password);
     }
 
     private String createHashHa1b(final SimlarId simlarId, final String password) {
-        return Hash.md5(simlarId.get() + '@' + domain + ':' + domain + ':' + password);
+        return Hash.md5(simlarId.get() + '@' + settingsService.getDomain() + ':' + settingsService.getDomain() + ':' + password);
     }
 
     private Long findSubscriberId(final SimlarId simlarId) {
-        final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), domain);
+        final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), settingsService.getDomain());
         if (CollectionUtils.isEmpty(ids)) {
             return null;
         }
@@ -90,7 +89,7 @@ public final class SubscriberService {
             return false;
         }
 
-        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId, domain);
+        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain());
         if (CollectionUtils.isEmpty(savedHa1s)) {
             return false;
         }
@@ -107,6 +106,6 @@ public final class SubscriberService {
             return 0;
         }
 
-        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), domain).isEmpty() ? 0 : 1;
+        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), settingsService.getDomain()).isEmpty() ? 0 : 1;
     }
 }
