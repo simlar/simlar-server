@@ -46,6 +46,10 @@ public class SettingsService implements ApplicationListener<ContextRefreshedEven
         return domain;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
     @Override
     public void onApplicationEvent(final ContextRefreshedEvent event) {
         LOGGER.info("started on domain '" + domain + "', dataSource '" + datasource + "' and version '" + version + '\'');
