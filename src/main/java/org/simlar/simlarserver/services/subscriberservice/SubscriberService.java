@@ -24,8 +24,6 @@ package org.simlar.simlarserver.services.subscriberservice;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.BooleanUtils;
-
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
@@ -108,6 +106,6 @@ public final class SubscriberService {
             return 0;
         }
 
-        return BooleanUtils.toInteger(!subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), settingsService.getDomain()).isEmpty());
+        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), settingsService.getDomain()).isEmpty() ? 0 : 1;
     }
 }
