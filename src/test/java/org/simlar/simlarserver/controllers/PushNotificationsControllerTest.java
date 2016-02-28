@@ -23,9 +23,12 @@ package org.simlar.simlarserver.controllers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.simlar.simlarserver.database.models.SimlarPushNotification;
+import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessPushNotification;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -36,6 +39,9 @@ import static org.junit.Assert.*;
 public final class PushNotificationsControllerTest extends BaseControllerTest {
     @SuppressWarnings("SpellCheckingInspection")
     private static final String ANDROID_PUSH_ID = "APAB1bE6JDTGtpHlM4b8K4Z4qst214PdaiZs5rhfk03iFhnwz6wVgMJN01l2homL7gBeE7EuC8ohfxqrDYgkknPY1VurG-5zzuiWQmgrhjhaptOC2LlQi2g9o7aG5gPP7ZmVWyLEL6DrZwN52OvB0egGu5fN3PDKAw";
+
+    @Autowired
+    private PushNotificationsRepository pushNotificationsRepository;
 
     @SuppressWarnings("unchecked")
     private <T> T requestStorePushId(final Class<T> responseClass, final String login, final String password, final int deviceType, final String pushId) {
@@ -69,5 +75,9 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
         assertNotNull(response);
         assertEquals(deviceType, response.getDeviceType());
         assertEquals(ANDROID_PUSH_ID, response.getPushId());
+        final SimlarPushNotification notification = pushNotificationsRepository.findBySimlarId(TestUser.get(0).getSimlarId());
+        assertNotNull(notification);
+        assertEquals(deviceType, notification.getDeviceType().toInt());
+        assertEquals(ANDROID_PUSH_ID, notification.getPushId());
     }
 }
