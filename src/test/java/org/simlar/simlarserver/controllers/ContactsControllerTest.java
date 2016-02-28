@@ -25,41 +25,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.StringReader;
 import java.util.List;
-import java.util.logging.Logger;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simlar.simlarserver.Application;
-import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 import org.simlar.simlarserver.xml.XmlError;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebIntegrationTest(randomPort = true)
-public final class ContactsControllerTest {
-    private static final Logger LOGGER                   = Logger.getLogger(ContactsControllerTest.class.getName());
-
-    @Value("${local.server.port}")
-    private int                 port;
-
-    @Autowired
-    private SubscriberService   subscriberService;
+public final class ContactsControllerTest extends BaseControllerTest {
 
     @SuppressWarnings("unchecked")
     private <T> T requestContactStatus(final Class<T> responseClass, final String login, final String password, final String contacts) {
@@ -68,22 +47,7 @@ public final class ContactsControllerTest {
         parameter.add("password", password);
         parameter.add("contacts", contacts);
 
-        final String result = new RestTemplate().postForObject("http://localhost:" + port + ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter,
-                String.class);
-
-        if (result == null) {
-            return null;
-        }
-
-        try {
-            return (T) JAXBContext.newInstance(responseClass).createUnmarshaller().unmarshal(new StringReader(result));
-        } catch (final JAXBException e) {
-            LOGGER.severe("JAXBException: for postResult: " + result);
-            return null;
-        } catch (final ClassCastException e) {
-            LOGGER.severe("ClassCastException for postResult: " + result);
-            return null;
-        }
+        return postRequest(responseClass, ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter);
     }
 
     @Test
