@@ -50,10 +50,7 @@ final class ErrorController {
             message.append(" User-Agent='").append(request.getHeader("User-Agent")).append('\'');
         }
 
-        if (exception != null) {
-            message.append(" exception").append(exception);
-        }
-        LOGGER.severe(message.toString());
+        LOGGER.log(Level.SEVERE, message.toString(), exception);
     }
 
     @RequestMapping(path = "*", produces = MediaType.APPLICATION_XML_VALUE)
