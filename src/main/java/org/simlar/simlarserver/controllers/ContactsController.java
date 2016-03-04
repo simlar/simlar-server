@@ -24,13 +24,12 @@ package org.simlar.simlarserver.controllers;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
-import org.simlar.simlarserver.xml.XmlError;
 
+import org.simlar.simlarserver.xmlexception.XmlException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -68,16 +67,12 @@ final class ContactsController {
      * @return XmlError or xmlContactList
      *            error message or contact list in xml
      */
-    @SuppressFBWarnings("URV_UNRELATED_RETURN_VALUES")
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
-    public Object getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
+    public XmlContacts getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlException {
         LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + '\"');
 
-        if (!subscriberService.checkCredentials(login, password)) {
-            LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with wrong credentials: login=\"" + login + '\"');
-            return XmlError.wrongCredentials();
-        }
+        subscriberService.checkCredentialsWithException(login, password);
 
         return new XmlContacts(SimlarId.parsePipeSeparatedSimlarIds(contacts).stream()
                 .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))

@@ -38,11 +38,6 @@ public final class XmlError {
         this.message = message;
     }
 
-
-    public static XmlError wrongCredentials() {
-        return new XmlError(10, "wrong credentials");
-    }
-
     @XmlAttribute
     public int getId() {
         return id;
