@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import org.simlar.simlarserver.xml.XmlError;
+import org.simlar.simlarserver.xmlexception.XmlExceptionType;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +58,23 @@ final class ErrorController {
     @ResponseBody
     public XmlError handle(final HttpServletRequest request) {
         log(request, null);
-        return XmlError.unknownStructure();
+        return createXmlError(XmlExceptionType.UNKNOWN_STRUCTURE);
+    }
+
+    private XmlError createXmlError(final XmlExceptionType type) {
+        return new XmlError(type.getId(), type.getMessage());
+    }
+
+    private String createXmlErrorString(final XmlExceptionType type) {
+        final StringWriter writer = new StringWriter();
+
+        try {
+            JAXBContext.newInstance(XmlError.class).createMarshaller().marshal(createXmlError(type), writer);
+        } catch (final JAXBException e) {
+            LOGGER.log(Level.SEVERE, "xmlParse error: ", e);
+        }
+
+        return writer.toString();
     }
 
     // in order to handle html request errors we have to return a String here
@@ -66,12 +83,6 @@ final class ErrorController {
     public String handleException(final HttpServletRequest request, final Exception exception) {
         log(request, exception);
 
-        final StringWriter writer = new StringWriter();
-        try {
-            JAXBContext.newInstance(XmlError.class).createMarshaller().marshal(XmlError.unknownStructure(), writer);
-        } catch (final JAXBException e) {
-            LOGGER.log(Level.SEVERE, "xmlParse error: ", e);
-        }
-        return writer.toString();
+        return createXmlErrorString(XmlExceptionType.UNKNOWN_STRUCTURE);
     }
 }

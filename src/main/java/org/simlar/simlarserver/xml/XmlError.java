@@ -33,7 +33,7 @@ public final class XmlError {
         // needed for JAXBContext
     }
 
-    private XmlError(final int id, final String message) {
+    public XmlError(final int id, final String message) {
         this.id = id;
         this.message = message;
     }
@@ -41,10 +41,6 @@ public final class XmlError {
 
     public static XmlError wrongCredentials() {
         return new XmlError(10, "wrong credentials");
-    }
-
-    public static XmlError unknownStructure() {
-        return new XmlError(1, "unknown structure");
     }
 
     @XmlAttribute
