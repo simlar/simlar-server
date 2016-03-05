@@ -21,9 +21,13 @@
 
 package org.simlar.simlarserver.controllers;
 
+import org.simlar.simlarserver.data.DeviceType;
+import org.simlar.simlarserver.database.models.SimlarPushNotification;
+import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.xml.XmlSuccessPushNotification;
 import org.simlar.simlarserver.xmlexception.XmlException;
+import org.simlar.simlarserver.xmlexception.XmlExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -39,12 +43,13 @@ final class PushNotificationsController {
     public  static final String     REQUEST_URL_STORE_PUSH_ID = "/store-push-id.xml";
     private static final Logger     LOGGER                    = Logger.getLogger(PushNotificationsController.class.getName());
 
-    private final SubscriberService subscriberService;
-
+    private final SubscriberService           subscriberService;
+    private final PushNotificationsRepository pushNotificationsRepository;
 
     @Autowired
-    public PushNotificationsController(final SubscriberService subscriberService) {
-        this.subscriberService = subscriberService;
+    public PushNotificationsController(final SubscriberService subscriberService, final PushNotificationsRepository pushNotificationsRepository) {
+        this.subscriberService           = subscriberService;
+        this.pushNotificationsRepository = pushNotificationsRepository;
     }
 
     /**
@@ -72,6 +77,13 @@ final class PushNotificationsController {
         LOGGER.info(REQUEST_URL_STORE_PUSH_ID + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
+
+        final DeviceType checkedType = DeviceType.fromInt(deviceType);
+        if (checkedType == null) {
+            throw new XmlException(XmlExceptionType.UNKNOWN_PUSH_ID_TYPE, "deviceType='" + deviceType + '\'');
+        }
+
+        pushNotificationsRepository.save(new SimlarPushNotification(login, checkedType, pushId));
 
         return new XmlSuccessPushNotification(deviceType, pushId);
     }

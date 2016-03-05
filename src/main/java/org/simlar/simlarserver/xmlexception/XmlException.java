@@ -24,7 +24,6 @@ package org.simlar.simlarserver.xmlexception;
 public final class XmlException extends Exception {
     private final XmlExceptionType type;
 
-    @SuppressWarnings("SameParameterValue") // TODO: remove this, once we implement more XmlExceptionTypes
     public XmlException(final XmlExceptionType type, final String message) {
         super(message);
         this.type = type;
