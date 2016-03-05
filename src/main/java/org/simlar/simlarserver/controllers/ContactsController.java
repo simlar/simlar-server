@@ -54,7 +54,7 @@ final class ContactsController {
     /**
      * This method handles http post requests. You may test it with:
      * <blockquote>
-     * curl --data "login=*0001*&password=xxxxxxx&contacts=*0002*|*0003*" http://localhost:8080/get-contacts-status.xml
+     * curl --data "login=*0001*&password=5c3d66f5a3928cca2821d711a2c016bb&contacts=*0002*|*0003*" http://localhost:8080/get-contacts-status.xml
      * </blockquote>
      *
      * @param login
