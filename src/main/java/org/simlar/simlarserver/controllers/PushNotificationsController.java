@@ -71,6 +71,7 @@ final class PushNotificationsController {
      * @return XmlError or xmlContactList
      *            error message or success message containing deviceType and pushId
      */
+    @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = REQUEST_URL_STORE_PUSH_ID, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
     public XmlSuccessPushNotification getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final int deviceType, @RequestParam final String pushId) throws XmlException {
