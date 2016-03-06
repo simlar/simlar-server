@@ -22,15 +22,11 @@
 package org.simlar.simlarserver.services.settingsservice;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.logging.Logger;
-
+@SuppressWarnings("unused")
 @Component
-public class SettingsService implements ApplicationListener<ContextRefreshedEvent> {
-    private static final Logger LOGGER = Logger.getLogger(SettingsService.class.getName());
+public class SettingsService {
 
     @Value("${domain:}")
     private String domain;
@@ -38,20 +34,11 @@ public class SettingsService implements ApplicationListener<ContextRefreshedEven
     @Value("${info.app.version:}")
     private String version;
 
-    @Value("${spring.datasource.url:}")
-    private String datasource;
-
-
     public String getDomain() {
         return domain;
     }
 
     public String getVersion() {
         return version;
-    }
-
-    @Override
-    public void onApplicationEvent(final ContextRefreshedEvent event) {
-        LOGGER.info("started on domain '" + domain + "', dataSource '" + datasource + "' and version '" + version + '\'');
     }
 }
