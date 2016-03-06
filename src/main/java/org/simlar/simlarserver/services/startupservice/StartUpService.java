@@ -40,12 +40,28 @@ final class StartUpService {
     private static final Logger LOGGER = Logger.getLogger(StartUpService.class.getName());
 
     private final SettingsService   settingsService;
+    private final SubscriberService subscriberService;
     private final String            datasourceUrl;
+    private final String            datasourceDriver;
+    private final String            hibernateDdlAuto;
 
     @Autowired
-    public StartUpService(final SettingsService settingsService, final DataSourceProperties dataSourceProperties) {
+    public StartUpService(final SettingsService settingsService, final SubscriberService subscriberService, final DataSourceProperties dataSourceProperties, final JpaProperties jpaProperties) {
         this.settingsService   = settingsService;
+        this.subscriberService = subscriberService;
         datasourceUrl          = dataSourceProperties.getUrl();
+        datasourceDriver       = dataSourceProperties.getDriverClassName();
+        hibernateDdlAuto       = jpaProperties.getHibernate().getDdlAuto();
+    }
+
+    private void createTestData() {
+        for (final TestUser user: TestUser.USERS) {
+            final SimlarId simlarId = SimlarId.create(user.getSimlarId());
+            if (simlarId != null) {
+                subscriberService.save(simlarId, user.getPassword());
+                LOGGER.info("added test user: " + user.getSimlarId());
+            }
+        }
     }
 
     @SuppressWarnings("unused")
@@ -53,7 +69,14 @@ final class StartUpService {
     public void handleApplicationReadyEvent(final ApplicationReadyEvent event) {
         LOGGER.info(
                 "started on domain='" + settingsService.getDomain() +
+                "', hibernateDdlAuto='" + hibernateDdlAuto +
                 "', dataSource='" + datasourceUrl +
                 "' and version='" + settingsService.getVersion() + '\'');
+
+        if (event.getApplicationContext().getClass() == AnnotationConfigEmbeddedWebApplicationContext.class &&
+                ("create-drop".equals(hibernateDdlAuto) || "org.h2.Driver".equals(datasourceDriver)))
+        {
+            createTestData();
+        }
     }
 }

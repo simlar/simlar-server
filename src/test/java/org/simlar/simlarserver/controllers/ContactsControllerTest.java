@@ -32,13 +32,11 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;
-import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 import org.simlar.simlarserver.xml.XmlError;
@@ -86,12 +84,6 @@ public final class ContactsControllerTest {
             LOGGER.severe("ClassCastException for postResult: " + result);
             return null;
         }
-    }
-
-    @Before
-    public void init() {
-        subscriberService.save(SimlarId.create(TestUser.get(0).getSimlarId()), TestUser.get(0).getPassword());
-        subscriberService.save(SimlarId.create(TestUser.get(1).getSimlarId()), TestUser.get(1).getPassword());
     }
 
     @Test
