@@ -60,6 +60,10 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
         return postRequest(responseClass, PushNotificationsController.REQUEST_URL_STORE_PUSH_ID, parameter);
     }
 
+    private <T> T requestStorePushId(final Class<T> responseClass, final TestUser user, final int deviceType, final String pushId) {
+        return requestStorePushId(responseClass, user.getSimlarId(), user.getPasswordHash(), deviceType, pushId);
+    }
+
     private void loginWithWrongCredentials(final String username, final String password) {
         final XmlError error = requestStorePushId(XmlError.class, username, password, 1, ANDROID_PUSH_ID_1);
         assertNotNull(error);
@@ -75,7 +79,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
     }
 
     private void storePushId(final int testUser, final int deviceType, final String pushId) {
-        final XmlSuccessPushNotification response = requestStorePushId(XmlSuccessPushNotification.class, TestUser.get(testUser).getSimlarId(), TestUser.get(testUser).getPasswordHash(), deviceType, pushId);
+        final XmlSuccessPushNotification response = requestStorePushId(XmlSuccessPushNotification.class, TestUser.get(testUser), deviceType, pushId);
         assertNotNull(response);
         assertEquals(deviceType, response.getDeviceType());
         assertEquals(pushId, response.getPushId());
@@ -92,5 +96,19 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
         storePushId(1, 1, ANDROID_PUSH_ID_1);
         storePushId(1, 1, ANDROID_PUSH_ID_2);
         storePushId(1, 5, IOS_PUSH_ID);
+    }
+
+    private void unknownDeviceType(final int deviceType) {
+        final XmlError error = requestStorePushId(XmlError.class, TestUser.get(0), deviceType, ANDROID_PUSH_ID_1);
+        assertNotNull(error);
+        assertEquals(30, error.getId());
+    }
+
+    @Test
+    public void unknownDeviceType() {
+        unknownDeviceType(-1);
+        unknownDeviceType(0);
+        unknownDeviceType(6);
+        unknownDeviceType(5400);
     }
 }
