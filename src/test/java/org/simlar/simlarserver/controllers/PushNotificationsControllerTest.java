@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.controllers;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.database.models.SimlarPushNotification;
@@ -35,6 +36,7 @@ import org.springframework.util.MultiValueMap;
 
 import static org.junit.Assert.*;
 
+@SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class PushNotificationsControllerTest extends BaseControllerTest {
     @SuppressWarnings("SpellCheckingInspection")
