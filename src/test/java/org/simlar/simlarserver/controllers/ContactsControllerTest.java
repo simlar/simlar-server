@@ -27,6 +27,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.testdata.TestUser;
@@ -37,6 +38,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+@SuppressFBWarnings({"PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS", "UCPM_USE_CHARACTER_PARAMETERIZED_METHOD"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class ContactsControllerTest extends BaseControllerTest {
 
