@@ -40,7 +40,11 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class PushNotificationsControllerTest extends BaseControllerTest {
     @SuppressWarnings("SpellCheckingInspection")
-    private static final String ANDROID_PUSH_ID = "APAB1bE6JDTGtpHlM4b8K4Z4qst214PdaiZs5rhfk03iFhnwz6wVgMJN01l2homL7gBeE7EuC8ohfxqrDYgkknPY1VurG-5zzuiWQmgrhjhaptOC2LlQi2g9o7aG5gPP7ZmVWyLEL6DrZwN52OvB0egGu5fN3PDKAw";
+    private static final String ANDROID_PUSH_ID_1 = "APAB1bE6JDTGtpHlM4b8K4Z4qst214PdaiZs5rhfk03iFhnwz6wVgMJN01l2homL7gBeE7EuC8ohfxqrDYgkknPY1VurG-5zzuiWQmgrhjhaptOC2LlQi2g9o7aG5gPP7ZmVWyLEL6DrZwN52OvB0egGu5fN3PDKAw";
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final String ANDROID_PUSH_ID_2 = "APA91bHpBzJWqeBkFyEwnzeISsYN8I7ni_aMn8xthy-0Y_MSVrs5wPHzJfmldK8LkkoEmeu0-Ud2rvDri2pdcuhH89-vhTd_Fw7gF5HB6YnXyYfWruLPeJU";
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final String IOS_PUSH_ID       = "7fd224670ab46d041e08101cd2bc3a5646c252a1dd5bfcb02f667203338f89a9";
 
     @Autowired
     private PushNotificationsRepository pushNotificationsRepository;
@@ -57,7 +61,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
     }
 
     private void loginWithWrongCredentials(final String username, final String password) {
-        final XmlError error = requestStorePushId(XmlError.class, username, password, 1, ANDROID_PUSH_ID);
+        final XmlError error = requestStorePushId(XmlError.class, username, password, 1, ANDROID_PUSH_ID_1);
         assertNotNull(error);
         assertEquals(10, error.getId());
     }
@@ -70,16 +74,23 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
         loginWithWrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx");
     }
 
-    @Test
-    public void storePushId() {
-        final int deviceType = 1;
-        final XmlSuccessPushNotification response = requestStorePushId(XmlSuccessPushNotification.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), deviceType, ANDROID_PUSH_ID);
+    private void storePushId(final int testUser, final int deviceType, final String pushId) {
+        final XmlSuccessPushNotification response = requestStorePushId(XmlSuccessPushNotification.class, TestUser.get(testUser).getSimlarId(), TestUser.get(testUser).getPasswordHash(), deviceType, pushId);
         assertNotNull(response);
         assertEquals(deviceType, response.getDeviceType());
-        assertEquals(ANDROID_PUSH_ID, response.getPushId());
-        final SimlarPushNotification notification = pushNotificationsRepository.findBySimlarId(TestUser.get(0).getSimlarId());
+        assertEquals(pushId, response.getPushId());
+        final SimlarPushNotification notification = pushNotificationsRepository.findBySimlarId(TestUser.get(testUser).getSimlarId());
         assertNotNull(notification);
         assertEquals(deviceType, notification.getDeviceType().toInt());
-        assertEquals(ANDROID_PUSH_ID, notification.getPushId());
+        assertEquals(pushId, notification.getPushId());
+    }
+
+    @Test
+    public void storePushId() {
+        storePushId(0, 1, ANDROID_PUSH_ID_1);
+        storePushId(0, 1, ANDROID_PUSH_ID_2);
+        storePushId(1, 1, ANDROID_PUSH_ID_1);
+        storePushId(1, 1, ANDROID_PUSH_ID_2);
+        storePushId(1, 5, IOS_PUSH_ID);
     }
 }
