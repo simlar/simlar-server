@@ -49,6 +49,7 @@ buildscript {
 
 war {
     baseName = 'simlar-server'
+    rootSpec.exclude('local.properties')
 }
 
 repositories {
