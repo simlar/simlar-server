@@ -111,4 +111,18 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
         unknownDeviceType(6);
         unknownDeviceType(5400);
     }
+
+    private void unknownApplePushId(final int deviceType, final String pushId) {
+        final XmlError error = requestStorePushId(XmlError.class, TestUser.get(0), deviceType, pushId);
+        assertNotNull(error);
+        assertEquals(31, error.getId());
+    }
+
+    @Test
+    public void unknownApplePushId() {
+        unknownApplePushId(2, ANDROID_PUSH_ID_1);
+        unknownApplePushId(3, ANDROID_PUSH_ID_2);
+        unknownApplePushId(4, ANDROID_PUSH_ID_2);
+        unknownApplePushId(5, ANDROID_PUSH_ID_1);
+    }
 }
