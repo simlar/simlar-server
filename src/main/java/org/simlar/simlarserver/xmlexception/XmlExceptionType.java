@@ -24,7 +24,8 @@ package org.simlar.simlarserver.xmlexception;
 public enum XmlExceptionType {
         UNKNOWN_STRUCTURE(1,  "unknown structure"),
         WRONG_CREDENTIALS(10, "wrong credentials"),
-        UNKNOWN_PUSH_ID_TYPE(30, "unknown push id type")
+        UNKNOWN_PUSH_ID_TYPE(30, "unknown push id type"),
+        UNKNOWN_APPLE_PUSH_ID(31, "unknown apple pushId")
     ;
 
     private final int id;
