@@ -52,4 +52,8 @@ public enum DeviceType {
     public int toInt() {
         return id;
     }
+
+    public boolean isIOS() {
+        return this != ANDROID;
+    }
 }

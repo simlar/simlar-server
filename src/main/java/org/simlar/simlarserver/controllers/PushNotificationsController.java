@@ -25,6 +25,7 @@ import org.simlar.simlarserver.data.DeviceType;
 import org.simlar.simlarserver.database.models.SimlarPushNotification;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.utils.ApplePushId;
 import org.simlar.simlarserver.xml.XmlSuccessPushNotification;
 import org.simlar.simlarserver.xmlexception.XmlException;
 import org.simlar.simlarserver.xmlexception.XmlExceptionType;
@@ -82,6 +83,10 @@ final class PushNotificationsController {
         final DeviceType checkedType = DeviceType.fromInt(deviceType);
         if (checkedType == null) {
             throw new XmlException(XmlExceptionType.UNKNOWN_PUSH_ID_TYPE, "deviceType='" + deviceType + '\'');
+        }
+
+        if (checkedType.isIOS() && !ApplePushId.check(pushId)) {
+            throw new XmlException(XmlExceptionType.UNKNOWN_APPLE_PUSH_ID, "pushId='" + pushId + '\'');
         }
 
         pushNotificationsRepository.save(new SimlarPushNotification(login, checkedType, pushId));
