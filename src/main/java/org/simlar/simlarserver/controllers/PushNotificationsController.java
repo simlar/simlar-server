@@ -27,8 +27,9 @@ import org.simlar.simlarserver.database.repositories.PushNotificationsRepository
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.ApplePushId;
 import org.simlar.simlarserver.xml.XmlSuccessPushNotification;
-import org.simlar.simlarserver.xmlexception.XmlException;
-import org.simlar.simlarserver.xmlexception.XmlExceptionType;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionUnknownApplePushId;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionUnknownPushIdType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -75,18 +76,18 @@ final class PushNotificationsController {
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = REQUEST_URL_STORE_PUSH_ID, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
-    public XmlSuccessPushNotification getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final int deviceType, @RequestParam final String pushId) throws XmlException {
+    public XmlSuccessPushNotification getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final int deviceType, @RequestParam final String pushId) throws XmlErrorException {
         LOGGER.info(REQUEST_URL_STORE_PUSH_ID + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
 
         final DeviceType checkedType = DeviceType.fromInt(deviceType);
         if (checkedType == null) {
-            throw new XmlException(XmlExceptionType.UNKNOWN_PUSH_ID_TYPE, "deviceType='" + deviceType + '\'');
+            throw new XmlErrorExceptionUnknownPushIdType("deviceType='" + deviceType + '\'');
         }
 
         if (checkedType.isIOS() && !ApplePushId.check(pushId)) {
-            throw new XmlException(XmlExceptionType.UNKNOWN_APPLE_PUSH_ID, "pushId='" + pushId + '\'');
+            throw new XmlErrorExceptionUnknownApplePushId("pushId='" + pushId + '\'');
         }
 
         pushNotificationsRepository.save(new SimlarPushNotification(login, checkedType, pushId));

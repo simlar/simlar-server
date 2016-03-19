@@ -19,28 +19,10 @@
  *
  */
 
-package org.simlar.simlarserver.xmlexception;
+package org.simlar.simlarserver.xmlerrorexception;
 
-public enum XmlExceptionType {
-        UNKNOWN_STRUCTURE(1,  "unknown structure"),
-        WRONG_CREDENTIALS(10, "wrong credentials"),
-        UNKNOWN_PUSH_ID_TYPE(30, "unknown push id type"),
-        UNKNOWN_APPLE_PUSH_ID(31, "unknown apple pushId")
-    ;
-
-    private final int id;
-    private final String message;
-
-    XmlExceptionType(final int id, final String message) {
-        this.id = id;
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public int getId() {
-        return id;
+public final class XmlErrorExceptionUnknownApplePushId extends XmlErrorException {
+    public XmlErrorExceptionUnknownApplePushId(final String message) {
+        super(message);
     }
 }

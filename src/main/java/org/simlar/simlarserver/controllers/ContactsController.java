@@ -29,7 +29,7 @@ import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 
-import org.simlar.simlarserver.xmlexception.XmlException;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -69,7 +69,7 @@ final class ContactsController {
      */
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
-    public XmlContacts getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlException {
+    public XmlContacts getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlErrorException {
         LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
