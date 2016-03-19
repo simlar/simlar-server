@@ -86,7 +86,7 @@ final class PushNotificationsController {
             throw new XmlErrorExceptionUnknownPushIdType("deviceType='" + deviceType + '\'');
         }
 
-        if (checkedType.isIOS() && !ApplePushId.check(pushId)) {
+        if (checkedType.isIos() && !ApplePushId.check(pushId)) {
             throw new XmlErrorExceptionUnknownApplePushId("pushId='" + pushId + '\'');
         }
 
