@@ -129,4 +129,16 @@ public final class SimlarIdTest {
         testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b2, c, d, e, f));
         testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b, b, b, c, c, c, c, c, d, e, f));
     }
+
+    @Test
+    public void testHashSimlarIds() {
+        final SimlarId a = SimlarId.create("*0001*");
+        final SimlarId b = SimlarId.create("*0002*");
+        final SimlarId c = SimlarId.create("*0003*");
+        final SimlarId d = SimlarId.create("*0004*");
+        final SimlarId e = SimlarId.create("*0005*");
+        final SimlarId f = SimlarId.create("*0006*");
+
+        assertEquals("265026f135c0046f94d5a8e89b2bbf1c",SimlarId.hashSimlarIds(Arrays.asList(a, b, c, d, e, f)));
+    }
 }

@@ -77,6 +77,16 @@ public final class SimlarId {
         return simlarIds.stream().sorted((o1, o2) -> o1.get().compareTo(o2.get())).distinct().collect(Collectors.toList());
     }
 
+    public static String hashSimlarIds(final Collection<SimlarId> simlarIds) {
+        final StringBuilder builder = new StringBuilder();
+
+        for (final SimlarId simlarId: sortAndUnifySimlarIds(simlarIds)) {
+            builder.append(simlarId.get());
+        }
+
+        return Hash.md5(builder.toString());
+    }
+
     @Override
     public boolean equals(final Object other) {
         return this == other || other != null && getClass() == other.getClass()
