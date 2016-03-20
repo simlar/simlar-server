@@ -24,6 +24,7 @@ package org.simlar.simlarserver.utils;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,7 +75,7 @@ public final class SimlarIdTest {
         return simlarIds;
     }
 
-    private void assertParsePipeSeparatedSimlarIds(final List<String> expected, final String str) {
+    private void assertParsePipeSeparatedSimlarIds(final Collection<String> expected, final String str) {
         assertEquals("failed to parse: " + str,
                 expected.stream().map(SimlarId::create).collect(Collectors.toList()),
                 parsePipeSeparatedSimlarIdsNotNull(str));
@@ -103,5 +104,29 @@ public final class SimlarIdTest {
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), s1 + " | " + s2 + " | sdfas");
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), s1 + "| |" + s2 + " | sdfas");
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s2, s1), s2 + "|" + s1);
+    }
+
+    private void testSortAndUnifySimlarIds(final List<SimlarId> expected, final Collection<SimlarId> input) {
+        assertEquals(expected, SimlarId.sortAndUnifySimlarIds(input));
+    }
+
+    @Test
+    public void testSortAndUnifySimlarIds() {
+        final SimlarId a  = SimlarId.create("*0001*");
+        final SimlarId b  = SimlarId.create("*0002*");
+        final SimlarId b2 = SimlarId.create("*0002*");
+        final SimlarId c  = SimlarId.create("*0003*");
+        final SimlarId d  = SimlarId.create("*0004*");
+        final SimlarId e  = SimlarId.create("*0005*");
+        final SimlarId f  = SimlarId.create("*0006*");
+
+        testSortAndUnifySimlarIds(Arrays.asList(a, b), Arrays.asList(a, b));
+        testSortAndUnifySimlarIds(Arrays.asList(a, b), Arrays.asList(b, a));
+        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, c, d, e, f));
+        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(f, e, d, c, b, a));
+        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(f, b, c, d, e, a));
+        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b, c, d, e, f));
+        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b2, c, d, e, f));
+        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b, b, b, c, c, c, c, c, d, e, f));
     }
 }
