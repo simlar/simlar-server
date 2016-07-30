@@ -28,6 +28,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@SuppressWarnings("FieldCanBeLocal")
 @Entity
 @Table(name = "simlar_push_notifications")
 public class SimlarPushNotification {
