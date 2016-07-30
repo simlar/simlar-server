@@ -31,6 +31,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+@SuppressWarnings("FieldCanBeLocal")
 @SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
 @Entity
 @Table(name = "subscriber",
