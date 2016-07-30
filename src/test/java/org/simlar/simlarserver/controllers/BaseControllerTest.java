@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 public class BaseControllerTest {
     private static final Logger LOGGER = Logger.getLogger(BaseControllerTest.class.getName());
 
+    @SuppressWarnings("CanBeFinal")
     @Value("${local.server.port}")
     int port;
 

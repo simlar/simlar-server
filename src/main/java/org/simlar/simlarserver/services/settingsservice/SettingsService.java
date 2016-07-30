@@ -28,9 +28,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class SettingsService {
 
+    @SuppressWarnings("CanBeFinal")
     @Value("${domain:}")
     private String domain;
 
+    @SuppressWarnings("CanBeFinal")
     @Value("${info.app.version:}")
     private String version;
 
