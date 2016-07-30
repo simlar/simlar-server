@@ -39,7 +39,7 @@ public class BaseControllerTest {
     private static final Logger LOGGER = Logger.getLogger(BaseControllerTest.class.getName());
 
     @Value("${local.server.port}")
-    protected int port;
+    int port;
 
     <T> T postRequest(final Class<T> responseClass, final String url, final MultiValueMap<String, String> parameter) {
         final String result = new RestTemplate().postForObject("http://localhost:" + port + url, parameter,
