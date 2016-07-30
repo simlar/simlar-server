@@ -46,7 +46,7 @@ final class StartUpService {
     private final String            hibernateDdlAuto;
 
     @Autowired
-    public StartUpService(final SettingsService settingsService, final SubscriberService subscriberService, final DataSourceProperties dataSourceProperties, final JpaProperties jpaProperties) {
+    private StartUpService(final SettingsService settingsService, final SubscriberService subscriberService, final DataSourceProperties dataSourceProperties, final JpaProperties jpaProperties) {
         this.settingsService   = settingsService;
         this.subscriberService = subscriberService;
         datasourceUrl          = dataSourceProperties.getUrl();

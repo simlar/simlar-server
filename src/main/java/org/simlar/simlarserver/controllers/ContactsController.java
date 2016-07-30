@@ -47,7 +47,7 @@ final class ContactsController {
 
 
     @Autowired
-    public ContactsController(final SubscriberService subscriberService) {
+    private ContactsController(final SubscriberService subscriberService) {
         this.subscriberService = subscriberService;
     }
 

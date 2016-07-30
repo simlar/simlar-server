@@ -49,7 +49,7 @@ final class PushNotificationsController {
     private final PushNotificationsRepository pushNotificationsRepository;
 
     @Autowired
-    public PushNotificationsController(final SubscriberService subscriberService, final PushNotificationsRepository pushNotificationsRepository) {
+    private PushNotificationsController(final SubscriberService subscriberService, final PushNotificationsRepository pushNotificationsRepository) {
         this.subscriberService           = subscriberService;
         this.pushNotificationsRepository = pushNotificationsRepository;
     }

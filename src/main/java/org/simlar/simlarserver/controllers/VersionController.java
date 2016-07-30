@@ -40,7 +40,7 @@ final class VersionController {
 
 
     @Autowired
-    public VersionController(final SettingsService settingsService) {
+    private VersionController(final SettingsService settingsService) {
         this.settingsService = settingsService;
     }
 
