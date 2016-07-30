@@ -22,4 +22,11 @@
 package org.simlar.simlarserver.services.delaycalculatorservice;
 
 public final class DelayCalculatorService {
+    static int calculateDelay(final int requestedContacts) {
+        if (requestedContacts < 0) {
+            return Integer.MAX_VALUE;
+        }
+
+        return (int)(Math.pow(requestedContacts / 4096d, 4) / 4);
+    }
 }
