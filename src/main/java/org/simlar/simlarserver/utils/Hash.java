@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2015 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
