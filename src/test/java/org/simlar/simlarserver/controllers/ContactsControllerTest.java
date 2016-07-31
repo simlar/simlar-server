@@ -66,10 +66,14 @@ public final class ContactsControllerTest extends BaseControllerTest {
         wrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx");
     }
 
-    private void emptyContactList(final String contactList) {
+    private List<XmlContact> requestContactList(final String contactList) {
         final XmlContacts response = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), contactList);
         assertNotNull(response);
-        assertNull(response.getContacts());
+        return response.getContacts();
+    }
+
+    private void emptyContactList(final String contactList) {
+        assertNull(requestContactList(contactList));
     }
 
     @Test
@@ -81,9 +85,7 @@ public final class ContactsControllerTest extends BaseControllerTest {
 
     @Test
     public void receiveContactsStatus() {
-        final XmlContacts xmlContacts = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), TestUser.get(1).getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
-        assertNotNull(xmlContacts);
-        final List<XmlContact> contacts = xmlContacts.getContacts();
+        final List<XmlContact> contacts = requestContactList(TestUser.get(1).getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
         assertNotNull(contacts);
         assertEquals(2, contacts.size());
         assertEquals(TestUser.get(1).getSimlarId(), contacts.get(0).getSimlarId());
