@@ -24,19 +24,15 @@ package org.simlar.simlarserver.services.delaycalculatorservice;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.helper.SimlarIds;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -77,44 +73,17 @@ public final class DelayCalculatorServiceTest {
         calculateDelayTest(Integer.MAX_VALUE,       Integer.MIN_VALUE,   Integer.MAX_VALUE);
     }
 
-    private static Collection<SimlarId> createContacts(final int amount) {
-        if (amount <= 0) {
-            return Collections.emptyList();
-        }
-
-        final Collection<SimlarId> simlarIds = new ArrayList<>();
-        for (int i = 0; i < amount; ++i) {
-            simlarIds.add(SimlarId.create(String.format("*%d*", i + 1)));
-        }
-
-        return simlarIds;
-    }
-
-    private void createContactsTest(final List<String> expected, final int amount) {
-        assertEquals(expected, createContacts(amount).stream().map(SimlarId::get).collect(Collectors.toList()));
-    }
-
-    @Test
-    public void createContactsTest() {
-        createContactsTest(Collections.emptyList(), -1);
-        createContactsTest(Collections.emptyList(), 0);
-
-        createContactsTest(Collections.singletonList("*1*"), 1);
-        createContactsTest(Arrays.asList("*1*", "*2*"), 2);
-        createContactsTest(Arrays.asList("*1*", "*2*", "*3*", "*4*", "*5*", "*6*", "*7*", "*8*", "*9*", "*10*"), 10);
-    }
-
     @Test
     public void calculateTotalRequestedContactsIncrement() {
         final SimlarId simlarId = SimlarId.create("*0001*");
         final Date now = new Date();
 
-        assertEquals(0, delayCalculatorService.calculateTotalRequestedContacts(simlarId, createContacts(0), now));
-        assertEquals(1, delayCalculatorService.calculateTotalRequestedContacts(simlarId, createContacts(1), now));
-        assertEquals(1, delayCalculatorService.calculateTotalRequestedContacts(simlarId, createContacts(0), now));
-        assertEquals(3, delayCalculatorService.calculateTotalRequestedContacts(simlarId, createContacts(2), now));
-        assertEquals(6, delayCalculatorService.calculateTotalRequestedContacts(simlarId, createContacts(3), now));
-        assertEquals(8, delayCalculatorService.calculateTotalRequestedContacts(simlarId, createContacts(2), now));
+        assertEquals(0, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(0), now));
+        assertEquals(1, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(1), now));
+        assertEquals(1, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(0), now));
+        assertEquals(3, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(2), now));
+        assertEquals(6, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(3), now));
+        assertEquals(8, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(2), now));
     }
 
     @Test
@@ -123,8 +92,8 @@ public final class DelayCalculatorServiceTest {
         final Date now = new Date();
         final Date dayAfter = new Date(now.getTime() + 1000 * 60 * 60 * 24 + 1000);
 
-        assertEquals(8, delayCalculatorService.calculateTotalRequestedContacts(simlarId, createContacts(8), now));
-        assertEquals(4, delayCalculatorService.calculateTotalRequestedContacts(simlarId, createContacts(4), dayAfter));
+        assertEquals(8, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(8), now));
+        assertEquals(4, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(4), dayAfter));
     }
 
     @Test
@@ -145,13 +114,13 @@ public final class DelayCalculatorServiceTest {
     public void calculateRequestDelay() {
         final SimlarId simlarId = SimlarId.create("*0004*");
 
-        assertEquals(0, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(2000)));
-        assertEquals(0, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(2001)));
-        assertEquals(1, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(2000)));
-        assertEquals(3, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(2001)));
-        assertEquals(93, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(10000)));
-        assertEquals(93, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(10000)));
-        assertEquals(546, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(10001)));
-        assertEquals(238440, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(100000)));
+        assertEquals(0, delayCalculatorService.calculateRequestDelay(simlarId, SimlarIds.createContacts(2000)));
+        assertEquals(0, delayCalculatorService.calculateRequestDelay(simlarId, SimlarIds.createContacts(2001)));
+        assertEquals(1, delayCalculatorService.calculateRequestDelay(simlarId, SimlarIds.createContacts(2000)));
+        assertEquals(3, delayCalculatorService.calculateRequestDelay(simlarId, SimlarIds.createContacts(2001)));
+        assertEquals(93, delayCalculatorService.calculateRequestDelay(simlarId, SimlarIds.createContacts(10000)));
+        assertEquals(93, delayCalculatorService.calculateRequestDelay(simlarId, SimlarIds.createContacts(10000)));
+        assertEquals(546, delayCalculatorService.calculateRequestDelay(simlarId, SimlarIds.createContacts(10001)));
+        assertEquals(238440, delayCalculatorService.calculateRequestDelay(simlarId, SimlarIds.createContacts(100000)));
     }
 }
