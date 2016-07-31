@@ -52,19 +52,6 @@ public final class ContactsControllerTest extends BaseControllerTest {
         return postRequest(responseClass, ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter);
     }
 
-    @Test
-    public void receiveContactsStatus() {
-        final XmlContacts xmlContacts = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), TestUser.get(1).getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
-        assertNotNull(xmlContacts);
-        final List<XmlContact> contacts = xmlContacts.getContacts();
-        assertNotNull(contacts);
-        assertEquals(2, contacts.size());
-        assertEquals(TestUser.get(1).getSimlarId(), contacts.get(0).getSimlarId());
-        assertEquals(1, contacts.get(0).getStatus());
-        assertEquals(TestUser.SIMLAR_ID_NOT_REGISTERED, contacts.get(1).getSimlarId());
-        assertEquals(0, contacts.get(1).getStatus());
-    }
-
     private void loginWithWrongCredentials(final String username, final String password) {
         final XmlError error = requestContactStatus(XmlError.class, username, password, "*0002*|*0003*");
         assertNotNull(error);
@@ -90,5 +77,18 @@ public final class ContactsControllerTest extends BaseControllerTest {
         emptyContactList(null);
         emptyContactList("");
         emptyContactList(TestUser.get(1).getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED);
+    }
+
+    @Test
+    public void receiveContactsStatus() {
+        final XmlContacts xmlContacts = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), TestUser.get(1).getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
+        assertNotNull(xmlContacts);
+        final List<XmlContact> contacts = xmlContacts.getContacts();
+        assertNotNull(contacts);
+        assertEquals(2, contacts.size());
+        assertEquals(TestUser.get(1).getSimlarId(), contacts.get(0).getSimlarId());
+        assertEquals(1, contacts.get(0).getStatus());
+        assertEquals(TestUser.SIMLAR_ID_NOT_REGISTERED, contacts.get(1).getSimlarId());
+        assertEquals(0, contacts.get(1).getStatus());
     }
 }
