@@ -21,9 +21,11 @@
 
 package org.simlar.simlarserver.controllers;
 
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.simlar.simlarserver.services.delaycalculatorservice.DelayCalculatorService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
@@ -43,11 +45,13 @@ final class ContactsController {
     private static final Logger LOGGER                      = Logger.getLogger(ContactsController.class.getName());
 
     private final SubscriberService subscriberService;
+    private final DelayCalculatorService delayCalculatorService;
 
 
     @Autowired
-    private ContactsController(final SubscriberService subscriberService) {
-        this.subscriberService = subscriberService;
+    private ContactsController(final SubscriberService subscriberService, final DelayCalculatorService delayCalculatorService) {
+        this.subscriberService      = subscriberService;
+        this.delayCalculatorService = delayCalculatorService;
     }
 
     /**
@@ -72,7 +76,10 @@ final class ContactsController {
 
         subscriberService.checkCredentialsWithException(login, password);
 
-        return new XmlContacts(SimlarId.parsePipeSeparatedSimlarIds(contacts).stream()
+        final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(contacts);
+        delayCalculatorService.delayRequest(SimlarId.create(login), simlarIds);
+
+        return new XmlContacts(simlarIds.stream()
                 .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
                 .collect(Collectors.toList()));
     }
