@@ -21,7 +21,64 @@
 
 package org.simlar.simlarserver.services.delaycalculatorservice;
 
+import org.simlar.simlarserver.database.models.ContactsRequestCount;
+import org.simlar.simlarserver.database.repositories.ContactsRequestCountRepository;
+import org.simlar.simlarserver.utils.SimlarId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+@Component
 public final class DelayCalculatorService {
+    private static final long RESET_COUNTER_MILLISECONDS = 1000 * 60 * 60 * 24; // reset counter after one day
+
+    private final ContactsRequestCountRepository contactsRequestCountRepository;
+
+    @Autowired
+    public DelayCalculatorService(final ContactsRequestCountRepository contactsRequestCountRepository) {
+        this.contactsRequestCountRepository = contactsRequestCountRepository;
+    }
+
+    int calculateTotalRequestedContacts(final SimlarId simlarId, final Collection<SimlarId> contacts, final Date now) {
+        final List<SimlarId> sortedContacts = SimlarId.sortAndUnifySimlarIds(contacts);
+        return calculateTotalRequestedContacts(simlarId, now, SimlarId.hashSimlarIds(sortedContacts), sortedContacts.size());
+    }
+
+    /// TODO: transaction
+    private int calculateTotalRequestedContacts(final SimlarId simlarId, final Date now, final String hash, final int count) {
+        final ContactsRequestCount saved = contactsRequestCountRepository.findBySimlarId(simlarId.get());
+        final int totalCount = calculateTotalRequestedContacts(saved, now, hash, count);
+        contactsRequestCountRepository.save(new ContactsRequestCount(simlarId, new Timestamp(now.getTime()), hash, totalCount));
+        return totalCount;
+    }
+
+    private static int calculateTotalRequestedContacts(final ContactsRequestCount saved, final Date now, final String hash, final int count) {
+        if (saved == null) {
+            return count;
+        }
+
+        //TODO: Think about time in db
+        final boolean enoughTimeElapsed =  now.getTime() - saved.getTimestamp().getTime() > RESET_COUNTER_MILLISECONDS;
+
+        return calculateTotalRequestedContacts(enoughTimeElapsed, hash.equals(saved.getHash()), saved.getCount(), count);
+    }
+
+    private static int calculateTotalRequestedContacts(final boolean enoughTimeElapsed, final boolean hashIsEqual, final int savedCount, final int count) {
+        if (enoughTimeElapsed) {
+            return count;
+        }
+
+        if (hashIsEqual) {
+            return Math.max(savedCount, count);
+        }
+
+        return savedCount + count;
+    }
+
     static int calculateDelay(final int requestedContacts) {
         if (requestedContacts < 0) {
             return Integer.MAX_VALUE;
