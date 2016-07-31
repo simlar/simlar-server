@@ -23,7 +23,7 @@ package org.simlar.simlarserver.controllers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
@@ -65,28 +65,30 @@ public final class ContactsControllerTest extends BaseControllerTest {
         assertEquals(0, contacts.get(1).getStatus());
     }
 
-    private boolean loginWithWrongCredentials(final String username, final String password) {
+    private void loginWithWrongCredentials(final String username, final String password) {
         final XmlError error = requestContactStatus(XmlError.class, username, password, "*0002*|*0003*");
-        return error != null && error.getId() == 10;
+        assertNotNull(error);
+        assertEquals(10, error.getId());
     }
 
     @Test
     public void loginWithWrongCredentials() {
-        assertTrue(loginWithWrongCredentials(null, "xxxxxxx"));
-        assertTrue(loginWithWrongCredentials("*", "xxxxxxx"));
-        assertTrue(loginWithWrongCredentials(TestUser.get(0).getSimlarId(), null));
-        assertTrue(loginWithWrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx"));
+        loginWithWrongCredentials(null, "xxxxxxx");
+        loginWithWrongCredentials("*", "xxxxxxx");
+        loginWithWrongCredentials(TestUser.get(0).getSimlarId(), null);
+        loginWithWrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx");
     }
 
-    private boolean loginWithEmptyContactList(final String contactList) {
+    private void loginWithEmptyContactList(final String contactList) {
         final XmlContacts response = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), contactList);
-        return response != null && response.getContacts() == null;
+        assertNotNull(response);
+        assertNull(response.getContacts());
     }
 
     @Test
     public void loginWithEmptyContactList() {
-        assertTrue(loginWithEmptyContactList(null));
-        assertTrue(loginWithEmptyContactList(""));
-        assertTrue(loginWithEmptyContactList(TestUser.get(1).getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED));
+        loginWithEmptyContactList(null);
+        loginWithEmptyContactList("");
+        loginWithEmptyContactList(TestUser.get(1).getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED);
     }
 }
