@@ -140,4 +140,18 @@ public final class DelayCalculatorServiceTest {
         assertEquals(3, delayCalculatorService.calculateTotalRequestedContacts(simlarId, Arrays.asList(c, b, a), now));
         assertEquals(3, delayCalculatorService.calculateTotalRequestedContacts(simlarId, Arrays.asList(a, b, c, a), now));
     }
+
+    @Test
+    public void calculateRequestDelay() {
+        final SimlarId simlarId = SimlarId.create("*0004*");
+
+        assertEquals(0, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(2000)));
+        assertEquals(0, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(2001)));
+        assertEquals(1, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(2000)));
+        assertEquals(3, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(2001)));
+        assertEquals(93, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(10000)));
+        assertEquals(93, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(10000)));
+        assertEquals(546, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(10001)));
+        assertEquals(238440, delayCalculatorService.calculateRequestDelay(simlarId, createContacts(100000)));
+    }
 }

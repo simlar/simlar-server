@@ -43,6 +43,10 @@ public final class DelayCalculatorService {
         this.contactsRequestCountRepository = contactsRequestCountRepository;
     }
 
+    int calculateRequestDelay(final SimlarId simlarId, final Collection<SimlarId> contacts) {
+        return calculateDelay(calculateTotalRequestedContacts(simlarId, contacts, new Date()));
+    }
+
     int calculateTotalRequestedContacts(final SimlarId simlarId, final Collection<SimlarId> contacts, final Date now) {
         final List<SimlarId> sortedContacts = SimlarId.sortAndUnifySimlarIds(contacts);
         return calculateTotalRequestedContacts(simlarId, now, SimlarId.hashSimlarIds(sortedContacts), sortedContacts.size());
