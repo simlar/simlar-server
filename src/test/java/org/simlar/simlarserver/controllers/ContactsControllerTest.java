@@ -32,30 +32,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.xml.XmlContact;
-import org.simlar.simlarserver.xml.XmlContacts;
-import org.simlar.simlarserver.xml.XmlError;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 @SuppressFBWarnings({"PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS", "UCPM_USE_CHARACTER_PARAMETERIZED_METHOD"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public final class ContactsControllerTest extends BaseControllerTest {
-
-    @SuppressWarnings("unchecked")
-    private <T> T requestContactStatus(final Class<T> responseClass, final String login, final String password, final String contacts) {
-        final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
-        parameter.add("login", login);
-        parameter.add("password", password);
-        parameter.add("contacts", contacts);
-
-        return postRequest(responseClass, ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter);
-    }
-
+public final class ContactsControllerTest extends ContactsControllerBaseTest {
     private void wrongCredentials(final String username, final String password) {
-        final XmlError error = requestContactStatus(XmlError.class, username, password, "*0002*|*0003*");
-        assertNotNull(error);
-        assertEquals(10, error.getId());
+        assertEquals(10, requestError(username, password, "*0002*|*0003*"));
     }
 
     @Test
@@ -64,12 +47,6 @@ public final class ContactsControllerTest extends BaseControllerTest {
         wrongCredentials("*", "xxxxxxx");
         wrongCredentials(TestUser.get(0).getSimlarId(), null);
         wrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx");
-    }
-
-    private List<XmlContact> requestContactList(final String contactList) {
-        final XmlContacts response = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), contactList);
-        assertNotNull(response);
-        return response.getContacts();
     }
 
     private void emptyContactList(final String contactList) {
