@@ -79,16 +79,16 @@ public final class ContactsControllerTest extends BaseControllerTest {
         loginWithWrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx");
     }
 
-    private void loginWithEmptyContactList(final String contactList) {
+    private void emptyContactList(final String contactList) {
         final XmlContacts response = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), contactList);
         assertNotNull(response);
         assertNull(response.getContacts());
     }
 
     @Test
-    public void loginWithEmptyContactList() {
-        loginWithEmptyContactList(null);
-        loginWithEmptyContactList("");
-        loginWithEmptyContactList(TestUser.get(1).getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED);
+    public void emptyContactList() {
+        emptyContactList(null);
+        emptyContactList("");
+        emptyContactList(TestUser.get(1).getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED);
     }
 }
