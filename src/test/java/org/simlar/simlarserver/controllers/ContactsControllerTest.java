@@ -52,18 +52,18 @@ public final class ContactsControllerTest extends BaseControllerTest {
         return postRequest(responseClass, ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter);
     }
 
-    private void loginWithWrongCredentials(final String username, final String password) {
+    private void wrongCredentials(final String username, final String password) {
         final XmlError error = requestContactStatus(XmlError.class, username, password, "*0002*|*0003*");
         assertNotNull(error);
         assertEquals(10, error.getId());
     }
 
     @Test
-    public void loginWithWrongCredentials() {
-        loginWithWrongCredentials(null, "xxxxxxx");
-        loginWithWrongCredentials("*", "xxxxxxx");
-        loginWithWrongCredentials(TestUser.get(0).getSimlarId(), null);
-        loginWithWrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx");
+    public void wrongCredentials() {
+        wrongCredentials(null, "xxxxxxx");
+        wrongCredentials("*", "xxxxxxx");
+        wrongCredentials(TestUser.get(0).getSimlarId(), null);
+        wrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx");
     }
 
     private void emptyContactList(final String contactList) {
