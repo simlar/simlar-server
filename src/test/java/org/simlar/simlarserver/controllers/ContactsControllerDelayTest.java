@@ -28,6 +28,7 @@ import org.simlar.simlarserver.helper.SimlarIds;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Collection;
@@ -56,6 +57,7 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
         assertEquals(50, requestError(TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), pipeJoin(SimlarIds.createContacts(amount))));
     }
 
+    @DirtiesContext
     @Test
     public void requestTooManyContacts() {
         requestContactListSuccess(23);
