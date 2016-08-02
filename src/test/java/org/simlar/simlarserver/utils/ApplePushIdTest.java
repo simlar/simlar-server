@@ -23,12 +23,19 @@ package org.simlar.simlarserver.utils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 @SuppressWarnings("SpellCheckingInspection")
 public final class ApplePushIdTest {
+    private static final String APPLE_ID="7fd224670ab46d041e08101cd2bc3a5646c252a1dd5bfcb02f667203338f89a9";
+
     @Test
     public void testApplePushIdCheckSuccess() {
+        assertTrue(ApplePushId.check(APPLE_ID));
         assertTrue(ApplePushId.check("7fd224670ab46d041e08101cd2bc3a5646c252a1dd5bfcb02f667203338f89a9"));
         assertTrue(ApplePushId.check("7fd224670ab46d041e08101cd2bc3a5646c252aDdd5bfcb02f6A7203338f89a9"));
         assertTrue(ApplePushId.check("7fd224670ab46d041e08101cd2bc3a5646c252a1dd5bfcb02f667203338FFFFF"));
@@ -51,8 +58,14 @@ public final class ApplePushIdTest {
     }
 
     @Test
-    public void testApplePushIdCreate() {
+    public void testApplePushIdCreateSuccess() {
+        final ApplePushId applePushId = ApplePushId.create(APPLE_ID);
+        assertNotNull(applePushId);
+        assertEquals(APPLE_ID, applePushId.get());
+    }
+
+    @Test
+    public void testApplePushIdCreateFail() {
         assertNull(ApplePushId.create(""));
-        assertNotNull(ApplePushId.create("7fd224670ab46d041e08101cd2bc3a5646c252a1dd5bfcb02f667203338f89a9"));
     }
 }
