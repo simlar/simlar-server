@@ -95,6 +95,12 @@ public final class DelayCalculatorService {
     }
 
     static int calculateDelay(final int requestedContacts) {
+        final int delay = calculateDelayWithoutLog(requestedContacts);
+        LOGGER.info("requestedContactsCount=" + requestedContacts + " -> delay=" + delay);
+        return delay;
+    }
+
+    private static int calculateDelayWithoutLog(final int requestedContacts) {
         if (requestedContacts < 0) {
             return Integer.MAX_VALUE;
         }
