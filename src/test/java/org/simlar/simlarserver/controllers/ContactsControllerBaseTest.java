@@ -50,7 +50,8 @@ public class ContactsControllerBaseTest extends BaseControllerTest {
     }
 
     List<XmlContact> requestContactList(final String contactList) {
-        final XmlContacts response = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), contactList);
+        final TestUser user =  TestUser.get(0);
+        final XmlContacts response = requestContactStatus(XmlContacts.class, user.getSimlarId(), user.getPasswordHash(), contactList);
         assertNotNull(response);
         return response.getContacts();
     }
