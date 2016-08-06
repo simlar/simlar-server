@@ -51,12 +51,12 @@ public final class DelayCalculatorService {
     /// TODO: transaction
     private int calculateTotalRequestedContacts(final SimlarId simlarId, final Date now, final String hash, final int count) {
         final ContactsRequestCount saved = contactsRequestCountRepository.findBySimlarId(simlarId.get());
-        final int totalCount = calculateTotalRequestedContacts(saved, now, hash, count);
+        final int totalCount = calculateTotalRequestedContactsStatic(saved, now, hash, count);
         contactsRequestCountRepository.save(new ContactsRequestCount(simlarId, new Timestamp(now.getTime()), hash, totalCount));
         return totalCount;
     }
 
-    private static int calculateTotalRequestedContacts(final ContactsRequestCount saved, final Date now, final String hash, final int count) {
+    private static int calculateTotalRequestedContactsStatic(final ContactsRequestCount saved, final Date now, final String hash, final int count) {
         if (saved == null) {
             return count;
         }
@@ -64,10 +64,10 @@ public final class DelayCalculatorService {
         //TODO: Think about time in db
         final boolean enoughTimeElapsed =  now.getTime() - saved.getTimestamp().getTime() > RESET_COUNTER_MILLISECONDS;
 
-        return calculateTotalRequestedContacts(enoughTimeElapsed, hash.equals(saved.getHash()), saved.getCount(), count);
+        return calculateTotalRequestedContactsStatic(enoughTimeElapsed, hash.equals(saved.getHash()), saved.getCount(), count);
     }
 
-    private static int calculateTotalRequestedContacts(final boolean enoughTimeElapsed, final boolean hashIsEqual, final int savedCount, final int count) {
+    private static int calculateTotalRequestedContactsStatic(final boolean enoughTimeElapsed, final boolean hashIsEqual, final int savedCount, final int count) {
         if (enoughTimeElapsed) {
             return count;
         }
