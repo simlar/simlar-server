@@ -29,7 +29,6 @@ import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionRequestedTooManyContacts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -83,7 +82,7 @@ public final class DelayCalculatorService {
         return calculateTotalRequestedContacts(simlarId, now, SimlarId.hashSimlarIds(sortedContacts), sortedContacts.size());
     }
 
-    @Transactional // TODO: rtfm
+    /// TODO: transaction
     private int calculateTotalRequestedContacts(final SimlarId simlarId, final Date now, final String hash, final int count) {
         final ContactsRequestCount saved = contactsRequestCountRepository.findBySimlarId(simlarId.get());
         final int totalCount = calculateTotalRequestedContactsStatic(saved, now, hash, count);
