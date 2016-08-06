@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.utils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.util.StringUtils;
 
 public final class ApplePushId {
@@ -44,6 +45,7 @@ public final class ApplePushId {
         return pushId;
     }
 
+    @SuppressFBWarnings("OPM_OVERLY_PERMISSIVE_METHOD") // false positive
     public static boolean check(final String str) {
         return StringUtils.hasText(str) && str.matches("^[0-9a-fA-F]{64}$");
     }
