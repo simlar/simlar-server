@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="simlar server" type="Application" factoryName="Application" singleton="true">
+  <configuration default="false" name="server" type="Application" factoryName="Application" singleton="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="MAIN_CLASS_NAME" value="org.simlar.simlarserver.Application" />
     <option name="VM_PARAMETERS" value="" />
