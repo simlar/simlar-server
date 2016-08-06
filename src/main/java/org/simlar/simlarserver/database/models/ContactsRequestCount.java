@@ -54,13 +54,13 @@ public final class ContactsRequestCount {
 
     public ContactsRequestCount(final SimlarId simlarId, final Timestamp timestamp, final String hash, final int count) {
         this.simlarId = simlarId.get();
-        this.timestamp = timestamp;
+        this.timestamp = new Timestamp(timestamp.getTime());
         this.hash = hash;
         this.count = count;
     }
 
     public Timestamp getTimestamp() {
-        return timestamp;
+        return new Timestamp(timestamp.getTime());
     }
 
     public String getHash() {
