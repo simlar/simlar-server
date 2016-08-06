@@ -73,6 +73,7 @@ dependencies {
 findbugs {
     effort = "max"
     reportLevel = "low"
+    excludeFilter = file("$rootProject.projectDir/ides/findbugs/excludeFilter.xml")
 }
 
 tasks.withType(FindBugs) {
