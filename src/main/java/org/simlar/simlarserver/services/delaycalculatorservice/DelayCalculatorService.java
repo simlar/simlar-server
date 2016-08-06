@@ -29,6 +29,8 @@ import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionRequestedTooManyContacts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -45,10 +47,12 @@ public final class DelayCalculatorService {
     private static final int DELAY_LIMIT = 8;
 
     private final ContactsRequestCountRepository contactsRequestCountRepository;
+    private final TransactionTemplate transactionTemplate;
 
     @Autowired
-    public DelayCalculatorService(final ContactsRequestCountRepository contactsRequestCountRepository) {
+    public DelayCalculatorService(final ContactsRequestCountRepository contactsRequestCountRepository, final PlatformTransactionManager transactionManager) {
         this.contactsRequestCountRepository = contactsRequestCountRepository;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
     @SuppressFBWarnings("LEST_LOST_EXCEPTION_STACK_TRACE")
@@ -79,15 +83,17 @@ public final class DelayCalculatorService {
 
     int calculateTotalRequestedContacts(final SimlarId simlarId, final Collection<SimlarId> contacts, final Date now) {
         final List<SimlarId> sortedContacts = SimlarId.sortAndUnifySimlarIds(contacts);
-        return calculateTotalRequestedContacts(simlarId, now, SimlarId.hashSimlarIds(sortedContacts), sortedContacts.size());
+        final Integer count = calculateTotalRequestedContacts(simlarId, now, SimlarId.hashSimlarIds(sortedContacts), sortedContacts.size());
+        return count == null ? Integer.MAX_VALUE : count;
     }
 
-    /// TODO: transaction
-    private int calculateTotalRequestedContacts(final SimlarId simlarId, final Date now, final String hash, final int count) {
-        final ContactsRequestCount saved = contactsRequestCountRepository.findBySimlarId(simlarId.get());
-        final int totalCount = calculateTotalRequestedContactsStatic(saved, now, hash, count);
-        contactsRequestCountRepository.save(new ContactsRequestCount(simlarId, new Timestamp(now.getTime()), hash, totalCount));
-        return totalCount;
+    private Integer calculateTotalRequestedContacts(final SimlarId simlarId, final Date now, final String hash, final int count) {
+        return transactionTemplate.execute(status -> {
+            final ContactsRequestCount saved = contactsRequestCountRepository.findBySimlarId(simlarId.get());
+            final int totalCount = calculateTotalRequestedContactsStatic(saved, now, hash, count);
+            contactsRequestCountRepository.save(new ContactsRequestCount(simlarId, new Timestamp(now.getTime()), hash, totalCount));
+            return totalCount;
+        });
     }
 
     private static int calculateTotalRequestedContactsStatic(final ContactsRequestCount saved, final Date now, final String hash, final int count) {
