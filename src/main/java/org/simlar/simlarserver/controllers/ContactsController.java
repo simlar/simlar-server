@@ -22,6 +22,8 @@
 package org.simlar.simlarserver.controllers;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,7 @@ import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionRequestedTooManyContacts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
 final class ContactsController {
     public static final String  REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
     private static final Logger LOGGER                      = Logger.getLogger(ContactsController.class.getName());
+    private static final int    DELAY_LIMIT                 = 8;
 
     private final SubscriberService subscriberService;
     private final DelayCalculatorService delayCalculatorService;
@@ -71,16 +75,33 @@ final class ContactsController {
      *            error message or contact list in xml
      */
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    public XmlContacts getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlErrorException {
+    public Callable<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlErrorException {
         LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
 
         final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(contacts);
-        delayCalculatorService.delayRequest(SimlarId.create(login), simlarIds);
+        final int delay = delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds);
+        if (delay > DELAY_LIMIT) {
+            throw new XmlErrorExceptionRequestedTooManyContacts("request delay=" + delay + " blocking simlarId=" + login);
+        }
 
-        return new XmlContacts(simlarIds.stream()
-                .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
-                .collect(Collectors.toList()));
+
+        return () -> {
+            if (delay > 0) {
+                LOGGER.info("request delay=" + delay + " blocking simlarId=" + login);
+                // TODO: think about
+                try {
+                    Thread.sleep(delay * 1000L);
+                } catch (final InterruptedException e) {
+                    LOGGER.log(Level.SEVERE, "InterruptedException simlarId=" + login + " delay=" + delay + "seconds", e);
+                    throw new XmlErrorExceptionRequestedTooManyContacts("interrupted request delay=" + delay + " blocking simlarId=" + login);
+                }
+            }
+
+            return new XmlContacts(simlarIds.stream()
+                    .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
+                    .collect(Collectors.toList()));
+        };
     }
 }

@@ -21,12 +21,9 @@
 
 package org.simlar.simlarserver.services.delaycalculatorservice;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.simlar.simlarserver.database.models.ContactsRequestCount;
 import org.simlar.simlarserver.database.repositories.ContactsRequestCountRepository;
 import org.simlar.simlarserver.utils.SimlarId;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionRequestedTooManyContacts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -36,7 +33,6 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Component
@@ -44,7 +40,6 @@ public final class DelayCalculatorService {
     private static final Logger LOGGER = Logger.getLogger(DelayCalculatorService.class.getName());
 
     private static final long RESET_COUNTER_MILLISECONDS = 1000 * 60 * 60 * 24; // reset counter after one day
-    private static final int DELAY_LIMIT = 8;
 
     private final ContactsRequestCountRepository contactsRequestCountRepository;
     private final TransactionTemplate transactionTemplate;
@@ -55,29 +50,7 @@ public final class DelayCalculatorService {
         this.transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
-    @SuppressFBWarnings("LEST_LOST_EXCEPTION_STACK_TRACE")
-    public void delayRequest(final SimlarId simlarId, final Collection<SimlarId> contacts) throws XmlErrorException {
-        final int delay = calculateRequestDelay(simlarId, contacts);
-        if (delay > DELAY_LIMIT) {
-            throw new XmlErrorExceptionRequestedTooManyContacts("request delay=" + delay + " blocking simlarId=" + simlarId);
-        }
-
-        if (delay <= 0) {
-            return;
-        }
-
-
-        LOGGER.info("request delay=" + delay + " blocking simlarId=" + simlarId);
-        // TODO: think about
-        try {
-            Thread.sleep(delay * 1000L);
-        } catch (final InterruptedException e) {
-            LOGGER.log(Level.SEVERE, "InterruptedException simlarId=" + simlarId + " delay=" + delay + "seconds", e);
-            throw new XmlErrorExceptionRequestedTooManyContacts("interrupted request delay=" + delay + " blocking simlarId=" + simlarId);
-        }
-    }
-
-    int calculateRequestDelay(final SimlarId simlarId, final Collection<SimlarId> contacts) {
+    public int calculateRequestDelay(final SimlarId simlarId, final Collection<SimlarId> contacts) {
         return calculateDelay(calculateTotalRequestedContacts(simlarId, contacts, new Date()));
     }
 
