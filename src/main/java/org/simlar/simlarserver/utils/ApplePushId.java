@@ -40,7 +40,6 @@ public final class ApplePushId {
         return new ApplePushId(pushId);
     }
 
-    @SuppressWarnings("unused")
     public String get() {
         return pushId;
     }
