@@ -21,9 +21,8 @@
 
 package org.simlar.simlarserver.controllers;
 
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -37,25 +36,30 @@ import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionRequestedTooManyContacts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
 @RestController
 final class ContactsController {
     public static final String  REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
     private static final Logger LOGGER                      = Logger.getLogger(ContactsController.class.getName());
-    private static final int    DELAY_LIMIT                 = 8;
+    private static final int    DELAY_MAXIMUM               = 8; // seconds
+    private static final long   DELAY_MINIMUM               = 10; // milliseconds
 
     private final SubscriberService subscriberService;
     private final DelayCalculatorService delayCalculatorService;
+    private final TaskScheduler taskScheduler;
 
 
     @Autowired
-    private ContactsController(final SubscriberService subscriberService, final DelayCalculatorService delayCalculatorService) {
+    private ContactsController(final SubscriberService subscriberService, final DelayCalculatorService delayCalculatorService, final TaskScheduler taskScheduler) {
         this.subscriberService      = subscriberService;
         this.delayCalculatorService = delayCalculatorService;
+        this.taskScheduler          = taskScheduler;
     }
 
     /**
@@ -75,33 +79,32 @@ final class ContactsController {
      *            error message or contact list in xml
      */
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    public Callable<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlErrorException {
+    public DeferredResult<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlErrorException {
         LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
 
         final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(contacts);
         final int delay = delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds);
-        if (delay > DELAY_LIMIT) {
+        if (delay > DELAY_MAXIMUM) {
             throw new XmlErrorExceptionRequestedTooManyContacts("request delay=" + delay + " blocking simlarId=" + login);
         }
 
+        final DeferredResult<XmlContacts> deferredResult = new DeferredResult<>();
+        final long delayMillis = delay <= 0 ? DELAY_MINIMUM : delay * 1000L;
 
-        return () -> {
-            if (delay > 0) {
-                LOGGER.info("request delay=" + delay + " blocking simlarId=" + login);
-                // TODO: think about
-                try {
-                    Thread.sleep(delay * 1000L);
-                } catch (final InterruptedException e) {
-                    LOGGER.log(Level.SEVERE, "InterruptedException simlarId=" + login + " delay=" + delay + "seconds", e);
-                    throw new XmlErrorExceptionRequestedTooManyContacts("interrupted request delay=" + delay + " blocking simlarId=" + login);
-                }
+        taskScheduler.schedule(() -> {
+            if (deferredResult.isSetOrExpired()) {
+                LOGGER.severe("deferred result already set or expired simlarId=" + login + " delay=" + delay + " seconds");
+            } else {
+                deferredResult.setResult(
+                        new XmlContacts(simlarIds.stream()
+                                .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
+                                .collect(Collectors.toList()))
+                );
             }
+        }, new Date(new Date().getTime() + delayMillis));
 
-            return new XmlContacts(simlarIds.stream()
-                    .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
-                    .collect(Collectors.toList()));
-        };
+        return deferredResult;
     }
 }
