@@ -21,6 +21,9 @@
 
 package org.simlar.simlarserver.controllers;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -91,7 +94,7 @@ final class ContactsController {
         }
 
         final long delayMillis = delay <= 0 ? DELAY_MINIMUM : delay * 1000L;
-        final Date date = new Date(new Date().getTime() + delayMillis);
+        final LocalDateTime date = LocalDateTime.now().plus(delayMillis, ChronoUnit.MILLIS);
         LOGGER.info("scheduling getContactStatus to: " + date);
 
         final DeferredResult<XmlContacts> deferredResult = new DeferredResult<>();
@@ -106,7 +109,7 @@ final class ContactsController {
                                 .collect(Collectors.toList()))
                 );
             }
-        }, date);
+        }, Date.from(date.atZone(ZoneId.systemDefault()).toInstant()));
 
         return deferredResult;
     }

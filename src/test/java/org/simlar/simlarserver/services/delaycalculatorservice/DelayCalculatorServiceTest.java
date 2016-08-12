@@ -31,8 +31,8 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -76,7 +76,7 @@ public final class DelayCalculatorServiceTest {
     @Test
     public void calculateTotalRequestedContactsIncrement() {
         final SimlarId simlarId = SimlarId.create("*0001*");
-        final Date now = new Date();
+        final LocalDateTime now = LocalDateTime.now();
 
         assertEquals(0, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(0), now));
         assertEquals(1, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(1), now));
@@ -89,8 +89,8 @@ public final class DelayCalculatorServiceTest {
     @Test
     public void calculateTotalRequestedContactsDecreaseAfterADay() {
         final SimlarId simlarId = SimlarId.create("*0002*");
-        final Date now = new Date();
-        final Date dayAfter = new Date(now.getTime() + 1000 * 60 * 60 * 24 + 1000);
+        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime dayAfter = LocalDateTime.now().plusDays(1).plusSeconds(2);
 
         assertEquals(8, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(8), now));
         assertEquals(4, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(4), dayAfter));
@@ -102,7 +102,7 @@ public final class DelayCalculatorServiceTest {
         final SimlarId a = SimlarId.create("*0002*");
         final SimlarId b = SimlarId.create("*0003*");
         final SimlarId c = SimlarId.create("*0004*");
-        final Date now = new Date();
+        final LocalDateTime now = LocalDateTime.now();
 
         assertEquals(3, delayCalculatorService.calculateTotalRequestedContacts(simlarId, Arrays.asList(a, b, c), now));
         assertEquals(3, delayCalculatorService.calculateTotalRequestedContacts(simlarId, Arrays.asList(b, a, c), now));
