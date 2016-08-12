@@ -114,6 +114,9 @@
     <inspection_tool class="NonFinalUtilityClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="NonPublicClone" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="NoopMethodInAbstractClass" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ObsoleteCollection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreRequiredObsoleteCollectionTypes" value="false" />
+    </inspection_tool>
     <inspection_tool class="OverlyStrongTypeCast" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreInMatchingInstanceof" value="false" />
     </inspection_tool>
@@ -127,6 +130,9 @@
     <inspection_tool class="StaticMethodOnlyUsedInOneClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="StaticNonFinalField" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="StaticVariableOfConcreteClass" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="SystemOutErr" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ThreadDumpStack" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ThrowablePrintStackTrace" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="TypeMayBeWeakened" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="useRighthandTypeAsWeakestTypeInAssignments" value="true" />
       <option name="useParameterizedTypeForCollectionMethods" value="true" />
@@ -134,6 +140,7 @@
       <option name="onlyWeakentoInterface" value="true" />
     </inspection_tool>
     <inspection_tool class="UseOfClone" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="UseOfObsoleteDateTimeApi" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UtilityClass" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignorableAnnotations">
         <value />
