@@ -23,10 +23,12 @@ package org.simlar.simlarserver.utils;
 
 import org.springframework.util.StringUtils;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -74,7 +76,8 @@ public final class SimlarId {
             return null;
         }
 
-        return simlarIds.stream().sorted((o1, o2) -> o1.get().compareTo(o2.get())).distinct().collect(Collectors.toList());
+        final Collator collator = Collator.getInstance(new Locale("en","US"));
+        return simlarIds.stream().sorted((o1, o2) -> collator.compare(o1.get(), o2.get())).distinct().collect(Collectors.toList());
     }
 
     public static String hashSimlarIds(final Collection<SimlarId> simlarIds) {
