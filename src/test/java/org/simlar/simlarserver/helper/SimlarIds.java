@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("JUnitTestClassNamingConvention")
 public final class SimlarIds {
     public static Collection<SimlarId> createContacts(final int amount) {
         if (amount <= 0) {
