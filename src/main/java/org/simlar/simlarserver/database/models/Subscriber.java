@@ -35,8 +35,8 @@ import javax.persistence.UniqueConstraint;
 @SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
 @Entity
 @Table(name = "subscriber",
-        uniqueConstraints = { @UniqueConstraint(name = "account_idx", columnNames = { "username", "domain" }) },
-        indexes = {@Index(name = "username_idx",  columnList="username") })
+       uniqueConstraints = @UniqueConstraint(name = "account_idx", columnNames = {"username", "domain"}),
+       indexes = @Index(name = "username_idx", columnList = "username"))
 public class Subscriber {
 
     @Id
