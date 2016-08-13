@@ -220,10 +220,30 @@
     <inspection_tool class="OverlyStrongTypeCast" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreInMatchingInstanceof" value="false" />
     </inspection_tool>
+    <inspection_tool class="PackageVisibleField" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PackageVisibleInnerClass" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreEnums" value="false" />
+      <option name="ignoreInterfaces" value="false" />
+    </inspection_tool>
     <inspection_tool class="PointlessIndexOfComparison" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PointlessNullCheck" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ProtectedField" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ProtectedInnerClass" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreEnums" value="false" />
+      <option name="ignoreInterfaces" value="false" />
+    </inspection_tool>
     <inspection_tool class="ProtectedMemberInFinalClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PublicConstructorInNonPublicClass" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PublicField" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreEnums" value="false" />
+      <option name="ignorableAnnotations">
+        <value />
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PublicInnerClass" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreEnums" value="false" />
+      <option name="ignoreInterfaces" value="false" />
+    </inspection_tool>
     <inspection_tool class="RedundantFieldInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="RedundantImplements" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreSerializable" value="false" />
@@ -234,6 +254,10 @@
       <option name="ignoreLazyOperators" value="true" />
       <option name="ignoreObscureOperators" value="false" />
     </inspection_tool>
+    <inspection_tool class="ReturnOfCollectionField" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignorePrivateMethods" value="true" />
+    </inspection_tool>
+    <inspection_tool class="ReturnOfDateField" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ReturnThis" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ReuseOfLocalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SimplifiableAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -303,6 +327,10 @@
     <inspection_tool class="UnnecessaryToStringCall" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnqualifiedInnerClassAccess" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreReferencesToLocalInnerClasses" value="false" />
+    </inspection_tool>
+    <inspection_tool class="UseOfAnotherObjectsPrivateField" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreSameClass" value="true" />
+      <option name="ignoreEquals" value="false" />
     </inspection_tool>
     <inspection_tool class="UseOfClone" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UseOfObsoleteDateTimeApi" enabled="true" level="WARNING" enabled_by_default="true" />
