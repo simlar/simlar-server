@@ -91,6 +91,7 @@ public final class SimlarIdTest {
     }
 
     @Test
+    @SuppressWarnings("TooBroadScope")
     public void testParsePipeSeparatedSimlarIds() {
         final String s1 = "*0001*";
         final String s2 = "*0002*";
