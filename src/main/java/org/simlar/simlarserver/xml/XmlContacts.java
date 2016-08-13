@@ -21,6 +21,8 @@
 
 package org.simlar.simlarserver.xml;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
@@ -42,8 +44,9 @@ public final class XmlContacts {
         return contacts;
     }
 
+    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
     @SuppressWarnings("unused")
-    public void setContacts(final List<XmlContact> contacts) {
+    private void setContacts(final List<XmlContact> contacts) {
         this.contacts = contacts;
     }
 }
