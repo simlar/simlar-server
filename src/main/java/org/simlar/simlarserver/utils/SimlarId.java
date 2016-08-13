@@ -59,7 +59,7 @@ public final class SimlarId {
 
         if (str != null) {
             for (final String entry : str.split("\\|")) {
-                final SimlarId simlarId = SimlarId.create(entry.trim());
+                final SimlarId simlarId = create(entry.trim());
                 if (simlarId != null) {
                     simlarIds.add(simlarId);
                 }
