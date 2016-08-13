@@ -39,7 +39,7 @@ public final class ContactsRequestCount {
     @Column(nullable = false, length = 64)
     private String simlarId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
     private Timestamp timestamp;
 
     @Column(nullable = false, length = 64)

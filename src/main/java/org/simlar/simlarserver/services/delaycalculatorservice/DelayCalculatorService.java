@@ -75,7 +75,6 @@ public final class DelayCalculatorService {
             return count;
         }
 
-        //TODO: Think about time in db
         final boolean enoughTimeElapsed = ChronoUnit.SECONDS.between(saved.getTimestamp(), now) > RESET_COUNTER_SECONDS;
 
         return calculateTotalRequestedContactsStatic(enoughTimeElapsed, hash.equals(saved.getHash()), saved.getCount(), count);
