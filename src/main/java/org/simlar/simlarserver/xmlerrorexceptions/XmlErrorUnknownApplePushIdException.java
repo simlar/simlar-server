@@ -19,10 +19,10 @@
  *
  */
 
-package org.simlar.simlarserver.xmlerrorexception;
+package org.simlar.simlarserver.xmlerrorexceptions;
 
-public final class XmlErrorUnknownPushIdTypeException extends XmlErrorException {
-    public XmlErrorUnknownPushIdTypeException(final String message) {
+public final class XmlErrorUnknownApplePushIdException extends XmlErrorException {
+    public XmlErrorUnknownApplePushIdException(final String message) {
         super(message);
     }
 }

@@ -22,8 +22,8 @@
 package org.simlar.simlarserver.controllers;
 
 import org.simlar.simlarserver.xml.XmlError;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorExceptionClientResponse;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -21,11 +21,11 @@
 
 package org.simlar.simlarserver.xmlerrorexceptionclientresponse;
 
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorRequestedTooManyContactsException;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorUnknownApplePushIdException;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorUnknownPushIdTypeException;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorWrongCredentialsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 
 import java.util.HashMap;
 import java.util.Map;

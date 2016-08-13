@@ -26,7 +26,7 @@ import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorRequestedTooManyContactsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.TaskScheduler;

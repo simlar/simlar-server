@@ -27,8 +27,8 @@ import org.simlar.simlarserver.database.repositories.PushNotificationsRepository
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.ApplePushId;
 import org.simlar.simlarserver.xml.XmlSuccessPushNotification;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorUnknownApplePushIdException;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorUnknownPushIdTypeException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
