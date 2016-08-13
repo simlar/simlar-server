@@ -54,8 +54,8 @@ public class Subscriber {
     @Column(nullable = false, length = 64)
     private String password;
 
-    @Column(nullable = false, length = 64)
-    private String email_address;
+    @Column(nullable = false, length = 64, name = "email_address")
+    private String emailAddress;
 
     @Column(nullable = false, length = 64)
     private String ha1;
@@ -73,11 +73,11 @@ public class Subscriber {
     }
 
     @SuppressWarnings({"SameParameterValue", "ConstructorWithTooManyParameters"})
-    public Subscriber(final String username, final String domain, final String password, final String email_address, final String ha1, final String ha1b) {
+    public Subscriber(final String username, final String domain, final String password, final String emailAddress, final String ha1, final String ha1b) {
         this.username = username;
         this.domain = domain;
         this.password = password;
-        this.email_address = email_address;
+        this.emailAddress = emailAddress;
         this.ha1 = ha1;
         this.ha1b = ha1b;
     }
