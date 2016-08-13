@@ -63,7 +63,7 @@ public final class ErrorControllerTest extends BaseControllerTest {
     }
 
     private boolean testHttpGet(final String requestUrl) {
-        final String result = new RestTemplate().getForObject("http://localhost:" + port + '/' + requestUrl, String.class);
+        final String result = new RestTemplate().getForObject(getBaseUrl() + requestUrl, String.class);
         assertNotNull(result);
 
         try {
@@ -81,9 +81,10 @@ public final class ErrorControllerTest extends BaseControllerTest {
     @Test
     public void httpGetRequest() {
         assertTrue(testHttpGet(""));
+        assertTrue(testHttpGet("/"));
         assertTrue(testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS + "x"));
-        assertTrue(testHttpGet("index"));
-        assertTrue(testHttpGet("index.html"));
+        assertTrue(testHttpGet("/index"));
+        assertTrue(testHttpGet("/index.html"));
         assertTrue(testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS));
     }
 }

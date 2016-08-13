@@ -40,10 +40,10 @@ public class BaseControllerTest {
 
     @SuppressWarnings("CanBeFinal")
     @Value("${local.server.port}")
-    int port;
+    private int port;
 
     <T> T postRequest(final Class<T> responseClass, final String url, final MultiValueMap<String, String> parameter) {
-        final String result = new RestTemplate().postForObject("http://localhost:" + port + url, parameter,
+        final String result = new RestTemplate().postForObject(getBaseUrl() + url, parameter,
                 String.class);
 
         if (result == null) {
@@ -60,5 +60,9 @@ public class BaseControllerTest {
             LOGGER.severe("ClassCastException for postResult: " + result);
             return null;
         }
+    }
+
+    String getBaseUrl() {
+        return "http://localhost:" + port;
     }
 }
