@@ -39,6 +39,7 @@ import javax.persistence.UniqueConstraint;
        indexes = @Index(name = "username_idx", columnList = "username"))
 public class Subscriber {
 
+    @SuppressWarnings("FieldHasSetterButNoGetter")
     @Id
     @GeneratedValue
     @Column(nullable = false, columnDefinition = "int(10)")
