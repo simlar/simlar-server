@@ -21,8 +21,8 @@
 
 package org.simlar.simlarserver.xmlerrorexception;
 
-public final class XmlErrorExceptionUnknownApplePushId extends XmlErrorException {
-    public XmlErrorExceptionUnknownApplePushId(final String message) {
+public final class XmlErrorRequestedTooManyContactsException extends XmlErrorException {
+    public XmlErrorRequestedTooManyContactsException(final String message) {
         super(message);
     }
 }

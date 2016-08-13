@@ -21,8 +21,8 @@
 
 package org.simlar.simlarserver.xmlerrorexception;
 
-public final class XmlErrorExceptionUnknownPushIdType extends XmlErrorException {
-    public XmlErrorExceptionUnknownPushIdType(final String message) {
+public final class XmlErrorWrongCredentialsException extends XmlErrorException {
+    public XmlErrorWrongCredentialsException(final String message) {
         super(message);
     }
 }

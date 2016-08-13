@@ -26,7 +26,7 @@ import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.utils.Hash;
 import org.simlar.simlarserver.utils.SimlarId;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionWrongCredentials;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorWrongCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -105,7 +105,7 @@ public final class SubscriberService {
 
     public void checkCredentialsWithException(final String simlarId, final String ha1) {
         if (!checkCredentials(simlarId, ha1)) {
-            throw new XmlErrorExceptionWrongCredentials("simlarId='" + simlarId + '\'');
+            throw new XmlErrorWrongCredentialsException("simlarId='" + simlarId + '\'');
         }
     }
 

@@ -26,7 +26,7 @@ import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionRequestedTooManyContacts;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorRequestedTooManyContactsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.TaskScheduler;
@@ -88,7 +88,7 @@ final class ContactsController {
         final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(contacts);
         final int delay = delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds);
         if (delay > DELAY_MAXIMUM) {
-            throw new XmlErrorExceptionRequestedTooManyContacts("request delay=" + delay + " blocking simlarId=" + login);
+            throw new XmlErrorRequestedTooManyContactsException("request delay=" + delay + " blocking simlarId=" + login);
         }
 
         final long delayMillis = delay <= 0 ? DELAY_MINIMUM : delay * 1000L;

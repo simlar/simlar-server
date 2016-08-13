@@ -27,8 +27,8 @@ import org.simlar.simlarserver.database.repositories.PushNotificationsRepository
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.ApplePushId;
 import org.simlar.simlarserver.xml.XmlSuccessPushNotification;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionUnknownApplePushId;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionUnknownPushIdType;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorUnknownApplePushIdException;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorUnknownPushIdTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,11 +80,11 @@ final class PushNotificationsController {
 
         final DeviceType checkedType = DeviceType.fromInt(deviceType);
         if (checkedType == null) {
-            throw new XmlErrorExceptionUnknownPushIdType("deviceType='" + deviceType + '\'');
+            throw new XmlErrorUnknownPushIdTypeException("deviceType='" + deviceType + '\'');
         }
 
         if (checkedType.isIos() && !ApplePushId.check(pushId)) {
-            throw new XmlErrorExceptionUnknownApplePushId("pushId='" + pushId + '\'');
+            throw new XmlErrorUnknownApplePushIdException("pushId='" + pushId + '\'');
         }
 
         pushNotificationsRepository.save(new PushNotification(login, checkedType, pushId));
