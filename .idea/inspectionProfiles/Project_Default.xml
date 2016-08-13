@@ -17,6 +17,7 @@
       <option name="m_limit" value="1" />
     </inspection_tool>
     <inspection_tool class="AnonymousInnerClass" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="AnonymousInnerClassMayBeStatic" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ArrayLengthInLoopCondition" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AssertAsName" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AssertEqualsCalledOnArray" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -210,6 +211,7 @@
     </inspection_tool>
     <inspection_tool class="ImplicitDefaultCharsetUsage" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="IncrementDecrementUsedAsExpression" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="InnerClassMayBeStatic" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="InnerClassOnInterface" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_ignoreInnerInterfaces" value="false" />
     </inspection_tool>
@@ -399,6 +401,7 @@
       <option name="ignorePrivateMethods" value="true" />
     </inspection_tool>
     <inspection_tool class="ReturnOfDateField" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ReturnOfInnerClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ReturnThis" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ReuseOfLocalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SamePackageImport" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -411,6 +414,9 @@
     <inspection_tool class="SingleCharacterStartsWith" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="Singleton" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SizeReplaceableByIsEmpty" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="StaticCollection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_ignoreWeakCollections" value="false" />
+    </inspection_tool>
     <inspection_tool class="StaticGuardedByInstance" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="StaticImport" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreSingleFieldImports" value="true" />
@@ -427,6 +433,7 @@
     <inspection_tool class="StaticVariableUninitializedUse" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_ignorePrimitives" value="false" />
     </inspection_tool>
+    <inspection_tool class="StringBufferField" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="StringCompareTo" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="StringConcatenationArgumentToLogCall" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="StringToUpperWithoutLocale" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -448,6 +455,7 @@
     <inspection_tool class="SwitchStatementsWithoutDefault" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_ignoreFullyCoveredEnums" value="true" />
     </inspection_tool>
+    <inspection_tool class="SystemGC" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SystemOutErr" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="TeardownCallsSuperTeardown" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="TeardownIsPublicVoidNoArg" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -548,5 +556,6 @@
       </option>
       <option name="ignoreClassesWithOnlyMain" value="false" />
     </inspection_tool>
+    <inspection_tool class="ZeroLengthArrayInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
   </profile>
 </component>
