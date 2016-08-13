@@ -46,6 +46,7 @@ public final class SubscriberServiceTest {
 
     @Test
     public void save() {
+        @SuppressWarnings("TooBroadScope")
         final String simlarId = "*0000*";
 
         assertFalse(subscriberService.save(null, null));
@@ -56,6 +57,7 @@ public final class SubscriberServiceTest {
         assertTrue(subscriberService.save(SimlarId.create(simlarId), "FdUfFjH34gd3"));
     }
 
+    @SuppressWarnings("TooBroadScope")
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void checkCredentials() {
