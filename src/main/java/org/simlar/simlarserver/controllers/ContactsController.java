@@ -26,7 +26,6 @@ import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionRequestedTooManyContacts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -81,7 +80,7 @@ final class ContactsController {
      *            error message or contact list in xml
      */
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    public DeferredResult<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlErrorException {
+    public DeferredResult<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
         LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);

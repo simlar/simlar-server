@@ -27,7 +27,6 @@ import org.simlar.simlarserver.database.repositories.PushNotificationsRepository
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.ApplePushId;
 import org.simlar.simlarserver.xml.XmlSuccessPushNotification;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionUnknownApplePushId;
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionUnknownPushIdType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +73,7 @@ final class PushNotificationsController {
      */
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = REQUEST_URL_STORE_PUSH_ID, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    public XmlSuccessPushNotification getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final int deviceType, @RequestParam final String pushId) throws XmlErrorException {
+    public XmlSuccessPushNotification getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final int deviceType, @RequestParam final String pushId) {
         LOGGER.info(REQUEST_URL_STORE_PUSH_ID + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
