@@ -319,6 +319,7 @@
       <option name="m_ignoreFullyCoveredEnums" value="true" />
     </inspection_tool>
     <inspection_tool class="SystemOutErr" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="TestOnlyProblems" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ThreadDeathRethrown" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ThreadDumpStack" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ThrowCaughtLocally" enabled="true" level="WARNING" enabled_by_default="true">
