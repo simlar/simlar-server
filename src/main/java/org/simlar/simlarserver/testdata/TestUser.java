@@ -21,30 +21,22 @@
 
 package org.simlar.simlarserver.testdata;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+public enum TestUser {
+    U1("*0001*", "x1fg6hk78", "5c3d66f5a3928cca2821d711a2c016bb"),
+    U2("*0002*", "fdfho21j3", "6e5a610112a88a001e14fb4bce3fd8af"),
+    U3("*0003*", "r4cu3sum5", "3e05c148ee4f6e5bcb2bbad98c43d704");
 
-public final class TestUser {
+
     public static final String SIMLAR_ID_NOT_REGISTERED = "*1000*";
-    public static final List<TestUser> USERS = Collections.unmodifiableList(Arrays.asList(
-            new TestUser("*0001*", "x1fg6hk78", "5c3d66f5a3928cca2821d711a2c016bb"),
-            new TestUser("*0002*", "fdfho21j3", "6e5a610112a88a001e14fb4bce3fd8af"),
-            new TestUser("*0003*", "r4cu3sum5", "3e05c148ee4f6e5bcb2bbad98c43d704")
-    ));
 
     private final String simlarId;
     private final String password;
     private final String passwordHash;
 
-    private TestUser(final String simlarId, final String password, final String passwordHash) {
+    TestUser(final String simlarId, final String password, final String passwordHash) {
         this.simlarId     = simlarId;
         this.password     = password;
         this.passwordHash = passwordHash;
-    }
-
-    public static TestUser get(final int i) {
-        return USERS.get(i);
     }
 
     public String getSimlarId() {

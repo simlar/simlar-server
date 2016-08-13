@@ -45,27 +45,27 @@ public final class ContactsControllerTest extends ContactsControllerBaseTest {
     public void wrongCredentials() {
         wrongCredentials(null, "xxxxxxx");
         wrongCredentials("*", "xxxxxxx");
-        wrongCredentials(TestUser.get(0).getSimlarId(), null);
-        wrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx");
+        wrongCredentials(TestUser.U1.getSimlarId(), null);
+        wrongCredentials(TestUser.U1.getSimlarId(), "xxxxxxx");
     }
 
     private void emptyContactList(final String contactList) {
-        assertNull(requestContactList(TestUser.get(0), contactList));
+        assertNull(requestContactList(TestUser.U1, contactList));
     }
 
     @Test
     public void emptyContactList() {
         emptyContactList(null);
         emptyContactList("");
-        emptyContactList(TestUser.get(1).getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED);
+        emptyContactList(TestUser.U2.getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED);
     }
 
     @Test
     public void receiveContactsStatus() {
-        final List<XmlContact> contacts = requestContactList(TestUser.get(0), TestUser.get(1).getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
+        final List<XmlContact> contacts = requestContactList(TestUser.U1, TestUser.U2.getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
         assertNotNull(contacts);
         assertEquals(2, contacts.size());
-        assertEquals(TestUser.get(1).getSimlarId(), contacts.get(0).getSimlarId());
+        assertEquals(TestUser.U2.getSimlarId(), contacts.get(0).getSimlarId());
         assertEquals(1, contacts.get(0).getStatus());
         assertEquals(TestUser.SIMLAR_ID_NOT_REGISTERED, contacts.get(1).getSimlarId());
         assertEquals(0, contacts.get(1).getStatus());

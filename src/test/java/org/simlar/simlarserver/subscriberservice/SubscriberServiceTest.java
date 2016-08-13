@@ -92,7 +92,7 @@ public final class SubscriberServiceTest {
     @DirtiesContext
     @Test
     public void testUsers() {
-        for (final TestUser user: TestUser.USERS) {
+        for (final TestUser user: TestUser.values()) {
             assertTrue(subscriberService.save(SimlarId.create(user.getSimlarId()), user.getPassword()));
             assertTrue(subscriberService.checkCredentials(user.getSimlarId(), user.getPasswordHash()));
         }
