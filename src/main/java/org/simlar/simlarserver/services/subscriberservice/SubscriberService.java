@@ -48,6 +48,7 @@ public final class SubscriberService {
         this.subscriberRepository = subscriberRepository;
     }
 
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
     public boolean save(final SimlarId simlarId, final String password) {
         if (simlarId == null || StringUtils.isEmpty(password)) {
             return false;
