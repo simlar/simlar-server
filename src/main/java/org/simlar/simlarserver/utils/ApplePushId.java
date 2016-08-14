@@ -26,7 +26,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.regex.Pattern;
 
 public final class ApplePushId {
-    private static final Pattern PUSH_ID_REGEX_PATTERN = Pattern.compile("^[0-9a-fA-F]{64}$");
+    private static final Pattern REGEX_PATTERN_PUSH_ID = Pattern.compile("^[0-9a-fA-F]{64}$");
 
     private final String pushId;
 
@@ -48,6 +48,6 @@ public final class ApplePushId {
 
     @SuppressFBWarnings("OPM_OVERLY_PERMISSIVE_METHOD") // false positive
     public static boolean check(final CharSequence input) {
-        return PUSH_ID_REGEX_PATTERN.matcher(input).matches();
+        return input != null && REGEX_PATTERN_PUSH_ID.matcher(input).matches();
     }
 }
