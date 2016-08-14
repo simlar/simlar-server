@@ -97,6 +97,6 @@ public final class DelayCalculatorService {
             return Integer.MAX_VALUE;
         }
 
-        return (int)(Math.pow(requestedContacts / 4096.0d, 4) / 4);
+        return (int)(StrictMath.pow(requestedContacts / 4096.0d, 4) / 4);
     }
 }
