@@ -103,6 +103,7 @@ public final class SubscriberService {
         return ha1.equals(savedHa1s.get(0));
     }
 
+    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
     public void checkCredentialsWithException(final String simlarId, final String ha1) {
         if (!checkCredentials(simlarId, ha1)) {
             throw new XmlErrorWrongCredentialsException("simlarId='" + simlarId + '\'');
