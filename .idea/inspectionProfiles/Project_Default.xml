@@ -120,9 +120,7 @@
     <inspection_tool class="ClassNestingDepth" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_limit" value="1" />
     </inspection_tool>
-    <inspection_tool class="ClassOnlyUsedInOnePackage" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ClassReferencesSubclass" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ClassUnconnectedToPackage" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ClassWithMultipleLoggers" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="loggerNamesString" value="java.util.logging.Logger,org.slf4j.Logger,org.apache.commons.logging.Log,org.apache.log4j.Logger" />
     </inspection_tool>
@@ -189,7 +187,6 @@
       <option name="ignorePrivateMethodsAndFields" value="false" />
     </inspection_tool>
     <inspection_tool class="DefaultNotLastCaseInSwitch" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="DisjointPackage" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="DivideByZero" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="DollarSignInName" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="DoubleBraceInitialization" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -205,9 +202,6 @@
       <option name="ignoreClassWithParameterization" value="false" />
       <option name="ignoreThrowables" value="true" />
       <option name="commentsAreContent" value="true" />
-    </inspection_tool>
-    <inspection_tool class="EmptyDirectory" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="onlyReportDirectoriesUnderSourceRoots" value="true" />
     </inspection_tool>
     <inspection_tool class="EnumAsName" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="EnumSwitchStatementWhichMissesCases" enabled="true" level="WARNING" enabled_by_default="true">
@@ -489,7 +483,6 @@
     <inspection_tool class="OverridableMethodCallDuringObjectConstruction" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="OverriddenMethodCallDuringObjectConstruction" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PackageDotHtmlMayBePackageInfo" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="PackageInMultipleModules" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PackageInfoWithoutPackage" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PackageNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_regex" value="[a-z]*" />
@@ -500,12 +493,6 @@
     <inspection_tool class="PackageVisibleInnerClass" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreEnums" value="false" />
       <option name="ignoreInterfaces" value="false" />
-    </inspection_tool>
-    <inspection_tool class="PackageWithTooFewClasses" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="limit" value="3" />
-    </inspection_tool>
-    <inspection_tool class="PackageWithTooManyClasses" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="limit" value="10" />
     </inspection_tool>
     <inspection_tool class="ParameterNameDiffersFromOverriddenParameter" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_ignoreSingleCharacterNames" value="false" />
