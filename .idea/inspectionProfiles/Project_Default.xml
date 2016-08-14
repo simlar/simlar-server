@@ -768,13 +768,17 @@
     <inspection_tool class="UseOfObsoleteDateTimeApi" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UtilityClass" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignorableAnnotations">
-        <value />
+        <value>
+          <item value="org.springframework.web.bind.annotation.ControllerAdvice" />
+        </value>
       </option>
     </inspection_tool>
     <inspection_tool class="UtilityClassWithPublicConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UtilityClassWithoutPrivateConstructor" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignorableAnnotations">
-        <value />
+        <value>
+          <item value="org.springframework.web.bind.annotation.ControllerAdvice" />
+        </value>
       </option>
       <option name="ignoreClassesWithOnlyMain" value="false" />
     </inspection_tool>
