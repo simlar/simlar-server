@@ -21,8 +21,6 @@
 
 package org.simlar.simlarserver.utils;
 
-import org.springframework.util.StringUtils;
-
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,9 +29,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class SimlarId {
+    private static final Pattern REGEX_PATTERN_SIMLAR_ID = Pattern.compile("\\*\\d+\\*");
 
     private final String simlarId;
 
@@ -53,8 +53,8 @@ public final class SimlarId {
         return simlarId;
     }
 
-    public static boolean check(final String str) {
-        return StringUtils.hasText(str) && str.matches("\\*\\d+\\*");
+    public static boolean check(final CharSequence input) {
+        return input != null && REGEX_PATTERN_SIMLAR_ID.matcher(input).matches();
     }
 
     public static List<SimlarId> parsePipeSeparatedSimlarIds(final String str) {
