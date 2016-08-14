@@ -57,12 +57,12 @@ public final class ContactsControllerTest extends ContactsControllerBaseTest {
     public void emptyContactList() {
         emptyContactList(null);
         emptyContactList("");
-        emptyContactList(TestUser.U2.getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED);
+        emptyContactList(TestUser.U2.getSimlarId() + ' ' + TestUser.SIMLAR_ID_NOT_REGISTERED);
     }
 
     @Test
     public void receiveContactsStatus() {
-        final List<XmlContact> contacts = requestContactList(TestUser.U1, TestUser.U2.getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
+        final List<XmlContact> contacts = requestContactList(TestUser.U1, TestUser.U2.getSimlarId() + '|' + TestUser.SIMLAR_ID_NOT_REGISTERED);
         assertNotNull(contacts);
         assertEquals(2, contacts.size());
         assertEquals(TestUser.U2.getSimlarId(), contacts.get(0).getSimlarId());
