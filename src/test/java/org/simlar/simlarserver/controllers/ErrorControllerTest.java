@@ -80,7 +80,7 @@ public final class ErrorControllerTest extends BaseControllerTest {
     public void httpGetRequest() {
         testHttpGet("");
         testHttpGet("/");
-        testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS + "x");
+        testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS + 'x');
         testHttpGet("/index");
         testHttpGet("/index.html");
         testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS);
