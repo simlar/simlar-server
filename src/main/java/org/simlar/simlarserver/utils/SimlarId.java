@@ -78,13 +78,7 @@ public final class SimlarId {
     }
 
     public static String hashSimlarIds(final Collection<SimlarId> simlarIds) {
-        final StringBuilder builder = new StringBuilder(simlarIds.size());
-
-        for (final SimlarId simlarId: simlarIds) {
-            builder.append(simlarId.get());
-        }
-
-        return Hash.md5(builder.toString());
+        return Hash.md5(String.join("", simlarIds.stream().map(SimlarId::get).collect(Collectors.toList())));
     }
 
     @Override
