@@ -48,7 +48,7 @@ public final class SimlarIds {
         return simlarIds;
     }
 
-    private void createContactsTest(final List<String> expected, final int amount) {
+    private static void createContactsTest(final List<String> expected, final int amount) {
         assertEquals(expected, createContacts(amount).stream().map(SimlarId::get).collect(Collectors.toList()));
     }
 

@@ -69,13 +69,13 @@ public final class SimlarIdTest {
         assertNotNull(SimlarId.create("*0007*"));
     }
 
-    private List<SimlarId> parsePipeSeparatedSimlarIdsNotNull(final String str) {
+    private static List<SimlarId> parsePipeSeparatedSimlarIdsNotNull(final String str) {
         final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(str);
         assertNotNull(simlarIds);
         return simlarIds;
     }
 
-    private void assertParsePipeSeparatedSimlarIds(final Collection<String> expected, final String str) {
+    private static void assertParsePipeSeparatedSimlarIds(final Collection<String> expected, final String str) {
         assertEquals("failed to parse: " + str,
                 expected.stream().map(SimlarId::create).collect(Collectors.toList()),
                 parsePipeSeparatedSimlarIdsNotNull(str));
@@ -107,13 +107,13 @@ public final class SimlarIdTest {
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s2, s1), s2 + "|" + s1);
     }
 
-    private void testSortAndUnifySimlarIds(final List<SimlarId> expected, final Collection<SimlarId> input) {
+    private static void testSortAndUnifySimlarIds(final List<SimlarId> expected, final Collection<SimlarId> input) {
         assertEquals(expected, SimlarId.sortAndUnifySimlarIds(input));
     }
 
     @SuppressWarnings("StandardVariableNames")
     @Test
-    public void testSortAndUnifySimlarIds() {
+    public void sortAndUnifySimlarIds() {
         final SimlarId a  = SimlarId.create("*0001*");
         final SimlarId b  = SimlarId.create("*0002*");
         final SimlarId b2 = SimlarId.create("*0002*");

@@ -37,7 +37,7 @@ class SchedulingConfiguration implements SchedulingConfigurer {
 
     @SuppressWarnings("WeakerAccess")
     @Bean
-    public TaskScheduler taskScheduler() {
+    public static TaskScheduler taskScheduler() {
         return new ThreadPoolTaskScheduler();
     }
 }

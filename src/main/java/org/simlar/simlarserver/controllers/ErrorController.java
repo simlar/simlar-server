@@ -58,16 +58,16 @@ final class ErrorController {
     }
 
     @RequestMapping(path = "*", produces = MediaType.APPLICATION_XML_VALUE)
-    public XmlError handle(final HttpServletRequest request) {
+    public static XmlError handle(final HttpServletRequest request) {
         log(Level.WARNING, "Request Error:", request, null);
         return createXmlError(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
-    private XmlError createXmlError(final XmlErrorExceptionClientResponse response) {
+    private static XmlError createXmlError(final XmlErrorExceptionClientResponse response) {
         return new XmlError(response.getId(), response.getMessage());
     }
 
-    private String createXmlErrorString(final XmlErrorExceptionClientResponse response) {
+    private static String createXmlErrorString(final XmlErrorExceptionClientResponse response) {
         final StringWriter writer = new StringWriter();
 
         try {
@@ -81,7 +81,7 @@ final class ErrorController {
 
     // in order to handle html request errors we have to return a String here
     @ExceptionHandler(XmlErrorException.class)
-    public String handleXmlErrorException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
+    public static String handleXmlErrorException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
         final XmlErrorExceptionClientResponse response = XmlErrorExceptionClientResponse.fromException(xmlErrorException);
         if (response == null) {
             log(Level.SEVERE, "XmlErrorException with no XmlErrorExceptionClientResponse found for: " + xmlErrorException.getClass().getSimpleName(), request, xmlErrorException);
@@ -94,7 +94,7 @@ final class ErrorController {
 
     // in order to handle html request errors we have to return a String here
     @ExceptionHandler(Exception.class)
-    public String handleException(final HttpServletRequest request, final Exception exception) {
+    public static String handleException(final HttpServletRequest request, final Exception exception) {
         log(Level.SEVERE, "unhandled exception:", request, exception);
 
         return createXmlErrorString(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
