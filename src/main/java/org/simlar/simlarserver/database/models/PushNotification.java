@@ -55,11 +55,11 @@ public class PushNotification {
         this.pushId = pushId;
     }
 
-    public DeviceType getDeviceType() {
+    public final DeviceType getDeviceType() {
         return DeviceType.fromInt(deviceType);
     }
 
-    public String getPushId() {
+    public final String getPushId() {
         return pushId;
     }
 }

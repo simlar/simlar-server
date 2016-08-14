@@ -43,13 +43,13 @@ public class ContactsControllerBaseTest extends BaseControllerTest {
         return postRequest(responseClass, ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter);
     }
 
-    int requestError(final String username, final String password, final String contacts) {
+    final int requestError(final String username, final String password, final String contacts) {
         final XmlError error = requestContactStatus(XmlError.class, username, password, contacts);
         assertNotNull(error);
         return error.getId();
     }
 
-    List<XmlContact> requestContactList(final TestUser user, final String contactList) {
+    final List<XmlContact> requestContactList(final TestUser user, final String contactList) {
         final XmlContacts response = requestContactStatus(XmlContacts.class, user.getSimlarId(), user.getPasswordHash(), contactList);
         assertNotNull(response);
         return response.getContacts();

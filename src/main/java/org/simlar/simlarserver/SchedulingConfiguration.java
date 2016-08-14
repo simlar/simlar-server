@@ -31,7 +31,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 @Configuration
 class SchedulingConfiguration implements SchedulingConfigurer {
     @Override
-    public void configureTasks(final ScheduledTaskRegistrar taskRegistrar) {
+    public final void configureTasks(final ScheduledTaskRegistrar taskRegistrar) {
         taskRegistrar.setTaskScheduler(taskScheduler());
     }
 

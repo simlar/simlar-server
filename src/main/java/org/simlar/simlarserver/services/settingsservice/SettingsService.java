@@ -39,11 +39,11 @@ public class SettingsService {
         this.version = version;
     }
 
-    public String getDomain() {
+    public final String getDomain() {
         return domain;
     }
 
-    public String getVersion() {
+    public final String getVersion() {
         return version;
     }
 }
