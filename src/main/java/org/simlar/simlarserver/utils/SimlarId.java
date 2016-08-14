@@ -78,9 +78,9 @@ public final class SimlarId {
     }
 
     public static String hashSimlarIds(final Collection<SimlarId> simlarIds) {
-        final StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder(simlarIds.size());
 
-        for (final SimlarId simlarId: sortAndUnifySimlarIds(simlarIds)) {
+        for (final SimlarId simlarId: simlarIds) {
             builder.append(simlarId.get());
         }
 
