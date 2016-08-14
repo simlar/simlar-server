@@ -78,7 +78,7 @@ public final class SimlarId {
 
     public static List<SimlarId> sortAndUnifySimlarIds(final Collection<SimlarId> simlarIds) {
         if (simlarIds == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         final Collator collator = Collator.getInstance(new Locale("en","US"));
