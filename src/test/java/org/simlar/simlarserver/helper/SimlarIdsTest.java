@@ -21,28 +21,29 @@
 
 package org.simlar.simlarserver.helper;
 
+import org.junit.Test;
 import org.simlar.simlarserver.utils.SimlarId;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@SuppressWarnings("UtilityClass")
-public final class SimlarIds {
-    private SimlarIds() {
-        throw new AssertionError("This class was not meant to be instantiated");
+import static org.junit.Assert.assertEquals;
+import static org.simlar.simlarserver.helper.SimlarIds.createContacts;
+
+public final class SimlarIdsTest {
+    private static void createContactsTest(final List<String> expected, final int amount) {
+        assertEquals(expected, createContacts(amount).stream().map(SimlarId::get).collect(Collectors.toList()));
     }
 
-    public static Collection<SimlarId> createContacts(final int amount) {
-        if (amount <= 0) {
-            return Collections.emptyList();
-        }
+    @Test
+    public void testCreateContacts() {
+        createContactsTest(Collections.emptyList(), -1);
+        createContactsTest(Collections.emptyList(), 0);
 
-        final Collection<SimlarId> simlarIds = new ArrayList<>(amount);
-        for (int i = 0; i < amount; ++i) {
-            simlarIds.add(SimlarId.create(String.format("*%d*", i + 1)));
-        }
-
-        return simlarIds;
+        createContactsTest(Collections.singletonList("*1*"), 1);
+        createContactsTest(Arrays.asList("*1*", "*2*"), 2);
+        createContactsTest(Arrays.asList("*1*", "*2*", "*3*", "*4*", "*5*", "*6*", "*7*", "*8*", "*9*", "*10*"), 10);
     }
 }
