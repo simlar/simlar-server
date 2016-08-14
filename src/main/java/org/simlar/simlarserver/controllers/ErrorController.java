@@ -43,18 +43,10 @@ final class ErrorController {
     private static final Logger LOGGER = Logger.getLogger(ErrorController.class.getName());
 
     private static void log(final Level level, final String prefix, final HttpServletRequest request, final Exception exception) {
-        final StringBuilder message = new StringBuilder();
-        message.append(prefix);
+        final String message = prefix + (request == null ? " no request object" :
+                " URL='" + request.getRequestURL() + "' IP='" + request.getRemoteAddr() + "' User-Agent='" + request.getHeader("User-Agent") + '\'');
 
-        if (request == null) {
-            message.append(" no request object");
-        } else {
-            message.append(" URL='").append(request.getRequestURL()).append('\'');
-            message.append(" IP='").append(request.getRemoteAddr()).append('\'');
-            message.append(" User-Agent='").append(request.getHeader("User-Agent")).append('\'');
-        }
-
-        LOGGER.log(level, message.toString(), exception);
+        LOGGER.log(level, message, exception);
     }
 
     @RequestMapping(path = "*", produces = MediaType.APPLICATION_XML_VALUE)
