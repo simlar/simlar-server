@@ -434,6 +434,7 @@
       <option name="checkDivision" value="false" />
     </inspection_tool>
     <inspection_tool class="NativeMethodNamingConvention" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="NativeMethods" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="NegatedConditional" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_ignoreNegatedNullComparison" value="true" />
     </inspection_tool>
@@ -580,6 +581,7 @@
     <inspection_tool class="ReturnOfInnerClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ReturnThis" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ReuseOfLocalVariable" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="RuntimeExec" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SamePackageImport" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SetReplaceableByEnumSet" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SetupCallsSuperSetup" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -654,7 +656,9 @@
     <inspection_tool class="SwitchStatementsWithoutDefault" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_ignoreFullyCoveredEnums" value="true" />
     </inspection_tool>
+    <inspection_tool class="SystemExit" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SystemGC" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="SystemGetenv" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SystemOutErr" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="TailRecursion" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="TeardownCallsSuperTeardown" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -759,13 +763,17 @@
     </inspection_tool>
     <inspection_tool class="UnusedImport" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UpperCaseFieldNameNotConstant" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="UseOfAWTPeerClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UseOfAnotherObjectsPrivateField" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreSameClass" value="true" />
       <option name="ignoreEquals" value="false" />
     </inspection_tool>
     <inspection_tool class="UseOfClone" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="UseOfJDBCDriverClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UseOfObsoleteAssert" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UseOfObsoleteDateTimeApi" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="UseOfProcessBuilder" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="UseOfSunClasses" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UtilityClass" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignorableAnnotations">
         <value>
