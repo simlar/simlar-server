@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -57,14 +58,17 @@ public final class SimlarId {
     }
 
     public static List<SimlarId> parsePipeSeparatedSimlarIds(final String str) {
-        final LinkedHashSet<SimlarId> simlarIds = new LinkedHashSet<>();
+        if (str == null) {
+            return Collections.emptyList();
+        }
 
-        if (str != null) {
-            for (final String entry : str.split("\\|")) {
-                final SimlarId simlarId = create(entry.trim());
-                if (simlarId != null) {
-                    simlarIds.add(simlarId);
-                }
+        final String[] entries = str.split("\\|");
+        final LinkedHashSet<SimlarId> simlarIds = new LinkedHashSet<>(entries.length);
+
+        for (final String entry : entries) {
+            final SimlarId simlarId = create(entry.trim());
+            if (simlarId != null) {
+                simlarIds.add(simlarId);
             }
         }
 
