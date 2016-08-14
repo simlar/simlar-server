@@ -40,7 +40,7 @@ public final class SimlarIds {
             return Collections.emptyList();
         }
 
-        final Collection<SimlarId> simlarIds = new ArrayList<>();
+        final Collection<SimlarId> simlarIds = new ArrayList<>(amount);
         for (int i = 0; i < amount; ++i) {
             simlarIds.add(SimlarId.create(String.format("*%d*", i + 1)));
         }
