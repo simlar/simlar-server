@@ -22,6 +22,8 @@
 package org.simlar.simlarserver.xmlerrorexceptions;
 
 public final class XmlErrorUnknownApplePushIdException extends XmlErrorException {
+    private static final long serialVersionUID = -8317191566354458403L;
+
     public XmlErrorUnknownApplePushIdException(final String message) {
         super(message);
     }

@@ -22,6 +22,8 @@
 package org.simlar.simlarserver.xmlerrorexceptions;
 
 public final class XmlErrorWrongCredentialsException extends XmlErrorException {
+    private static final long serialVersionUID = -1431392919132171208L;
+
     public XmlErrorWrongCredentialsException(final String message) {
         super(message);
     }
