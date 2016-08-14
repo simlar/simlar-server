@@ -111,6 +111,7 @@ public final class SimlarIdTest {
         assertEquals(expected, SimlarId.sortAndUnifySimlarIds(input));
     }
 
+    @SuppressWarnings("StandardVariableNames")
     @Test
     public void testSortAndUnifySimlarIds() {
         final SimlarId a  = SimlarId.create("*0001*");
@@ -131,6 +132,7 @@ public final class SimlarIdTest {
         testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b, b, b, c, c, c, c, c, d, e, f));
     }
 
+    @SuppressWarnings("StandardVariableNames")
     @Test
     public void testHashSimlarIds() {
         final SimlarId a = SimlarId.create("*0001*");
