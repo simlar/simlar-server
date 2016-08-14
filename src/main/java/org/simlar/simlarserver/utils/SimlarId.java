@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ClassWithTooManyDependents")
 public final class SimlarId {
     private static final Pattern REGEX_PATTERN_SIMLAR_ID = Pattern.compile("\\*\\d+\\*");
 
