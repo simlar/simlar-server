@@ -21,9 +21,6 @@
 
 package org.simlar.simlarserver.services.subscriberservice;
 
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
@@ -35,6 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.logging.Logger;
 
 @Component
 public final class SubscriberService {

@@ -21,11 +21,11 @@
 
 package org.simlar.simlarserver.database.repositories;
 
-import java.util.List;
-
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+
+import java.util.List;
 
 @SuppressWarnings({"SameParameterValue", "unused"})
 public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
