@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.utils;
 
+import javax.annotation.Nonnull;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,11 +30,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("ClassWithTooManyDependents")
-public final class SimlarId {
+public final class SimlarId implements Comparable<SimlarId> {
     private static final Pattern REGEX_PATTERN_SIMLAR_ID = Pattern.compile("\\*\\d+\\*");
 
     private final String simlarId;
@@ -76,16 +79,12 @@ public final class SimlarId {
         return new ArrayList<>(simlarIds);
     }
 
-    public static List<SimlarId> sortAndUnifySimlarIds(final Collection<SimlarId> simlarIds) {
-        if (simlarIds == null) {
-            return Collections.emptyList();
-        }
-
-        final Collator collator = Collator.getInstance(new Locale("en","US"));
-        return simlarIds.stream().sorted((o1, o2) -> collator.compare(o1.get(), o2.get())).distinct().collect(Collectors.toList());
+    public static SortedSet<SimlarId> sortAndUnifySimlarIds(final Collection<SimlarId> simlarIds) {
+        return simlarIds == null ? Collections.emptySortedSet() : new TreeSet<>(simlarIds);
     }
 
-    public static String hashSimlarIds(final Collection<SimlarId> simlarIds) {
+    @SuppressWarnings("TypeMayBeWeakened") // we definitely want a sorted set here
+    public static String hashSimlarIds(final SortedSet<SimlarId> simlarIds) {
         return Hash.md5(String.join("", simlarIds.stream().map(SimlarId::get).collect(Collectors.toList())));
     }
 
@@ -103,5 +102,10 @@ public final class SimlarId {
     @Override
     public String toString() {
         return simlarId;
+    }
+
+    @Override
+    public int compareTo(@Nonnull final SimlarId o) {
+        return Collator.getInstance(Locale.ENGLISH).compare(simlarId, o.simlarId);
     }
 }
