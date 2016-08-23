@@ -30,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -44,15 +43,11 @@ public final class DelayCalculatorServiceTest {
     @Autowired
     private DelayCalculatorService delayCalculatorService;
 
-    private String formatInt(final int i) {
-        return NumberFormat.getIntegerInstance().format(i);
-    }
-
-    private void calculateDelayTest(final int minSeconds, final int count, final int maxSeconds) {
+    private static void calculateDelayTest(final int minSeconds, final int count, final int maxSeconds) {
         final int resultDelay = DelayCalculatorService.calculateDelay(count);
-        final String result = "calculateDelay(" + formatInt(count) + ") = " + formatInt(resultDelay);
-        assertTrue(formatInt(minSeconds) + " <= " + result, minSeconds <= resultDelay);
-        assertTrue(result + " <= " + formatInt(maxSeconds), resultDelay <= maxSeconds);
+        final String result = "calculateDelay(" + count + ") = " + resultDelay;
+        assertTrue(minSeconds + " <= " + result, minSeconds <= resultDelay);
+        assertTrue(result + " <= " + maxSeconds, resultDelay <= maxSeconds);
     }
 
     @Test
