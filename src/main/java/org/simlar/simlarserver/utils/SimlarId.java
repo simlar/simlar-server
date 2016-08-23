@@ -100,7 +100,6 @@ public final class SimlarId {
         return Objects.hash(simlarId);
     }
 
-
     @Override
     public String toString() {
         return simlarId;
