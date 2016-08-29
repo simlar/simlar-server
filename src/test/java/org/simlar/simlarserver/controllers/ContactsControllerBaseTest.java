@@ -40,7 +40,7 @@ public class ContactsControllerBaseTest extends BaseControllerTest {
         parameter.add("password", password);
         parameter.add("contacts", contacts);
 
-        return postRequest(responseClass, ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter);
+        return postRequest(responseClass, ContactsController.REQUEST_PATH, parameter);
     }
 
     final int requestError(final String username, final String password, final String contacts) {
