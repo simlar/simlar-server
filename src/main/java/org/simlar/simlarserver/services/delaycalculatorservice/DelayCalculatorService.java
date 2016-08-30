@@ -29,8 +29,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.Collection;
 import java.util.SortedSet;
@@ -40,7 +40,7 @@ import java.util.logging.Logger;
 public final class DelayCalculatorService {
     private static final Logger LOGGER = Logger.getLogger(DelayCalculatorService.class.getName());
 
-    private static final long RESET_COUNTER_SECONDS = 60 * 60 * 24; // reset counter after one day
+    private static final Duration RESET_COUNTER = Duration.ofDays(1); // reset counter after one day
 
     private final ContactsRequestCountRepository contactsRequestCountRepository;
     private final TransactionTemplate transactionTemplate;
@@ -75,7 +75,7 @@ public final class DelayCalculatorService {
             return count;
         }
 
-        final boolean enoughTimeElapsed = ChronoUnit.SECONDS.between(saved.getTimestamp(), now) > RESET_COUNTER_SECONDS;
+        final boolean enoughTimeElapsed = Duration.between(saved.getTimestamp().plus(RESET_COUNTER), now).compareTo(Duration.ZERO) > 0;
 
         return calculateTotalRequestedContactsStatic(enoughTimeElapsed, hash.equals(saved.getHash()), saved.getCount(), count);
     }
