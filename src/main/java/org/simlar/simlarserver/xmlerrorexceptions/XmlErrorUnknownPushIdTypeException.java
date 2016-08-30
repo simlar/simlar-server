@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.xmlerrorexceptions;
 
 public final class XmlErrorUnknownPushIdTypeException extends XmlErrorException {
-    private static final long serialVersionUID = 4788533284768403510L;
+    private static final long serialVersionUID = 1L;
 
     public XmlErrorUnknownPushIdTypeException(final String message) {
         super(message);

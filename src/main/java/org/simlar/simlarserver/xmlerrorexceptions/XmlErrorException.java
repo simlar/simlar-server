@@ -23,7 +23,7 @@ package org.simlar.simlarserver.xmlerrorexceptions;
 
 @SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithoutAbstractMethods"})
 public abstract class XmlErrorException extends RuntimeException {
-    private static final long serialVersionUID = -3268367430348027069L;
+    private static final long serialVersionUID = 1L;
 
     XmlErrorException(final String message) {
         super(message);

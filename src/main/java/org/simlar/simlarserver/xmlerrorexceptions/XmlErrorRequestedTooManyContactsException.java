@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.xmlerrorexceptions;
 
 public final class XmlErrorRequestedTooManyContactsException extends XmlErrorException {
-    private static final long serialVersionUID = -1426065476173925397L;
+    private static final long serialVersionUID = 1L;
 
     public XmlErrorRequestedTooManyContactsException(final String message) {
         super(message);
