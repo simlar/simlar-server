@@ -59,7 +59,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
         parameter.add("deviceType", String.valueOf(deviceType));
         parameter.add("pushId", pushId);
 
-        return postRequest(responseClass, PushNotificationsController.REQUEST_URL_STORE_PUSH_ID, parameter);
+        return postRequest(responseClass, PushNotificationsController.REQUEST_PATH, parameter);
     }
 
     private <T> T requestStorePushId(final Class<T> responseClass, final TestUser user, final int deviceType, final String pushId) {
