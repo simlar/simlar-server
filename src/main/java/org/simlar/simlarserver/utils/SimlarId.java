@@ -85,7 +85,7 @@ public final class SimlarId implements Comparable<SimlarId> {
 
     @SuppressWarnings("TypeMayBeWeakened") // we definitely want a sorted set here
     public static String hashSimlarIds(final SortedSet<SimlarId> simlarIds) {
-        return Hash.md5(String.join("", simlarIds.stream().map(SimlarId::get).collect(Collectors.toList())));
+        return Hash.md5(simlarIds.stream().map(SimlarId::get).collect(Collectors.joining()));
     }
 
     @Override
