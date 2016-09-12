@@ -41,8 +41,8 @@ public class BaseControllerTest {
     @Value("${local.server.port}")
     private int port;
 
-    final <T> T postRequest(final Class<T> responseClass, final String url, final MultiValueMap<String, String> parameter) {
-        final String result = new RestTemplate().postForObject(getBaseUrl() + url, parameter,
+    final <T> T postRequest(final Class<T> responseClass, final String url, final MultiValueMap<String, String> parameters) {
+        final String result = new RestTemplate().postForObject(getBaseUrl() + url, parameters,
                 String.class);
 
         assertNotNull(result);
