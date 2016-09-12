@@ -39,7 +39,7 @@ public final class VersionControllerTest {
 
     @SuppressWarnings("CanBeFinal")
     @Value("${local.server.port}")
-    private int                 port;
+    private int port;
 
     @Test
     public void requestVersion() {
