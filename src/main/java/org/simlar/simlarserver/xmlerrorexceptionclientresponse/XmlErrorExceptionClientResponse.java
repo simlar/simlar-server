@@ -27,8 +27,9 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdExce
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public enum XmlErrorExceptionClientResponse {
         UNKNOWN_STRUCTURE          (null,                                             1, "unknown structure"),
@@ -43,12 +44,8 @@ public enum XmlErrorExceptionClientResponse {
     private final int id;
     private final String message;
 
-    private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP = new HashMap<>(XmlErrorExceptionClientResponse.values().length);
-    static {
-        for (final XmlErrorExceptionClientResponse type : XmlErrorExceptionClientResponse.values()) {
-            EXCEPTION_CLIENT_RESPONSE_MAP.put(type.exceptionClass, type);
-        }
-    }
+    private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP
+            = Arrays.stream(XmlErrorExceptionClientResponse.values()).collect(Collectors.toMap(response -> response.exceptionClass, response -> response));
 
     public static XmlErrorExceptionClientResponse fromException(final XmlErrorException exception) {
         return EXCEPTION_CLIENT_RESPONSE_MAP.get(exception.getClass());
