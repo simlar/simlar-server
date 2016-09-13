@@ -36,8 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -92,22 +91,22 @@ final class ContactsController {
         }
 
         final long delayMillis = Math.max(DELAY_MINIMUM, delay * 1000L);
-        final LocalDateTime date = LocalDateTime.now().plus(delayMillis, ChronoUnit.MILLIS);
-        LOGGER.info("scheduling getContactStatus to: " + date);
+        final Instant instant = Instant.now().plus(delayMillis, ChronoUnit.MILLIS);
+        LOGGER.info("scheduling getContactStatus to: " + instant);
 
         final DeferredResult<XmlContacts> deferredResult = new DeferredResult<>();
         taskScheduler.schedule(() -> {
             if (deferredResult.isSetOrExpired()) {
                 LOGGER.severe("deferred result already set or expired simlarId=" + login + " delay=" + delay + " seconds");
             } else {
-                LOGGER.info("executing getContactStatus scheduled to: " + date);
+                LOGGER.info("executing getContactStatus scheduled to: " + instant);
                 deferredResult.setResult(
                         new XmlContacts(simlarIds.stream()
                                 .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
                                 .collect(Collectors.toList()))
                 );
             }
-        }, Date.from(date.atZone(ZoneId.systemDefault()).toInstant()));
+        }, Date.from(instant));
 
         return deferredResult;
     }
