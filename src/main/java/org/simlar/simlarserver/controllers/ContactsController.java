@@ -91,7 +91,7 @@ final class ContactsController {
             throw new XmlErrorRequestedTooManyContactsException("request delay=" + delay + " blocking simlarId=" + login);
         }
 
-        final long delayMillis = delay <= 0 ? DELAY_MINIMUM : delay * 1000L;
+        final long delayMillis = Math.max(DELAY_MINIMUM, delay * 1000L);
         final LocalDateTime date = LocalDateTime.now().plus(delayMillis, ChronoUnit.MILLIS);
         LOGGER.info("scheduling getContactStatus to: " + date);
 
