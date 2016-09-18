@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.services.delaycalculatorservice;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.simlar.simlarserver.database.models.ContactsRequestCount;
 import org.simlar.simlarserver.database.repositories.ContactsRequestCountRepository;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -31,7 +32,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.Temporal;
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.logging.Logger;
@@ -70,7 +70,9 @@ public final class DelayCalculatorService {
         });
     }
 
-    private static int calculateTotalRequestedContactsStatic(final ContactsRequestCount saved, final Temporal now, final String hash, final int count) {
+    @SuppressFBWarnings( "OCP_OVERLY_CONCRETE_PARAMETER") // Instant instead of Temporal
+    @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
+    private static int calculateTotalRequestedContactsStatic(final ContactsRequestCount saved, final Instant now, final String hash, final int count) {
         if (saved == null) {
             return count;
         }
