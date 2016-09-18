@@ -21,8 +21,9 @@
 
 package org.simlar.simlarserver.data;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public enum DeviceType {
     ANDROID(1),
@@ -38,12 +39,8 @@ public enum DeviceType {
     }
 
 
-    private static final Map<Integer, DeviceType> INTEGER_DEVICE_TYPE_MAP = new HashMap<>(DeviceType.values().length);
-    static {
-        for (final DeviceType type : DeviceType.values()) {
-            INTEGER_DEVICE_TYPE_MAP.put(type.toInt(), type);
-        }
-    }
+    private static final Map<Integer, DeviceType> INTEGER_DEVICE_TYPE_MAP =
+            Arrays.stream(DeviceType.values()).collect(Collectors.toMap(DeviceType::toInt, type -> type));
 
     public static DeviceType fromInt(final int id) {
         return INTEGER_DEVICE_TYPE_MAP.get(id);
