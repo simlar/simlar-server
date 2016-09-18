@@ -75,7 +75,7 @@ public final class SubscriberService {
             return null;
         }
 
-        if (ids.size() != 1) {
+        if (ids.size() > 1) {
             LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
@@ -96,7 +96,7 @@ public final class SubscriberService {
             return false;
         }
 
-        if (savedHa1s.size() != 1) {
+        if (savedHa1s.size() > 1) {
             LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
