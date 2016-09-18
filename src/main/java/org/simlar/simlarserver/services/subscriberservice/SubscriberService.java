@@ -37,7 +37,7 @@ import java.util.logging.Logger;
 
 @Component
 public final class SubscriberService {
-    private static final Logger        LOGGER = Logger.getLogger(SubscriberService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SubscriberService.class.getName());
 
     private final SettingsService settingsService;
     private final SubscriberRepository subscriberRepository;
