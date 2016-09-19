@@ -62,6 +62,9 @@ public final class SimlarIdTest {
         assertFalse(SimlarId.check(" *0001*"));
         assertFalse(SimlarId.check("*0001 *"));
         assertFalse(SimlarId.check(" *0001* "));
+        assertFalse(SimlarId.check("1*0001*2"));
+        assertFalse(SimlarId.check("*0001*\n*0002*"));
+        assertFalse(SimlarId.check("*0001*|*0002*"));
     }
 
     @Test
