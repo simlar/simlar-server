@@ -39,6 +39,6 @@ public final class SimlarIds {
             return Collections.emptyList();
         }
 
-        return IntStream.range(1, amount + 1).mapToObj(i -> SimlarId.create(String.format("*%d*", i))).collect(Collectors.toList());
+        return IntStream.rangeClosed(1, amount).mapToObj(i -> SimlarId.create(String.format("*%d*", i))).collect(Collectors.toList());
     }
 }
