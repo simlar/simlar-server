@@ -47,14 +47,14 @@ public enum XmlErrorExceptionClientResponse {
     private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP
             = Arrays.stream(XmlErrorExceptionClientResponse.values()).collect(Collectors.toMap(response -> response.exceptionClass, response -> response));
 
-    public static XmlErrorExceptionClientResponse fromException(final XmlErrorException exception) {
-        return EXCEPTION_CLIENT_RESPONSE_MAP.get(exception.getClass());
-    }
-
     XmlErrorExceptionClientResponse(final Class<? extends XmlErrorException> exceptionClass, final int id, final String message) {
         this.exceptionClass = exceptionClass;
         this.id = id;
         this.message = message;
+    }
+
+    public static XmlErrorExceptionClientResponse fromException(final XmlErrorException exception) {
+        return EXCEPTION_CLIENT_RESPONSE_MAP.get(exception.getClass());
     }
 
     public String getMessage() {
