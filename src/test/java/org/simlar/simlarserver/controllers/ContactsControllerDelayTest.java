@@ -90,8 +90,9 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
         assertLessEquals(elapsed, 500);
     }
 
+    /// this test takes over 4 seconds if you rename it to testOneSecondDelay. WTF!
     @Test
-    public void testOneSecondDelay() {
+    public void oneSecondDelay() {
         final long begin = System.currentTimeMillis();
         requestContactListSuccess(TestUser.U3, 6000);
         final long elapsed = System.currentTimeMillis() - begin;
