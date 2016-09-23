@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 
 public final class DeviceTypeTest {
     @Test
-    public void fromIntTest() {
+    public void testFromInt() {
         assertNull(DeviceType.fromInt(-1));
         assertNull(DeviceType.fromInt(0));
         assertEquals(DeviceType.ANDROID, DeviceType.fromInt(1));
@@ -42,7 +42,7 @@ public final class DeviceTypeTest {
     }
 
     @Test
-    public void isIosTest() {
+    public void testIsIos() {
         assertFalse(DeviceType.ANDROID.isIos());
         assertTrue(DeviceType.IOS.isIos());
         assertTrue(DeviceType.IOS_DEVELOPMENT.isIos());

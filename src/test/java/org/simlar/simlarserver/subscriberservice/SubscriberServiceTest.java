@@ -77,7 +77,7 @@ public final class SubscriberServiceTest {
     }
 
     @Test
-    public void getStatus() {
+    public void testGetStatus() {
         final SimlarId simlarIdSaved = SimlarId.create("*0002*");
         final SimlarId simlarIdNotSaved = SimlarId.create("*0003*");
 

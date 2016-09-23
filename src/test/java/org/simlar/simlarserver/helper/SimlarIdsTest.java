@@ -30,20 +30,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.simlar.simlarserver.helper.SimlarIds.createContacts;
 
 public final class SimlarIdsTest {
-    private static void createContactsTest(final List<String> expected, final int amount) {
-        assertEquals(expected, createContacts(amount).stream().map(SimlarId::get).collect(Collectors.toList()));
+    private static void createContacts(final List<String> expected, final int amount) {
+        assertEquals(expected, SimlarIds.createContacts(amount).stream().map(SimlarId::get).collect(Collectors.toList()));
     }
 
     @Test
     public void testCreateContacts() {
-        createContactsTest(Collections.emptyList(), -1);
-        createContactsTest(Collections.emptyList(), 0);
+        createContacts(Collections.emptyList(), -1);
+        createContacts(Collections.emptyList(), 0);
 
-        createContactsTest(Collections.singletonList("*1*"), 1);
-        createContactsTest(Arrays.asList("*1*", "*2*"), 2);
-        createContactsTest(Arrays.asList("*1*", "*2*", "*3*", "*4*", "*5*", "*6*", "*7*", "*8*", "*9*", "*10*"), 10);
+        createContacts(Collections.singletonList("*1*"), 1);
+        createContacts(Arrays.asList("*1*", "*2*"), 2);
+        createContacts(Arrays.asList("*1*", "*2*", "*3*", "*4*", "*5*", "*6*", "*7*", "*8*", "*9*", "*10*"), 10);
     }
 }

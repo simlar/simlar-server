@@ -73,7 +73,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void loginWithWrongCredentials() {
+    public void testLoginWithWrongCredentials() {
         loginWithWrongCredentials(null, "xxxxxxx");
         loginWithWrongCredentials("*", "xxxxxxx");
         loginWithWrongCredentials(TestUser.U1.getSimlarId(), null);
@@ -92,7 +92,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void storePushId() {
+    public void testStorePushId() {
         storePushId(TestUser.U1, 1, ANDROID_PUSH_ID_1);
         storePushId(TestUser.U1, 1, ANDROID_PUSH_ID_2);
         storePushId(TestUser.U2, 1, ANDROID_PUSH_ID_1);
@@ -107,7 +107,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void unknownDeviceType() {
+    public void testUnknownDeviceType() {
         unknownDeviceType(-1);
         unknownDeviceType(0);
         unknownDeviceType(6);
@@ -121,7 +121,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void unknownApplePushId() {
+    public void testUnknownApplePushId() {
         unknownApplePushId(2, ANDROID_PUSH_ID_1);
         unknownApplePushId(3, ANDROID_PUSH_ID_2);
         unknownApplePushId(4, ANDROID_PUSH_ID_2);

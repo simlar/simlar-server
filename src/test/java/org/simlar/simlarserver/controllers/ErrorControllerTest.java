@@ -38,30 +38,30 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class ErrorControllerTest extends BaseControllerTest {
-    private void testHttpPost(final String requestUrl, final MultiValueMap<String, String> parameters) {
+    private void httpPost(final String requestUrl, final MultiValueMap<String, String> parameters) {
         final XmlError xmlError = postRequest(XmlError.class, requestUrl, parameters);
         assertNotNull(xmlError);
         assertEquals(1, xmlError.getId());
     }
 
     @Test
-    public void httpPostRequest() {
-        testHttpPost("", null);
-        testHttpPost(ContactsController.REQUEST_PATH + 'x', null);
-        testHttpPost("index", null);
-        testHttpPost("index.html", null);
-        testHttpPost(ContactsController.REQUEST_PATH, null);
+    public void testHttpPostRequest() {
+        httpPost("", null);
+        httpPost(ContactsController.REQUEST_PATH + 'x', null);
+        httpPost("index", null);
+        httpPost("index.html", null);
+        httpPost(ContactsController.REQUEST_PATH, null);
     }
 
     @Test
-    public void httpPostRequestWrongParameter() {
+    public void testHttpPostRequestWrongParameter() {
         final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
         parameter.add("login", "007");
         parameter.add("password", "007");
-        testHttpPost(ContactsController.REQUEST_PATH, parameter);
+        httpPost(ContactsController.REQUEST_PATH, parameter);
     }
 
-    private void testHttpGet(final String requestUrl) {
+    private void httpGet(final String requestUrl) {
         final String result = new RestTemplate().getForObject(getBaseUrl() + requestUrl, String.class);
         assertNotNull(result);
 
@@ -77,12 +77,12 @@ public final class ErrorControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void httpGetRequest() {
-        testHttpGet("");
-        testHttpGet("/");
-        testHttpGet(ContactsController.REQUEST_PATH + 'x');
-        testHttpGet("/index");
-        testHttpGet("/index.html");
-        testHttpGet(ContactsController.REQUEST_PATH);
+    public void testHttpGetRequest() {
+        httpGet("");
+        httpGet("/");
+        httpGet(ContactsController.REQUEST_PATH + 'x');
+        httpGet("/index");
+        httpGet("/index.html");
+        httpGet(ContactsController.REQUEST_PATH);
     }
 }

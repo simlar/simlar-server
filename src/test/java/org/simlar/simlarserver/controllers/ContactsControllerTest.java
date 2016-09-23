@@ -42,7 +42,7 @@ public final class ContactsControllerTest extends ContactsControllerBaseTest {
     }
 
     @Test
-    public void wrongCredentials() {
+    public void testWrongCredentials() {
         wrongCredentials(null, "xxxxxxx");
         wrongCredentials("*", "xxxxxxx");
         wrongCredentials(TestUser.U1.getSimlarId(), null);
@@ -54,14 +54,14 @@ public final class ContactsControllerTest extends ContactsControllerBaseTest {
     }
 
     @Test
-    public void emptyContactList() {
+    public void testEmptyContactList() {
         emptyContactList(null);
         emptyContactList("");
         emptyContactList(TestUser.U2.getSimlarId() + ' ' + TestUser.SIMLAR_ID_NOT_REGISTERED);
     }
 
     @Test
-    public void receiveContactsStatus() {
+    public void testReceiveContactsStatus() {
         final List<XmlContact> contacts = requestContactList(TestUser.U1, TestUser.U2.getSimlarId() + '|' + TestUser.SIMLAR_ID_NOT_REGISTERED);
         assertNotNull(contacts);
         assertEquals(2, contacts.size());
