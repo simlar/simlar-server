@@ -25,7 +25,7 @@ package org.simlar.simlarserver.xmlerrorexceptions;
 public abstract class XmlErrorException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    XmlErrorException(final String message) {
+    protected XmlErrorException(final String message) {
         super(message);
     }
 }
