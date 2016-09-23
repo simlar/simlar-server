@@ -49,12 +49,6 @@ final class ErrorController {
         LOGGER.log(level, message, exception);
     }
 
-    @RequestMapping(path = "*", produces = MediaType.APPLICATION_XML_VALUE)
-    public static XmlError handle(final HttpServletRequest request) {
-        log(Level.WARNING, "Request Error:", request, null);
-        return createXmlError(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
-    }
-
     private static XmlError createXmlError(final XmlErrorExceptionClientResponse response) {
         return new XmlError(response.getId(), response.getMessage());
     }
@@ -69,6 +63,12 @@ final class ErrorController {
         }
 
         return writer.toString();
+    }
+
+    @RequestMapping(path = "*", produces = MediaType.APPLICATION_XML_VALUE)
+    public static XmlError handle(final HttpServletRequest request) {
+        log(Level.WARNING, "Request Error:", request, null);
+        return createXmlError(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
     // in order to handle html request errors we have to return a String here
