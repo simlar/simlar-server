@@ -53,8 +53,8 @@ public enum XmlErrorExceptionClientResponse {
         this.message = message;
     }
 
-    public static XmlErrorExceptionClientResponse fromException(final XmlErrorException exception) {
-        return EXCEPTION_CLIENT_RESPONSE_MAP.get(exception.getClass());
+    public static XmlErrorExceptionClientResponse fromException(final Class<? extends XmlErrorException> exceptionClass) {
+        return EXCEPTION_CLIENT_RESPONSE_MAP.get(exceptionClass);
     }
 
     public String getMessage() {
