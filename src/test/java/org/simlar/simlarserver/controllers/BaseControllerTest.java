@@ -21,10 +21,12 @@
 
 package org.simlar.simlarserver.controllers;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.simlar.simlarserver.Application;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -32,6 +34,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.StringReader;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @SpringApplicationConfiguration(classes = Application.class)
@@ -60,5 +63,19 @@ public class BaseControllerTest {
 
     final String getBaseUrl() {
         return "http://localhost:" + port;
+    }
+
+    @SuppressFBWarnings("CLI_CONSTANT_LIST_INDEX")
+    static MultiValueMap<String, String> createParameters(final String[][] parameters) {
+        assertNotNull(parameters);
+
+        final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        for (final String[] parameter: parameters) {
+            assertNotNull(parameter);
+            assertEquals(2, parameter.length);
+            map.add(parameter[0], parameter[1]);
+        }
+
+        return map;
     }
 }

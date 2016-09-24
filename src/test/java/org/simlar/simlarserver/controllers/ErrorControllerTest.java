@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.xml.XmlError;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -55,10 +54,10 @@ public final class ErrorControllerTest extends BaseControllerTest {
 
     @Test
     public void testHttpPostRequestWrongParameter() {
-        final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
-        parameter.add("login", "007");
-        parameter.add("password", "007");
-        httpPost(ContactsController.REQUEST_PATH, parameter);
+        httpPost(ContactsController.REQUEST_PATH, createParameters(new String[][] {
+                { "login", "007" },
+                { "password", "007" }
+        }));
     }
 
     private void httpGet(final String requestPath) {

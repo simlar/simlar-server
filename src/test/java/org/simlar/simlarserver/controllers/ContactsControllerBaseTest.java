@@ -25,8 +25,6 @@ import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 import org.simlar.simlarserver.xml.XmlError;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -35,12 +33,11 @@ import static org.junit.Assert.assertNotNull;
 public class ContactsControllerBaseTest extends BaseControllerTest {
     @SuppressWarnings("unchecked")
     private <T> T requestContactStatus(final Class<T> responseClass, final String login, final String password, final String contacts) {
-        final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
-        parameter.add("login", login);
-        parameter.add("password", password);
-        parameter.add("contacts", contacts);
-
-        return postRequest(responseClass, ContactsController.REQUEST_PATH, parameter);
+        return postRequest(responseClass, ContactsController.REQUEST_PATH, createParameters(new String[][] {
+                { "login", login },
+                { "password", password },
+                { "contacts", contacts }
+        }));
     }
 
     final int requestError(final String username, final String password, final String contacts) {
