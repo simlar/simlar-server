@@ -34,10 +34,14 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class ErrorControllerTest extends BaseControllerTest {
-    private void httpPost(final String requestPath, final MultiValueMap<String, String> parameters) {
-        final XmlError xmlError = postRequest(XmlError.class, requestPath, parameters);
+    private static void assertUnknownStructure(final XmlError xmlError) {
         assertNotNull(xmlError);
         assertEquals(1, xmlError.getId());
+    }
+
+    private void httpPost(final String requestPath, final MultiValueMap<String, String> parameters) {
+        assertNotNull(requestPath);
+        assertUnknownStructure(postRequest(XmlError.class, requestPath, parameters));
     }
 
     @Test
@@ -58,9 +62,8 @@ public final class ErrorControllerTest extends BaseControllerTest {
     }
 
     private void httpGet(final String requestPath) {
-        final XmlError xmlError = unmarshal(XmlError.class, new RestTemplate().getForObject(getBaseUrl() + requestPath, String.class));
-        assertNotNull(xmlError);
-        assertEquals(1, xmlError.getId());
+        assertNotNull(requestPath);
+        assertUnknownStructure(unmarshal(XmlError.class, new RestTemplate().getForObject(getBaseUrl() + requestPath, String.class)));
     }
 
     @Test
