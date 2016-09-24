@@ -29,10 +29,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import java.io.StringReader;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -62,18 +58,9 @@ public final class ErrorControllerTest extends BaseControllerTest {
     }
 
     private void httpGet(final String requestUrl) {
-        final String result = new RestTemplate().getForObject(getBaseUrl() + requestUrl, String.class);
-        assertNotNull(result);
-
-        try {
-            final XmlError xmlError = (XmlError)JAXBContext.newInstance(XmlError.class).createUnmarshaller().unmarshal(new StringReader(result));
-            assertNotNull(xmlError);
-            assertEquals(1, xmlError.getId());
-        } catch (final JAXBException e) {
-            throw new AssertionError("JAXBException: for postResult: " + result, e);
-        } catch (final ClassCastException e) {
-            throw new AssertionError("ClassCastException: for postResult: " + result, e);
-        }
+        final XmlError xmlError = unmarshal(XmlError.class, new RestTemplate().getForObject(getBaseUrl() + requestUrl, String.class));
+        assertNotNull(xmlError);
+        assertEquals(1, xmlError.getId());
     }
 
     @Test

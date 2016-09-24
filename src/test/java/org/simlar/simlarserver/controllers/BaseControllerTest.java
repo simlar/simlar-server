@@ -42,18 +42,19 @@ public class BaseControllerTest {
     private int port;
 
     final <T> T postRequest(final Class<T> responseClass, final String url, final MultiValueMap<String, String> parameters) {
-        final String result = new RestTemplate().postForObject(getBaseUrl() + url, parameters,
-                String.class);
+        return unmarshal(responseClass, new RestTemplate().postForObject(getBaseUrl() + url, parameters, String.class));
+    }
 
-        assertNotNull(result);
+    static <T> T unmarshal(final Class<T> resultClass, final String xml) {
+        assertNotNull(xml);
 
         try {
             //noinspection unchecked
-            return (T) JAXBContext.newInstance(responseClass).createUnmarshaller().unmarshal(new StringReader(result));
+            return (T) JAXBContext.newInstance(resultClass).createUnmarshaller().unmarshal(new StringReader(xml));
         } catch (final JAXBException e) {
-            throw new AssertionError("JAXBException: for postResult: " + result, e);
+            throw new AssertionError("JAXBException for: " + xml, e);
         } catch (final ClassCastException e) {
-            throw new AssertionError("ClassCastException: for postResult: " + result, e);
+            throw new AssertionError("ClassCastException for: " + xml, e);
         }
     }
 
