@@ -49,14 +49,27 @@ public final class ErrorControllerTest extends BaseControllerTest {
         httpPost(ContactsController.REQUEST_PATH + 'x', null);
         httpPost("index", null);
         httpPost("index.html", null);
-        httpPost(ContactsController.REQUEST_PATH, null);
     }
 
     @Test
     public void testHttpPostRequestWrongParameter() {
+        httpPost(ContactsController.REQUEST_PATH, null);
+
         httpPost(ContactsController.REQUEST_PATH, createParameters(new String[][] {
                 { "login", "007" },
                 { "password", "007" }
+        }));
+
+        httpPost(ContactsController.REQUEST_PATH, createParameters(new String[][] {
+                { "loin", "*0007*" },
+                { "password", "007" },
+                { "contacts", "*0001*|*0002*" }
+        }));
+
+        httpPost(PushNotificationsController.REQUEST_PATH, createParameters(new String[][] {
+                { "login", "*0007*" },
+                { "password", "007" },
+                { "contacts", "*0001*|*0002*" }
         }));
     }
 
