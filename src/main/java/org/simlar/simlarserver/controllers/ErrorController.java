@@ -24,10 +24,12 @@ package org.simlar.simlarserver.controllers;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorExceptionClientResponse;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,6 +67,7 @@ final class ErrorController {
         return writer.toString();
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @RequestMapping(path = "*")
     // in order to handle html request errors we have to return a String here
     public static String handle(final HttpServletRequest request) {
