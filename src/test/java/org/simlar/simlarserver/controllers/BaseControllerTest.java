@@ -41,8 +41,8 @@ public class BaseControllerTest {
     @Value("${local.server.port}")
     private int port;
 
-    final <T> T postRequest(final Class<T> responseClass, final String url, final MultiValueMap<String, String> parameters) {
-        return unmarshal(responseClass, new RestTemplate().postForObject(getBaseUrl() + url, parameters, String.class));
+    final <T> T postRequest(final Class<T> responseClass, final String requestPath, final MultiValueMap<String, String> parameters) {
+        return unmarshal(responseClass, new RestTemplate().postForObject(getBaseUrl() + requestPath, parameters, String.class));
     }
 
     static <T> T unmarshal(final Class<T> resultClass, final String xml) {
