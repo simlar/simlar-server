@@ -86,7 +86,7 @@ final class ContactsController {
         subscriberService.checkCredentialsWithException(login, password);
 
         final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(contacts);
-        final Duration delay = Comparables.max(DELAY_MINIMUM, Duration.ofSeconds(delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds)));
+        final Duration delay = Comparables.max(DELAY_MINIMUM, delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds));
         if (DELAY_MAXIMUM.compareTo(delay) < 0) {
             throw new XmlErrorRequestedTooManyContactsException("request delay=" + delay + " blocking simlarId=" + login);
         }
