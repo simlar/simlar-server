@@ -39,6 +39,9 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -61,6 +64,10 @@ final class ContactsController {
         this.subscriberService      = subscriberService;
         this.delayCalculatorService = delayCalculatorService;
         this.taskScheduler          = taskScheduler;
+    }
+
+    private static String formatInstant(final Instant instant) {
+        return DateTimeFormatter.ISO_ZONED_DATE_TIME.format(ZonedDateTime.ofInstant(instant, ZoneId.systemDefault()));
     }
 
     /**
@@ -92,14 +99,14 @@ final class ContactsController {
         }
 
         final Instant scheduledTime = Instant.now().plus(delay);
-        LOGGER.info("scheduling getContactStatus to: " + scheduledTime);
+        LOGGER.info("scheduling getContactStatus to: " + formatInstant(scheduledTime));
 
         final DeferredResult<XmlContacts> deferredResult = new DeferredResult<>();
         taskScheduler.schedule(() -> {
             if (deferredResult.isSetOrExpired()) {
                 LOGGER.severe("deferred result already set or expired simlarId=" + login + " delay=" + delay);
             } else {
-                LOGGER.info("executing getContactStatus scheduled to: " + scheduledTime);
+                LOGGER.info("executing getContactStatus scheduled to: " + formatInstant(scheduledTime));
                 deferredResult.setResult(
                         new XmlContacts(simlarIds.stream()
                                 .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
