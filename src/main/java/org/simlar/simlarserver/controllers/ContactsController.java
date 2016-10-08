@@ -91,22 +91,22 @@ final class ContactsController {
             throw new XmlErrorRequestedTooManyContactsException("request delay=" + delay + " blocking simlarId=" + login);
         }
 
-        final Instant instant = Instant.now().plus(delay);
-        LOGGER.info("scheduling getContactStatus to: " + instant);
+        final Instant scheduledTime = Instant.now().plus(delay);
+        LOGGER.info("scheduling getContactStatus to: " + scheduledTime);
 
         final DeferredResult<XmlContacts> deferredResult = new DeferredResult<>();
         taskScheduler.schedule(() -> {
             if (deferredResult.isSetOrExpired()) {
                 LOGGER.severe("deferred result already set or expired simlarId=" + login + " delay=" + delay);
             } else {
-                LOGGER.info("executing getContactStatus scheduled to: " + instant);
+                LOGGER.info("executing getContactStatus scheduled to: " + scheduledTime);
                 deferredResult.setResult(
                         new XmlContacts(simlarIds.stream()
                                 .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
                                 .collect(Collectors.toList()))
                 );
             }
-        }, Date.from(instant));
+        }, Date.from(scheduledTime));
 
         return deferredResult;
     }
