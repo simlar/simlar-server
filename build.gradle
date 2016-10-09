@@ -26,6 +26,7 @@ apply plugin: 'spring-boot'
 apply plugin: 'war'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
+apply plugin: 'com.github.ben-manes.versions'
 
 def getGitVersion = { ->
     try {
@@ -44,6 +45,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+        classpath("com.github.ben-manes:gradle-versions-plugin:0.13.0")
     }
 }
 
