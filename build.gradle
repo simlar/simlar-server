@@ -64,7 +64,7 @@ dependencies {
     compile("org.apache.commons:commons-lang3:3.4")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("junit:junit:4.12")
-    runtime("mysql:mysql-connector-java:5.1.38")
+    runtime("mysql:mysql-connector-java:5.1.38") // this version is currently needed by spring
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
