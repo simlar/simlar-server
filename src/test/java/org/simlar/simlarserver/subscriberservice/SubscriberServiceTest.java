@@ -45,7 +45,7 @@ public final class SubscriberServiceTest {
     private SubscriberService subscriberService;
 
     @Test
-    public void save() {
+    public void testSave() {
         @SuppressWarnings("TooBroadScope")
         final String simlarId = "*0000*";
 
