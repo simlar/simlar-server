@@ -65,7 +65,7 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("junit:junit:4.12")
     runtime("mysql:mysql-connector-java:5.1.38") // this version is currently needed by spring
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
     findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.8.0")
