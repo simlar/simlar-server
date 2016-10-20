@@ -29,7 +29,7 @@ import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,7 +42,7 @@ import static org.junit.Assert.assertTrue;
 
 @DirtiesContext
 @SuppressFBWarnings({"PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS", "UCPM_USE_CHARACTER_PARAMETERIZED_METHOD"})
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 public final class ContactsControllerDelayTest extends ContactsControllerBaseTest {
     private static String pipeJoin(final Collection<SimlarId> simlarIds) {
         assertNotNull(simlarIds);
