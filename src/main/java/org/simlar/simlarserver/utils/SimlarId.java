@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.utils;
 
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.text.Collator;
