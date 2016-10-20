@@ -29,7 +29,7 @@ import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -38,7 +38,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringBootTest(classes = Application.class)
 public final class SubscriberServiceTest {
     @SuppressWarnings("CanBeFinal")
     @Autowired
@@ -47,7 +47,7 @@ public final class SubscriberServiceTest {
     @Test
     public void testSave() {
         @SuppressWarnings("TooBroadScope")
-        final String simlarId = "*0000*";
+        final String simlarId = "*2000*";
 
         assertFalse(subscriberService.save(null, null));
         assertFalse(subscriberService.save(null, "sdflkj34gd3F"));
@@ -61,9 +61,9 @@ public final class SubscriberServiceTest {
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testCheckCredentials() {
-        final String simlarId = "*0001*";
+        final String simlarId = "*2001*";
         final String password = "sp4mv02fvu";
-        final String ha1 = "1ee89de73dccb07194b19a25fdfad653";
+        final String ha1 = "9fcff156b76304b5db012cbd5f0b0916";
 
         assertFalse(subscriberService.checkCredentials("*", ha1));
         assertFalse(subscriberService.checkCredentials(simlarId, ha1));
@@ -78,8 +78,8 @@ public final class SubscriberServiceTest {
 
     @Test
     public void testGetStatus() {
-        final SimlarId simlarIdSaved = SimlarId.create("*0002*");
-        final SimlarId simlarIdNotSaved = SimlarId.create("*0003*");
+        final SimlarId simlarIdSaved = SimlarId.create("*2002*");
+        final SimlarId simlarIdNotSaved = SimlarId.create("*2003*");
 
         assertEquals(0, subscriberService.getStatus(null));
         assertEquals(0, subscriberService.getStatus(simlarIdSaved));
