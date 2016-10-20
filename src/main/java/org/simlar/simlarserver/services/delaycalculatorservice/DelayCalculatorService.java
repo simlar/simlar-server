@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.services.delaycalculatorservice;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.apache.commons.lang3.ObjectUtils;
 import org.simlar.simlarserver.database.models.ContactsRequestCount;
 import org.simlar.simlarserver.database.repositories.ContactsRequestCountRepository;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -60,7 +61,7 @@ public final class DelayCalculatorService {
     int calculateTotalRequestedContacts(final SimlarId simlarId, final Collection<SimlarId> contacts, final Instant now) {
         final SortedSet<SimlarId> sortedContacts = SimlarId.sortAndUnifySimlarIds(contacts);
         final Integer count = calculateTotalRequestedContacts(simlarId, now, SimlarId.hashSimlarIds(sortedContacts), sortedContacts.size());
-        return count == null ? Integer.MAX_VALUE : count;
+        return ObjectUtils.defaultIfNull(count, Integer.MAX_VALUE);
     }
 
     private Integer calculateTotalRequestedContacts(final SimlarId simlarId, final Instant now, final String hash, final int count) {
