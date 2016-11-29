@@ -23,6 +23,7 @@ package org.simlar.simlarserver.services.delaycalculatorservice;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.ContactsRequestCount;
 import org.simlar.simlarserver.database.repositories.ContactsRequestCountRepository;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -82,7 +83,7 @@ public final class DelayCalculatorService {
 
         final boolean enoughTimeElapsed = Duration.between(saved.getTimestamp().plus(RESET_COUNTER), now).compareTo(Duration.ZERO) > 0;
 
-        return calculateTotalRequestedContactsStatic(enoughTimeElapsed, hash.equals(saved.getHash()), saved.getCount(), count);
+        return calculateTotalRequestedContactsStatic(enoughTimeElapsed, StringUtils.equals(hash, saved.getHash()), saved.getCount(), count);
     }
 
     private static int calculateTotalRequestedContactsStatic(final boolean enoughTimeElapsed, final boolean hashIsEqual, final int savedCount, final int count) {
