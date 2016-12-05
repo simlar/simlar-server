@@ -82,7 +82,7 @@ public final class SubscriberService {
         return ids.get(0);
     }
 
-    public boolean checkCredentials(final String simlarId, final String ha1) {
+    public boolean checkCredentials(final String simlarId, @SuppressWarnings("TypeMayBeWeakened") final String ha1) {
         if (!SimlarId.check(simlarId)) {
             return false;
         }
