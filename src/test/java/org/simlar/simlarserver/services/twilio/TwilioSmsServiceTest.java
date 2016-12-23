@@ -21,15 +21,19 @@
 
 package org.simlar.simlarserver.services.twilio;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 @TestPropertySource(properties = "domain = sip.simlar.org") // domain is an essential part of the callback url
@@ -44,10 +48,49 @@ public final class TwilioSmsServiceTest {
     @Autowired
     private TwilioSettingsService twilioSettingsService;
 
-    @Test
-    public void testSendSms() {
+
+    @SuppressWarnings("CanBeFinal")
+    @Autowired
+    private SettingsService settingsService;
+
+    @Before
+    public void verifyConfiguration() {
         assumeTrue("This test needs a Twilio configuration with Twilio test credentials", twilioSettingsService.isConfigured());
         assertEquals("Twilio test credentials", "+15005550006", twilioSettingsService.getSmsSourceNumber());
-        twilioSmsService.sendSms("+15005550006", "Test");
+    }
+
+    @Test
+    public void testSendSmsSuccess() {
+        final String telephoneNumber = "+15005550006";
+        final String message         = "Test success";
+        assertTrue(twilioSmsService.sendSms(telephoneNumber, message));
+    }
+
+    @Test
+    public void testSendSmsNoConfig() {
+        final String telephoneNumber = "+0000000001";
+        final String message         = "Test not configured";
+
+        final TwilioSettingsService twilioSettings = new TwilioSettingsService("", "", "", "", "", "");
+        final TwilioSmsService service = new TwilioSmsService(settingsService, twilioSettings);
+        assertFalse(service.sendSms(telephoneNumber, message));
+    }
+
+    @Test
+    public void testSendSmsNoNetwork() {
+        final String telephoneNumber = "+0000000002";
+        final String message         = "Test no network";
+
+        final TwilioSettingsService twilioSettings = new TwilioSettingsService("https://no.example.com", "+1", "007", "secret", "user", "password");
+        final TwilioSmsService service = new TwilioSmsService(settingsService, twilioSettings);
+
+        assertFalse(service.sendSms(telephoneNumber, message));
+    }
+
+    @Test
+    public void testSendSmsInvalidNumber() {
+        final String telephoneNumber = "+15005550001";
+        final String message         = "Test invalid number";
+        assertFalse(twilioSmsService.sendSms(telephoneNumber, message));
     }
 }

@@ -27,7 +27,10 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Component
@@ -43,7 +46,13 @@ public final class TwilioSmsService {
         this.twilioSettingsService = twilioSettingsService;
     }
 
-    public void sendSms(final String telephoneNumber, final String text) {
+    @SuppressWarnings({"BooleanMethodNameMustStartWithQuestion", "MethodWithMultipleReturnPoints"})
+    public boolean sendSms(final String telephoneNumber, final String text) {
+        if (!twilioSettingsService.isConfigured()) {
+            LOGGER.severe("twilio not configured: " + twilioSettingsService);
+            return false;
+        }
+
         final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("To", telephoneNumber);
         parameters.add("From", twilioSettingsService.getSmsSourceNumber());
@@ -52,9 +61,18 @@ public final class TwilioSmsService {
                 settingsService.getDomain() + ":6161/twilio/delivery-report.php");
         parameters.add("Body", text);
 
-        final String response = new RestTemplateBuilder().basicAuthorization(twilioSettingsService.getSid(), twilioSettingsService.getAuthToken()).build()
-                .postForObject(twilioSettingsService.getUrl(), parameters, String.class);
+        try {
+            final String response = new RestTemplateBuilder().basicAuthorization(twilioSettingsService.getSid(), twilioSettingsService.getAuthToken()).build()
+                    .postForObject(twilioSettingsService.getUrl(), parameters, String.class);
 
-        LOGGER.info("response: " + response);
+            LOGGER.info("response: " + response);
+            return true;
+        } catch (final HttpClientErrorException e) {
+            LOGGER.info("while sending sms to " + telephoneNumber + " received error response: " + e.getMessage() + " response: " + e.getResponseBodyAsString());
+            return false;
+        } catch (final RestClientException e) {
+            LOGGER.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " failed to connect to twilio server", e);
+            return false;
+        }
     }
 }
