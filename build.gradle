@@ -71,7 +71,7 @@ dependencies {
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
-    findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.8.0")
+    findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.8.2")
 }
 
 //noinspection GroovyMissingReturnStatement
