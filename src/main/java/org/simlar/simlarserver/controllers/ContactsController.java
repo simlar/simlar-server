@@ -83,7 +83,7 @@ final class ContactsController {
      *            md5(simlarId + ":" + domain + ":" + password);
      * @param contacts
      *            pipe separated list of simlarIds
-     * @return XmlError or xmlContactList
+     * @return XmlError or XmlContacts
      *            error message or contact list in xml
      */
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
