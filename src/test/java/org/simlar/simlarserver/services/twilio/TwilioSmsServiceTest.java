@@ -25,6 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.database.models.SmsSentLog;
+import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +35,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
@@ -48,6 +52,9 @@ public final class TwilioSmsServiceTest {
     @Autowired
     private TwilioSettingsService twilioSettingsService;
 
+    @SuppressWarnings("CanBeFinal")
+    @Autowired
+    private SmsSentLogRepository smsSentLogRepository;
 
     @SuppressWarnings("CanBeFinal")
     @Autowired
@@ -64,6 +71,15 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+15005550006";
         final String message         = "Test success";
         assertTrue(twilioSmsService.sendSms(telephoneNumber, message));
+        final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
+        assertNotNull(logEntry);
+        assertNotNull(logEntry.getTimestamp());
+        assertEquals(telephoneNumber, logEntry.getTelephoneNumber());
+        assertEquals(message, logEntry.getMessage());
+        assertNotNull(logEntry.getDlrNumber());
+        assertEquals("queued", logEntry.getTwilioStatus());
+        assertNull(logEntry.getTwilioError());
+        assertEquals(-2, logEntry.getSmsTradeStatus());
     }
 
     @Test
@@ -72,7 +88,7 @@ public final class TwilioSmsServiceTest {
         final String message         = "Test not configured";
 
         final TwilioSettingsService twilioSettings = new TwilioSettingsService("", "", "", "", "", "");
-        final TwilioSmsService service = new TwilioSmsService(settingsService, twilioSettings);
+        final TwilioSmsService service = new TwilioSmsService(settingsService, twilioSettings, smsSentLogRepository);
         assertFalse(service.sendSms(telephoneNumber, message));
     }
 
@@ -82,9 +98,18 @@ public final class TwilioSmsServiceTest {
         final String message         = "Test no network";
 
         final TwilioSettingsService twilioSettings = new TwilioSettingsService("https://no.example.com", "+1", "007", "secret", "user", "password");
-        final TwilioSmsService service = new TwilioSmsService(settingsService, twilioSettings);
+        final TwilioSmsService service = new TwilioSmsService(settingsService, twilioSettings, smsSentLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));
+        final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
+        assertNotNull(logEntry);
+        assertNotNull(logEntry.getTimestamp());
+        assertEquals(telephoneNumber, logEntry.getTelephoneNumber());
+        assertEquals(message, logEntry.getMessage());
+        assertNull(logEntry.getDlrNumber());
+        assertNotNull(logEntry.getTwilioStatus());
+        assertNotNull(logEntry.getTwilioError());
+        assertEquals(-2, logEntry.getSmsTradeStatus());
     }
 
     @Test
@@ -92,5 +117,14 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+15005550001";
         final String message         = "Test invalid number";
         assertFalse(twilioSmsService.sendSms(telephoneNumber, message));
+        final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
+        assertNotNull(logEntry);
+        assertNotNull(logEntry.getTimestamp());
+        assertEquals(telephoneNumber, logEntry.getTelephoneNumber());
+        assertEquals(message, logEntry.getMessage());
+        assertNull(logEntry.getDlrNumber());
+        assertNotNull(logEntry.getTwilioStatus());
+        assertNotNull(logEntry.getTwilioError());
+        assertEquals(-2, logEntry.getSmsTradeStatus());
     }
 }

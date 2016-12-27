@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.simlar.simlarserver.database.models.SmsSentLog;
+import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.json.twilio.MessageResponse;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +50,13 @@ public final class TwilioSmsService {
 
     private final SettingsService       settingsService;
     private final TwilioSettingsService twilioSettingsService;
+    private final SmsSentLogRepository  smsSentLogRepository;
 
     @Autowired
-    public TwilioSmsService(final SettingsService settingsService, final TwilioSettingsService twilioSettingsService) {
+    public TwilioSmsService(final SettingsService settingsService, final TwilioSettingsService twilioSettingsService, final SmsSentLogRepository smsSentLogRepository) {
         this.settingsService       = settingsService;
         this.twilioSettingsService = twilioSettingsService;
+        this.smsSentLogRepository  = smsSentLogRepository;
     }
 
     private String postRequest(final String telephoneNumber, final String text) {
@@ -76,6 +80,7 @@ public final class TwilioSmsService {
         } catch (final RestClientException e) {
             final String cause = ExceptionUtils.getRootCauseMessage(e);
             LOGGER.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " failed to connect to twilio server: " + cause);
+            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", cause, text));
             return null;
         }
     }
@@ -98,6 +103,7 @@ public final class TwilioSmsService {
             final MessageResponse messageResponse = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readValue(response, MessageResponse.class);
             if (StringUtils.isEmpty(messageResponse.getSid())) {
                 LOGGER.severe("while sending sms to " + telephoneNumber + " received message response without MessageSid: " + response);
+                smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, messageResponse.getStatus(), messageResponse.getErrorCode() + " - " + messageResponse.getErrorMessage(), text));
                 return false;
             }
 
@@ -107,6 +113,7 @@ public final class TwilioSmsService {
             }
 
             LOGGER.info("while sending sms to " + telephoneNumber + " received message response: " + messageResponse);
+            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
             return true;
         } catch (final JsonMappingException | JsonParseException e) {
             LOGGER.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " unable to parse response: " + response, e);
