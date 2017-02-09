@@ -89,10 +89,10 @@ final class ErrorController {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public static XmlError handleMissingParameterException(final HttpServletRequest request, final MissingServletRequestParameterException exception) {
+    public static String handleMissingParameterException(final HttpServletRequest request, final MissingServletRequestParameterException exception) {
         log(Level.SEVERE, exception.toString(), request, exception);
 
-        return createXmlError(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
+        return createXmlErrorString(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
     // in order to handle html request errors we have to return a String here

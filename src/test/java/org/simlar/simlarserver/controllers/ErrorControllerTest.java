@@ -114,6 +114,16 @@ public final class ErrorControllerTest extends BaseControllerTest {
         }));
     }
 
+    @Test
+    public void testHttpPostRequestWrongParameterTwilio() {
+        httpPost(TwilioController.REQUEST_PATH, createParameters(new String[][] {
+                { "ErrorCode", "404" },
+                { "SmsSid", "007" },
+                { "SmsStatus", "sent" }
+        }));
+    }
+
+
     private void httpGet404(final String requestPath) {
         assertNotNull(requestPath);
         assertUnknownStructure404(createNoExceptionRestTemplate().getForEntity(getBaseUrl() + requestPath, String.class));
