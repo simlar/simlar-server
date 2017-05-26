@@ -44,7 +44,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE")
         classpath("com.github.ben-manes:gradle-versions-plugin:0.14.0")
     }
 }
@@ -59,7 +59,7 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-ws")
+    compile("org.springframework.boot:spring-boot-starter-web-services")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("com.h2database:h2")
     compile("com.google.code.findbugs:annotations:3.0.1")
