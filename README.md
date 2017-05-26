@@ -41,6 +41,11 @@ It is recommended to run clean before building the war file. This may lead to sm
 ```
 ./gradlew clean war
 ```
+### Check dependencies ###
+The simlar-server uses the [gradle versions plugin](https://github.com/ben-manes/gradle-versions-plugin). You may check for dependency updates like:
+```
+./gradlew dependencyUpdates -Drevision=release
+```
 
 ## IntelliJ IDEA CE ##
 We use the [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/) for development.
