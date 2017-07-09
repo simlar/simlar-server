@@ -162,4 +162,26 @@ public final class TwilioSmsServiceTest {
                 new SmsSentLog(telephoneNumber, null, "400", "null - The 'To' phone number: " + telephoneNumber + ", is not currently reachable using the 'From' phone number: +15005550006 via SMS.", message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
+
+    @Test
+    public void testHandleResponseNoStatus() {
+        final String telephoneNumber = "4711";
+        final String message         = "Number no status";
+        final String response        = "{\"sid\": 21211}";
+        assertFalse(twilioSmsService.handleResponse(telephoneNumber, message, response));
+        assertAlmostEquals(message,
+                new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, message),
+                smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
+    }
+
+    @Test
+    public void testHandleResponseNoJson() {
+        final String telephoneNumber = "23";
+        final String message         = "Number no json";
+        final String response        = "\"sid\": 21211";
+        assertFalse(twilioSmsService.handleResponse(telephoneNumber, message, response));
+        assertAlmostEquals(message,
+                new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, message),
+                smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
+    }
 }

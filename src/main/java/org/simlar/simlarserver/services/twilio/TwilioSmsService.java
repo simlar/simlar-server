@@ -93,8 +93,11 @@ public final class TwilioSmsService {
             return false;
         }
 
-        final String response = postRequest(telephoneNumber, text);
+        return handleResponse(telephoneNumber, text, postRequest(telephoneNumber, text));
+    }
 
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+    boolean handleResponse(final String telephoneNumber, final String text, final String response) {
         if (StringUtils.isEmpty(response)) {
             LOGGER.severe("while sending sms to " + telephoneNumber + " received empty response");
             return false;
@@ -110,6 +113,7 @@ public final class TwilioSmsService {
 
             if (StringUtils.isEmpty(messageResponse.getStatus())) {
                 LOGGER.severe("while sending sms to " + telephoneNumber + " received message response without status: " + response);
+                smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
                 return false;
             }
 
@@ -118,9 +122,11 @@ public final class TwilioSmsService {
             return true;
         } catch (final JsonMappingException | JsonParseException e) {
             LOGGER.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " unable to parse response: " + response, e);
+            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " IOException during response parsing: " + response, e);
+            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
     }
