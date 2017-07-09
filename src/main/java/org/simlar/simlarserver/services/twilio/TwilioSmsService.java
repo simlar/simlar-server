@@ -89,6 +89,7 @@ public final class TwilioSmsService {
     public boolean sendSms(final String telephoneNumber, final String text) {
         if (!twilioSettingsService.isConfigured()) {
             LOGGER.severe("twilio not configured: " + twilioSettingsService);
+            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
             return false;
         }
 

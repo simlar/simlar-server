@@ -122,7 +122,11 @@ public final class TwilioSmsServiceTest {
 
         final TwilioSettingsService twilioSettings = new TwilioSettingsService("", "", "", "", "", "");
         final TwilioSmsService service = new TwilioSmsService(settingsService, twilioSettings, smsSentLogRepository);
+
         assertFalse(service.sendSms(telephoneNumber, message));
+        assertAlmostEquals(message,
+                new SmsSentLog(telephoneNumber, null, "SimlarServerException", "twilio not configured", message),
+                smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
     @Test
@@ -134,7 +138,6 @@ public final class TwilioSmsServiceTest {
         final TwilioSmsService service = new TwilioSmsService(settingsService, twilioSettings, smsSentLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));
-
         assertAlmostEquals(message,
                 new SmsSentLog(telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com", message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
