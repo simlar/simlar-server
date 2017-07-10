@@ -23,6 +23,8 @@ package org.simlar.simlarserver.controllers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertNull;
@@ -30,6 +32,10 @@ import static org.junit.Assert.assertNull;
 @SuppressWarnings("ALL")
 @RunWith(SpringRunner.class)
 public final class TwilioControllerTest extends BaseControllerTest {
+    @SuppressWarnings("CanBeFinal")
+    @Autowired
+    private SmsSentLogRepository smsSentLogRepository;
+
     /*private <T> T postDeliveryReport(final Class<T> responseClass,
                                      final String messageSid,
                                      final String to,
@@ -83,6 +89,23 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 { "From", from },
                 { "ApiVersion", apiVersion }
         })));
+    }
+
+    @Test
+    public void testPostDeliveryReportNoSentEntryInDB() {
+        final String telephoneNumber = "991";
+        postDeliveryReportSuccess(
+                "SM5dbcbffd029d4eb18de4068b58e31234",
+                "delivered",
+                "delivered",
+                telephoneNumber,
+                "SM5dbcbffd029d4eb18de4068b58e31234",
+                "ACfegg76bace9937efaa9932aabbcc1122",
+                "+15005550006",
+                "2010-04-01"
+        );
+
+        assertNull(smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
     @Test
