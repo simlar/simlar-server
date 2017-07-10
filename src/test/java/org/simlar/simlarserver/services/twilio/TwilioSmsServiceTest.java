@@ -33,18 +33,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.Duration;
-import java.time.temporal.Temporal;
-
-import static java.lang.Math.abs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
+import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
 
 @TestPropertySource(properties = "domain = sip.simlar.org") // domain is an essential part of the callback url
 @RunWith(SpringRunner.class)
@@ -70,39 +64,6 @@ public final class TwilioSmsServiceTest {
     public void verifyConfiguration() {
         assumeTrue("This test needs a Twilio configuration with Twilio test credentials", twilioSettingsService.isConfigured());
         assertEquals("Twilio test credentials", "+15005550006", twilioSettingsService.getSmsSourceNumber());
-    }
-
-    private static void assertAlmostEquals(final String message, final Temporal expected, final Temporal actual) {
-
-        if (expected == null || actual == null) {
-            assertEquals(message, expected, actual);
-            return;
-        }
-
-        assertTrue(message, abs(Duration.between(expected, actual).getSeconds()) <= 1);
-    }
-
-    private static void assertAlmostEquals(final String message, final SmsSentLog expected, final SmsSentLog actual) {
-        if (expected == null || actual == null) {
-            assertSame(message, expected, actual);
-            return;
-        }
-
-        assertEquals(message, expected.getTelephoneNumber(), actual.getTelephoneNumber());
-        assertAlmostEquals(message, expected.getTimestamp(), actual.getTimestamp());
-        final String dleNumber = actual.getDlrNumber();
-        if (expected.getDlrNumber() == null) {
-            assertNull(message, dleNumber);
-        } else {
-            assertNotNull(message, dleNumber);
-            assertNotEquals(message, "", dleNumber);
-        }
-        assertEquals(message, expected.getDlrStatus(), actual.getDlrStatus());
-        assertAlmostEquals(message, expected.getDlrTimestamp(), actual.getDlrTimestamp());
-        assertEquals(message, expected.getSmsTradeStatus(), actual.getSmsTradeStatus());
-        assertEquals(message, expected.getTwilioStatus(), actual.getTwilioStatus());
-        assertEquals(message, expected.getTwilioError(), actual.getTwilioError());
-        assertEquals(message, expected.getMessage(), actual.getMessage());
     }
 
     @Test
