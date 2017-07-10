@@ -23,10 +23,13 @@ package org.simlar.simlarserver.controllers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 @SuppressWarnings("ALL")
@@ -106,6 +109,35 @@ public final class TwilioControllerTest extends BaseControllerTest {
         );
 
         assertNull(smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
+    }
+
+    @Test
+    public void testPostDeliveryReportSmsSuccess() {
+        final String telephoneNumber = "992";
+        final String sid             = "y2390ß1jc";
+        final String message         = "sms text success";
+        final String twilioStatus    = "delivered";
+
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber, sid, "queued", message)));
+
+        postDeliveryReportSuccess(
+                sid,
+                twilioStatus,
+                twilioStatus,
+                telephoneNumber,
+                sid,
+                "ACfegg76bace9937efaa9932aabbcc1122",
+                "+15005550006",
+                "2010-04-01"
+        );
+
+        final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
+        assertNotNull(logEntry);
+        assertEquals(logEntry.getTelephoneNumber(), telephoneNumber);
+        assertEquals(logEntry.getTwilioStatus(), twilioStatus);
+        assertEquals(logEntry.getDlrNumber(), sid);
+        assertEquals(logEntry.getMessage(), message);
+        assertNotNull(logEntry.getDlrTimestamp()); /// TODO
     }
 
     @Test
