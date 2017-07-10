@@ -28,9 +28,11 @@ import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertEquals;
+import java.time.Instant;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
 
 @SuppressWarnings("ALL")
 @RunWith(SpringRunner.class)
@@ -131,13 +133,9 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 "2010-04-01"
         );
 
-        final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
-        assertNotNull(logEntry);
-        assertEquals(logEntry.getTelephoneNumber(), telephoneNumber);
-        assertEquals(logEntry.getTwilioStatus(), twilioStatus);
-        assertEquals(logEntry.getDlrNumber(), sid);
-        assertEquals(logEntry.getMessage(), message);
-        assertNotNull(logEntry.getDlrTimestamp()); /// TODO
+        assertAlmostEquals(message,
+                new SmsSentLog(telephoneNumber, sid, twilioStatus, message, Instant.now()),
+                smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
     @Test

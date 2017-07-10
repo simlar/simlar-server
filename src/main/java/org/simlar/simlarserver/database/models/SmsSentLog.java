@@ -79,14 +79,22 @@ public final class SmsSentLog {
         this(telephoneNumber, dlrNumber, twilioStatus, null, message);
     }
 
-    @SuppressWarnings("UnnecessaryThis")
+    public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message, final Instant dlrTimestamp) {
+        this(telephoneNumber, dlrNumber, twilioStatus, null, message, dlrTimestamp);
+    }
+
     public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message) {
+        this(telephoneNumber, dlrNumber, twilioStatus, twilioError, message, null);
+    }
+
+    @SuppressWarnings("UnnecessaryThis")
+    private SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message, final Instant dlrTimestamp) {
         this.telephoneNumber = telephoneNumber;
         this.timestamp       = Timestamp.from(Instant.now());
         this.dlrNumber       = dlrNumber;
         this.dlrStatus       = -1;
         //noinspection AssignmentToNull
-        this.dlrTimestamp    = null;
+        this.dlrTimestamp    = dlrTimestamp == null ? null : Timestamp.from(dlrTimestamp);
         this.smsTradeStatus  = -2;
         this.twilioStatus    = twilioStatus;
         this.twilioError     = StringUtils.left(twilioError, 64);
