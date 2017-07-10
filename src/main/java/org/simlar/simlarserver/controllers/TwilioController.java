@@ -21,6 +21,8 @@
 
 package org.simlar.simlarserver.controllers;
 
+import org.simlar.simlarserver.services.twilio.TwilioSmsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +34,13 @@ import java.util.logging.Logger;
 final class TwilioController {
     public  static final String REQUEST_PATH = "twilio/delivery-report.json";
     private static final Logger LOGGER       = Logger.getLogger(TwilioController.class.getName());
+
+    private final TwilioSmsService twilioSmsService;
+
+    @Autowired
+    private TwilioController(final TwilioSmsService twilioSmsService) {
+        this.twilioSmsService = twilioSmsService;
+    }
 
     /**
      * This method handles http post requests. You may test it with:
@@ -57,5 +66,7 @@ final class TwilioController {
             @RequestParam(name = "ErrorCode", required = false) final String errorCode
     ) {
         LOGGER.info(REQUEST_PATH + " requested with messageSid=" + messageSid + " to=" + to + " messageStatus=" + messageStatus + " errorCode=" + errorCode);
+
+        twilioSmsService.handleDeliveryReport(to, messageSid, messageStatus, errorCode);
     }
 }

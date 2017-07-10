@@ -130,4 +130,17 @@ public final class TwilioSmsService {
             return false;
         }
     }
+
+    public void handleDeliveryReport(final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
+        final SmsSentLog smsSentLog = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
+        if (smsSentLog == null) {
+            LOGGER.severe("no db entry");
+            return;
+        }
+
+        smsSentLog.setDlrTimestampToNow();
+        smsSentLog.setTwilioStatus(messageStatus);
+        smsSentLog.setTwilioError(errorCode);
+        smsSentLogRepository.save(smsSentLog);
+    }
 }
