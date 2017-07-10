@@ -115,6 +115,10 @@ public final class SmsSentLog {
         return dlrTimestamp == null ? null : dlrTimestamp.toInstant();
     }
 
+    public void setDlrTimestampToNow() {
+        dlrTimestamp = Timestamp.from(Instant.now());
+    }
+
     public int getSmsTradeStatus() {
         return smsTradeStatus;
     }
@@ -123,8 +127,16 @@ public final class SmsSentLog {
         return twilioStatus;
     }
 
+    public void setTwilioStatus(String twilioStatus) {
+        this.twilioStatus = twilioStatus;
+    }
+
     public String getTwilioError() {
         return twilioError;
+    }
+
+    public void setTwilioError(String twilioError) {
+        this.twilioError = twilioError;
     }
 
     public String getMessage() {
