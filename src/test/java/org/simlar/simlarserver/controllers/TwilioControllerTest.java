@@ -155,6 +155,26 @@ public final class TwilioControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testPostDeliveryReportSmsSuccessMinimalValues() {
+        final String telephoneNumber = "993";
+        final String sid             = "yxyxcvyxc";
+        final String message         = "sms text success";
+        final String twilioStatus    = "delivered";
+
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber, sid, "queued", message)));
+
+        assertNull(postRequest(TwilioController.REQUEST_PATH, createParameters(new String[][] {
+                { "MessageStatus", twilioStatus },
+                { "To", telephoneNumber },
+                { "MessageSid", sid }
+        })));
+
+        assertAlmostEquals(message,
+                new SmsSentLog(telephoneNumber, sid, twilioStatus, message, Instant.now()),
+                smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
+    }
+
+    @Test
     public void testPostDeliveryReport() {
         postDeliveryReportSuccess(
                 "SM5dbcbffd029d4eb18de4068b58e31234",
