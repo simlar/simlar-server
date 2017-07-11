@@ -87,7 +87,7 @@ public final class SmsSentLog {
         this(telephoneNumber, dlrNumber, twilioStatus, twilioError, message, null);
     }
 
-    @SuppressWarnings("UnnecessaryThis")
+    @SuppressWarnings({"UnnecessaryThis", "ConstructorWithTooManyParameters"})
     private SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message, final Instant dlrTimestamp) {
         this.telephoneNumber = telephoneNumber;
         this.timestamp       = Timestamp.from(Instant.now());
