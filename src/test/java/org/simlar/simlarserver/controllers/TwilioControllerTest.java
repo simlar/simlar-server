@@ -209,7 +209,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
     @Test
     public void testPostDeliveryReportSmsSuccessDifferentTelefoneNumbers() {
         final String telephoneNumber1 = "995";
-        final String telephoneNumber2 = "995";
+        final String telephoneNumber2 = "996";
         final String sid              = "sdfster57";
         final String message          = "sms text success";
         final String twilioStatus     = "sent";
