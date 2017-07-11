@@ -132,7 +132,7 @@ public final class TwilioSmsService {
     }
 
     public void handleDeliveryReport(final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
-        final SmsSentLog smsSentLog = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
+        final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(messageSid);
         if (smsSentLog == null) {
             LOGGER.severe("no db entry");
             return;

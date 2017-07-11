@@ -27,4 +27,6 @@ import org.springframework.data.repository.CrudRepository;
 @SuppressWarnings({"unused", "InterfaceNeverImplemented"})
 public interface SmsSentLogRepository extends CrudRepository<SmsSentLog, Integer> {
     SmsSentLog findByTelephoneNumber(final String telephoneNumber);
+
+    SmsSentLog findByDlrNumber(final String dlrNumber);
 }
