@@ -67,7 +67,7 @@ dependencies {
     compile("commons-codec:commons-codec:1.10")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("junit:junit:4.12")
-    runtime("mysql:mysql-connector-java:5.1.41") // this version is currently needed by spring
+    runtime("mysql:mysql-connector-java")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
