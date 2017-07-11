@@ -23,6 +23,7 @@ package org.simlar.simlarserver.database.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,13 +52,15 @@ public final class SmsSentLog {
     @Column(length = 64)
     private String dlrNumber;
 
-    @Column(nullable = false, columnDefinition = "int(10) signed DEFAULT -1")
+    @Column(nullable = false)
+    @ColumnDefault("-1")
     private int dlrStatus;
 
     @Column(columnDefinition = "TIMESTAMP NULL DEFAULT NULL") /// hibernate does not support columnDefinition = "TIMESTAMP DEFAULT '0000-00-00 00:00:00'"
     private Timestamp dlrTimestamp;
 
-    @Column(nullable = false, columnDefinition = "int(10) signed DEFAULT -1")
+    @Column(nullable = false)
+    @ColumnDefault("-1")
     private int smsTradeStatus;
 
     @Column(length = 64)
