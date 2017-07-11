@@ -101,6 +101,7 @@ public final class SmsSentLog {
         this.message         = message;
     }
 
+    @SuppressWarnings("TypeMayBeWeakened")
     public String getTelephoneNumber() {
         return telephoneNumber;
     }
