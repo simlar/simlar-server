@@ -233,6 +233,31 @@ public final class TwilioControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testPostDeliveryReportSmsError() {
+        final String telephoneNumber = "997";
+        final String sid             = "SM861a2b3299db4af1996d4ff9cb07f4cc";
+        final String message         = "sms text error";
+        final String twilioStatus    = "undelivered";
+
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber, sid, "queued", message)));
+
+        postDeliveryReportError(
+                "30009",
+                sid,
+                twilioStatus,
+                twilioStatus,
+                telephoneNumber,
+                sid,
+                "ACfegg76bace9937efaa9932aabbcc1122",
+                "+32460202070",
+                "2010-04-01");
+
+        assertAlmostEquals(message,
+                new SmsSentLog(telephoneNumber, sid, twilioStatus, "30009", message, Instant.now()),
+                smsSentLogRepository.findByDlrNumber(sid));
+    }
+
+    @Test
     public void testPostDeliveryReport() {
         postDeliveryReportSuccess(
                 "SM5dbcbffd029d4eb18de4068b58e31234",
