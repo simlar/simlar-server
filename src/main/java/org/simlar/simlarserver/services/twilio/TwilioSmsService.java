@@ -133,7 +133,7 @@ public final class TwilioSmsService {
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
-    public void handleDeliveryReport(final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
+    public void handleDeliveryReport(@SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
         final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(messageSid);
         if (smsSentLog == null) {
             LOGGER.severe("no db entry");
