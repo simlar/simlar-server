@@ -207,6 +207,32 @@ public final class TwilioControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testPostDeliveryReportSmsSuccessDifferentTelefoneNumbers() {
+        final String telephoneNumber1 = "995";
+        final String telephoneNumber2 = "995";
+        final String sid              = "sdfster57";
+        final String message          = "sms text success";
+        final String twilioStatus     = "sent";
+
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber1, sid, "queued", message)));
+
+        postDeliveryReportSuccess(
+                sid,
+                twilioStatus,
+                twilioStatus,
+                telephoneNumber2,
+                sid,
+                "ACfegg76bace9937efaa9932aabbcc1122",
+                "+15005550006",
+                "2010-04-01"
+        );
+
+        assertAlmostEquals(message,
+                new SmsSentLog(telephoneNumber1, sid, twilioStatus, message, Instant.now()),
+                smsSentLogRepository.findByDlrNumber(sid));
+    }
+
+    @Test
     public void testPostDeliveryReport() {
         postDeliveryReportSuccess(
                 "SM5dbcbffd029d4eb18de4068b58e31234",

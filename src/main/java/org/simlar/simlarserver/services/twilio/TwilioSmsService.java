@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.simlar.simlarserver.database.models.SmsSentLog;
@@ -131,11 +132,16 @@ public final class TwilioSmsService {
         }
     }
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public void handleDeliveryReport(final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
         final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(messageSid);
         if (smsSentLog == null) {
             LOGGER.severe("no db entry");
             return;
+        }
+
+        if (!StringUtils.equals(smsSentLog.getTelephoneNumber(), telephoneNumber)) {
+            LOGGER.warning("delivery report with unequal telephone numbers: saved='" + smsSentLog.getTelephoneNumber() + "' received='" + telephoneNumber + '\'');
         }
 
         smsSentLog.setDlrTimestampToNow();
