@@ -253,7 +253,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 "2010-04-01");
 
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, sid, twilioStatus, "30009", message, Instant.now()),
+                new SmsSentLog(telephoneNumber, sid, twilioStatus, "30009 - Missing segment", message, Instant.now()),
                 smsSentLogRepository.findByDlrNumber(sid));
     }
 

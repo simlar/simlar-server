@@ -32,6 +32,7 @@ import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.json.twilio.MessageResponse;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.utils.TwilioCallBackErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
@@ -146,7 +147,7 @@ public final class TwilioSmsService {
 
         smsSentLog.setDlrTimestampToNow();
         smsSentLog.setTwilioStatus(messageStatus);
-        smsSentLog.setTwilioError(errorCode);
+        smsSentLog.setTwilioError(TwilioCallBackErrorCode.createString(errorCode));
         smsSentLogRepository.save(smsSentLog);
     }
 }
