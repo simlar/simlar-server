@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.controllers;
 
-import org.simlar.simlarserver.services.twilio.TwilioSmsService;
+import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
@@ -41,11 +41,11 @@ final class CreateAccountController {
     public  static final String COMMAND_REQUEST = "request";
     private static final Logger LOGGER          = Logger.getLogger(CreateAccountController.class.getName());
 
-    private final TwilioSmsService twilioSmsService;
+    private final SmsService smsService;
 
     @Autowired
-    private CreateAccountController(final TwilioSmsService twilioSmsService) {
-        this.twilioSmsService = twilioSmsService;
+    private CreateAccountController(final SmsService smsService) {
+        this.smsService = smsService;
     }
 
     /**
@@ -76,7 +76,7 @@ final class CreateAccountController {
             throw new XmlErrorUnknownStructureException("create account request with command: " + command);
         }
 
-        if (!twilioSmsService.sendSms(telephoneNumber, smsText)) {
+        if (!smsService.sendSms(telephoneNumber, smsText)) {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsText);
         }
 

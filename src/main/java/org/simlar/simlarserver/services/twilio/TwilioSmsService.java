@@ -32,6 +32,7 @@ import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.json.twilio.MessageResponse;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.TwilioCallBackErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -47,7 +48,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Component
-public final class TwilioSmsService {
+public final class TwilioSmsService implements SmsService {
     private static final Logger LOGGER = Logger.getLogger(TwilioSmsService.class.getName());
 
     private final SettingsService       settingsService;
@@ -87,6 +88,7 @@ public final class TwilioSmsService {
         }
     }
 
+    @Override
     @SuppressWarnings({"BooleanMethodNameMustStartWithQuestion", "MethodWithMultipleReturnPoints"})
     public boolean sendSms(final String telephoneNumber, final String text) {
         if (!twilioSettingsService.isConfigured()) {
