@@ -25,9 +25,11 @@ import org.junit.Test;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import java.io.StringReader;
 import java.io.StringWriter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public final class XmlSuccessCreateAccountRequestTest {
     @Test
@@ -39,5 +41,17 @@ public final class XmlSuccessCreateAccountRequestTest {
         assertEquals(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><success password=\"s1cur3Me\" simlarId=\"*12345*\"/>",
                 xml);
+    }
+
+    @Test
+    public void testUnMarshal() throws JAXBException {
+        final String xml =
+                "<?xml version=\"1.0\"?>\n" +
+                "<success simlarId=\"*23456784*\" password=\"s1cur3Me2\"/>";
+
+        final XmlSuccessCreateAccountRequest response = (XmlSuccessCreateAccountRequest)JAXBContext.newInstance(XmlSuccessCreateAccountRequest.class).createUnmarshaller().unmarshal(new StringReader(xml));
+        assertNotNull(response);
+        assertEquals("*23456784*", response.getSimlarId());
+        assertEquals("s1cur3Me2", response.getPassword());
     }
 }
