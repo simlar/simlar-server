@@ -44,9 +44,15 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         }));
     }
 
+    private void assertPostCreateAccountError(final int expectedErrorId, final String command, final String telephoneNumber, final String smsText) {
+        final XmlError response = postCreateAccount(XmlError.class, command,telephoneNumber, smsText);
+        assertNotNull(response);
+        assertEquals(expectedErrorId, response.getId());
+    }
+
     @Test
     public void testRequestSuccess() {
-        final XmlSuccessCreateAccountRequest success = postCreateAccount(XmlSuccessCreateAccountRequest.class, "request","+15005550006", "android-en");
+        final XmlSuccessCreateAccountRequest success = postCreateAccount(XmlSuccessCreateAccountRequest.class, CreateAccountController.COMMAND_REQUEST,"+15005550006", "android-en");
         assertNotNull(success);
         //assertEquals("*15005550006*", success.getSimlarId()); /// TODO
         assertNotNull(success.getPassword());
@@ -55,8 +61,13 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
     @Test
     public void testRequestFailedToSendSms() {
-        final XmlError response = postCreateAccount(XmlError.class, "request","+15005550001", "android-ios");
-        assertNotNull(response);
-        assertEquals(24, response.getId());
+        assertPostCreateAccountError(24, CreateAccountController.COMMAND_REQUEST, "+15005550001", "android-de");
+    }
+
+    @Test
+    public void testRequestWithWrongCommand() {
+        assertPostCreateAccountError(1, "xyz", "+15005550006", "android-en");
+        assertPostCreateAccountError(1, "confirm", "+15005550006", "android-en");
+        assertPostCreateAccountError(1, null, "+15005550006", "android-en");
     }
 }

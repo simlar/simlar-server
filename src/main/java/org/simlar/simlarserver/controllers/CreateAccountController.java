@@ -24,6 +24,7 @@ package org.simlar.simlarserver.controllers;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,12 +32,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @RestController
 final class CreateAccountController {
-    public  static final String REQUEST_PATH = "/create-account.xml";
-    private static final Logger LOGGER       = Logger.getLogger(CreateAccountController.class.getName());
+    public  static final String REQUEST_PATH    = "/create-account.xml";
+    public  static final String COMMAND_REQUEST = "request";
+    private static final Logger LOGGER          = Logger.getLogger(CreateAccountController.class.getName());
 
     private final TwilioSmsService twilioSmsService;
 
@@ -68,6 +71,10 @@ final class CreateAccountController {
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessCreateAccountRequest createAccountRequest(@RequestParam final String command, @RequestParam final String telephoneNumber, @RequestParam final String smsText) {
         LOGGER.info(REQUEST_PATH + " requested with command=\"" + command + '\"');
+
+        if (!Objects.equals(command, COMMAND_REQUEST)) {
+            throw new XmlErrorUnknownStructureException("create account request with command: " + command);
+        }
 
         if (!twilioSmsService.sendSms(telephoneNumber, smsText)) {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsText);
