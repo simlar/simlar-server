@@ -24,18 +24,23 @@ package org.simlar.simlarserver.controllers;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
-@TestPropertySource(properties = "domain = sip.simlar.org") // domain is an essential part of the callback url
 @RunWith(SpringRunner.class)
 public final class CreateAccountControllerTest extends BaseControllerTest {
+    @SuppressWarnings("CanBeFinal")
+    @Autowired
+    private SmsService smsService;
+
     private <T> T postCreateAccount(final Class<T> responseClass, final String command, final String telephoneNumber, final String smsText) {
         return postRequest(responseClass, CreateAccountController.REQUEST_PATH, createParameters(new String[][] {
                 { "command", command },
@@ -52,6 +57,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
     @Test
     public void testRequestSuccess() {
+        when(smsService.sendSms("+15005550006", "android-en")).thenReturn(Boolean.TRUE);
         final XmlSuccessCreateAccountRequest success = postCreateAccount(XmlSuccessCreateAccountRequest.class, CreateAccountController.COMMAND_REQUEST,"+15005550006", "android-en");
         assertNotNull(success);
         //assertEquals("*15005550006*", success.getSimlarId()); /// TODO
@@ -61,6 +67,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
     @Test
     public void testRequestFailedToSendSms() {
+        when(smsService.sendSms("+15005550001", "android-de")).thenReturn(Boolean.FALSE);
         assertPostCreateAccountError(24, CreateAccountController.COMMAND_REQUEST, "+15005550001", "android-de");
     }
 

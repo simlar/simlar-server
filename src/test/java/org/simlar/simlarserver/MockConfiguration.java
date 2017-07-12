@@ -21,9 +21,16 @@
 
 package org.simlar.simlarserver;
 
+import org.mockito.Mockito;
+import org.simlar.simlarserver.services.smsservice.SmsService;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @SuppressWarnings({"DesignForExtension", "unused", "MethodMayBeStatic"})
 @Configuration
 class MockConfiguration {
+    @Bean
+    public SmsService smsService() {
+        return Mockito.mock(SmsService.class);
+    }
 }
