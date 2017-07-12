@@ -41,19 +41,6 @@ public final class TwilioControllerTest extends BaseControllerTest {
     @Autowired
     private SmsSentLogRepository smsSentLogRepository;
 
-    /*private <T> T postDeliveryReport(final Class<T> responseClass,
-                                     final String messageSid,
-                                     final String to,
-                                     final String messageStatus,
-                                     final String errorCode) {
-        return postRequest(responseClass, TwilioController.REQUEST_PATH, createParameters(new String[][] {
-                { "MessageSid", messageSid },
-                { "To", to },
-                { "MessageStatus", messageStatus },
-                { "ErrorCode", errorCode }
-        }));
-    }*/
-
     private void postDeliveryReportSuccess(final String smsSid,
                                            final String smsStatus,
                                            final String messageStatus,
@@ -293,8 +280,4 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 "2010-04-01"
         );
     }
-
-    /// Todos
-    // wrong parameter
-    // more parameter
 }
