@@ -26,6 +26,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsExcepti
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 
 import java.util.Arrays;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 
 public enum XmlErrorExceptionClientResponse {
         UNKNOWN_ERROR              (null,                                             0, "unknown error"),
-        UNKNOWN_STRUCTURE          (null,                                             1, "unknown structure"),
+        UNKNOWN_STRUCTURE          (XmlErrorUnknownStructureException.class,          1, "unknown structure"),
         WRONG_CREDENTIALS          (XmlErrorWrongCredentialsException.class,         10, "wrong credentials"),
         FAILED_TO_SEND_SMS         (XmlErrorFailedToSendSmsException.class,          24, "failed to send sms"),
         UNKNOWN_PUSH_ID_TYPE       (XmlErrorUnknownPushIdTypeException.class,        30, "unknown push id type"),
