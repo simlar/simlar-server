@@ -73,6 +73,18 @@ public final class SimlarIdTest {
         assertNotNull(SimlarId.create("*0007*"));
     }
 
+    @Test
+    public void testCreateWithTelephoneNumber() {
+        assertNull(SimlarId.createWithTelephoneNumber(null));
+        assertNull(SimlarId.createWithTelephoneNumber(""));
+        assertNull(SimlarId.createWithTelephoneNumber("*"));
+        assertNull(SimlarId.createWithTelephoneNumber("+"));
+        assertNull(SimlarId.createWithTelephoneNumber("+4d"));
+        assertNull(SimlarId.createWithTelephoneNumber("4912345678"));
+
+        assertEquals("*4912345678*", SimlarId.createWithTelephoneNumber("+4912345678").get());
+    }
+
     private static List<SimlarId> parsePipeSeparatedSimlarIdsNotNull(final String str) {
         final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(str);
         assertNotNull(simlarIds);

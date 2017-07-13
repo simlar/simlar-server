@@ -39,7 +39,8 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("ClassWithTooManyDependents")
 public final class SimlarId implements Comparable<SimlarId> {
-    private static final Pattern REGEX_PATTERN_SIMLAR_ID = Pattern.compile("\\*\\d+\\*");
+    private static final Pattern REGEX_PATTERN_SIMLAR_ID        = Pattern.compile("\\*\\d+\\*");
+    private static final Pattern REGEX_PATTERN_TELEPHONE_NUMBER = Pattern.compile("\\+\\d+");
 
     private final String simlarId;
 
@@ -53,6 +54,15 @@ public final class SimlarId implements Comparable<SimlarId> {
         }
 
         return new SimlarId(simlarId);
+    }
+
+    @SuppressWarnings("ReturnOfNull")
+    public static SimlarId createWithTelephoneNumber(final String telephoneNumber) {
+        if (telephoneNumber == null || !REGEX_PATTERN_TELEPHONE_NUMBER.matcher(telephoneNumber).matches()) {
+            return null;
+        }
+
+        return create('*' + telephoneNumber.substring(1) + '*');
     }
 
     public String get() {
