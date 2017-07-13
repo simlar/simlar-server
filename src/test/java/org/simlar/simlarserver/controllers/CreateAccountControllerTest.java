@@ -32,6 +32,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
@@ -41,24 +43,36 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     @Autowired
     private SmsService smsService;
 
-    private <T> T postCreateAccount(final Class<T> responseClass, final String command, final String telephoneNumber, final String smsText) {
-        return postRequest(responseClass, CreateAccountController.REQUEST_PATH, createParameters(new String[][] {
+    @SuppressWarnings("MethodWithTooManyParameters")
+    private <T> T postCreateAccount(final Class<T> responseClass, final boolean callSmsService, final boolean sendSmsResult, final String command, final String telephoneNumber, final String smsText) {
+        if (callSmsService) {
+            when(smsService.sendSms(telephoneNumber, smsText)).thenReturn(sendSmsResult);
+        }
+
+        final T result = postRequest(responseClass, CreateAccountController.REQUEST_PATH, createParameters(new String[][] {
                 { "command", command },
                 { "telephoneNumber", telephoneNumber },
                 { "smsText", smsText }
         }));
+
+        if (callSmsService) {
+            verify(smsService).sendSms(telephoneNumber, smsText);
+        }
+
+        verifyNoMoreInteractions(smsService);
+
+        return result;
     }
 
-    private void assertPostCreateAccountError(final int expectedErrorId, final String command, final String telephoneNumber, final String smsText) {
-        final XmlError response = postCreateAccount(XmlError.class, command,telephoneNumber, smsText);
+    private void assertPostCreateAccountError(final int expectedErrorId, final boolean callSmsService, final String command, final String telephoneNumber, final String smsText) {
+        final XmlError response = postCreateAccount(XmlError.class, callSmsService, false, command,telephoneNumber, smsText);
         assertNotNull(response);
         assertEquals(expectedErrorId, response.getId());
     }
 
     @Test
     public void testRequestSuccess() {
-        when(smsService.sendSms("+15005550006", "android-en")).thenReturn(Boolean.TRUE);
-        final XmlSuccessCreateAccountRequest success = postCreateAccount(XmlSuccessCreateAccountRequest.class, CreateAccountController.COMMAND_REQUEST,"+15005550006", "android-en");
+        final XmlSuccessCreateAccountRequest success = postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST,"+15005550006", "android-en");
         assertNotNull(success);
         //assertEquals("*15005550006*", success.getSimlarId()); /// TODO
         assertNotNull(success.getPassword());
@@ -67,14 +81,13 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
     @Test
     public void testRequestFailedToSendSms() {
-        when(smsService.sendSms("+15005550001", "android-de")).thenReturn(Boolean.FALSE);
-        assertPostCreateAccountError(24, CreateAccountController.COMMAND_REQUEST, "+15005550001", "android-de");
+        assertPostCreateAccountError(24, true, CreateAccountController.COMMAND_REQUEST, "+15005550001", "android-de");
     }
 
     @Test
     public void testRequestWithWrongCommand() {
-        assertPostCreateAccountError(1, "xyz", "+15005550006", "android-en");
-        assertPostCreateAccountError(1, "confirm", "+15005550006", "android-en");
-        assertPostCreateAccountError(1, null, "+15005550006", "android-en");
+        assertPostCreateAccountError(1, false, "xyz", "+15005550006", "android-en");
+        assertPostCreateAccountError(1, false, "confirm", "+15005550006", "android-en");
+        assertPostCreateAccountError(1, false, null, "+15005550006", "android-en");
     }
 }
