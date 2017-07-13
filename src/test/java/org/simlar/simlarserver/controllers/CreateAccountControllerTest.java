@@ -74,7 +74,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     public void testRequestSuccess() {
         final XmlSuccessCreateAccountRequest success = postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST,"+15005550006", "android-en");
         assertNotNull(success);
-        //assertEquals("*15005550006*", success.getSimlarId()); /// TODO
+        assertEquals("*15005550006*", success.getSimlarId());
         assertNotNull(success.getPassword());
         assertEquals("password '" + success.getPassword() + "' does not match expected size",12, success.getPassword().length());
     }
@@ -89,5 +89,10 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertPostCreateAccountError(1, false, "xyz", "+15005550006", "android-en");
         assertPostCreateAccountError(1, false, "confirm", "+15005550006", "android-en");
         assertPostCreateAccountError(1, false, null, "+15005550006", "android-en");
+    }
+
+    @Test
+    public void testRequestWithInvalidTelephoneNumber() {
+        assertPostCreateAccountError(22, false, CreateAccountController.COMMAND_REQUEST, "NO-NUMBER", "android-de");
     }
 }

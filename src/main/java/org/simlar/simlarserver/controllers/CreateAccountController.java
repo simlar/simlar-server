@@ -22,8 +22,10 @@
 package org.simlar.simlarserver.controllers;
 
 import org.simlar.simlarserver.services.smsservice.SmsService;
+import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -76,10 +78,15 @@ final class CreateAccountController {
             throw new XmlErrorUnknownStructureException("create account request with command: " + command);
         }
 
+        final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
+        if (simlarId == null) {
+            throw new XmlErrorInvalidTelephoneNumberException("invalid telephone number: " + telephoneNumber);
+        }
+
         if (!smsService.sendSms(telephoneNumber, smsText)) {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsText);
         }
 
-        return new XmlSuccessCreateAccountRequest(telephoneNumber, "passwort1234");
+        return new XmlSuccessCreateAccountRequest(simlarId.get(), "passwort1234");
     }
 }
