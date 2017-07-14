@@ -32,6 +32,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -46,7 +48,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     @SuppressWarnings("MethodWithTooManyParameters")
     private <T> T postCreateAccount(final Class<T> responseClass, final boolean callSmsService, final boolean sendSmsResult, final String command, final String telephoneNumber, final String smsText) {
         if (callSmsService) {
-            when(smsService.sendSms(telephoneNumber, smsText)).thenReturn(sendSmsResult);
+            when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(sendSmsResult);
         }
 
         final T result = postRequest(responseClass, CreateAccountController.REQUEST_PATH, createParameters(new String[][] {
@@ -56,7 +58,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         }));
 
         if (callSmsService) {
-            verify(smsService).sendSms(telephoneNumber, smsText);
+            verify(smsService).sendSms(eq(telephoneNumber), anyString());
         }
 
         verifyNoMoreInteractions(smsService);

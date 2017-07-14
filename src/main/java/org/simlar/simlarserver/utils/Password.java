@@ -44,4 +44,10 @@ public final class Password {
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
     }
+
+    public static String generateRegistrationCode() {
+        return RANDOM.ints(6, 0, 10)
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
+    }
 }

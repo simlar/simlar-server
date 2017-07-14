@@ -36,4 +36,14 @@ public final class PasswordTest {
             //System.out.println(password);
         }
     }
+
+    @Test
+    public void testGenerateRegistrationCode() {
+        for (int i = 0; i < 10; ++i) {
+            final String code = Password.generateRegistrationCode();
+            assertNotNull(code);
+            assertEquals(code, 6, code.length());
+            //System.out.println(code);
+        }
+    }
 }
