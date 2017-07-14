@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import org.simlar.simlarserver.services.smsservice.SmsService;
+import org.simlar.simlarserver.utils.Password;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
@@ -87,6 +88,6 @@ final class CreateAccountController {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsText);
         }
 
-        return new XmlSuccessCreateAccountRequest(simlarId.get(), "passwort1234");
+        return new XmlSuccessCreateAccountRequest(simlarId.get(), Password.generate());
     }
 }
