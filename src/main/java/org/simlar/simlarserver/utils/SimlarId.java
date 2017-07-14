@@ -21,6 +21,9 @@
 
 package org.simlar.simlarserver.utils;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -62,7 +65,16 @@ public final class SimlarId implements Comparable<SimlarId> {
             return null;
         }
 
-        return create('*' + telephoneNumber.substring(1) + '*');
+        try {
+            final PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+            final Phonenumber.PhoneNumber pn = util.parse(telephoneNumber, null);
+
+            return pn != null && pn.hasCountryCode() && pn.hasNationalNumber() && util.isValidNumber(pn)
+                    ? new SimlarId('*' + Long.toString(pn.getCountryCode()) + Long.toString(pn.getNationalNumber()) + '*')
+                    : null;
+        } catch (final NumberParseException e) {
+            return null;
+        }
     }
 
     public String get() {

@@ -80,9 +80,10 @@ public final class SimlarIdTest {
         assertNull(SimlarId.createWithTelephoneNumber("*"));
         assertNull(SimlarId.createWithTelephoneNumber("+"));
         assertNull(SimlarId.createWithTelephoneNumber("+4d"));
-        assertNull(SimlarId.createWithTelephoneNumber("4912345678"));
+        assertNull(SimlarId.createWithTelephoneNumber("491631234567"));
+        assertNull(SimlarId.createWithTelephoneNumber("+49163123456"));
 
-        assertEquals("*4912345678*", SimlarId.createWithTelephoneNumber("+4912345678").get());
+        assertEquals("*491631234567*", SimlarId.createWithTelephoneNumber("+491631234567").get());
     }
 
     private static List<SimlarId> parsePipeSeparatedSimlarIdsNotNull(final String str) {
