@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -81,8 +82,8 @@ final class CreateAccountController {
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    public XmlSuccessCreateAccountRequest createAccountRequest(@RequestParam final String command, @RequestParam final String telephoneNumber, @RequestParam final String smsText) {
-        LOGGER.info(REQUEST_PATH + " requested with command=\"" + command + '\"');
+    public XmlSuccessCreateAccountRequest createAccountRequest(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String telephoneNumber, @RequestParam final String smsText) {
+        LOGGER.info(REQUEST_PATH + " requested with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
 
         if (!Objects.equals(command, COMMAND_REQUEST)) {
             throw new XmlErrorUnknownStructureException("create account request with command: " + command);
@@ -112,7 +113,7 @@ final class CreateAccountController {
         dbEntry.setRegistrationCode(registrationCode);
         dbEntry.setTimestamp(Instant.now());
         dbEntry.incrementRequestTries();
-        dbEntry.setIp("0.0.0.0"); /// Todo
+        dbEntry.setIp(request.getRemoteAddr());
         accountCreationRepository.save(dbEntry);
 
         return new XmlSuccessCreateAccountRequest(simlarId.get(), password);

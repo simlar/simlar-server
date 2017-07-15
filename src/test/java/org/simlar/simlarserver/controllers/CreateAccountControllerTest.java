@@ -92,6 +92,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals("password '" + count.getRegistrationCode() + "' does not match expected size",6, count.getRegistrationCode().length());
         assertEquals(1, count.getRequestTries());
         assertEquals(0, count.getConfirmTries());
+        assertEquals("127.0.0.1", count.getIp());//NOPMD.AvoidUsingHardCodedIP
     }
 
     @Test
