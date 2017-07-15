@@ -85,6 +85,10 @@ test {
     }
 }
 
+pmd {
+    toolVersion = '5.8.1'
+}
+
 findbugs {
     effort = "max"
     reportLevel = "low"
