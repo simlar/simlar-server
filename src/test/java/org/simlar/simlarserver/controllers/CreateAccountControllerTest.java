@@ -96,5 +96,6 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     @Test
     public void testRequestWithInvalidTelephoneNumber() {
         assertPostCreateAccountError(22, false, CreateAccountController.COMMAND_REQUEST, "NO-NUMBER", "android-de");
+        assertPostCreateAccountError(22, false, CreateAccountController.COMMAND_REQUEST, "+49163123456", "android-de");
     }
 }

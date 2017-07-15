@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import org.simlar.simlarserver.services.smsservice.SmsService;
+import org.simlar.simlarserver.utils.LibPhoneNumber;
 import org.simlar.simlarserver.utils.Password;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
@@ -82,6 +83,10 @@ final class CreateAccountController {
         final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
         if (simlarId == null) {
             throw new XmlErrorInvalidTelephoneNumberException("invalid telephone number: " + telephoneNumber);
+        }
+
+        if (!LibPhoneNumber.isValid(telephoneNumber)) {
+            throw new XmlErrorInvalidTelephoneNumberException("libphonenumber invalidates telephone number: " + telephoneNumber);
         }
 
         final String smsMessage = "Simlar Registration Code: " + Password.generateRegistrationCode();

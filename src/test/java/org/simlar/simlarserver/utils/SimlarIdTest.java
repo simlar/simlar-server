@@ -81,8 +81,8 @@ public final class SimlarIdTest {
         assertNull(SimlarId.createWithTelephoneNumber("+"));
         assertNull(SimlarId.createWithTelephoneNumber("+4d"));
         assertNull(SimlarId.createWithTelephoneNumber("491631234567"));
-        assertNull(SimlarId.createWithTelephoneNumber("+49163123456"));
 
+        assertEquals("*49163123456*", SimlarId.createWithTelephoneNumber("+49163123456").get());
         assertEquals("*491631234567*", SimlarId.createWithTelephoneNumber("+491631234567").get());
     }
 
