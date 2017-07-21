@@ -24,7 +24,7 @@ package org.simlar.simlarserver.database.repositories;
 import org.simlar.simlarserver.database.models.ContactsRequestCount;
 import org.springframework.data.repository.CrudRepository;
 
-@SuppressWarnings({"unused", "InterfaceNeverImplemented"})
+@SuppressWarnings({"unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
 public interface ContactsRequestCountRepository extends CrudRepository<ContactsRequestCount, String> {
     ContactsRequestCount findBySimlarId(final String simlarId);
 }
