@@ -25,9 +25,9 @@ import java.security.SecureRandom;
 
 @SuppressWarnings("UtilityClass")
 public final class Password {
-    private static final int DEFAULT_LENGTH = 12;
+    private static final int DEFAULT_LENGTH = 14;
     @SuppressWarnings("SpellCheckingInspection")
-    private static final String ALPHABET = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXY23456789 _-+#*?$()[]<>/%";
+    private static final String ALPHABET = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKMLNPQRTUVWXY346789";
 
     private Password() {
         throw new AssertionError("This class was not meant to be instantiated");

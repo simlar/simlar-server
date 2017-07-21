@@ -83,7 +83,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertNotNull(success);
         assertEquals("*15005550006*", success.getSimlarId());
         assertNotNull(success.getPassword());
-        assertEquals("password '" + success.getPassword() + "' does not match expected size",12, success.getPassword().length());
+        assertEquals("password '" + success.getPassword() + "' does not match expected size",14, success.getPassword().length());
 
         final AccountCreationRequestCount count = accountCreationRepository.findBySimlarId(success.getSimlarId());
         assertNotNull(count);
