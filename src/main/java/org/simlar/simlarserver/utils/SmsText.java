@@ -21,24 +21,50 @@
 
 package org.simlar.simlarserver.utils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("EnumeratedClassNamingConvention")
 public enum SmsText {
-    ANDROID_EN("Welcome to Simlar! If the app asks for a registration code, use: *CODE*. Otherwise you do not need this SMS."),
+    ANDROID_EN(
+            "Welcome to Simlar! If the app asks for a registration code, use: *CODE*. Otherwise you do not need this SMS.",
+            "Welcome to Simlar! If the app asks for a registration code, use: *CODE*. Otherwise you don't need this SMS.",
+            "Simlar Registration Code:"),
     @SuppressWarnings("SpellCheckingInspection")
-    ANDROID_DE("Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst brauchst du diese SMS nicht."),
+    ANDROID_DE(
+            "Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst brauchst du diese SMS nicht.",
+            "Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst benötigst du diese SMS nicht."),
     IOS_EN("Welcome to Simlar! When the app asks for a registration code, use: *CODE*.");
 
     private static final Pattern REGEX_PATTERN_CODE = Pattern.compile("\\*CODE\\*");
 
-    private final String text;
+    private final List<String> texts;
 
-    SmsText(final String text) {
-        this.text = text;
+    SmsText(final String... texts) {
+        this.texts = Collections.unmodifiableList(Arrays.asList(texts));
     }
 
     String format(final String registrationCode) {
-        return REGEX_PATTERN_CODE.matcher(text).replaceAll(registrationCode);
+        return REGEX_PATTERN_CODE.matcher(texts.get(0)).replaceAll(registrationCode);
+    }
+
+    @SuppressFBWarnings("DLC_DUBIOUS_LIST_COLLECTION")
+    static SmsText fromString(final String input) {
+        if (StringUtils.isEmpty(input)) {
+            return ANDROID_EN;
+        }
+
+        for (final SmsText value: values()) {
+            if (value.toString().equals(input) || value.texts.contains(input)) {
+                return value;
+            }
+        }
+
+        return ANDROID_EN;
     }
 }
