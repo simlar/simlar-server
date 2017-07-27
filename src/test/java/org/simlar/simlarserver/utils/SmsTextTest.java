@@ -65,4 +65,11 @@ public final class SmsTextTest {
         assertEquals(SmsText.ANDROID_DE, SmsText.fromString("Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst brauchst du diese SMS nicht."));
         assertEquals(SmsText.ANDROID_DE, SmsText.fromString("Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst benötigst du diese SMS nicht."));
     }
+
+    @Test
+    public void testFromStringNotExactlyEqual() {
+        assertEquals(SmsText.ANDROID_EN, SmsText.fromString(" Simlar Registration Code: "));
+        assertEquals(SmsText.ANDROID_EN, SmsText.fromString("xxxSimlarXXXRegistrationXXXCode:XXX"));
+        assertEquals(SmsText.IOS_EN, SmsText.fromString("XXXWelcome to Simlar! When!the app asks<>for a registration code, use: *CODE*.<>??0"));
+    }
 }

@@ -21,8 +21,8 @@
 
 package org.simlar.simlarserver.utils;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,21 +53,43 @@ public enum SmsText {
         return REGEX_PATTERN_CODE.matcher(texts.get(0)).replaceAll(registrationCode);
     }
 
-    @SuppressFBWarnings("DLC_DUBIOUS_LIST_COLLECTION")
-    static SmsText fromString(final String input) {
+    private static int calculateDistance(final CharSequence s1, final CharSequence s2) {
+        return new LevenshteinDistance().apply(s1, s2) * 100 / (s1.length() + s2.length());
+    }
+
+    private int calculateLowestDistance(final CharSequence text) {
+        int distance = calculateDistance(toString(), text);
+        if (distance == 0 || texts == null) {
+            return distance;
+        }
+
+        for (final String alternatives : texts) {
+            distance = Math.min(distance, calculateDistance(alternatives, text));
+        }
+
+        return distance;
+    }
+
+    static SmsText fromString(final CharSequence input) {
         if (StringUtils.isEmpty(input)) {
             return ANDROID_EN;
         }
 
+        int distance = Integer.MAX_VALUE;
+        SmsText result = ANDROID_EN;
+
         for (final SmsText value: values()) {
-            if (value.toString().equals(input) || value.texts.contains(input)) {
-                return value;
+            final int valueDistance = value.calculateLowestDistance(input);
+            if (valueDistance < distance) {
+                distance = valueDistance;
+                result = value;
             }
         }
 
-        return ANDROID_EN;
+        return result;
     }
 
+    @SuppressWarnings("TypeMayBeWeakened")
     public static String create(final String text, final String registrationCode) {
         return fromString(text).format(registrationCode);
     }
