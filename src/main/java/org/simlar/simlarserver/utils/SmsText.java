@@ -67,4 +67,8 @@ public enum SmsText {
 
         return ANDROID_EN;
     }
+
+    public static String create(final String text, final String registrationCode) {
+        return fromString(text).format(registrationCode);
+    }
 }
