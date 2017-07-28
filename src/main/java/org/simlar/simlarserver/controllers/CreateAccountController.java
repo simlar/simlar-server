@@ -30,6 +30,7 @@ import org.simlar.simlarserver.utils.LibPhoneNumber;
 import org.simlar.simlarserver.utils.Password;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.utils.SmsText;
+import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
@@ -118,5 +119,29 @@ final class CreateAccountController {
         accountCreationRepository.save(dbEntry);
 
         return new XmlSuccessCreateAccountRequest(simlarId.get(), password);
+    }
+
+
+    /**
+     * This method handles http post requests. You may test it with:
+     * <blockquote>
+     * curl --data "command=confirm&simlarId=*1111*&registrationCode=123456"" http://localhost:8080/create-account.xml
+     * </blockquote>
+     *
+     * @param command
+     *            needs tp be "confirm"
+     * @param simlarId
+     *            the simlarId to be confirmed
+     * @param registrationCode
+     *            the code sent by sms
+     *
+     * @return XmlError or XmlSuccessCreateAccountConfirm
+     *            error message or success message containing simlarId and registrationCode
+     */
+    @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE, params = { "command", "simlarId", "registrationCode"  })
+    public XmlSuccessCreateAccountConfirm confirmAccount(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String simlarId, @RequestParam final String registrationCode) {
+        LOGGER.info(REQUEST_PATH + " requested with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
+
+        return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
     }
 }
