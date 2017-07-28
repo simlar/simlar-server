@@ -27,6 +27,7 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("EnumeratedClassNamingConvention")
@@ -53,11 +54,11 @@ public enum SmsText {
         return REGEX_PATTERN_CODE.matcher(texts.get(0)).replaceAll(registrationCode);
     }
 
-    private static int calculateDistance(final CharSequence s1, final CharSequence s2) {
-        return new LevenshteinDistance().apply(s1, s2) * 100 / (s1.length() + s2.length());
+    private static int calculateDistance(final String s1, final String s2) {
+        return new LevenshteinDistance().apply(s1.toUpperCase(Locale.ENGLISH), s2.toUpperCase(Locale.ENGLISH)) * 100 / (s1.length() + s2.length());
     }
 
-    private int calculateLowestDistance(final CharSequence text) {
+    private int calculateLowestDistance(final String text) {
         int distance = calculateDistance(toString(), text);
         if (distance == 0 || texts == null) {
             return distance;
@@ -70,7 +71,7 @@ public enum SmsText {
         return distance;
     }
 
-    static SmsText fromString(final CharSequence input) {
+    static SmsText fromString(final String input) {
         if (StringUtils.isEmpty(input)) {
             return ANDROID_EN;
         }
@@ -89,7 +90,6 @@ public enum SmsText {
         return result;
     }
 
-    @SuppressWarnings("TypeMayBeWeakened")
     public static String create(final String text, final String registrationCode) {
         return fromString(text).format(registrationCode);
     }

@@ -49,6 +49,10 @@ public final class SmsTextTest {
         assertEquals(SmsText.IOS_EN, SmsText.fromString("IOS_EN"));
         assertEquals(SmsText.ANDROID_DE, SmsText.fromString("ANDROID_DE"));
         assertEquals(SmsText.ANDROID_EN, SmsText.fromString("ANDROID_EN"));
+        assertEquals(SmsText.IOS_EN, SmsText.fromString("ios_en"));
+        assertEquals(SmsText.IOS_EN, SmsText.fromString("iOS_En"));
+        assertEquals(SmsText.ANDROID_DE, SmsText.fromString("android_de"));
+        assertEquals(SmsText.ANDROID_EN, SmsText.fromString("android_en"));
     }
 
     @Test
