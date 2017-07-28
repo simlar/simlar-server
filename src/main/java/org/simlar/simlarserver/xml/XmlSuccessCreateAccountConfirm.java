@@ -35,9 +35,9 @@ public final class XmlSuccessCreateAccountConfirm {
         // needed for JAXBContext
     }
 
-    public XmlSuccessCreateAccountConfirm(final String simlarId, final String password) {
+    public XmlSuccessCreateAccountConfirm(final String simlarId, final String registrationCode) {
         this.simlarId = simlarId;
-        this.registrationCode = password;
+        this.registrationCode = registrationCode;
     }
 
 
@@ -60,7 +60,7 @@ public final class XmlSuccessCreateAccountConfirm {
 
     @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
     @SuppressWarnings("unused")
-    private void setRegistrationCode(final String password) {
-        this.registrationCode = password;
+    private void setRegistrationCode(final String registrationCode) {
+        this.registrationCode = registrationCode;
     }
 }
