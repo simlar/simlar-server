@@ -112,4 +112,25 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertPostCreateAccountError(22, false, CreateAccountController.COMMAND_REQUEST, "NO-NUMBER", "android-de");
         assertPostCreateAccountError(22, false, CreateAccountController.COMMAND_REQUEST, "+49163123456", "android-de");
     }
+
+    private <T> T postConfirmAccount(final Class<T> responseClass, final String command, final String simlarId, final String registrationCode) {
+        return postRequest(responseClass, CreateAccountController.REQUEST_PATH, createParameters(new String[][] {
+                { "command", command },
+                { "simlarId", simlarId },
+                { "registrationCode", registrationCode }
+        }));
+    }
+
+    private void assertPostConfirmAccountError(final int expectedErrorId, final String command, final String simlarId, final String registrationCode) {
+        final XmlError response = postConfirmAccount(XmlError.class, command, simlarId, registrationCode);
+        assertNotNull(response);
+        assertEquals(expectedErrorId, response.getId());
+    }
+
+    @Test
+    public void testConfirmWithWrongCommand() {
+        assertPostConfirmAccountError(1, "xyz", "*15005550006*", "123456");
+        assertPostConfirmAccountError(1, "request", "*15005550006*", "234561");
+        assertPostConfirmAccountError(1, null, "*15005550006*", "345612");
+    }
 }

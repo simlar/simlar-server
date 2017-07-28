@@ -51,6 +51,7 @@ import java.util.logging.Logger;
 final class CreateAccountController {
     public  static final String REQUEST_PATH    = "/create-account.xml";
     public  static final String COMMAND_REQUEST = "request";
+    public  static final String COMMAND_CONFIRM = "confirm";
     private static final Logger LOGGER          = Logger.getLogger(CreateAccountController.class.getName());
 
     private final SmsService smsService;
@@ -140,7 +141,11 @@ final class CreateAccountController {
      */
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE, params = { "command", "simlarId", "registrationCode"  })
     public XmlSuccessCreateAccountConfirm confirmAccount(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String simlarId, @RequestParam final String registrationCode) {
-        LOGGER.info(REQUEST_PATH + " requested with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
+        LOGGER.info(REQUEST_PATH + " confirm with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
+
+        if (!Objects.equals(command, COMMAND_CONFIRM)) {
+            throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);
+        }
 
         return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
     }
