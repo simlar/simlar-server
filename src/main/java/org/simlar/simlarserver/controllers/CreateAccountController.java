@@ -78,7 +78,7 @@ final class CreateAccountController {
      *            android-es
      *
      * @return XmlError or XmlSuccessPushNotification
-     *            error message or success message containing deviceType and pushId
+     *            error message or success message containing simlarId and password
      */
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @SuppressWarnings("SpellCheckingInspection")
