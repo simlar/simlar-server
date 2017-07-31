@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
@@ -52,6 +53,7 @@ public final class XmlErrorExceptionClientResponseTest {
         assertEquals(XmlErrorExceptionClientResponse.WRONG_CREDENTIALS, XmlErrorExceptionClientResponse.fromException(XmlErrorWrongCredentialsException.class));
         assertEquals(XmlErrorExceptionClientResponse.INVALID_TELEPHONE_NUMBER, XmlErrorExceptionClientResponse.fromException(XmlErrorInvalidTelephoneNumberException.class));
         assertEquals(XmlErrorExceptionClientResponse.FAILED_TO_SEND_SMS, XmlErrorExceptionClientResponse.fromException(XmlErrorFailedToSendSmsException.class));
+        assertEquals(XmlErrorExceptionClientResponse.NO_SIMLAR_ID, XmlErrorExceptionClientResponse.fromException(XmlErrorNoSimlarIdException.class));
         assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_PUSH_ID_TYPE, XmlErrorExceptionClientResponse.fromException(XmlErrorUnknownPushIdTypeException.class));
         assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_APPLE_PUSH_ID, XmlErrorExceptionClientResponse.fromException(XmlErrorUnknownApplePushIdException.class));
         assertEquals(XmlErrorExceptionClientResponse.REQUESTED_TOO_MANY_CONTACTS, XmlErrorExceptionClientResponse.fromException(XmlErrorRequestedTooManyContactsException.class));
