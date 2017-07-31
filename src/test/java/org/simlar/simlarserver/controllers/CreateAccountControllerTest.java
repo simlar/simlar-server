@@ -133,4 +133,11 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertPostConfirmAccountError(1, "request", "*15005550006*", "234561");
         assertPostConfirmAccountError(1, null, "*15005550006*", "345612");
     }
+
+    @Test
+    public void testConfirmWithNoSimlarId() {
+        assertPostConfirmAccountError(27, "confirm", null, "123456");
+        assertPostConfirmAccountError(27, "confirm", "*as005550006*", "234561");
+        assertPostConfirmAccountError(27, "confirm", "*1500555000..", "345612");
+    }
 }

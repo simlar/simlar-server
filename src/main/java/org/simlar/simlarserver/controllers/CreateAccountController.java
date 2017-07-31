@@ -34,6 +34,7 @@ import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -145,6 +146,10 @@ final class CreateAccountController {
 
         if (!Objects.equals(command, COMMAND_CONFIRM)) {
             throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);
+        }
+
+        if (!SimlarId.check(simlarId)) {
+            throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarId);
         }
 
         return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
