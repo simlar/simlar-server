@@ -140,4 +140,12 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertPostConfirmAccountError(27, "confirm", "*as005550006*", "234561");
         assertPostConfirmAccountError(27, "confirm", "*1500555000..", "345612");
     }
+
+    @Test
+    public void testConfirmWithNoRegistrationCode() {
+        assertPostConfirmAccountError(28, "confirm", "*15005550006*", null);
+        assertPostConfirmAccountError(28, "confirm", "*15005550006*", "23456");
+        assertPostConfirmAccountError(28, "confirm", "*15005550006*", "2345618");
+        assertPostConfirmAccountError(28, "confirm", "*15005550006*", "345x12");
+    }
 }

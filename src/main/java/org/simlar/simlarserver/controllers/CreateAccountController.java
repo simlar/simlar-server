@@ -34,6 +34,7 @@ import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 @RestController
 final class CreateAccountController {
@@ -54,6 +56,7 @@ final class CreateAccountController {
     public  static final String COMMAND_REQUEST = "request";
     public  static final String COMMAND_CONFIRM = "confirm";
     private static final Logger LOGGER          = Logger.getLogger(CreateAccountController.class.getName());
+    private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{6}");
 
     private final SmsService smsService;
     private final AccountCreationRequestCountRepository accountCreationRepository;
@@ -152,6 +155,14 @@ final class CreateAccountController {
             throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarId);
         }
 
+        if (!checkRegistrationCode(registrationCode)) {
+            throw new XmlErrorNoRegistrationCodeException("confirm account request with simlarId: " + simlarId + " and registrationCode: " + registrationCode);
+        }
+
         return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
+    }
+
+    private static boolean checkRegistrationCode(final CharSequence input) {
+        return input != null && REGEX_REGISTRATION_CODE.matcher(input).matches();
     }
 }
