@@ -41,6 +41,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
 @RunWith(SpringRunner.class)
 public final class CreateAccountControllerTest extends BaseControllerTest {
@@ -156,5 +157,13 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
         assertNull(accountCreationRepository.findBySimlarId(simlarId));
         assertPostConfirmAccountError(27, "confirm", simlarId, "234561");
+    }
+
+    @Test
+    public void testConfirmWithWrongRegistrationCode() {
+        final String simlarId = "*42002300002*";
+
+        accountCreationRepository.save(new AccountCreationRequestCount(simlarId, "V3RY-5AF3", "627130", 1, 0, "127.0.0.1"));
+        assertPostConfirmAccountError(26, "confirm", simlarId, "234561");
     }
 }

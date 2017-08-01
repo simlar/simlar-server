@@ -37,6 +37,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumber
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -162,6 +163,10 @@ final class CreateAccountController {
         final AccountCreationRequestCount creationRequest = accountCreationRepository.findBySimlarId(simlarId);
         if (creationRequest == null) {
             throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
+        }
+
+        if (!Objects.equals(creationRequest.getRegistrationCode(), registrationCode)) {
+            throw new XmlErrorWrongRegistrationCodeException("confirm account request with wrong registration code: " + registrationCode + " for simlarId: " + simlarId);
         }
 
         return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
