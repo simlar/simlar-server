@@ -34,6 +34,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -147,5 +148,13 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertPostConfirmAccountError(28, "confirm", "*15005550006*", "23456");
         assertPostConfirmAccountError(28, "confirm", "*15005550006*", "2345618");
         assertPostConfirmAccountError(28, "confirm", "*15005550006*", "345x12");
+    }
+
+    @Test
+    public void testConfirmWithNotRequestedSimlarId() {
+        final String simlarId = "*42002300001*";
+
+        assertNull(accountCreationRepository.findBySimlarId(simlarId));
+        assertPostConfirmAccountError(27, "confirm", simlarId, "234561");
     }
 }
