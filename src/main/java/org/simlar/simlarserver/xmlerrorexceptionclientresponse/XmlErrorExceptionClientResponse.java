@@ -21,12 +21,25 @@
 
 package org.simlar.simlarserver.xmlerrorexceptionclientresponse;
 
-import org.simlar.simlarserver.xmlerrorexceptions.*;
+
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ClassWithTooManyDependencies")
 public enum XmlErrorExceptionClientResponse {
         UNKNOWN_ERROR              (null,                                             0, "unknown error"),
         UNKNOWN_STRUCTURE          (XmlErrorUnknownStructureException.class,          1, "unknown structure"),
