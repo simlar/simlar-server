@@ -113,8 +113,8 @@ public final class AccountCreationRequestCount {
         return confirmTries;
     }
 
-    public void setConfirmTries(final int confirmTries) {
-        this.confirmTries = confirmTries;
+    public void incrementConfirmTries() {
+        confirmTries++;
     }
 
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal

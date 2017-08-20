@@ -165,6 +165,9 @@ final class CreateAccountController {
             throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
         }
 
+        creationRequest.incrementConfirmTries();
+        accountCreationRepository.save(creationRequest);
+
         if (!Objects.equals(creationRequest.getRegistrationCode(), registrationCode)) {
             throw new XmlErrorWrongRegistrationCodeException("confirm account request with wrong registration code: " + registrationCode + " for simlarId: " + simlarId);
         }

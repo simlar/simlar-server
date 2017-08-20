@@ -163,7 +163,14 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     public void testConfirmWithWrongRegistrationCode() {
         final String simlarId = "*42002300002*";
 
-        accountCreationRepository.save(new AccountCreationRequestCount(simlarId, "V3RY-5AF3", "627130", 1, 0, "127.0.0.1"));
+        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", "627130", 1, 0, "127.0.0.1");
+        accountCreationRepository.save(before);
         assertPostConfirmAccountError(26, "confirm", simlarId, "234561");
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
+        assertEquals(before.getConfirmTries() + 1, after.getConfirmTries());
+        assertEquals(before.getRequestTries(), after.getRequestTries());
+        assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
+        assertEquals(before.getIp(), after.getIp());
+        assertEquals(before.getPassword(), after.getPassword());
     }
 }
