@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
+import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
@@ -51,6 +52,9 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
     @Autowired
     private AccountCreationRequestCountRepository accountCreationRepository;
+
+    @Autowired
+    private SettingsService settingsService;
 
     @SuppressWarnings("MethodWithTooManyParameters")
     private <T> T postCreateAccount(final Class<T> responseClass, final boolean callSmsService, final boolean sendSmsResult, final String command, final String telephoneNumber, final String smsText) {
@@ -166,6 +170,23 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", "627130", 1, 0, "127.0.0.1");
         accountCreationRepository.save(before);
         assertPostConfirmAccountError(26, CreateAccountController.COMMAND_CONFIRM, simlarId, "234561");
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
+        assertEquals(before.getConfirmTries() + 1, after.getConfirmTries());
+        assertEquals(before.getRequestTries(), after.getRequestTries());
+        assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
+        assertEquals(before.getIp(), after.getIp());
+        assertEquals(before.getPassword(), after.getPassword());
+    }
+
+
+    @Test
+    public void testConfirmWithTooManyRetries() {
+        final String simlarId = "*42002300003*";
+        final String registrationCode = "432516";
+
+        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", registrationCode, 1, settingsService.getAccountCreationMaxConfirms() - 1, "127.0.0.1");
+        accountCreationRepository.save(before);
+        assertPostConfirmAccountError(25, CreateAccountController.COMMAND_CONFIRM, simlarId, registrationCode);
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
         assertEquals(before.getConfirmTries() + 1, after.getConfirmTries());
         assertEquals(before.getRequestTries(), after.getRequestTries());

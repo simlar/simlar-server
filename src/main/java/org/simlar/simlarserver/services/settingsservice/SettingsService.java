@@ -29,14 +29,17 @@ import org.springframework.stereotype.Component;
 public class SettingsService {
     private final String domain;
     private final String version;
+    private final int accountCreationMaxConfirms;
 
     @Autowired
     public SettingsService(
-            @Value("${domain:}")           final String domain,
-            @Value("${info.app.version:}") final String version
+            @Value("${domain:}")                        final String domain,
+            @Value("${info.app.version:}")              final String version,
+            @Value("${accountCreation.maxConfirms:10}") final int accountCreationMaxConfirms
     ) {
-        this.domain  = domain;
-        this.version = version;
+        this.domain                     = domain;
+        this.version                    = version;
+        this.accountCreationMaxConfirms = accountCreationMaxConfirms;
     }
 
     public final String getDomain() {
@@ -45,5 +48,9 @@ public class SettingsService {
 
     public final String getVersion() {
         return version;
+    }
+
+    public final int getAccountCreationMaxConfirms() {
+        return accountCreationMaxConfirms;
     }
 }

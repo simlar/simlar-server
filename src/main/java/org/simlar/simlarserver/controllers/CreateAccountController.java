@@ -25,6 +25,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.ObjectUtils;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
+import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.LibPhoneNumber;
 import org.simlar.simlarserver.utils.Password;
@@ -36,6 +37,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsExcepti
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +62,13 @@ final class CreateAccountController {
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{6}");
 
     private final SmsService smsService;
+    private final SettingsService settingsService;
     private final AccountCreationRequestCountRepository accountCreationRepository;
 
     @Autowired
-    private CreateAccountController(final SmsService smsService, final AccountCreationRequestCountRepository accountCreationRepository) {
+    private CreateAccountController(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository) {
         this.smsService = smsService;
+        this.settingsService = settingsService;
         this.accountCreationRepository = accountCreationRepository;
     }
 
@@ -167,6 +171,9 @@ final class CreateAccountController {
 
         creationRequest.incrementConfirmTries();
         accountCreationRepository.save(creationRequest);
+        if (creationRequest.getConfirmTries() >= settingsService.getAccountCreationMaxConfirms()) {
+            throw new XmlErrorTooManyConfirmTriesException("Too many confirm tries(" + creationRequest.getConfirmTries() + ") for simlarId: " + simlarId);
+        }
 
         if (!Objects.equals(creationRequest.getRegistrationCode(), registrationCode)) {
             throw new XmlErrorWrongRegistrationCodeException("confirm account request with wrong registration code: " + registrationCode + " for simlarId: " + simlarId);
