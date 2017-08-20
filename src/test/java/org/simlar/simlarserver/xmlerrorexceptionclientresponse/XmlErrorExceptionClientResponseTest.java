@@ -22,11 +22,23 @@
 package org.simlar.simlarserver.xmlerrorexceptionclientresponse;
 
 import org.junit.Test;
-import org.simlar.simlarserver.xmlerrorexceptions.*;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+@SuppressWarnings("ALL")
 public final class XmlErrorExceptionClientResponseTest {
 
     private static final class XmlErrorNoResponseRegisteredException extends XmlErrorException {
