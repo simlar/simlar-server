@@ -169,10 +169,10 @@ final class CreateAccountController {
             throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
         }
 
-        creationRequest.incrementConfirmTries();
+        final int confirmTries = creationRequest.incrementConfirmTries();
         accountCreationRepository.save(creationRequest);
-        if (creationRequest.getConfirmTries() >= settingsService.getAccountCreationMaxConfirms()) {
-            throw new XmlErrorTooManyConfirmTriesException("Too many confirm tries(" + creationRequest.getConfirmTries() + ") for simlarId: " + simlarId);
+        if (confirmTries >= settingsService.getAccountCreationMaxConfirms()) {
+            throw new XmlErrorTooManyConfirmTriesException("Too many confirm tries(" + confirmTries + ") for simlarId: " + simlarId);
         }
 
         if (!Objects.equals(creationRequest.getRegistrationCode(), registrationCode)) {
