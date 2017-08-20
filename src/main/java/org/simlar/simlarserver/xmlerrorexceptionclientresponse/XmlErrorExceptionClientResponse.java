@@ -33,6 +33,7 @@ public enum XmlErrorExceptionClientResponse {
         WRONG_CREDENTIALS          (XmlErrorWrongCredentialsException.class,         10, "wrong credentials"),
         INVALID_TELEPHONE_NUMBER   (XmlErrorInvalidTelephoneNumberException.class,   22, "unable to create simlar id"),
         FAILED_TO_SEND_SMS         (XmlErrorFailedToSendSmsException.class,          24, "failed to send sms"),
+        TOO_MANY_CONFIRM_TRIES     (XmlErrorTooManyConfirmTriesException.class,      25, "too many confirm tries"),
         WRONG_REGISTRATION_CODE    (XmlErrorWrongRegistrationCodeException.class,    26, "wrong registration code"),
         NO_SIMLAR_ID               (XmlErrorNoSimlarIdException.class,               27, "no simlarId"),
         NO_REGISTRATION_CODE       (XmlErrorNoRegistrationCodeException.class,       28, "no registration code"),

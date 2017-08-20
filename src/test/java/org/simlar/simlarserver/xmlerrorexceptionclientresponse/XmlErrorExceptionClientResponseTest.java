@@ -37,6 +37,7 @@ public final class XmlErrorExceptionClientResponseTest {
         }
     }
 
+    @SuppressWarnings("OverlyCoupledMethod")
     @Test
     public void testFromException() {
         assertNull(XmlErrorExceptionClientResponse.fromException(XmlErrorNoResponseRegisteredException.class));
@@ -45,6 +46,7 @@ public final class XmlErrorExceptionClientResponseTest {
         assertEquals(XmlErrorExceptionClientResponse.WRONG_CREDENTIALS, XmlErrorExceptionClientResponse.fromException(XmlErrorWrongCredentialsException.class));
         assertEquals(XmlErrorExceptionClientResponse.INVALID_TELEPHONE_NUMBER, XmlErrorExceptionClientResponse.fromException(XmlErrorInvalidTelephoneNumberException.class));
         assertEquals(XmlErrorExceptionClientResponse.FAILED_TO_SEND_SMS, XmlErrorExceptionClientResponse.fromException(XmlErrorFailedToSendSmsException.class));
+        assertEquals(XmlErrorExceptionClientResponse.TOO_MANY_CONFIRM_TRIES, XmlErrorExceptionClientResponse.fromException(XmlErrorTooManyConfirmTriesException.class));
         assertEquals(XmlErrorExceptionClientResponse.WRONG_REGISTRATION_CODE, XmlErrorExceptionClientResponse.fromException(XmlErrorWrongRegistrationCodeException.class));
         assertEquals(XmlErrorExceptionClientResponse.NO_SIMLAR_ID, XmlErrorExceptionClientResponse.fromException(XmlErrorNoSimlarIdException.class));
         assertEquals(XmlErrorExceptionClientResponse.NO_REGISTRATION_CODE, XmlErrorExceptionClientResponse.fromException(XmlErrorNoRegistrationCodeException.class));
