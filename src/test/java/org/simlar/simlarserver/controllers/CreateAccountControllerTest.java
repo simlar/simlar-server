@@ -156,7 +156,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final String simlarId = "*42002300001*";
 
         assertNull(accountCreationRepository.findBySimlarId(simlarId));
-        assertPostConfirmAccountError(27, "confirm", simlarId, "234561");
+        assertPostConfirmAccountError(27, CreateAccountController.COMMAND_CONFIRM, simlarId, "234561");
     }
 
     @Test
@@ -165,7 +165,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
         final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", "627130", 1, 0, "127.0.0.1");
         accountCreationRepository.save(before);
-        assertPostConfirmAccountError(26, "confirm", simlarId, "234561");
+        assertPostConfirmAccountError(26, CreateAccountController.COMMAND_CONFIRM, simlarId, "234561");
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
         assertEquals(before.getConfirmTries() + 1, after.getConfirmTries());
         assertEquals(before.getRequestTries(), after.getRequestTries());
