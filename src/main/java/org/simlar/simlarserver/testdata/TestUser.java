@@ -21,6 +21,11 @@
 
 package org.simlar.simlarserver.testdata;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public enum TestUser {
     U1("*0001*", "x1fg6hk78", "5c3d66f5a3928cca2821d711a2c016bb"),
     U2("*0002*", "fdfho21j3", "6e5a610112a88a001e14fb4bce3fd8af"),
@@ -32,22 +37,4 @@ public enum TestUser {
     private final String simlarId;
     private final String password;
     private final String passwordHash;
-
-    TestUser(final String simlarId, final String password, final String passwordHash) {
-        this.simlarId     = simlarId;
-        this.password     = password;
-        this.passwordHash = passwordHash;
-    }
-
-    public String getSimlarId() {
-        return simlarId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
 }
