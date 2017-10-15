@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.database.models;
 
+import lombok.Data;
 import org.simlar.simlarserver.utils.SimlarId;
 
 import javax.persistence.Column;
@@ -30,6 +31,7 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+@Data
 @Entity
 @Table(name = "simlar_contacts_request_count")
 public final class ContactsRequestCount {
@@ -63,14 +65,5 @@ public final class ContactsRequestCount {
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
     public Instant getTimestamp() {
         return timestamp.toInstant();
-    }
-
-    @SuppressWarnings("TypeMayBeWeakened")
-    public String getHash() {
-        return hash;
-    }
-
-    public int getCount() {
-        return count;
     }
 }

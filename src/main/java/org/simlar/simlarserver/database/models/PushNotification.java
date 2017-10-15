@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.database.models;
 
+import lombok.Data;
 import org.simlar.simlarserver.data.DeviceType;
 
 import javax.persistence.Column;
@@ -29,6 +30,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @SuppressWarnings("FieldCanBeLocal")
+@Data
 @Entity
 @Table(name = "simlar_push_notifications")
 public class PushNotification {
@@ -57,9 +59,5 @@ public class PushNotification {
 
     public final DeviceType getDeviceType() {
         return DeviceType.fromInt(deviceType);
-    }
-
-    public final String getPushId() {
-        return pushId;
     }
 }

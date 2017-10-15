@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.database.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -33,8 +34,9 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-@SuppressWarnings("LocalCanBeFinal")
+@SuppressWarnings({"LocalCanBeFinal", "ClassWithTooManyMethods"})
 @SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
+@Data
 @Entity
 @Table(name = "simlar_sms_sent_log_java")
 public final class SmsSentLog {
@@ -104,22 +106,9 @@ public final class SmsSentLog {
         this.message         = message;
     }
 
-    @SuppressWarnings("TypeMayBeWeakened")
-    public String getTelephoneNumber() {
-        return telephoneNumber;
-    }
-
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
     public Instant getTimestamp() {
         return timestamp == null ? null : timestamp.toInstant();
-    }
-
-    public String getDlrNumber() {
-        return dlrNumber;
-    }
-
-    public int getDlrStatus() {
-        return dlrStatus;
     }
 
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
@@ -129,29 +118,5 @@ public final class SmsSentLog {
 
     public void setDlrTimestampToNow() {
         dlrTimestamp = Timestamp.from(Instant.now());
-    }
-
-    public int getSmsTradeStatus() {
-        return smsTradeStatus;
-    }
-
-    public String getTwilioStatus() {
-        return twilioStatus;
-    }
-
-    public void setTwilioStatus(String twilioStatus) {
-        this.twilioStatus = twilioStatus;
-    }
-
-    public String getTwilioError() {
-        return twilioError;
-    }
-
-    public void setTwilioError(String twilioError) {
-        this.twilioError = twilioError;
-    }
-
-    public String getMessage() {
-        return message;
     }
 }
