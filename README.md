@@ -55,6 +55,9 @@ To generate some files for this ide run:
 ```
 Then simply open the directory in IntelliJ.
 
+## Lombok
+Because the simlar-server uses the [Project Lombok](https://projectlombok.org/), IntelliJ requires the [Lombok Plugin](https://plugins.jetbrains.com/plugin/6317-lombok-plugin) to compile it.
+
 ### Dictionary ###
 In Settings/Editor/Spelling choose the tab Dictionaries and add ```ides/intellij/dictionaries/``` to list of Custom Dictionary Folders.
 

@@ -17,6 +17,7 @@ kamailio
 klipp
 kozocsa
 landline
+lombok
 nopmd
 parameterized
 pipefail
