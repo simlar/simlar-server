@@ -22,6 +22,9 @@
 package org.simlar.simlarserver.xmlerrorexceptionclientresponse;
 
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
@@ -40,6 +43,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("ClassWithTooManyDependencies")
+@AllArgsConstructor
+@Getter
 public enum XmlErrorExceptionClientResponse {
         UNKNOWN_ERROR              (null,                                             0, "unknown error"),
         UNKNOWN_STRUCTURE          (XmlErrorUnknownStructureException.class,          1, "unknown structure"),
@@ -56,28 +61,16 @@ public enum XmlErrorExceptionClientResponse {
     ;
 
 
+    @Getter(AccessLevel.NONE)
     private final Class<? extends XmlErrorException> exceptionClass;
+
     private final int id;
     private final String message;
 
     private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP
             = Arrays.stream(XmlErrorExceptionClientResponse.values()).collect(Collectors.toMap(response -> response.exceptionClass, response -> response, (class1, class2) -> class1));
 
-    XmlErrorExceptionClientResponse(final Class<? extends XmlErrorException> exceptionClass, final int id, final String message) {
-        this.exceptionClass = exceptionClass;
-        this.id = id;
-        this.message = message;
-    }
-
     public static XmlErrorExceptionClientResponse fromException(final Class<? extends XmlErrorException> exceptionClass) {
         return EXCEPTION_CLIENT_RESPONSE_MAP.get(exceptionClass);
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public int getId() {
-        return id;
     }
 }
