@@ -21,34 +21,24 @@
 
 package org.simlar.simlarserver.xml;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @XmlRootElement(name = "contacts")
 public final class XmlContacts {
     private List<XmlContact> contacts;
-
-    public XmlContacts() {
-        // needed for JAXBContext
-    }
-
-    public XmlContacts(final List<XmlContact> contacts) {
-        //noinspection AssignmentToCollectionOrArrayFieldFromParameter
-        this.contacts = contacts;
-    }
 
     @XmlElement(name = "contact")
     public List<XmlContact> getContacts() {
         //noinspection ReturnOfCollectionOrArrayField // JAXB crashes with Collections.unmodifiableList
         return contacts;
-    }
-
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setContacts(final List<XmlContact> contacts) {
-        this.contacts = contacts;
     }
 }

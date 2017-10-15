@@ -21,24 +21,20 @@
 
 package org.simlar.simlarserver.xml;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @XmlRootElement(name = "success")
 public final class XmlSuccessCreateAccountConfirm {
     private String simlarId;
     private String registrationCode;
-
-    public XmlSuccessCreateAccountConfirm() {
-        // needed for JAXBContext
-    }
-
-    public XmlSuccessCreateAccountConfirm(final String simlarId, final String registrationCode) {
-        this.simlarId = simlarId;
-        this.registrationCode = registrationCode;
-    }
 
 
     @XmlAttribute
@@ -46,21 +42,8 @@ public final class XmlSuccessCreateAccountConfirm {
         return simlarId;
     }
 
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setSimlarId(final String simlarId) {
-        this.simlarId = simlarId;
-    }
-
-
     @XmlAttribute
     public String getRegistrationCode() {
         return registrationCode;
-    }
-
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setRegistrationCode(final String registrationCode) {
-        this.registrationCode = registrationCode;
     }
 }

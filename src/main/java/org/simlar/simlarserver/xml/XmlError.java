@@ -21,45 +21,29 @@
 
 package org.simlar.simlarserver.xml;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @XmlRootElement(name = "error")
 public final class XmlError {
     private int    id;
     private String message;
-
-    public XmlError() {
-        // needed for JAXBContext
-    }
-
-    public XmlError(final int id, final String message) {
-        this.id = id;
-        this.message = message;
-    }
 
     @XmlAttribute
     public int getId() {
         return id;
     }
 
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setId(final int id) {
-        this.id = id;
-    }
-
     @SuppressWarnings("unused")
     @XmlAttribute
     public String getMessage() {
         return message;
-    }
-
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setMessage(final String message) {
-        this.message = message;
     }
 }
