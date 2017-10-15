@@ -22,8 +22,13 @@
 package org.simlar.simlarserver.json.twilio;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 
 @SuppressWarnings("unused")
+@Data
+@Setter(AccessLevel.NONE)
 public final class MessageResponse {
     private String sid;
     private String to;
@@ -38,33 +43,4 @@ public final class MessageResponse {
 
     // We are not interested in every field of twilio's response. At least the following are ignored:
     //  account_sid, from, date_created, date_updated, date_sent, messaging_service_sid, body, num_segments, num_media, direction, api_version, uri, subresource_uris, media
-
-    @Override
-    public String toString() {
-        return "MessageResponse{" +
-                "sid='" + sid + '\'' +
-                ", to='" + to + '\'' +
-                ", status='" + status + '\'' +
-                ", price='" + price + '\'' +
-                ", priceUnit='" + priceUnit + '\'' +
-                ", errorCode='" + errorCode + '\'' +
-                ", errorMessage='" + errorMessage + '\'' +
-                '}';
-    }
-
-    public String getSid() {
-        return sid;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
 }
