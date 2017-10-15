@@ -23,6 +23,7 @@ package org.simlar.simlarserver.database.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -37,6 +38,7 @@ import java.time.Instant;
 @SuppressWarnings({"LocalCanBeFinal", "ClassWithTooManyMethods"})
 @SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "simlar_sms_sent_log_java")
 public final class SmsSentLog {
@@ -73,12 +75,6 @@ public final class SmsSentLog {
 
     @Column(length = 170)
     private String message;
-
-    @SuppressWarnings({"unused", "ProtectedMemberInFinalClass"})
-    protected SmsSentLog() {
-        // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
-    }
 
     public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message) {
         this(telephoneNumber, dlrNumber, twilioStatus, null, message);

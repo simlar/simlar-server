@@ -23,6 +23,7 @@ package org.simlar.simlarserver.database.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,6 +36,7 @@ import javax.persistence.UniqueConstraint;
 @SuppressWarnings("FieldCanBeLocal")
 @SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "subscriber",
        uniqueConstraints = @UniqueConstraint(name = "account_idx", columnNames = {"username", "domain"}),
@@ -67,12 +69,6 @@ public class Subscriber {
 
     @Column(length = 64)
     private String rpid;
-
-    @SuppressWarnings("unused")
-    protected Subscriber() {
-        // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
-    }
 
     @SuppressWarnings({"SameParameterValue", "ConstructorWithTooManyParameters"})
     public Subscriber(final String username, final String domain, final String password, final String emailAddress, final String ha1, final String ha1b) {

@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.database.models;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
@@ -33,6 +34,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "simlar_account_creation_request", indexes = {
         @Index(name = "request_timestamp", columnList = "timestamp"),
@@ -62,12 +64,6 @@ public final class AccountCreationRequestCount {
 
     @Column(nullable = false, length = 64)
     private String ip;
-
-    @SuppressWarnings({"unused", "ProtectedMemberInFinalClass"})
-    protected AccountCreationRequestCount() {
-        // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
-    }
 
     @SuppressWarnings("UnnecessaryThis")
     public AccountCreationRequestCount(final String simlarId) {
