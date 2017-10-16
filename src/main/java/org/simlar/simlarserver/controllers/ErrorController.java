@@ -32,12 +32,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 @RestController
@@ -46,9 +48,15 @@ final class ErrorController {
 
     private static void log(final Level level, final String prefix, final HttpServletRequest request, final Exception exception) {
         final String message = prefix + (request == null ? " no request object" :
-                " URL='" + request.getRequestURL() + "' IP='" + request.getRemoteAddr() + "' User-Agent='" + request.getHeader("User-Agent") + '\'');
+                " URL='" + request.getRequestURL() + "' IP='" + request.getRemoteAddr() + "' User-Agent='" + request.getHeader("User-Agent") + "' parameters='" + serializeParameters(request) + '\'');
 
         LOGGER.log(level, message, exception);
+    }
+
+    private static String serializeParameters(final ServletRequest request) {
+        return request.getParameterMap().entrySet().stream()
+                .map(e -> e.getKey() + "=\"" + String.join(" ", e.getValue()) + '"')
+                .collect(Collectors.joining(", "));
     }
 
     private static XmlError createXmlError(final XmlErrorExceptionClientResponse response) {
