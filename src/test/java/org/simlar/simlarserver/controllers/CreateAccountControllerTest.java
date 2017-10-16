@@ -28,7 +28,9 @@ import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
+import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.xml.XmlError;
+import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -36,6 +38,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -55,6 +58,9 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
     @Autowired
     private SettingsService settingsService;
+
+    @Autowired
+    private SubscriberService subscriberService;
 
     @SuppressWarnings("MethodWithTooManyParameters")
     private <T> T postCreateAccount(final Class<T> responseClass, final boolean callSmsService, final boolean sendSmsResult, final String command, final String telephoneNumber, final String smsText) {
@@ -192,5 +198,27 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
         assertEquals(before.getIp(), after.getIp());
         assertEquals(before.getPassword(), after.getPassword());
+    }
+
+    @Test
+    public void testConfirmSuccess() {
+        final String simlarId = "*42002300004*";
+        final String registrationCode = "432517";
+
+        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", registrationCode, 1, 0, "127.0.0.1");
+        accountCreationRepository.save(before);
+
+        final XmlSuccessCreateAccountConfirm response = postConfirmAccount(XmlSuccessCreateAccountConfirm.class, CreateAccountController.COMMAND_CONFIRM, simlarId, registrationCode);
+        assertEquals(simlarId, response.getSimlarId());
+        assertEquals(registrationCode, response.getRegistrationCode());
+
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
+        assertEquals(before.getConfirmTries() + 1, after.getConfirmTries());
+        assertEquals(before.getRequestTries(), after.getRequestTries());
+        assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
+        assertEquals(before.getIp(), after.getIp());
+        assertEquals(before.getPassword(), after.getPassword());
+
+        assertTrue(subscriberService.checkCredentials(simlarId, "c42214dc9d5eb6f7093b7589937e41cf"));
     }
 }

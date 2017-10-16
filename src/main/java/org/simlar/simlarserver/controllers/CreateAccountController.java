@@ -27,6 +27,7 @@ import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
+import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.LibPhoneNumber;
 import org.simlar.simlarserver.utils.Password;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -64,12 +65,14 @@ final class CreateAccountController {
     private final SmsService smsService;
     private final SettingsService settingsService;
     private final AccountCreationRequestCountRepository accountCreationRepository;
+    private final SubscriberService subscriberService;
 
     @Autowired
-    private CreateAccountController(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository) {
+    private CreateAccountController(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService) {
         this.smsService = smsService;
         this.settingsService = settingsService;
         this.accountCreationRepository = accountCreationRepository;
+        this.subscriberService = subscriberService;
     }
 
     /**
@@ -178,6 +181,8 @@ final class CreateAccountController {
         if (!Objects.equals(creationRequest.getRegistrationCode(), registrationCode)) {
             throw new XmlErrorWrongRegistrationCodeException("confirm account request with wrong registration code: " + registrationCode + " for simlarId: " + simlarId);
         }
+
+        subscriberService.save(SimlarId.create(simlarId), creationRequest.getPassword());
 
         return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
     }
