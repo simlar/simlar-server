@@ -90,7 +90,7 @@ final class ErrorController {
         if (response == null) {
             log(Level.SEVERE, "XmlErrorException with no XmlErrorExceptionClientResponse found for: " + exceptionClass.getSimpleName(), request, xmlErrorException);
         } else {
-            log(Level.WARNING, "XmlError(" + response.getId() + ") " + response.getMessage() + ": " + xmlErrorException.getMessage(), request, null);
+            log(Level.WARNING, xmlErrorException.getClass().getSimpleName() + " => XmlError(" + response.getId() + ") " + response.getMessage() + ": " + xmlErrorException.getMessage(), request, null);
         }
 
         return createXmlError(response);
