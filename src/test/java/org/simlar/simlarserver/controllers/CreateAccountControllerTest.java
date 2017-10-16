@@ -178,7 +178,6 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals(before.getPassword(), after.getPassword());
     }
 
-
     @Test
     public void testConfirmWithTooManyRetries() {
         final String simlarId = "*42002300003*";
