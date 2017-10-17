@@ -21,7 +21,6 @@
 
 package org.simlar.simlarserver.services.createaccountservice;
 
-import lombok.AllArgsConstructor;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
@@ -39,12 +38,13 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesExc
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Instant;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-@AllArgsConstructor(onConstructor = @__(@Autowired))
 @Component
 public final class CreateAccountService {
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{6}");
@@ -53,6 +53,16 @@ public final class CreateAccountService {
     private final SettingsService settingsService;
     private final AccountCreationRequestCountRepository accountCreationRepository;
     private final SubscriberService subscriberService;
+    private final TransactionTemplate transactionTemplate;
+
+    @Autowired
+    public CreateAccountService(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager) {
+        this.smsService = smsService;
+        this.settingsService = settingsService;
+        this.accountCreationRepository = accountCreationRepository;
+        this.subscriberService = subscriberService;
+        transactionTemplate = new TransactionTemplate(transactionManager);
+    }
 
     public String createAccountRequest(final String telephoneNumber, final String smsText, final String ip, final String password) {
         final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
@@ -70,15 +80,17 @@ public final class CreateAccountService {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsMessage);
         }
 
-        final AccountCreationRequestCount dbEntry = readAccountCreationRequest(simlarId);
-        dbEntry.setPassword(password);
-        dbEntry.setRegistrationCode(registrationCode);
-        dbEntry.setTimestamp(Instant.now());
-        dbEntry.incrementRequestTries();
-        dbEntry.setIp(ip);
-        accountCreationRepository.save(dbEntry);
+        return transactionTemplate.execute(status -> {
+            final AccountCreationRequestCount dbEntry = readAccountCreationRequest(simlarId);
+            dbEntry.setPassword(password);
+            dbEntry.setRegistrationCode(registrationCode);
+            dbEntry.setTimestamp(Instant.now());
+            dbEntry.incrementRequestTries();
+            dbEntry.setIp(ip);
+            accountCreationRepository.save(dbEntry);
 
-        return simlarId.get();
+            return simlarId.get();
+        });
     }
 
     private AccountCreationRequestCount readAccountCreationRequest(final SimlarId simlarId) {
@@ -96,13 +108,17 @@ public final class CreateAccountService {
             throw new XmlErrorNoRegistrationCodeException("confirm account request with simlarId: " + simlarId + " and registrationCode: " + registrationCode);
         }
 
-        final AccountCreationRequestCount creationRequest = accountCreationRepository.findBySimlarId(simlarId.get());
-        if (creationRequest == null) {
-            throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
-        }
+        final AccountCreationRequestCount creationRequest = transactionTemplate.execute(status -> {
+            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
+            if (dbEntry == null) {
+                throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
+            }
 
-        final int confirmTries = creationRequest.incrementConfirmTries();
-        accountCreationRepository.save(creationRequest);
+            dbEntry.incrementConfirmTries();
+            return accountCreationRepository.save(dbEntry);
+        });
+
+        final int confirmTries = creationRequest.getConfirmTries();
         if (confirmTries >= settingsService.getAccountCreationMaxConfirms()) {
             throw new XmlErrorTooManyConfirmTriesException("Too many confirm tries(" + confirmTries + ") for simlarId: " + simlarId);
         }

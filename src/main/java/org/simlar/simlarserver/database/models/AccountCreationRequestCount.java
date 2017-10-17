@@ -87,9 +87,8 @@ public final class AccountCreationRequestCount {
         requestTries++;
     }
 
-    public int incrementConfirmTries() {
-        //noinspection ValueOfIncrementOrDecrementUsed
-        return ++confirmTries;
+    public void incrementConfirmTries() {
+        confirmTries++;
     }
 
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
