@@ -44,29 +44,16 @@ public final class SubscriberService {
     private final SettingsService settingsService;
     private final SubscriberRepository subscriberRepository;
 
-    @SuppressWarnings("PackageVisibleInnerClass")
-    static final class SaveNoSimlarIdException extends RuntimeException { private static final long serialVersionUID = 1L; }
-    @SuppressWarnings("PackageVisibleInnerClass")
-    static final class SaveNoPasswordException extends RuntimeException { private static final long serialVersionUID = 1L; }
-    @SuppressWarnings("PackageVisibleInnerClass")
-    static final class SaveDbErrorException extends RuntimeException { private static final long serialVersionUID = 1L; }
-
     public void save(final SimlarId simlarId, final String password) {
-        if (simlarId == null) {
-            throw new SaveNoSimlarIdException();
-        }
-
-        if (StringUtils.isEmpty(password)) {
-            throw new SaveNoPasswordException();
+        if (simlarId == null || StringUtils.isEmpty(password)) {
+            throw new IllegalArgumentException("simlarId=" + simlarId + " password=" + password);
         }
 
         final Subscriber subscriber = new Subscriber(simlarId.get(), settingsService.getDomain(), password, "", createHashHa1(simlarId, password),
                 createHashHa1b(simlarId, password));
 
         subscriber.setId(findSubscriberId(simlarId));
-        if (subscriberRepository.save(subscriber) == null) {
-            throw new SaveDbErrorException();
-        }
+        subscriberRepository.save(subscriber);
     }
 
     private String createHashHa1(final SimlarId simlarId, final String password) {
