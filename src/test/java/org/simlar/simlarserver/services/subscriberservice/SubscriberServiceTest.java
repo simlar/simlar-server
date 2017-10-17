@@ -51,22 +51,22 @@ public final class SubscriberServiceTest {
     @Autowired
     private SettingsService settingsService;
 
-    @Test(expected = SubscriberService.SaveException.class)
+    @Test(expected = SubscriberService.SaveNoSimlarIdException.class)
     public void testSaveNoSimlarIdNoPassword() {
         subscriberService.save(null, null);
     }
 
-    @Test(expected = SubscriberService.SaveException.class)
+    @Test(expected = SubscriberService.SaveNoSimlarIdException.class)
     public void testSaveNoSimlarId() {
         subscriberService.save(null, "sdflkj34gd3F");
     }
 
-    @Test(expected = SubscriberService.SaveException.class)
+    @Test(expected = SubscriberService.SaveNoPasswordException.class)
     public void testSaveNoPassword() {
         subscriberService.save(SimlarId.create("*2000*"), null);
     }
 
-    @Test(expected = SubscriberService.SaveException.class)
+    @Test(expected = SubscriberService.SaveNoPasswordException.class)
     public void testSaveEmptyPassword() {
         subscriberService.save(SimlarId.create("*2000*"), "");
     }

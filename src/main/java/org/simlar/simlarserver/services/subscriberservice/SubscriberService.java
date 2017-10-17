@@ -42,13 +42,12 @@ public final class SubscriberService {
     private final SettingsService settingsService;
     private final SubscriberRepository subscriberRepository;
 
-    public static final class SaveException extends RuntimeException {
-        private static final long serialVersionUID = 1L;
-
-        private SaveException(final String message) {
-            super(message);
-        }
-    }
+    @SuppressWarnings("PackageVisibleInnerClass")
+    static final class SaveNoSimlarIdException extends RuntimeException { private static final long serialVersionUID = 1L; }
+    @SuppressWarnings("PackageVisibleInnerClass")
+    static final class SaveNoPasswordException extends RuntimeException { private static final long serialVersionUID = 1L; }
+    @SuppressWarnings("PackageVisibleInnerClass")
+    static final class SaveDbErrorException extends RuntimeException { private static final long serialVersionUID = 1L; }
 
     @Autowired
     private SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository) {
@@ -58,11 +57,11 @@ public final class SubscriberService {
 
     public void save(final SimlarId simlarId, final String password) {
         if (simlarId == null) {
-            throw new SaveException("No simlarId");
+            throw new SaveNoSimlarIdException();
         }
 
         if (StringUtils.isEmpty(password)) {
-            throw new SaveException("No password");
+            throw new SaveNoPasswordException();
         }
 
         final Subscriber subscriber = new Subscriber(simlarId.get(), settingsService.getDomain(), password, "", createHashHa1(simlarId, password),
@@ -70,7 +69,7 @@ public final class SubscriberService {
 
         subscriber.setId(findSubscriberId(simlarId));
         if (subscriberRepository.save(subscriber) == null) {
-            throw new SaveException("saving to repository failed");
+            throw new SaveDbErrorException();
         }
     }
 
