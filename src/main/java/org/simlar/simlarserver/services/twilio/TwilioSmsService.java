@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.simlar.simlarserver.database.models.SmsSentLog;
@@ -47,6 +48,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 @Component
 public final class TwilioSmsService implements SmsService {
     private static final Logger LOGGER = Logger.getLogger(TwilioSmsService.class.getName());
@@ -54,13 +56,6 @@ public final class TwilioSmsService implements SmsService {
     private final SettingsService       settingsService;
     private final TwilioSettingsService twilioSettingsService;
     private final SmsSentLogRepository  smsSentLogRepository;
-
-    @Autowired
-    public TwilioSmsService(final SettingsService settingsService, final TwilioSettingsService twilioSettingsService, final SmsSentLogRepository smsSentLogRepository) {
-        this.settingsService       = settingsService;
-        this.twilioSettingsService = twilioSettingsService;
-        this.smsSentLogRepository  = smsSentLogRepository;
-    }
 
     private String postRequest(final String telephoneNumber, final String text) {
         final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
