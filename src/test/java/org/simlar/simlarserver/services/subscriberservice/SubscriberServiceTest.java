@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver.subscriberservice;
+package org.simlar.simlarserver.services.subscriberservice;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
@@ -27,7 +27,6 @@ import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
-import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
