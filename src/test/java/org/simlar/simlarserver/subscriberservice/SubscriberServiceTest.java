@@ -44,17 +44,32 @@ public final class SubscriberServiceTest {
     @Autowired
     private SubscriberService subscriberService;
 
+    @Test(expected = SubscriberService.SaveException.class)
+    public void testSaveNoSimlarIdNoPassword() {
+        subscriberService.save(null, null);
+    }
+
+    @Test(expected = SubscriberService.SaveException.class)
+    public void testSaveNoSimlarId() {
+        subscriberService.save(null, "sdflkj34gd3F");
+    }
+
+    @Test(expected = SubscriberService.SaveException.class)
+    public void testSaveNoPassword() {
+        subscriberService.save(SimlarId.create("*2000*"), null);
+    }
+
+    @Test(expected = SubscriberService.SaveException.class)
+    public void testSaveEmptyPassword() {
+        subscriberService.save(SimlarId.create("*2000*"), "");
+    }
+
     @Test
-    public void testSave() {
+    public void testSaveSuccess() {
         @SuppressWarnings("TooBroadScope")
         final String simlarId = "*2000*";
-
-        assertFalse(subscriberService.save(null, null));
-        assertFalse(subscriberService.save(null, "sdflkj34gd3F"));
-        assertFalse(subscriberService.save(SimlarId.create(simlarId), null));
-        assertFalse(subscriberService.save(SimlarId.create(simlarId), ""));
-        assertTrue(subscriberService.save(SimlarId.create(simlarId), "sdflkj34gd3F"));
-        assertTrue(subscriberService.save(SimlarId.create(simlarId), "FdUfFjH34gd3"));
+        subscriberService.save(SimlarId.create(simlarId), "sdflkj34gd3F");
+        subscriberService.save(SimlarId.create(simlarId), "FdUfFjH34gd3");
     }
 
     @SuppressWarnings("TooBroadScope")
@@ -67,7 +82,7 @@ public final class SubscriberServiceTest {
 
         assertFalse(subscriberService.checkCredentials("*", ha1));
         assertFalse(subscriberService.checkCredentials(simlarId, ha1));
-        assertTrue(subscriberService.save(SimlarId.create(simlarId), password));
+        subscriberService.save(SimlarId.create(simlarId), password);
         assertFalse(subscriberService.checkCredentials("*", ha1));
         assertFalse(subscriberService.checkCredentials(simlarId, password));
         assertTrue(subscriberService.checkCredentials(simlarId, ha1));
@@ -84,10 +99,10 @@ public final class SubscriberServiceTest {
         assertEquals(0, subscriberService.getStatus(null));
         assertEquals(0, subscriberService.getStatus(simlarIdSaved));
         assertEquals(0, subscriberService.getStatus(simlarIdNotSaved));
-        assertTrue(subscriberService.save(simlarIdSaved, "xxxxxx"));
+        subscriberService.save(simlarIdSaved, "xxxxxx");
         assertEquals(1, subscriberService.getStatus(simlarIdSaved));
         assertEquals(0, subscriberService.getStatus(simlarIdNotSaved));
-        assertTrue(subscriberService.save(simlarIdSaved, "as234f2dsd"));
+        subscriberService.save(simlarIdSaved, "as234f2dsd");
         assertEquals(1, subscriberService.getStatus(simlarIdSaved));
     }
 
@@ -95,7 +110,7 @@ public final class SubscriberServiceTest {
     @Test
     public void testUsers() {
         for (final TestUser user: TestUser.values()) {
-            assertTrue(subscriberService.save(SimlarId.create(user.getSimlarId()), user.getPassword()));
+            subscriberService.save(SimlarId.create(user.getSimlarId()), user.getPassword());
             assertTrue(subscriberService.checkCredentials(user.getSimlarId(), user.getPasswordHash()));
         }
     }

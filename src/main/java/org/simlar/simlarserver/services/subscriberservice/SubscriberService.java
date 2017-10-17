@@ -42,23 +42,36 @@ public final class SubscriberService {
     private final SettingsService settingsService;
     private final SubscriberRepository subscriberRepository;
 
+    public static final class SaveException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+
+        private SaveException(final String message) {
+            super(message);
+        }
+    }
+
     @Autowired
     private SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository) {
         this.settingsService = settingsService;
         this.subscriberRepository = subscriberRepository;
     }
 
-    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    public boolean save(final SimlarId simlarId, final String password) {
-        if (simlarId == null || StringUtils.isEmpty(password)) {
-            return false;
+    public void save(final SimlarId simlarId, final String password) {
+        if (simlarId == null) {
+            throw new SaveException("No simlarId");
+        }
+
+        if (StringUtils.isEmpty(password)) {
+            throw new SaveException("No password");
         }
 
         final Subscriber subscriber = new Subscriber(simlarId.get(), settingsService.getDomain(), password, "", createHashHa1(simlarId, password),
                 createHashHa1b(simlarId, password));
 
         subscriber.setId(findSubscriberId(simlarId));
-        return subscriberRepository.save(subscriber) != null;
+        if (subscriberRepository.save(subscriber) == null) {
+            throw new SaveException("saving to repository failed");
+        }
     }
 
     private String createHashHa1(final SimlarId simlarId, final String password) {
