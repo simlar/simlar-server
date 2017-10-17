@@ -35,7 +35,7 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-@SuppressWarnings({"LocalCanBeFinal", "ClassWithTooManyMethods"})
+@SuppressWarnings("ClassWithTooManyMethods")
 @SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
 @Data
 @NoArgsConstructor
