@@ -21,9 +21,7 @@
 
 package org.simlar.simlarserver.services.createaccountservice;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
@@ -56,7 +54,6 @@ public final class CreateAccountService {
     private final AccountCreationRequestCountRepository accountCreationRepository;
     private final SubscriberService subscriberService;
 
-    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public String createAccountRequest(final String telephoneNumber, final String smsText, final String ip, final String password) {
         final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
         if (simlarId == null) {
@@ -73,9 +70,7 @@ public final class CreateAccountService {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsMessage);
         }
 
-        final AccountCreationRequestCount dbEntry = ObjectUtils.defaultIfNull(
-                accountCreationRepository.findBySimlarId(simlarId.get()),
-                new AccountCreationRequestCount(simlarId.get()));
+        final AccountCreationRequestCount dbEntry = readAccountCreationRequest(simlarId);
         dbEntry.setPassword(password);
         dbEntry.setRegistrationCode(registrationCode);
         dbEntry.setTimestamp(Instant.now());
@@ -84,6 +79,11 @@ public final class CreateAccountService {
         accountCreationRepository.save(dbEntry);
 
         return simlarId.get();
+    }
+
+    private AccountCreationRequestCount readAccountCreationRequest(final SimlarId simlarId) {
+        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
+        return dbEntry != null ? dbEntry : new AccountCreationRequestCount(simlarId.get());
     }
 
     public void confirmAccount(final String simlarIdString, final CharSequence registrationCode) {
