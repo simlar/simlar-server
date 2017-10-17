@@ -33,7 +33,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public final class CreateAccountServiceTest {
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private CreateAccountService createAccountService;
 

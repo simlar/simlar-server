@@ -49,7 +49,6 @@ import static org.mockito.Mockito.when;
 @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
 @RunWith(SpringRunner.class)
 public final class CreateAccountControllerTest extends BaseControllerTest {
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private SmsService smsService;
 

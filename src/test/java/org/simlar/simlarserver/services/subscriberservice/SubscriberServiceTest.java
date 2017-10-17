@@ -41,7 +41,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public final class SubscriberServiceTest {
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private SubscriberService subscriberService;
 

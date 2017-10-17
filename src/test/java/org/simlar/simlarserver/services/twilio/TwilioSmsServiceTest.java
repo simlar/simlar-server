@@ -45,19 +45,15 @@ import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public final class TwilioSmsServiceTest {
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private TwilioSmsService twilioSmsService;
 
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private TwilioSettingsService twilioSettingsService;
 
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private SmsSentLogRepository smsSentLogRepository;
 
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private SettingsService settingsService;
 
