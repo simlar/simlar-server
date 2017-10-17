@@ -33,8 +33,6 @@ import org.simlar.simlarserver.utils.LibPhoneNumber;
 import org.simlar.simlarserver.utils.Password;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.utils.SmsText;
-import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
-import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
@@ -46,13 +44,11 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Objects;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Component
 public final class CreateAccountService {
-    private static final Logger LOGGER = Logger.getLogger(CreateAccountService.class.getName());
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{6}");
 
     private final SmsService smsService;
@@ -61,7 +57,7 @@ public final class CreateAccountService {
     private final SubscriberService subscriberService;
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
-    public XmlSuccessCreateAccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip) {
+    public String createAccountRequest(final String telephoneNumber, final String smsText, final String ip, final String password) {
         final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
         if (simlarId == null) {
             throw new XmlErrorInvalidTelephoneNumberException("invalid telephone number: " + telephoneNumber);
@@ -77,8 +73,6 @@ public final class CreateAccountService {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsMessage);
         }
 
-        final String password = Password.generate();
-
         final AccountCreationRequestCount dbEntry = ObjectUtils.defaultIfNull(
                 accountCreationRepository.findBySimlarId(simlarId.get()),
                 new AccountCreationRequestCount(simlarId.get()));
@@ -89,10 +83,10 @@ public final class CreateAccountService {
         dbEntry.setIp(ip);
         accountCreationRepository.save(dbEntry);
 
-        return new XmlSuccessCreateAccountRequest(simlarId.get(), password);
+        return simlarId.get();
     }
 
-    public XmlSuccessCreateAccountConfirm confirmAccount(final String simlarIdString, final String registrationCode) {
+    public void confirmAccount(final String simlarIdString, final CharSequence registrationCode) {
         final SimlarId simlarId = SimlarId.create(simlarIdString);
         if (simlarId == null) {
             throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);
@@ -118,8 +112,6 @@ public final class CreateAccountService {
         }
 
         subscriberService.save(simlarId, creationRequest.getPassword());
-
-        return new XmlSuccessCreateAccountConfirm(simlarId.get(), registrationCode);
     }
 
     private static boolean checkRegistrationCode(final CharSequence input) {

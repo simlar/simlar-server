@@ -23,6 +23,7 @@ package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
 import org.simlar.simlarserver.services.createaccountservice.CreateAccountService;
+import org.simlar.simlarserver.utils.Password;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
@@ -75,7 +76,10 @@ final class CreateAccountController {
             throw new XmlErrorUnknownStructureException("create account request with command: " + command);
         }
 
-        return createAccountService.createAccountRequest(telephoneNumber, smsText, request.getRemoteAddr());
+        final String password = Password.generate();
+        final String simlarId = createAccountService.createAccountRequest(telephoneNumber, smsText, request.getRemoteAddr(), password);
+
+        return new XmlSuccessCreateAccountRequest(simlarId, password);
     }
 
 
@@ -103,6 +107,8 @@ final class CreateAccountController {
             throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);
         }
 
-        return createAccountService.confirmAccount(simlarId, registrationCode);
+        createAccountService.confirmAccount(simlarId, registrationCode);
+
+        return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
     }
 }
