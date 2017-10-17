@@ -21,7 +21,6 @@
 
 package org.simlar.simlarserver.services.subscriberservice;
 
-import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
@@ -31,18 +30,29 @@ import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.logging.Logger;
 
-@AllArgsConstructor(onConstructor = @__(@Autowired))
 @Component
 public final class SubscriberService {
     private static final Logger LOGGER = Logger.getLogger(SubscriberService.class.getName());
 
     private final SettingsService settingsService;
     private final SubscriberRepository subscriberRepository;
+    private final TransactionTemplate transactionTemplate;
+
+    @Autowired
+    public SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository, final PlatformTransactionManager transactionManager) {
+        this.settingsService = settingsService;
+        this.subscriberRepository = subscriberRepository;
+        transactionTemplate = new TransactionTemplate(transactionManager);
+    }
 
     public void save(final SimlarId simlarId, final String password) {
         if (simlarId == null || StringUtils.isEmpty(password)) {
@@ -52,8 +62,14 @@ public final class SubscriberService {
         final Subscriber subscriber = new Subscriber(simlarId.get(), settingsService.getDomain(), password, "", createHashHa1(simlarId, password),
                 createHashHa1b(simlarId, password));
 
-        subscriber.setId(findSubscriberId(simlarId));
-        subscriberRepository.save(subscriber);
+        //noinspection AnonymousInnerClass
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(final TransactionStatus status) {
+                subscriber.setId(findSubscriberId(simlarId));
+                subscriberRepository.save(subscriber);
+            }
+        });
     }
 
     private String createHashHa1(final SimlarId simlarId, final String password) {
