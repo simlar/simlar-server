@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.AllArgsConstructor;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,18 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.logging.Logger;
 
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
 final class VersionController {
     public  static final String REQUEST_PATH = "/version";
     private static final Logger LOGGER       = Logger.getLogger(VersionController.class.getName());
 
     private final SettingsService settingsService;
-
-
-    @Autowired
-    private VersionController(final SettingsService settingsService) {
-        this.settingsService = settingsService;
-    }
 
     /**
      * This method handles http post requests. You may test it with:

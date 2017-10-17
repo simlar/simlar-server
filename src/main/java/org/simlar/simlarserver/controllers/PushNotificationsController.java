@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.controllers;
 
+import lombok.AllArgsConstructor;
 import org.simlar.simlarserver.data.DeviceType;
 import org.simlar.simlarserver.database.models.PushNotification;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.logging.Logger;
 
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
 final class PushNotificationsController {
     public  static final String REQUEST_PATH = "/store-push-id.xml";
@@ -45,12 +47,6 @@ final class PushNotificationsController {
 
     private final SubscriberService           subscriberService;
     private final PushNotificationsRepository pushNotificationsRepository;
-
-    @Autowired
-    private PushNotificationsController(final SubscriberService subscriberService, final PushNotificationsRepository pushNotificationsRepository) {
-        this.subscriberService           = subscriberService;
-        this.pushNotificationsRepository = pushNotificationsRepository;
-    }
 
     /**
      * This method handles http post requests. You may test it with:
