@@ -25,6 +25,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.database.repositories.SubscriberRepository;
+import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -43,6 +45,12 @@ public final class SubscriberServiceTest {
     @SuppressWarnings("CanBeFinal")
     @Autowired
     private SubscriberService subscriberService;
+
+    @Autowired
+    private SubscriberRepository subscriberRepository;
+
+    @Autowired
+    private SettingsService settingsService;
 
     @Test(expected = SubscriberService.SaveException.class)
     public void testSaveNoSimlarIdNoPassword() {
@@ -68,8 +76,14 @@ public final class SubscriberServiceTest {
     public void testSaveSuccess() {
         @SuppressWarnings("TooBroadScope")
         final String simlarId = "*2000*";
+
+        assertTrue(subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).isEmpty());
         subscriberService.save(SimlarId.create(simlarId), "sdflkj34gd3F");
+        assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).size());
+        assertEquals("988395d60155f38eae4bb15657275d13", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).get(0));
         subscriberService.save(SimlarId.create(simlarId), "FdUfFjH34gd3");
+        assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).size());
+        assertEquals("fb14b3adf050f0e9b71bf866702188b5", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).get(0));
     }
 
     @SuppressWarnings("TooBroadScope")
