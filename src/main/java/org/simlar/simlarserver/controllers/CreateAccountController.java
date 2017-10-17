@@ -159,15 +159,20 @@ final class CreateAccountController {
             throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);
         }
 
-        if (!SimlarId.check(simlarId)) {
-            throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarId);
+        return confirmAccount(simlarId, registrationCode);
+    }
+
+    private XmlSuccessCreateAccountConfirm confirmAccount(final String simlarIdString, final String registrationCode) {
+        final SimlarId simlarId = SimlarId.create(simlarIdString);
+        if (simlarId == null) {
+            throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);
         }
 
         if (!checkRegistrationCode(registrationCode)) {
             throw new XmlErrorNoRegistrationCodeException("confirm account request with simlarId: " + simlarId + " and registrationCode: " + registrationCode);
         }
 
-        final AccountCreationRequestCount creationRequest = accountCreationRepository.findBySimlarId(simlarId);
+        final AccountCreationRequestCount creationRequest = accountCreationRepository.findBySimlarId(simlarId.get());
         if (creationRequest == null) {
             throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
         }
@@ -182,9 +187,9 @@ final class CreateAccountController {
             throw new XmlErrorWrongRegistrationCodeException("confirm account request with wrong registration code: " + registrationCode + " for simlarId: " + simlarId);
         }
 
-        subscriberService.save(SimlarId.create(simlarId), creationRequest.getPassword());
+        subscriberService.save(simlarId, creationRequest.getPassword());
 
-        return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
+        return new XmlSuccessCreateAccountConfirm(simlarId.get(), registrationCode);
     }
 
     private static boolean checkRegistrationCode(final CharSequence input) {
