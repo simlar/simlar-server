@@ -57,7 +57,7 @@ public final class CreateAccountServiceTest {
         expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
         expectedException.expectMessage("NO-NUMBER");
         expectedException.expectMessage(not(containsString("libphonenumber")));
-        createAccountService.createAccountRequest("NO-NUMBER", "", "", "");
+        createAccountService.createAccountRequest("NO-NUMBER", "", "");
     }
 
     @Test
@@ -65,20 +65,20 @@ public final class CreateAccountServiceTest {
         expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
         expectedException.expectMessage("+49163123456");
         expectedException.expectMessage("libphonenumber");
-        createAccountService.createAccountRequest("+49163123456", "", "", "");
+        createAccountService.createAccountRequest("+49163123456", "", "");
     }
 
     @Test
     public void testCreateAccountRequestWithFailedSms() {
         expectedException.expect(XmlErrorFailedToSendSmsException.class);
-        createAccountService.createAccountRequest("+15005550006", "", "", "");
+        createAccountService.createAccountRequest("+15005550006", "", "");
     }
 
     @Test
     public void testCreateAccountRequestSuccess() {
         final String telephoneNumber = "+15005510001";
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
-        createAccountService.createAccountRequest(telephoneNumber, "", "", "");
+        createAccountService.createAccountRequest(telephoneNumber, "", "");
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
     }
 }

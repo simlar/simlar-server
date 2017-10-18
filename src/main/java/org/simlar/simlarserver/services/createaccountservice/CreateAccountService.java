@@ -64,7 +64,7 @@ public final class CreateAccountService {
         transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
-    public String createAccountRequest(final String telephoneNumber, final String smsText, final String ip, final String password) {
+    public AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip) {
         final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
         if (simlarId == null) {
             throw new XmlErrorInvalidTelephoneNumberException("invalid telephone number: " + telephoneNumber);
@@ -81,6 +81,7 @@ public final class CreateAccountService {
         }
 
         return transactionTemplate.execute(status -> {
+            final String password = Password.generate();
             final AccountCreationRequestCount dbEntry = readAccountCreationRequest(simlarId);
             dbEntry.setPassword(password);
             dbEntry.setRegistrationCode(registrationCode);
@@ -89,7 +90,7 @@ public final class CreateAccountService {
             dbEntry.setIp(ip);
             accountCreationRepository.save(dbEntry);
 
-            return simlarId.get();
+            return new AccountRequest(simlarId, password);
         });
     }
 
