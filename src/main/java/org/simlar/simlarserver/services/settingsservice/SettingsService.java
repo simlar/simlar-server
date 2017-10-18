@@ -21,10 +21,12 @@
 
 package org.simlar.simlarserver.services.settingsservice;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Getter
 @Component
 public class SettingsService {
     private final String domain;
@@ -40,17 +42,5 @@ public class SettingsService {
         this.domain                     = domain;
         this.version                    = version;
         this.accountCreationMaxConfirms = accountCreationMaxConfirms;
-    }
-
-    public final String getDomain() {
-        return domain;
-    }
-
-    public final String getVersion() {
-        return version;
-    }
-
-    public final int getAccountCreationMaxConfirms() {
-        return accountCreationMaxConfirms;
     }
 }
