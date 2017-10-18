@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public final class CreateAccountServiceTest {
     @Autowired
     private CreateAccountService createAccountService;
+
+    @Autowired
+    private SmsService smsService;
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
@@ -64,5 +72,13 @@ public final class CreateAccountServiceTest {
     public void testCreateAccountRequestWithFailedSms() {
         expectedException.expect(XmlErrorFailedToSendSmsException.class);
         createAccountService.createAccountRequest("+15005550006", "", "", "");
+    }
+
+    @Test
+    public void testCreateAccountRequestSuccess() {
+        final String telephoneNumber = "+15005510001";
+        when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
+        createAccountService.createAccountRequest(telephoneNumber, "", "", "");
+        verify(smsService).sendSms(eq(telephoneNumber), anyString());
     }
 }
