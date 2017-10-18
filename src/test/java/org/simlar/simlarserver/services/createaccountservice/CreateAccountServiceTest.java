@@ -21,7 +21,9 @@
 
 package org.simlar.simlarserver.services.createaccountservice;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
@@ -36,13 +38,19 @@ public final class CreateAccountServiceTest {
     @Autowired
     private CreateAccountService createAccountService;
 
-    @Test(expected = XmlErrorInvalidTelephoneNumberException.class)
+    @Rule
+    public final ExpectedException expectedException = ExpectedException.none();
+
+    @Test
     public void testCreateAccountRequestWithInvalidNumber() {
+        expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
+        expectedException.expectMessage("NO-NUMBER");
         createAccountService.createAccountRequest("NO-NUMBER", "", "", "");
     }
 
-    @Test(expected = XmlErrorFailedToSendSmsException.class)
+    @Test
     public void testCreateAccountRequestWithFailedSms() {
+        expectedException.expect(XmlErrorFailedToSendSmsException.class);
         createAccountService.createAccountRequest("+15005550006", "", "", "");
     }
 }

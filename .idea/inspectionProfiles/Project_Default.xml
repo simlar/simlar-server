@@ -694,7 +694,9 @@
     <inspection_tool class="PublicField" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreEnums" value="false" />
       <option name="ignorableAnnotations">
-        <value />
+        <value>
+          <item value="org.junit.Rule" />
+        </value>
       </option>
     </inspection_tool>
     <inspection_tool class="PublicFieldAccessedInSynchronizedContext" enabled="true" level="WARNING" enabled_by_default="true" />
