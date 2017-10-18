@@ -32,6 +32,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeExce
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
@@ -49,6 +50,7 @@ public enum XmlErrorExceptionClientResponse {
         UNKNOWN_STRUCTURE          (XmlErrorUnknownStructureException.class,          1, "unknown structure"),
         WRONG_CREDENTIALS          (XmlErrorWrongCredentialsException.class,         10, "wrong credentials"),
         INVALID_TELEPHONE_NUMBER   (XmlErrorInvalidTelephoneNumberException.class,   22, "unable to create simlar id"),
+        TOO_MANY_REQUEST_TRIES     (XmlErrorTooManyRequestTriesException.class,      23, "too many account creation requests"),
         FAILED_TO_SEND_SMS         (XmlErrorFailedToSendSmsException.class,          24, "failed to send sms"),
         TOO_MANY_CONFIRM_TRIES     (XmlErrorTooManyConfirmTriesException.class,      25, "too many confirm tries"),
         WRONG_REGISTRATION_CODE    (XmlErrorWrongRegistrationCodeException.class,    26, "wrong registration code"),

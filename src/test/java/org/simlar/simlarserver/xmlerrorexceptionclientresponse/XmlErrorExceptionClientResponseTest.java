@@ -29,6 +29,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeExce
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
@@ -56,6 +57,7 @@ public final class XmlErrorExceptionClientResponseTest {
         assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE, XmlErrorExceptionClientResponse.fromException(XmlErrorUnknownStructureException.class));
         assertEquals(XmlErrorExceptionClientResponse.WRONG_CREDENTIALS, XmlErrorExceptionClientResponse.fromException(XmlErrorWrongCredentialsException.class));
         assertEquals(XmlErrorExceptionClientResponse.INVALID_TELEPHONE_NUMBER, XmlErrorExceptionClientResponse.fromException(XmlErrorInvalidTelephoneNumberException.class));
+        assertEquals(XmlErrorExceptionClientResponse.TOO_MANY_REQUEST_TRIES, XmlErrorExceptionClientResponse.fromException(XmlErrorTooManyRequestTriesException.class));
         assertEquals(XmlErrorExceptionClientResponse.FAILED_TO_SEND_SMS, XmlErrorExceptionClientResponse.fromException(XmlErrorFailedToSendSmsException.class));
         assertEquals(XmlErrorExceptionClientResponse.TOO_MANY_CONFIRM_TRIES, XmlErrorExceptionClientResponse.fromException(XmlErrorTooManyConfirmTriesException.class));
         assertEquals(XmlErrorExceptionClientResponse.WRONG_REGISTRATION_CODE, XmlErrorExceptionClientResponse.fromException(XmlErrorWrongRegistrationCodeException.class));
