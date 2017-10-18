@@ -32,6 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public final class CreateAccountServiceTest {
@@ -45,7 +48,16 @@ public final class CreateAccountServiceTest {
     public void testCreateAccountRequestWithInvalidNumber() {
         expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
         expectedException.expectMessage("NO-NUMBER");
+        expectedException.expectMessage(not(containsString("libphonenumber")));
         createAccountService.createAccountRequest("NO-NUMBER", "", "", "");
+    }
+
+    @Test
+    public void testCreateAccountRequestWithInvalidNumberLibphonenumber() {
+        expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
+        expectedException.expectMessage("+49163123456");
+        expectedException.expectMessage("libphonenumber");
+        createAccountService.createAccountRequest("+49163123456", "", "", "");
     }
 
     @Test
