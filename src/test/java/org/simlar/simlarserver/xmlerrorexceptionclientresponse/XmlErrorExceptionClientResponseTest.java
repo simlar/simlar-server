@@ -38,7 +38,6 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeE
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-@SuppressWarnings("ClassWithTooManyDependencies")
 public final class XmlErrorExceptionClientResponseTest {
 
     private static final class XmlErrorNoResponseRegisteredException extends XmlErrorException {
