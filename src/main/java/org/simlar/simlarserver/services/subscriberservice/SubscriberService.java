@@ -72,7 +72,7 @@ public final class SubscriberService {
         });
     }
 
-    private String createHashHa1(final SimlarId simlarId, final String password) {
+    public String createHashHa1(final SimlarId simlarId, final String password) {
         return Hash.md5(simlarId.get() + ':' + settingsService.getDomain() + ':' + password);
     }
 

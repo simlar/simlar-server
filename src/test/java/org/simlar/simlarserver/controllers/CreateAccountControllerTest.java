@@ -29,6 +29,7 @@ import org.simlar.simlarserver.database.repositories.AccountCreationRequestCount
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
@@ -219,5 +220,28 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals(before.getPassword(), after.getPassword());
 
         assertTrue(subscriberService.checkCredentials(simlarId, "c42214dc9d5eb6f7093b7589937e41cf"));
+    }
+
+    @Test
+    public void testCompleteAccountCreation() {
+        // request
+        final XmlSuccessCreateAccountRequest request = postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST,"+15005042023", "android-en");
+        assertNotNull(request);
+        assertEquals("*15005042023*", request.getSimlarId());
+        assertNotNull(request.getPassword());
+        assertEquals("password '" + request.getPassword() + "' does not match expected size",14, request.getPassword().length());
+
+        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(request.getSimlarId());
+        assertNotNull(dbEntry);
+        assertNotNull(dbEntry.getRegistrationCode());
+
+
+        // confirm
+        final XmlSuccessCreateAccountConfirm response = postConfirmAccount(XmlSuccessCreateAccountConfirm.class, CreateAccountController.COMMAND_CONFIRM, request.getSimlarId(), dbEntry.getRegistrationCode());
+        assertEquals(request.getSimlarId(), response.getSimlarId());
+        assertEquals(dbEntry.getRegistrationCode(), response.getRegistrationCode());
+
+        // check
+        assertTrue(subscriberService.checkCredentials(request.getSimlarId(), subscriberService.createHashHa1(SimlarId.create(request.getSimlarId()), request.getPassword())));
     }
 }
