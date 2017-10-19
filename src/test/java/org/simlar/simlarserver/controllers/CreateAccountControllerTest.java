@@ -209,7 +209,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final String simlarId = "*42002300003*";
         final String registrationCode = "432516";
 
-        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", registrationCode, 1, settingsService.getAccountCreationMaxConfirms() - 1, "127.0.0.1");
+        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", registrationCode, 1, settingsService.getAccountCreationMaxConfirms(), "127.0.0.1");
         accountCreationRepository.save(before);
         assertPostConfirmAccountError(25, CreateAccountController.COMMAND_CONFIRM, simlarId, registrationCode);
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);

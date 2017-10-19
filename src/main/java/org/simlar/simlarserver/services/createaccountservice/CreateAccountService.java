@@ -127,7 +127,7 @@ public final class CreateAccountService {
         });
 
         final int confirmTries = creationRequest.getConfirmTries();
-        if (confirmTries >= settingsService.getAccountCreationMaxConfirms()) {
+        if (confirmTries > settingsService.getAccountCreationMaxConfirms()) {
             throw new XmlErrorTooManyConfirmTriesException("Too many confirm tries(" + confirmTries + ") for simlarId: " + simlarId);
         }
 
