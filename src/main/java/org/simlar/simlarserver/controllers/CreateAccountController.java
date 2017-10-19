@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
 import org.simlar.simlarserver.services.createaccountservice.AccountRequest;
 import org.simlar.simlarserver.services.createaccountservice.CreateAccountService;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
@@ -36,15 +37,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
+@Log
 @RestController
 final class CreateAccountController {
     public  static final String REQUEST_PATH    = "/create-account.xml";
     public  static final String COMMAND_REQUEST = "request";
     public  static final String COMMAND_CONFIRM = "confirm";
-    private static final Logger LOGGER          = Logger.getLogger(CreateAccountController.class.getName());
 
     private final CreateAccountService createAccountService;
 
@@ -70,7 +70,7 @@ final class CreateAccountController {
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessCreateAccountRequest createAccountRequest(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String telephoneNumber, @RequestParam final String smsText) {
-        LOGGER.info(REQUEST_PATH + " requested with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
+        log.info(REQUEST_PATH + " requested with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
 
         if (!Objects.equals(command, COMMAND_REQUEST)) {
             throw new XmlErrorUnknownStructureException("create account request with command: " + command);
@@ -100,7 +100,7 @@ final class CreateAccountController {
      */
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE, params = { "command", "simlarId", "registrationCode"  })
     public XmlSuccessCreateAccountConfirm confirmAccount(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String simlarId, @RequestParam final String registrationCode) {
-        LOGGER.info(REQUEST_PATH + " confirm with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
+        log.info(REQUEST_PATH + " confirm with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
 
         if (!Objects.equals(command, COMMAND_CONFIRM)) {
             throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);

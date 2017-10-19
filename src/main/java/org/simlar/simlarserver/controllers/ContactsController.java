@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
 import org.apache.commons.lang3.ObjectUtils;
 import org.simlar.simlarserver.services.delaycalculatorservice.DelayCalculatorService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
@@ -45,14 +46,13 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
+@Log
 @RestController
 final class ContactsController {
     public  static final String   REQUEST_PATH  = "/get-contacts-status.xml";
-    private static final Logger   LOGGER        = Logger.getLogger(ContactsController.class.getName());
     private static final Duration DELAY_MINIMUM = Duration.ofMillis(10);
     private static final Duration DELAY_MAXIMUM = Duration.ofSeconds(8);
 
@@ -82,7 +82,7 @@ final class ContactsController {
      */
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public DeferredResult<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
-        LOGGER.info(REQUEST_PATH + " requested with login=\"" + login + '\"');
+        log.info(REQUEST_PATH + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
 
@@ -93,14 +93,14 @@ final class ContactsController {
         }
 
         final Instant scheduledTime = Instant.now().plus(delay);
-        LOGGER.info("scheduling getContactStatus to: " + formatInstant(scheduledTime));
+        log.info("scheduling getContactStatus to: " + formatInstant(scheduledTime));
 
         final DeferredResult<XmlContacts> deferredResult = new DeferredResult<>();
         taskScheduler.schedule(() -> {
             if (deferredResult.isSetOrExpired()) {
-                LOGGER.severe("deferred result already set or expired simlarId=" + login + " delay=" + delay);
+                log.severe("deferred result already set or expired simlarId=" + login + " delay=" + delay);
             } else {
-                LOGGER.info("executing getContactStatus scheduled to: " + formatInstant(scheduledTime));
+                log.info("executing getContactStatus scheduled to: " + formatInstant(scheduledTime));
                 deferredResult.setResult(
                         new XmlContacts(simlarIds.stream()
                                 .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
