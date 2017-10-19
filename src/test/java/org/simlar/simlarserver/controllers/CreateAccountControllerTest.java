@@ -42,6 +42,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -64,6 +65,8 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
     @SuppressWarnings("MethodWithTooManyParameters")
     private <T> T postCreateAccount(final Class<T> responseClass, final boolean callSmsService, final boolean sendSmsResult, final String command, final String telephoneNumber, final String smsText) {
+        reset(smsService);
+
         if (callSmsService) {
             when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(sendSmsResult);
         }
@@ -124,6 +127,23 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertPostCreateAccountError(22, false, CreateAccountController.COMMAND_REQUEST, "NO-NUMBER", "android-de");
         assertPostCreateAccountError(22, false, CreateAccountController.COMMAND_REQUEST, "+49163123456", "android-de");
     }
+
+    @Test
+    public void testRequestTelephoneNumberLimit() {
+        final String telephoneNumber = "+15005023024";
+
+        final int max = settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay();
+        for (int i = 0; i < max; i++) {
+            if ((i & 1) == 0) {
+                assertPostCreateAccountError(24, true, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-de");
+            } else {
+                postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-en");
+            }
+        }
+
+        assertPostCreateAccountError(23, false, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-de");
+    }
+
 
     private <T> T postConfirmAccount(final Class<T> responseClass, final String command, final String simlarId, final String registrationCode) {
         return postRequest(responseClass, CreateAccountController.REQUEST_PATH, createParameters(new String[][] {
