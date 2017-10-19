@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.services.startupservice;
 
+import lombok.extern.java.Log;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;
@@ -33,12 +34,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.logging.Logger;
-
+@Log
 @Component
 final class StartUpService {
-    private static final Logger LOGGER = Logger.getLogger(StartUpService.class.getName());
-
     private final SettingsService   settingsService;
     private final SubscriberService subscriberService;
     private final String            datasourceUrl;
@@ -59,7 +57,7 @@ final class StartUpService {
             final SimlarId simlarId = SimlarId.create(user.getSimlarId());
             if (simlarId != null) {
                 subscriberService.save(simlarId, user.getPassword());
-                LOGGER.info("added test user: " + user.getSimlarId());
+                log.info("added test user: " + user.getSimlarId());
             }
         }
     }
@@ -67,7 +65,7 @@ final class StartUpService {
     @SuppressWarnings("unused")
     @EventListener
     public void handleApplicationReadyEvent(final ApplicationReadyEvent event) {
-        LOGGER.info(
+        log.info(
                 "started on domain='" + settingsService.getDomain() +
                 "', hibernateDdlAuto='" + hibernateDdlAuto +
                 "', dataSource='" + datasourceUrl +

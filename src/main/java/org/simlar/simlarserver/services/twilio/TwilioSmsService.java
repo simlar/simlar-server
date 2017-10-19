@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.simlar.simlarserver.database.models.SmsSentLog;
@@ -46,12 +47,11 @@ import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
+@Log
 @Component
 public final class TwilioSmsService implements SmsService {
-    private static final Logger LOGGER = Logger.getLogger(TwilioSmsService.class.getName());
 
     private final SettingsService       settingsService;
     private final TwilioSettingsService twilioSettingsService;
@@ -70,14 +70,14 @@ public final class TwilioSmsService implements SmsService {
             final String response = new RestTemplateBuilder().basicAuthorization(twilioSettingsService.getSid(), twilioSettingsService.getAuthToken()).build()
                     .postForObject(twilioSettingsService.getUrl(), parameters, String.class);
 
-            LOGGER.info("response: " + response);
+            log.info("response: " + response);
             return response;
         } catch (final HttpClientErrorException e) {
-            LOGGER.info("while sending sms to " + telephoneNumber + " received error: " + e.getMessage() + " response: " + e.getResponseBodyAsString());
+            log.info("while sending sms to " + telephoneNumber + " received error: " + e.getMessage() + " response: " + e.getResponseBodyAsString());
             return e.getStatusCode() == HttpStatus.BAD_REQUEST ? e.getResponseBodyAsString() : null;
         } catch (final RestClientException e) {
             final String cause = ExceptionUtils.getRootCauseMessage(e);
-            LOGGER.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " failed to connect to twilio server: " + cause);
+            log.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " failed to connect to twilio server: " + cause);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", cause, text));
             return null;
         }
@@ -87,7 +87,7 @@ public final class TwilioSmsService implements SmsService {
     @SuppressWarnings({"BooleanMethodNameMustStartWithQuestion", "MethodWithMultipleReturnPoints"})
     public boolean sendSms(final String telephoneNumber, final String text) {
         if (!twilioSettingsService.isConfigured()) {
-            LOGGER.severe("twilio not configured: " + twilioSettingsService);
+            log.severe("twilio not configured: " + twilioSettingsService);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
             return false;
         }
@@ -98,33 +98,33 @@ public final class TwilioSmsService implements SmsService {
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
     boolean handleResponse(final String telephoneNumber, final String text, final String response) {
         if (StringUtils.isEmpty(response)) {
-            LOGGER.severe("while sending sms to " + telephoneNumber + " received empty response");
+            log.severe("while sending sms to " + telephoneNumber + " received empty response");
             return false;
         }
 
         try {
             final MessageResponse messageResponse = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readValue(response, MessageResponse.class);
             if (StringUtils.isEmpty(messageResponse.getSid())) {
-                LOGGER.severe("while sending sms to " + telephoneNumber + " received message response without MessageSid: " + response);
+                log.severe("while sending sms to " + telephoneNumber + " received message response without MessageSid: " + response);
                 smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, messageResponse.getStatus(), messageResponse.getErrorCode() + " - " + messageResponse.getErrorMessage(), text));
                 return false;
             }
 
             if (StringUtils.isEmpty(messageResponse.getStatus())) {
-                LOGGER.severe("while sending sms to " + telephoneNumber + " received message response without status: " + response);
+                log.severe("while sending sms to " + telephoneNumber + " received message response without status: " + response);
                 smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
                 return false;
             }
 
-            LOGGER.info("while sending sms to " + telephoneNumber + " received message response: " + messageResponse);
+            log.info("while sending sms to " + telephoneNumber + " received message response: " + messageResponse);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
             return true;
         } catch (final JsonMappingException | JsonParseException e) {
-            LOGGER.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " unable to parse response: " + response, e);
+            log.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " unable to parse response: " + response, e);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " IOException during response parsing: " + response, e);
+            log.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " IOException during response parsing: " + response, e);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
@@ -134,12 +134,12 @@ public final class TwilioSmsService implements SmsService {
     public void handleDeliveryReport(@SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
         final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(messageSid);
         if (smsSentLog == null) {
-            LOGGER.severe("no db entry");
+            log.severe("no db entry");
             return;
         }
 
         if (!StringUtils.equals(smsSentLog.getTelephoneNumber(), telephoneNumber)) {
-            LOGGER.warning("delivery report with unequal telephone numbers: saved='" + smsSentLog.getTelephoneNumber() + "' received='" + telephoneNumber + '\'');
+            log.warning("delivery report with unequal telephone numbers: saved='" + smsSentLog.getTelephoneNumber() + "' received='" + telephoneNumber + '\'');
         }
 
         smsSentLog.setDlrTimestampToNow();

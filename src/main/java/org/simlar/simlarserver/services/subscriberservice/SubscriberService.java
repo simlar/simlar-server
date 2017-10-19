@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.services.subscriberservice;
 
+import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
@@ -37,12 +38,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.logging.Logger;
 
+@Log
 @Component
 public final class SubscriberService {
-    private static final Logger LOGGER = Logger.getLogger(SubscriberService.class.getName());
-
     private final SettingsService settingsService;
     private final SubscriberRepository subscriberRepository;
     private final TransactionTemplate transactionTemplate;
@@ -87,7 +86,7 @@ public final class SubscriberService {
         }
 
         if (ids.size() > 1) {
-            LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            log.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
         return ids.get(0);
@@ -108,7 +107,7 @@ public final class SubscriberService {
         }
 
         if (savedHa1s.size() > 1) {
-            LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            log.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
         return StringUtils.equals(ha1, savedHa1s.get(0));
