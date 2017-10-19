@@ -141,7 +141,17 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
             }
         }
 
+        final String simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber).get();
+        final AccountCreationRequestCount before = accountCreationRepository.findBySimlarId(simlarId);
+
         assertPostCreateAccountError(23, false, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-de");
+
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
+        assertEquals(before.getConfirmTries(), after.getConfirmTries());
+        assertEquals(before.getRequestTries() + 1, after.getRequestTries());
+        assertEquals(settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay() + 1, after.getRequestTries());
+        assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
+        assertEquals(before.getPassword(), after.getPassword());
     }
 
 

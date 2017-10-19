@@ -77,25 +77,20 @@ public final class CreateAccountService {
             throw new XmlErrorInvalidTelephoneNumberException("libphonenumber invalidates telephone number: " + telephoneNumber);
         }
 
-        final AccountCreationRequestCount creationRequest = transactionTemplate.execute(status -> {
-            final AccountCreationRequestCount dbEntry = readAccountCreationRequest(simlarId);
-            dbEntry.setPassword(Password.generate());
-            dbEntry.setRegistrationCode(Password.generateRegistrationCode());
-            dbEntry.setTimestamp(Instant.now());
-            dbEntry.incrementRequestTries();
-            dbEntry.setIp(ip);
-            return accountCreationRepository.save(dbEntry);
-        });
-
+        final AccountCreationRequestCount creationRequest = updateRequestTries(simlarId, ip);
         final int requestTries = creationRequest.getRequestTries();
         if (requestTries > settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay()) {
             throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTries + " for number: " + telephoneNumber);
         }
 
+        creationRequest.setRegistrationCode(Password.generateRegistrationCode());
         final String smsMessage = SmsText.create(smsText, creationRequest.getRegistrationCode());
         if (!smsService.sendSms(telephoneNumber, smsMessage)) {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsMessage);
         }
+
+        creationRequest.setPassword(Password.generate());
+        accountCreationRepository.save(creationRequest);
 
         log.info("created account request for simlarId: " + simlarId);
         return new AccountRequest(simlarId, creationRequest.getPassword());
@@ -103,7 +98,18 @@ public final class CreateAccountService {
 
     private AccountCreationRequestCount readAccountCreationRequest(final SimlarId simlarId) {
         final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
-        return dbEntry != null ? dbEntry : new AccountCreationRequestCount(simlarId.get());
+        return dbEntry != null ? dbEntry :
+                new AccountCreationRequestCount(simlarId.get(), Password.generate(), Password.generateRegistrationCode());
+    }
+
+    private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip) {
+        return transactionTemplate.execute(status -> {
+            final AccountCreationRequestCount dbEntry = readAccountCreationRequest(simlarId);
+            dbEntry.setTimestamp(Instant.now());
+            dbEntry.incrementRequestTries();
+            dbEntry.setIp(ip);
+            return accountCreationRepository.save(dbEntry);
+        });
     }
 
     public void confirmAccount(final String simlarIdString, final CharSequence registrationCode) {
