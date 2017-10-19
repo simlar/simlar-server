@@ -36,6 +36,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumber
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -76,26 +77,30 @@ public final class CreateAccountService {
             throw new XmlErrorInvalidTelephoneNumberException("libphonenumber invalidates telephone number: " + telephoneNumber);
         }
 
-        final String registrationCode = Password.generateRegistrationCode();
-        final String smsMessage = SmsText.create(smsText, registrationCode);
+        final AccountCreationRequestCount creationRequest = transactionTemplate.execute(status -> {
+            final AccountCreationRequestCount dbEntry = readAccountCreationRequest(simlarId);
+            dbEntry.setPassword(Password.generate());
+            dbEntry.setRegistrationCode(Password.generateRegistrationCode());
+            dbEntry.setTimestamp(Instant.now());
+            dbEntry.incrementRequestTries();
+            dbEntry.setIp(ip);
+            return accountCreationRepository.save(dbEntry);
+        });
+
+        if (creationRequest.getRequestTries() > settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay()) {
+            throw new XmlErrorTooManyRequestTriesException(
+                    "too many create account requests " + creationRequest.getRequestTries() +
+                    " > " + settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay() +
+                    " for number: " + telephoneNumber);
+        }
+
+        final String smsMessage = SmsText.create(smsText, creationRequest.getRegistrationCode());
         if (!smsService.sendSms(telephoneNumber, smsMessage)) {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsMessage);
         }
 
-        return transactionTemplate.execute(status -> {
-            final String password = Password.generate();
-            final AccountCreationRequestCount dbEntry = readAccountCreationRequest(simlarId);
-            dbEntry.setPassword(password);
-            dbEntry.setRegistrationCode(registrationCode);
-            dbEntry.setTimestamp(Instant.now());
-            dbEntry.incrementRequestTries();
-            dbEntry.setIp(ip);
-            accountCreationRepository.save(dbEntry);
-
-            log.info("created account request for simlarId: " + simlarId);
-
-            return new AccountRequest(simlarId, password);
-        });
+        log.info("created account request for simlarId: " + simlarId);
+        return new AccountRequest(simlarId, creationRequest.getPassword());
     }
 
     private AccountCreationRequestCount readAccountCreationRequest(final SimlarId simlarId) {
