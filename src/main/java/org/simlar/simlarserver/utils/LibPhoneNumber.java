@@ -24,13 +24,11 @@ package org.simlar.simlarserver.utils;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import lombok.extern.java.Log;
 
-import java.util.logging.Logger;
-
+@Log
 @SuppressWarnings("UtilityClass")
 public final class LibPhoneNumber {
-    private static final Logger LOGGER = Logger.getLogger(LibPhoneNumber.class.getName());
-
     private LibPhoneNumber() {
         throw new AssertionError("This class was not meant to be instantiated");
     }
@@ -41,7 +39,7 @@ public final class LibPhoneNumber {
             final Phonenumber.PhoneNumber pn = util.parse(telephoneNumber, null);
             return pn != null && util.isValidNumber(pn);
         } catch (final NumberParseException e) {
-            LOGGER.warning("telephoneNumber '" + telephoneNumber + "' caused exception: " + e.getMessage());
+            log.warning("telephoneNumber '" + telephoneNumber + "' caused exception: " + e.getMessage());
             return false;
         }
     }
