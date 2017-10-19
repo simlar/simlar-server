@@ -87,11 +87,9 @@ public final class CreateAccountService {
             return accountCreationRepository.save(dbEntry);
         });
 
-        if (creationRequest.getRequestTries() > settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay()) {
-            throw new XmlErrorTooManyRequestTriesException(
-                    "too many create account requests " + creationRequest.getRequestTries() +
-                    " > " + settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay() +
-                    " for number: " + telephoneNumber);
+        final int requestTries = creationRequest.getRequestTries();
+        if (requestTries > settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay()) {
+            throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTries + " for number: " + telephoneNumber);
         }
 
         final String smsMessage = SmsText.create(smsText, creationRequest.getRegistrationCode());
