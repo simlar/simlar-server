@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.services.createaccountservice;
 
+import lombok.extern.java.Log;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
@@ -45,6 +46,7 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+@Log
 @Component
 public final class CreateAccountService {
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{6}");
@@ -89,6 +91,8 @@ public final class CreateAccountService {
             dbEntry.incrementRequestTries();
             dbEntry.setIp(ip);
             accountCreationRepository.save(dbEntry);
+
+            log.info("created account request for simlarId: " + simlarId);
 
             return new AccountRequest(simlarId, password);
         });
