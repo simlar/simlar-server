@@ -77,23 +77,23 @@ public final class CreateAccountService {
             throw new XmlErrorInvalidTelephoneNumberException("libphonenumber invalidates telephone number: " + telephoneNumber);
         }
 
-        final AccountCreationRequestCount creationRequest = updateRequestTries(simlarId, ip);
-        final int requestTries = creationRequest.getRequestTries();
+        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip);
+        final int requestTries = dbEntry.getRequestTries();
         if (requestTries > settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay()) {
             throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTries + " for number: " + telephoneNumber);
         }
 
-        creationRequest.setRegistrationCode(Password.generateRegistrationCode());
-        final String smsMessage = SmsText.create(smsText, creationRequest.getRegistrationCode());
+        dbEntry.setRegistrationCode(Password.generateRegistrationCode());
+        final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
         if (!smsService.sendSms(telephoneNumber, smsMessage)) {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsMessage);
         }
 
-        creationRequest.setPassword(Password.generate());
-        accountCreationRepository.save(creationRequest);
+        dbEntry.setPassword(Password.generate());
+        accountCreationRepository.save(dbEntry);
 
         log.info("created account request for simlarId: " + simlarId);
-        return new AccountRequest(simlarId, creationRequest.getPassword());
+        return new AccountRequest(simlarId, dbEntry.getPassword());
     }
 
     private AccountCreationRequestCount readAccountCreationRequest(final SimlarId simlarId) {
