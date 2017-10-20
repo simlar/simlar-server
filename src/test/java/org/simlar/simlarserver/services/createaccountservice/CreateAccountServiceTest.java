@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.services.createaccountservice;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -52,6 +53,8 @@ public final class CreateAccountServiceTest {
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
 
+
+    @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @Test
     public void testCreateAccountRequestWithInvalidNumber() {
         expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
@@ -60,6 +63,7 @@ public final class CreateAccountServiceTest {
         createAccountService.createAccountRequest("NO-NUMBER", "", "");
     }
 
+    @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @Test
     public void testCreateAccountRequestWithInvalidNumberLibphonenumber() {
         expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
@@ -68,6 +72,7 @@ public final class CreateAccountServiceTest {
         createAccountService.createAccountRequest("+49163123456", "", "");
     }
 
+    @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @Test
     public void testCreateAccountRequestWithFailedSms() {
         expectedException.expect(XmlErrorFailedToSendSmsException.class);
