@@ -36,6 +36,8 @@ import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Duration;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -152,8 +154,14 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals(settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay() + 1, after.getRequestTries());
         assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
         assertEquals(before.getPassword(), after.getPassword());
-    }
 
+        /// check limit reset after a day
+        assertNotNull(after.getTimestamp());
+        after.setTimestamp(after.getTimestamp().minus(Duration.ofHours(25)));
+        accountCreationRepository.save(after);
+        postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-en");
+        assertEquals(1, accountCreationRepository.findBySimlarId(simlarId).getRequestTries());
+    }
 
     private <T> T postConfirmAccount(final Class<T> responseClass, final String command, final String simlarId, final String registrationCode) {
         return postRequest(responseClass, CreateAccountController.REQUEST_PATH, createParameters(new String[][] {

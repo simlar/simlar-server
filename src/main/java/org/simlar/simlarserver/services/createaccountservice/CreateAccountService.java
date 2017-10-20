@@ -43,6 +43,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -105,8 +106,14 @@ public final class CreateAccountService {
     private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip) {
         return transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = readAccountCreationRequest(simlarId);
-            dbEntry.setTimestamp(Instant.now());
-            dbEntry.incrementRequestTries();
+            final Instant now = Instant.now();
+            final Instant savedTimestamp = dbEntry.getTimestamp();
+            if (savedTimestamp != null && Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
+                dbEntry.setRequestTries(1);
+            } else{
+                dbEntry.incrementRequestTries();
+            }
+            dbEntry.setTimestamp(now);
             dbEntry.setIp(ip);
             return accountCreationRepository.save(dbEntry);
         });

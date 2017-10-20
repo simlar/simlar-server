@@ -95,7 +95,7 @@ public final class AccountCreationRequestCount {
 
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
     public Instant getTimestamp() {
-        return timestamp.toInstant();
+        return timestamp == null ? null : timestamp.toInstant();
     }
 
     public void setTimestamp(final Instant instant) {
