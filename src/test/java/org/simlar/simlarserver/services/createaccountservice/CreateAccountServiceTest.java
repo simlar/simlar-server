@@ -27,8 +27,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
+import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
+import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
@@ -36,10 +39,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Duration;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -58,6 +64,9 @@ public final class CreateAccountServiceTest {
 
     @Autowired
     private SettingsService settingsService;
+
+    @Autowired
+    private AccountCreationRequestCountRepository accountCreationRepository;
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
@@ -88,12 +97,16 @@ public final class CreateAccountServiceTest {
         createAccountService.createAccountRequest("+15005550006", "", "");
     }
 
-    @Test
-    public void testCreateAccountRequestSuccess() {
-        final String telephoneNumber = "+15005510001";
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
+    private void assertCreateAccountRequestSuccess(final String telephoneNumber) {
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
         createAccountService.createAccountRequest(telephoneNumber, "", "");
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
+    }
+
+    @Test
+    public void testCreateAccountRequestSuccess() {
+        assertCreateAccountRequestSuccess("+15005510001");
     }
 
     private static void assertException(final Class<? extends Exception> expected, final Runnable runnable) {
@@ -118,13 +131,30 @@ public final class CreateAccountServiceTest {
             if ((i & 1) == 0) {
                 assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ""));
             } else {
-                when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
-                createAccountService.createAccountRequest(telephoneNumber, "", "");
-                verify(smsService).sendSms(eq(telephoneNumber), anyString());
+                assertCreateAccountRequestSuccess(telephoneNumber);
             }
         }
 
-        expectedException.expect(XmlErrorTooManyRequestTriesException.class);
-        createAccountService.createAccountRequest(telephoneNumber, "", "");
+        final String simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber).get();
+        final AccountCreationRequestCount before = accountCreationRepository.findBySimlarId(simlarId);
+
+        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ""));
+
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
+        assertEquals(before.getConfirmTries(), after.getConfirmTries());
+        assertEquals(before.getRequestTries() + 1, after.getRequestTries());
+        assertEquals(settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay() + 1, after.getRequestTries());
+        assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
+        assertEquals(before.getPassword(), after.getPassword());
+
+        /// check limit reset after a day
+        assertNotNull(after.getTimestamp());
+        after.setTimestamp(after.getTimestamp().minus(Duration.ofHours(25)));
+        accountCreationRepository.save(after);
+
+        reset(smsService);
+        assertCreateAccountRequestSuccess(telephoneNumber);
+
+        assertEquals(1, accountCreationRepository.findBySimlarId(simlarId).getRequestTries());
     }
 }
