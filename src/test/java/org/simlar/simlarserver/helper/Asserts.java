@@ -58,12 +58,12 @@ public final class Asserts {
 
         assertEquals(message, expected.getTelephoneNumber(), actual.getTelephoneNumber());
         assertAlmostEquals(message, expected.getTimestamp(), actual.getTimestamp());
-        final String dleNumber = actual.getDlrNumber();
+        final String dlrNumber = actual.getDlrNumber();
         if (expected.getDlrNumber() == null) {
-            assertNull(message, dleNumber);
+            assertNull(message, dlrNumber);
         } else {
-            assertNotNull(message, dleNumber);
-            assertNotEquals(message, "", dleNumber);
+            assertNotNull(message, dlrNumber);
+            assertNotEquals(message, "", dlrNumber);
         }
         assertEquals(message, expected.getDlrStatus(), actual.getDlrStatus());
         assertAlmostEquals(message, expected.getDlrTimestamp(), actual.getDlrTimestamp());
