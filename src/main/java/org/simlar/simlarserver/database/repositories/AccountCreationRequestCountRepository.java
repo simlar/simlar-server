@@ -33,4 +33,7 @@ public interface AccountCreationRequestCountRepository extends CrudRepository<Ac
 
     @Query("SELECT SUM(requestTries) FROM AccountCreationRequestCount WHERE ip = ?1 AND timestamp >= ?2")
     int sumRequestTries(final String ip, final Timestamp timestamp);
+
+    @Query("SELECT SUM(requestTries) FROM AccountCreationRequestCount WHERE timestamp >= ?1")
+    int sumRequestTries(final Timestamp timestamp);
 }

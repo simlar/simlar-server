@@ -91,9 +91,15 @@ public final class CreateAccountService {
             throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTries + " for number: " + telephoneNumber);
         }
 
-        final int requestTriesPerIp = accountCreationRepository.sumRequestTries(ip, Timestamp.from(Instant.now().minus(Duration.ofHours(1))));
+        final Timestamp anHourAgo = Timestamp.from(Instant.now().minus(Duration.ofHours(1)));
+        final int requestTriesPerIp = accountCreationRepository.sumRequestTries(ip, anHourAgo);
         if (requestTriesPerIp > settingsService.getAccountCreationMaxRequestsPerIpPerHour()) {
             throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTriesPerIp + " for ip: " + ip);
+        }
+
+        final int requestTriesTotal = accountCreationRepository.sumRequestTries(anHourAgo);
+        if (requestTriesTotal > settingsService.getAccountCreationMaxRequestsTotalPerHour()) {
+            throw new XmlErrorTooManyRequestTriesException("too many total create account requests: " + requestTriesTotal + " within one hour");
         }
 
         dbEntry.setRegistrationCode(Password.generateRegistrationCode());
