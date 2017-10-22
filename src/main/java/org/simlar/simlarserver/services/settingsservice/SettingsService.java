@@ -41,13 +41,13 @@ public class SettingsService {
     @SuppressWarnings("ConstructorWithTooManyParameters")
     @Autowired
     public SettingsService(
-            @Value("${domain:}") final String                                       domain,
-            @Value("${info.app.version:}") final String                             version,
-            @Value("${accountCreation.maxRequestsPerSimlarIdPerDay:10}") final int  accountCreationMaxRequestsPerSimlarIdPerDay,
-            @Value("${accountCreation.maxRequestsPerIpPerHour:60}") final int       accountCreationMaxRequestsPerIpPerHour,
-            @Value("${accountCreation.maxRequestsTotalPerHour:220}") final int      accountCreationMaxRequestsTotalPerHour,
-            @Value("${accountCreation.maxRequestsTotalPerDay:1440}") final int      accountCreationMaxRequestsTotalPerDay,
-            @Value("${accountCreation.maxConfirms:10}") final int                   accountCreationMaxConfirms
+            @Value("${domain:}") final String                                      domain,
+            @Value("${info.app.version:}") final String                            version,
+            @Value("${accountCreation.maxRequestsPerSimlarIdPerDay:10}") final int accountCreationMaxRequestsPerSimlarIdPerDay,
+            @Value("${accountCreation.maxRequestsPerIpPerHour:60}") final int      accountCreationMaxRequestsPerIpPerHour,
+            @Value("${accountCreation.maxRequestsTotalPerHour:220}") final int     accountCreationMaxRequestsTotalPerHour,
+            @Value("${accountCreation.maxRequestsTotalPerDay:1440}") final int     accountCreationMaxRequestsTotalPerDay,
+            @Value("${accountCreation.maxConfirms:10}") final int                  accountCreationMaxConfirms
     ) {
         this.domain                                      = domain;
         this.version                                     = version;
