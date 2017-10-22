@@ -241,4 +241,41 @@ public final class CreateAccountServiceTest {
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
     }
+
+    @DirtiesContext
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
+    @Test
+    public void testCreateAccountRequestTotalLimitWithinOneDay() {
+        final int max = settingsService.getAccountCreationMaxRequestsTotalPerDay();
+        for (int i = 0; i < max; i++) {
+            reset(smsService);
+            final String number = String.format("15005012%03d",  i % 1000);
+            final String telephoneNumber = '+' + number;
+            final String ip = "192.168.42." + i % 256;
+            if ((i & 1) == 0) {
+                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+            } else {
+                assertCreateAccountRequestSuccess(telephoneNumber, ip);
+            }
+
+            // spread entries over the day
+            final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId('*' + number + '*');
+            assertNotNull(after.getTimestamp());
+            after.setTimestamp(after.getTimestamp().minus(Duration.ofMinutes((i % 24) * 60L)));
+            accountCreationRepository.save(after);
+        }
+
+        final String telephoneNumber = "+15005012149";
+        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
+
+
+        /// check limit reset after an hour
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*15005012148*");
+        assertNotNull(after.getTimestamp());
+        after.setTimestamp(after.getTimestamp().minus(Duration.ofHours(25)));
+        accountCreationRepository.save(after);
+
+        reset(smsService);
+        assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
+    }
 }

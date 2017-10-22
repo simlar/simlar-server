@@ -102,6 +102,11 @@ public final class CreateAccountService {
             throw new XmlErrorTooManyRequestTriesException("too many total create account requests: " + requestTriesTotal + " within one hour");
         }
 
+        final int requestTriesTotalDay = accountCreationRepository.sumRequestTries(Timestamp.from(Instant.now().minus(Duration.ofDays(1))));
+        if (requestTriesTotalDay > settingsService.getAccountCreationMaxRequestsTotalPerDay()) {
+            throw new XmlErrorTooManyRequestTriesException("too many total create account requests: " + requestTriesTotalDay + " within one day");
+        }
+
         dbEntry.setRegistrationCode(Password.generateRegistrationCode());
         final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
         if (!smsService.sendSms(telephoneNumber, smsMessage)) {
