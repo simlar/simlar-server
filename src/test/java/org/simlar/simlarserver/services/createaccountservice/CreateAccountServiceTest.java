@@ -34,6 +34,7 @@ import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -78,7 +79,7 @@ public final class CreateAccountServiceTest {
         expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
         expectedException.expectMessage("NO-NUMBER");
         expectedException.expectMessage(not(containsString("libphonenumber")));
-        createAccountService.createAccountRequest("NO-NUMBER", "", "");
+        createAccountService.createAccountRequest("NO-NUMBER", "", "192.168.1.1");
     }
 
     @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
@@ -87,20 +88,34 @@ public final class CreateAccountServiceTest {
         expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
         expectedException.expectMessage("+49163123456");
         expectedException.expectMessage("libphonenumber");
-        createAccountService.createAccountRequest("+49163123456", "", "");
+        createAccountService.createAccountRequest("+49163123456", "", "192.168.1.1");
     }
 
     @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @Test
     public void testCreateAccountRequestWithFailedSms() {
         expectedException.expect(XmlErrorFailedToSendSmsException.class);
+        createAccountService.createAccountRequest("+15005550006", "", "192.168.1.1");
+    }
+
+    @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
+    @Test
+    public void testCreateAccountRequestWithIpEmpty() {
+        expectedException.expect(XmlErrorNoIpException.class);
         createAccountService.createAccountRequest("+15005550006", "", "");
+    }
+
+    @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
+    @Test
+    public void testCreateAccountRequestWithIpNull() {
+        expectedException.expect(XmlErrorNoIpException.class);
+        createAccountService.createAccountRequest("+15005550006", "", null);
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void assertCreateAccountRequestSuccess(final String telephoneNumber) {
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
-        createAccountService.createAccountRequest(telephoneNumber, "", "");
+        createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1");
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
     }
 
@@ -129,7 +144,7 @@ public final class CreateAccountServiceTest {
         for (int i = 0; i < max; i++) {
             reset(smsService);
             if ((i & 1) == 0) {
-                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ""));
+                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
             } else {
                 assertCreateAccountRequestSuccess(telephoneNumber);
             }
@@ -138,7 +153,7 @@ public final class CreateAccountServiceTest {
         final String simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber).get();
         final AccountCreationRequestCount before = accountCreationRepository.findBySimlarId(simlarId);
 
-        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ""));
+        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
 
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
         assertEquals(before.getConfirmTries(), after.getConfirmTries());
