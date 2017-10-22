@@ -38,6 +38,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Duration;
@@ -123,6 +124,7 @@ public final class CreateAccountServiceTest {
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.1");
     }
 
+    @DirtiesContext
     @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @Test
     public void testCreateAccountRequestSuccess() {
@@ -141,6 +143,7 @@ public final class CreateAccountServiceTest {
         }
     }
 
+    @DirtiesContext
     @Test
     public void testCreateAccountRequestTelephoneNumberLimit() {
         final String telephoneNumber = "+15005023024";
@@ -178,6 +181,7 @@ public final class CreateAccountServiceTest {
         assertEquals(1, accountCreationRepository.findBySimlarId(simlarId).getRequestTries());
     }
 
+    @DirtiesContext
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testCreateAccountRequestIpLimitWithinOneHour() {
@@ -208,6 +212,7 @@ public final class CreateAccountServiceTest {
         assertCreateAccountRequestSuccess(telephoneNumber, ip);
     }
 
+    @DirtiesContext
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHour() {
