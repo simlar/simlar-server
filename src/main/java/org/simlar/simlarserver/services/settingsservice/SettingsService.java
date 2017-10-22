@@ -34,6 +34,7 @@ public class SettingsService {
     private final String version;
     private final int accountCreationMaxRequestsPerSimlarIdPerDay;
     private final int accountCreationMaxRequestsPerIpPerHour;
+    private final int accountCreationMaxRequestsTotalPerHour;
     private final int accountCreationMaxConfirms;
 
     @Autowired
@@ -42,12 +43,14 @@ public class SettingsService {
             @Value("${info.app.version:}") final String                             version,
             @Value("${accountCreation.maxRequestsPerSimlarIdPerDay:10}") final int  accountCreationMaxRequestsPerSimlarIdPerDay,
             @Value("${accountCreation.maxRequestsPerIpPerHour:60}") final int       accountCreationMaxRequestsPerIpPerHour,
+            @Value("${accountCreation.maxRequestsTotalPerHour:220}") final int      accountCreationMaxRequestsTotalPerHour,
             @Value("${accountCreation.maxConfirms:10}") final int                   accountCreationMaxConfirms
     ) {
         this.domain                                      = domain;
         this.version                                     = version;
         this.accountCreationMaxRequestsPerSimlarIdPerDay = accountCreationMaxRequestsPerSimlarIdPerDay;
         this.accountCreationMaxRequestsPerIpPerHour      = accountCreationMaxRequestsPerIpPerHour;
+        this.accountCreationMaxRequestsTotalPerHour      = accountCreationMaxRequestsTotalPerHour;
         this.accountCreationMaxConfirms                  = accountCreationMaxConfirms;
     }
 }
