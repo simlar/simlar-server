@@ -178,6 +178,7 @@ public final class CreateAccountServiceTest {
         assertEquals(1, accountCreationRepository.findBySimlarId(simlarId).getRequestTries());
     }
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testCreateAccountRequestIpLimitWithinOneHour() {
         final String ip = "192.168.23.42";
@@ -195,5 +196,15 @@ public final class CreateAccountServiceTest {
 
         final String telephoneNumber = "+15005023049";
         assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+
+
+        /// check limit reset after an hour
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*15005023048*");
+        assertNotNull(after.getTimestamp());
+        after.setTimestamp(after.getTimestamp().minus(Duration.ofMinutes(61)));
+        accountCreationRepository.save(after);
+
+        reset(smsService);
+        assertCreateAccountRequestSuccess(telephoneNumber, ip);
     }
 }

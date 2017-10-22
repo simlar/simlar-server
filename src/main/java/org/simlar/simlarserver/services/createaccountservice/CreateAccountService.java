@@ -45,6 +45,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
@@ -90,7 +91,7 @@ public final class CreateAccountService {
             throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTries + " for number: " + telephoneNumber);
         }
 
-        final int requestTriesPerIp = accountCreationRepository.sumRequestTries(ip);
+        final int requestTriesPerIp = accountCreationRepository.sumRequestTries(ip, Timestamp.from(Instant.now().minus(Duration.ofHours(1))));
         if (requestTriesPerIp > settingsService.getAccountCreationMaxRequestsPerIpPerHour()) {
             throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTriesPerIp + " for ip: " + ip);
         }
