@@ -90,6 +90,11 @@ public final class CreateAccountService {
             throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTries + " for number: " + telephoneNumber);
         }
 
+        final int requestTriesPerIp = accountCreationRepository.sumRequestTries(ip);
+        if (requestTriesPerIp > settingsService.getAccountCreationMaxRequestsPerIpPerHour()) {
+            throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTriesPerIp + " for ip: " + ip);
+        }
+
         dbEntry.setRegistrationCode(Password.generateRegistrationCode());
         final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
         if (!smsService.sendSms(telephoneNumber, smsMessage)) {

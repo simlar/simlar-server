@@ -113,12 +113,17 @@ public final class CreateAccountServiceTest {
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
-    private void assertCreateAccountRequestSuccess(final String telephoneNumber) {
+    private void assertCreateAccountRequestSuccess(final String telephoneNumber, final String ip) {
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
-        createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1");
+        createAccountService.createAccountRequest(telephoneNumber, "", ip);
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
     }
 
+    private void assertCreateAccountRequestSuccess(final String telephoneNumber) {
+        assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.1");
+    }
+
+    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @Test
     public void testCreateAccountRequestSuccess() {
         assertCreateAccountRequestSuccess("+15005510001");
@@ -171,5 +176,24 @@ public final class CreateAccountServiceTest {
         assertCreateAccountRequestSuccess(telephoneNumber);
 
         assertEquals(1, accountCreationRepository.findBySimlarId(simlarId).getRequestTries());
+    }
+
+    @Test
+    public void testCreateAccountRequestIpLimitWithinOneHour() {
+        final String ip = "192.168.23.42";
+
+        final int max = settingsService.getAccountCreationMaxRequestsPerIpPerHour();
+        for (int i = 0; i < max; i++) {
+            final String telephoneNumber = "+1500502304" + i % 10;
+            reset(smsService);
+            if ((i & 1) == 0) {
+                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+            } else {
+                assertCreateAccountRequestSuccess(telephoneNumber, ip);
+            }
+        }
+
+        final String telephoneNumber = "+15005023049";
+        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
     }
 }
