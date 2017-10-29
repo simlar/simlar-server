@@ -45,7 +45,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE")
-        classpath("com.github.ben-manes:gradle-versions-plugin:0.15.0")
+        classpath("com.github.ben-manes:gradle-versions-plugin:0.17.0")
     }
 }
 
