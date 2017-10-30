@@ -57,6 +57,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @TestPropertySource(properties = {
+        "accountCreation.alertSmsNumbers = 1234, 5678",
         "accountCreation.maxRequestsPerIpPerHour = 12",
         "accountCreation.maxRequestsTotalPerHour = 15",
         "accountCreation.maxRequestsTotalPerDay = 30"})
@@ -123,6 +124,22 @@ public final class CreateAccountServiceTest {
     private void assertCreateAccountRequestSuccess(final String telephoneNumber, final String ip) {
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
         createAccountService.createAccountRequest(telephoneNumber, "", ip);
+        verify(smsService).sendSms(eq(telephoneNumber), anyString());
+    }
+
+    @SuppressWarnings("MethodWithMultipleLoops")
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
+    private void assertCreateAccountRequestSuccessWithSmsAlert(final String telephoneNumber, final String ip) {
+        for (final String alertNumber: settingsService.getAccountCreationAlertSmsNumbers()) {
+            when(smsService.sendSms(eq(alertNumber), anyString())).thenReturn(Boolean.TRUE);
+        }
+        when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
+
+        createAccountService.createAccountRequest(telephoneNumber, "", ip);
+
+        for (final String alertNumber: settingsService.getAccountCreationAlertSmsNumbers()) {
+            verify(smsService).sendSms(eq(alertNumber), anyString());
+        }
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
     }
 
@@ -227,10 +244,14 @@ public final class CreateAccountServiceTest {
             final String telephoneNumber = "+1500502214" + i % 10;
             final String ip = "192.168.42." + (i % 255 + 1);
             reset(smsService);
-            if ((i & 1) == 0) {
-                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+            if (i == max / 2 - 1) {
+                assertCreateAccountRequestSuccessWithSmsAlert(telephoneNumber, ip);
             } else {
-                assertCreateAccountRequestSuccess(telephoneNumber, ip);
+                if ((i & 1) == 0) {
+                    assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+                } else {
+                    assertCreateAccountRequestSuccess(telephoneNumber, ip);
+                }
             }
         }
 
@@ -258,10 +279,15 @@ public final class CreateAccountServiceTest {
             final String number = "1500501201" + i % 10;
             final String telephoneNumber = '+' + number;
             final String ip = "192.168.42." + (i % 255 + 1);
-            if ((i & 1) == 0) {
-                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+
+            if (i == max / 2 - 1) {
+                assertCreateAccountRequestSuccessWithSmsAlert(telephoneNumber, ip);
             } else {
-                assertCreateAccountRequestSuccess(telephoneNumber, ip);
+                if ((i & 1) == 0) {
+                    assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+                } else {
+                    assertCreateAccountRequestSuccess(telephoneNumber, ip);
+                }
             }
 
             // spread entries over the day

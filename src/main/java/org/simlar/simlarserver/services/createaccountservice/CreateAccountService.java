@@ -93,10 +93,10 @@ public final class CreateAccountService {
         checkRequestTriesLimit(accountCreationRepository.sumRequestTries(ip, anHourAgo), settingsService.getAccountCreationMaxRequestsPerIpPerHour(),
                 "too many create account requests %d >= %d for ip: " + ip);
 
-        checkRequestTriesLimit(accountCreationRepository.sumRequestTries(anHourAgo), settingsService.getAccountCreationMaxRequestsTotalPerHour(),
+        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(anHourAgo), settingsService.getAccountCreationMaxRequestsTotalPerHour(),
                 "too many total create account requests %d >= %d within one hour");
 
-        checkRequestTriesLimit(accountCreationRepository.sumRequestTries(Timestamp.from(Instant.now().minus(Duration.ofDays(1)))),
+        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(Timestamp.from(Instant.now().minus(Duration.ofDays(1)))),
                 settingsService.getAccountCreationMaxRequestsTotalPerDay(),
                 "too many total create account requests %d >= %d within one day");
 
@@ -139,6 +139,17 @@ public final class CreateAccountService {
     private static void checkRequestTriesLimit(final int requestTries, final int limit, final String message) {
         if (requestTries > limit) {
             throw new XmlErrorTooManyRequestTriesException(String.format(message, requestTries, limit));
+        }
+    }
+
+    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
+    private void checkRequestTriesLimitWithAlert(final int requestTries, final int limit, final String message) {
+        if (requestTries == limit / 2) {
+            for (final String alertNumber: settingsService.getAccountCreationAlertSmsNumbers()) {
+                smsService.sendSms(alertNumber, "50% Alert for: " + message);
+            }
+        } else {
+            checkRequestTriesLimit(requestTries, limit, message);
         }
     }
 
