@@ -26,12 +26,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @SuppressWarnings({"InstanceVariableNamingConvention", "MethodParameterNamingConvention"})
 @Getter
 @Component
 public class SettingsService {
     private final String domain;
     private final String version;
+    private final List<String> accountCreationAlertSmsNumbers;
     private final int accountCreationMaxRequestsPerSimlarIdPerDay;
     private final int accountCreationMaxRequestsPerIpPerHour;
     private final int accountCreationMaxRequestsTotalPerHour;
@@ -43,14 +48,16 @@ public class SettingsService {
     public SettingsService(
             @Value("${domain:}") final String                                      domain,
             @Value("${info.app.version:}") final String                            version,
+            @Value("${accountCreation.alertSmsNumbers:}") final String[]           accountCreationAlertSmsNumbers,
             @Value("${accountCreation.maxRequestsPerSimlarIdPerDay:10}") final int accountCreationMaxRequestsPerSimlarIdPerDay,
             @Value("${accountCreation.maxRequestsPerIpPerHour:60}") final int      accountCreationMaxRequestsPerIpPerHour,
             @Value("${accountCreation.maxRequestsTotalPerHour:220}") final int     accountCreationMaxRequestsTotalPerHour,
             @Value("${accountCreation.maxRequestsTotalPerDay:1440}") final int     accountCreationMaxRequestsTotalPerDay,
             @Value("${accountCreation.maxConfirms:10}") final int                  accountCreationMaxConfirms
-    ) {
+            ) {
         this.domain                                      = domain;
         this.version                                     = version;
+        this.accountCreationAlertSmsNumbers              = Collections.unmodifiableList(Arrays.asList(accountCreationAlertSmsNumbers));
         this.accountCreationMaxRequestsPerSimlarIdPerDay = accountCreationMaxRequestsPerSimlarIdPerDay;
         this.accountCreationMaxRequestsPerIpPerHour      = accountCreationMaxRequestsPerIpPerHour;
         this.accountCreationMaxRequestsTotalPerHour      = accountCreationMaxRequestsTotalPerHour;
