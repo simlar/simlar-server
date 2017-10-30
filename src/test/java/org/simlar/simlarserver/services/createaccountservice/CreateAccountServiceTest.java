@@ -220,7 +220,7 @@ public final class CreateAccountServiceTest {
         final int max = settingsService.getAccountCreationMaxRequestsTotalPerHour();
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = i % 100 < 10 ? "+1500502214" + i % 10 : "+150050220" + i % 100;
-            final String ip = "192.168.42." + i % 256;
+            final String ip = "192.168.42." + (i % 255 + 1);
             reset(smsService);
             if ((i & 1) == 0) {
                 assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
@@ -252,7 +252,7 @@ public final class CreateAccountServiceTest {
             reset(smsService);
             final String number = String.format("15005012%03d",  i % 1000);
             final String telephoneNumber = '+' + number;
-            final String ip = "192.168.42." + i % 256;
+            final String ip = "192.168.42." + (i % 255 + 1);
             if ((i & 1) == 0) {
                 assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
             } else {
