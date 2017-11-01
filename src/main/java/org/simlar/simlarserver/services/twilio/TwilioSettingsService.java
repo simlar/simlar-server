@@ -21,11 +21,13 @@
 
 package org.simlar.simlarserver.services.twilio;
 
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Getter
 @Component
 class TwilioSettingsService {
     private final String url;
@@ -73,29 +75,5 @@ class TwilioSettingsService {
                 ", callbackUser='" + callbackUser + '\'' +
                 ", callbackPassword='" + callbackPassword + '\'' +
                 '}';
-    }
-
-    public final String getUrl() {
-        return url;
-    }
-
-    public final String getSmsSourceNumber() {
-        return smsSourceNumber;
-    }
-
-    public final String getSid() {
-        return sid;
-    }
-
-    public final String getAuthToken() {
-        return authToken;
-    }
-
-    public final String getCallbackUser() {
-        return callbackUser;
-    }
-
-    public final String getCallbackPassword() {
-        return callbackPassword;
     }
 }
