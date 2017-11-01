@@ -100,7 +100,7 @@ final class CreateAccountController {
      */
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE, params = { "command", "simlarId", "registrationCode"  })
     public XmlSuccessCreateAccountConfirm confirmAccount(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String simlarId, @RequestParam final String registrationCode) {
-        log.info(REQUEST_PATH + " confirm with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
+        log.info("'{}' confirm with command='{}' and User-Agent '{}'", REQUEST_PATH, command, request.getHeader("User-Agent"));
 
         if (!Objects.equals(command, COMMAND_CONFIRM)) {
             throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);
