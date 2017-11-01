@@ -26,7 +26,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import lombok.extern.java.Log;
 
-@Log
+@Slf4j
 @SuppressWarnings("UtilityClass")
 public final class LibPhoneNumber {
     private LibPhoneNumber() {

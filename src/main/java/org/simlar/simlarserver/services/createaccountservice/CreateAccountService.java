@@ -51,7 +51,7 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-@Log
+@Slf4j
 @Component
 public final class CreateAccountService {
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{6}");

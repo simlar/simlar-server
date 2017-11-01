@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@Log
+@Slf4j
 @RestController
 final class CreateAccountController {
     public  static final String REQUEST_PATH    = "/create-account.xml";

@@ -39,7 +39,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
-@Log
+@Slf4j
 @Component
 public final class SubscriberService {
     private final SettingsService settingsService;

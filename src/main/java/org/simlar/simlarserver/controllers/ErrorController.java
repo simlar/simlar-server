@@ -41,7 +41,7 @@ import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-@Log
+@Slf4j
 @ControllerAdvice
 @RestController
 final class ErrorController {

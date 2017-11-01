@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@Log
+@Slf4j
 @RestController
 final class TwilioController {
     public  static final String REQUEST_PATH = "twilio/delivery-report.json";

@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@Log
+@Slf4j
 @RestController
 final class VersionController {
     public  static final String REQUEST_PATH = "/version";

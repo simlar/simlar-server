@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@Log
+@Slf4j
 @RestController
 final class ContactsController {
     public  static final String   REQUEST_PATH  = "/get-contacts-status.xml";

@@ -49,7 +49,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@Log
+@Slf4j
 @Component
 public final class TwilioSmsService implements SmsService {
 

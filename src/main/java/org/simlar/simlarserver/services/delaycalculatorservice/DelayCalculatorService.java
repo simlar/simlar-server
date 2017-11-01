@@ -38,7 +38,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.SortedSet;
 
-@Log
+@Slf4j
 @Component
 public final class DelayCalculatorService {
     public static final Duration MAXIMUM = Duration.ofSeconds(Long.MAX_VALUE);
