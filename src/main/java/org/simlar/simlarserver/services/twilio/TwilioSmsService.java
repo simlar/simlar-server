@@ -46,7 +46,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
-import java.util.logging.Level;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
