@@ -109,7 +109,7 @@ public final class CreateAccountService {
         dbEntry.setPassword(Password.generate());
         accountCreationRepository.save(dbEntry);
 
-        log.info("created account request for simlarId: " + simlarId);
+        log.info("created account request for simlarId: {}", simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
     }
 

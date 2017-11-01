@@ -99,7 +99,7 @@ public final class DelayCalculatorService {
 
     static Duration calculateDelay(final int requestedContacts) {
         final Duration delay = calculateDelayWithoutLog(requestedContacts);
-        log.info("requestedContactsCount=" + requestedContacts + " -> delay=" + delay);
+        log.info("requestedContactsCount={} -> delay={}", requestedContacts, delay);
         return delay;
     }
 
