@@ -51,6 +51,7 @@ buildscript {
 
 war {
     baseName = 'simlar-server'
+    archiveName = "${baseName}##${version}.war"
     rootSpec.exclude('local.properties')
 }
 
