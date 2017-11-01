@@ -70,7 +70,7 @@ final class CreateAccountController {
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessCreateAccountRequest createAccountRequest(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String telephoneNumber, @RequestParam final String smsText) {
-        log.info(REQUEST_PATH + " requested with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
+        log.info("'{}' requested with command= '{}' and User-Agent '{}'", REQUEST_PATH, command, request.getHeader("User-Agent"));
 
         if (!Objects.equals(command, COMMAND_REQUEST)) {
             throw new XmlErrorUnknownStructureException("create account request with command: " + command);
