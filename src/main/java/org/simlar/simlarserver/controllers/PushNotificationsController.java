@@ -69,7 +69,7 @@ final class PushNotificationsController {
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessPushNotification getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final int deviceType, @RequestParam final String pushId) {
-        log.info(REQUEST_PATH + " requested with login=\"" + login + '\"');
+        log.info("'{}' requested with login '{}'", REQUEST_PATH, login);
 
         subscriberService.checkCredentialsWithException(login, password);
 
