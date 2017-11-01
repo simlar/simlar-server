@@ -68,7 +68,7 @@ final class ErrorController {
         try {
             JAXBContext.newInstance(XmlError.class).createMarshaller().marshal(createXmlError(response), writer);
         } catch (final JAXBException e) {
-            log.log(Level.SEVERE, "xmlParse error: ", e);
+            log.error("xmlParse error: ", e);
         }
 
         return writer.toString();

@@ -77,7 +77,7 @@ public final class TwilioSmsService implements SmsService {
             return e.getStatusCode() == HttpStatus.BAD_REQUEST ? e.getResponseBodyAsString() : null;
         } catch (final RestClientException e) {
             final String cause = ExceptionUtils.getRootCauseMessage(e);
-            log.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " failed to connect to twilio server: " + cause);
+            log.error("while sending sms to " + telephoneNumber + " failed to connect to twilio server: " + cause, e);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", cause, text));
             return null;
         }
@@ -87,7 +87,7 @@ public final class TwilioSmsService implements SmsService {
     @SuppressWarnings({"BooleanMethodNameMustStartWithQuestion", "MethodWithMultipleReturnPoints"})
     public boolean sendSms(final String telephoneNumber, final String text) {
         if (!twilioSettingsService.isConfigured()) {
-            log.severe("twilio not configured: " + twilioSettingsService);
+            log.error("twilio not configured: " + twilioSettingsService);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
             return false;
         }
@@ -98,20 +98,20 @@ public final class TwilioSmsService implements SmsService {
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
     boolean handleResponse(final String telephoneNumber, final String text, final String response) {
         if (StringUtils.isEmpty(response)) {
-            log.severe("while sending sms to " + telephoneNumber + " received empty response");
+            log.error("while sending sms to " + telephoneNumber + " received empty response");
             return false;
         }
 
         try {
             final MessageResponse messageResponse = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readValue(response, MessageResponse.class);
             if (StringUtils.isEmpty(messageResponse.getSid())) {
-                log.severe("while sending sms to " + telephoneNumber + " received message response without MessageSid: " + response);
+                log.error("while sending sms to " + telephoneNumber + " received message response without MessageSid: " + response);
                 smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, messageResponse.getStatus(), messageResponse.getErrorCode() + " - " + messageResponse.getErrorMessage(), text));
                 return false;
             }
 
             if (StringUtils.isEmpty(messageResponse.getStatus())) {
-                log.severe("while sending sms to " + telephoneNumber + " received message response without status: " + response);
+                log.error("while sending sms to " + telephoneNumber + " received message response without status: " + response);
                 smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
                 return false;
             }
@@ -120,11 +120,11 @@ public final class TwilioSmsService implements SmsService {
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
             return true;
         } catch (final JsonMappingException | JsonParseException e) {
-            log.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " unable to parse response: " + response, e);
+            log.error("while sending sms to " + telephoneNumber + " unable to parse response: " + response, e);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         } catch (final IOException e) {
-            log.log(Level.SEVERE, "while sending sms to " + telephoneNumber + " IOException during response parsing: " + response, e);
+            log.error("while sending sms to " + telephoneNumber + " IOException during response parsing: " + response, e);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
@@ -134,12 +134,12 @@ public final class TwilioSmsService implements SmsService {
     public void handleDeliveryReport(@SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
         final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(messageSid);
         if (smsSentLog == null) {
-            log.severe("no db entry");
+            log.error("no db entry");
             return;
         }
 
         if (!StringUtils.equals(smsSentLog.getTelephoneNumber(), telephoneNumber)) {
-            log.warning("delivery report with unequal telephone numbers: saved='" + smsSentLog.getTelephoneNumber() + "' received='" + telephoneNumber + '\'');
+            log.warn("delivery report with unequal telephone numbers: saved='" + smsSentLog.getTelephoneNumber() + "' received='" + telephoneNumber + '\'');
         }
 
         smsSentLog.setDlrTimestampToNow();

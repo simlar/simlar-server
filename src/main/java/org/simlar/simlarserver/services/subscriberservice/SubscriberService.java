@@ -86,7 +86,7 @@ public final class SubscriberService {
         }
 
         if (ids.size() > 1) {
-            log.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            log.error("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
         return ids.get(0);
@@ -107,7 +107,7 @@ public final class SubscriberService {
         }
 
         if (savedHa1s.size() > 1) {
-            log.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            log.error("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
         return StringUtils.equals(ha1, savedHa1s.get(0));

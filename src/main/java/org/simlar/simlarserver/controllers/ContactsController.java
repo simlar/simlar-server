@@ -98,7 +98,7 @@ final class ContactsController {
         final DeferredResult<XmlContacts> deferredResult = new DeferredResult<>();
         taskScheduler.schedule(() -> {
             if (deferredResult.isSetOrExpired()) {
-                log.severe("deferred result already set or expired simlarId=" + login + " delay=" + delay);
+                log.error("deferred result already set or expired simlarId=" + login + " delay=" + delay);
             } else {
                 log.info("executing getContactStatus scheduled to: " + formatInstant(scheduledTime));
                 deferredResult.setResult(
