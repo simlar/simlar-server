@@ -39,7 +39,7 @@ public final class LibPhoneNumber {
             final Phonenumber.PhoneNumber pn = util.parse(telephoneNumber, null);
             return pn != null && util.isValidNumber(pn);
         } catch (final NumberParseException e) {
-            log.warn("telephoneNumber '{}' caused exception: {}", telephoneNumber, e.getMessage());
+            log.warn("telephoneNumber '{}' caused exception '{}'", telephoneNumber, e.getMessage());
             return false;
         }
     }
