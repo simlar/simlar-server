@@ -50,7 +50,7 @@ final class VersionController {
     @RequestMapping(value = REQUEST_PATH, produces = MediaType.TEXT_PLAIN_VALUE)
     public Object getVersion() {
         final String version = settingsService.getVersion();
-        log.info(REQUEST_PATH + " requested with version=\"" + version + '\"');
+        log.info("'{}' requested with version '{}'", REQUEST_PATH, version);
         return version + '\n';
     }
 }
