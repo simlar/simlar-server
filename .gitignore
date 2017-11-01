@@ -1,28 +1,28 @@
-# Operating System Files
-*.DS_Store
+### Operating System
+.DS_Store
 Thumbs.db
-*.sw?
-.#*
-*#
 *~
+*.bak
+*.log
 
-# Build Artifacts
-.gradle/
-build/
-target/
-bin/
+### Build Artifacts
+/.gradle/
+/build/
+/target/
+/bin/
 
-# Eclipse Project Files
-.classpath
-.project
-.settings/
+### Eclipse Project
+/.classpath
+/.project
+/.settings/
 
-# IntelliJ IDEA Files
-*.iml
-*.ipr
-*.iws
-*.idea
-out/
+### IntelliJ IDEA
+/.idea/
+/out/
+/*.iws
+/*.iml
+/*.ipr
 
-# local properties are not meant to be checked in
+### simlar
+## local properties are not meant to be checked in
 src/main/resources/local.properties
