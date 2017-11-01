@@ -24,7 +24,7 @@ package org.simlar.simlarserver.utils;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SuppressWarnings("UtilityClass")

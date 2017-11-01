@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

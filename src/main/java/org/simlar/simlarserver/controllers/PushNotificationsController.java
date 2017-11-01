@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.data.DeviceType;
 import org.simlar.simlarserver.database.models.PushNotification;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;

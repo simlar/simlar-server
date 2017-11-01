@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.simlar.simlarserver.services.delaycalculatorservice.DelayCalculatorService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;

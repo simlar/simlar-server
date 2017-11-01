@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.services.delaycalculatorservice;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.ContactsRequestCount;

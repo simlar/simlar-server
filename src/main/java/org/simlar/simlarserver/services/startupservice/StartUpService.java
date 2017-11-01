@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.services.startupservice;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;

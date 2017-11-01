@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.controllers;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorExceptionClientResponse;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
