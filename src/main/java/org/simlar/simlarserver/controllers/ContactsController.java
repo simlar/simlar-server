@@ -93,14 +93,14 @@ final class ContactsController {
         }
 
         final Instant scheduledTime = Instant.now().plus(delay);
-        log.info("scheduling getContactStatus to: " + formatInstant(scheduledTime));
+        log.info("scheduling getContactStatus to '{}'", formatInstant(scheduledTime));
 
         final DeferredResult<XmlContacts> deferredResult = new DeferredResult<>();
         taskScheduler.schedule(() -> {
             if (deferredResult.isSetOrExpired()) {
-                log.error("deferred result already set or expired simlarId=" + login + " delay=" + delay);
+                log.error("deferred result already set or expired simlarId '{}' delay '{}'", login, delay);
             } else {
-                log.info("executing getContactStatus scheduled to: " + formatInstant(scheduledTime));
+                log.info("executing getContactStatus scheduled to '{}'", formatInstant(scheduledTime));
                 deferredResult.setResult(
                         new XmlContacts(simlarIds.stream()
                                 .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
