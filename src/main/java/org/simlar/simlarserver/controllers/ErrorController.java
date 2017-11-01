@@ -85,10 +85,10 @@ final class ErrorController {
         final XmlErrorExceptionClientResponse response = XmlErrorExceptionClientResponse.fromException(exceptionClass);
         if (response == null) {
             log.error(createLog("XmlErrorException with no XmlErrorExceptionClientResponse found for: " + exceptionClass.getSimpleName(), request), xmlErrorException);
-        } else {
-            log.warn(createLog(xmlErrorException.getClass().getSimpleName() + " => XmlError(" + response.getId() + ") " + response.getMessage() + ": " + xmlErrorException.getMessage(), request));
+            return createXmlError(XmlErrorExceptionClientResponse.UNKNOWN_ERROR);
         }
 
+        log.warn(createLog(xmlErrorException.getClass().getSimpleName() + " => XmlError(" + response.getId() + ") " + response.getMessage() + ": " + xmlErrorException.getMessage(), request));
         return createXmlError(response);
     }
 
