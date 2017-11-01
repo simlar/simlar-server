@@ -71,7 +71,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.16.20")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.mockito:mockito-core:2.13.0")
-    runtime("mysql:mysql-connector-java")
+    runtime("mysql:mysql-connector-java:5.1.40") // this version fixes thread termination bug when deploying (affected versions 5.1.41 5.1.42 5.1.43 5.1.44)
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
