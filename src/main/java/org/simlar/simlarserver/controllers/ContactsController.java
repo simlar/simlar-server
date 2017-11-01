@@ -82,7 +82,7 @@ final class ContactsController {
      */
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public DeferredResult<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
-        log.info(REQUEST_PATH + " requested with login=\"" + login + '\"');
+        log.info("'{}' requested with login '{}'", REQUEST_PATH, login);
 
         subscriberService.checkCredentialsWithException(login, password);
 
