@@ -76,7 +76,7 @@ public final class TwilioSmsService implements SmsService {
             return e.getStatusCode() == HttpStatus.BAD_REQUEST ? e.getResponseBodyAsString() : null;
         } catch (final RestClientException e) {
             final String cause = ExceptionUtils.getRootCauseMessage(e);
-            log.error("while sending sms to " + telephoneNumber + " failed to connect to twilio server: " + cause, e);
+            log.error("while sending sms to '{}' failed to connect to twilio server '{}'", telephoneNumber, cause, e);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", cause, text));
             return null;
         }
@@ -119,11 +119,11 @@ public final class TwilioSmsService implements SmsService {
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
             return true;
         } catch (final JsonMappingException | JsonParseException e) {
-            log.error("while sending sms to " + telephoneNumber + " unable to parse response: " + response, e);
+            log.error("while sending sms to '{}' unable to parse response: '{}'", telephoneNumber, response, e);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         } catch (final IOException e) {
-            log.error("while sending sms to " + telephoneNumber + " IOException during response parsing: " + response, e);
+            log.error("while sending sms to '{}' IOException during response parsing: '{}'", telephoneNumber, response, e);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
