@@ -26,6 +26,7 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -76,18 +77,7 @@ public enum SmsText {
             return ANDROID_EN;
         }
 
-        int distance = Integer.MAX_VALUE;
-        SmsText result = ANDROID_EN;
-
-        for (final SmsText value: values()) {
-            final int valueDistance = value.calculateLowestDistance(input);
-            if (valueDistance < distance) {
-                distance = valueDistance;
-                result = value;
-            }
-        }
-
-        return result;
+        return Collections.min(Arrays.asList(values()), Comparator.comparingInt(o -> o.calculateLowestDistance(input)));
     }
 
     public static String create(final String text, final String registrationCode) {
