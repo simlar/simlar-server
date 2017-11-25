@@ -39,7 +39,7 @@ public final class XmlSuccessCreateAccountRequestTest {
         JAXBContext.newInstance(XmlSuccessCreateAccountRequest.class).createMarshaller().marshal(response, writer);
         final String xml = writer.toString();
         assertEquals(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><success password=\"s1cur3Me\" simlarId=\"*12345*\"/>",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><success simlarId=\"*12345*\" password=\"s1cur3Me\"/>",
                 xml);
     }
 
