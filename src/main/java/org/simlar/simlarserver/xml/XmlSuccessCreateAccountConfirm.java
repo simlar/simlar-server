@@ -27,11 +27,13 @@ import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @XmlRootElement(name = "success")
+@XmlType(propOrder={"simlarId","registrationCode"})
 public final class XmlSuccessCreateAccountConfirm {
     private String simlarId;
     private String registrationCode;
