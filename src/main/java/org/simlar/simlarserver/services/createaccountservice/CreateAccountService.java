@@ -153,7 +153,7 @@ public final class CreateAccountService {
         }
     }
 
-    public void confirmAccount(final String simlarIdString, final CharSequence registrationCode) {
+    public void confirmAccount(final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
         final SimlarId simlarId = SimlarId.create(simlarIdString);
         if (simlarId == null) {
             throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);
