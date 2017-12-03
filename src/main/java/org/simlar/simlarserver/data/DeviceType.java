@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("SerializableDeserializableClassInSecureContext")
 public enum DeviceType {
     ANDROID(1),
     IOS(2),

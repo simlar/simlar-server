@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("EnumeratedClassNamingConvention")
+@SuppressWarnings({"EnumeratedClassNamingConvention", "SerializableDeserializableClassInSecureContext"})
 public enum SmsText {
     ANDROID_EN(
             "Welcome to Simlar! If the app asks for a registration code, use: *CODE*. Otherwise you do not need this SMS.",
