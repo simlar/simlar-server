@@ -103,7 +103,7 @@ public final class SimlarId implements Comparable<SimlarId> {
     @Override
     public boolean equals(final Object obj) {
         return this == obj ||
-                obj != null && getClass() == obj.getClass() && Objects.equals(simlarId, ((SimlarId) obj).simlarId);
+                obj != null && Objects.equals(getClass(), obj.getClass()) && Objects.equals(simlarId, ((SimlarId) obj).simlarId);
     }
 
     @Override
