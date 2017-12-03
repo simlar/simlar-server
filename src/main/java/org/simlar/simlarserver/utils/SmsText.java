@@ -24,6 +24,9 @@ package org.simlar.simlarserver.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -82,5 +85,10 @@ public enum SmsText {
 
     public static String create(final String text, final String registrationCode) {
         return fromString(text).format(registrationCode);
+    }
+
+    @SuppressWarnings({"OverlyBroadThrowsClause", "unused"})
+    private void writeObject(final ObjectOutputStream out) throws IOException {
+        throw new NotSerializableException(getClass().getSimpleName() + " not serializable");
     }
 }

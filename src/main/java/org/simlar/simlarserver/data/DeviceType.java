@@ -21,6 +21,9 @@
 
 package org.simlar.simlarserver.data;
 
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,5 +54,10 @@ public enum DeviceType {
 
     public boolean isIos() {
         return this != ANDROID;
+    }
+
+    @SuppressWarnings({"OverlyBroadThrowsClause", "unused"})
+    private void writeObject(final ObjectOutputStream out) throws IOException {
+        throw new NotSerializableException(getClass().getSimpleName() + " not serializable");
     }
 }

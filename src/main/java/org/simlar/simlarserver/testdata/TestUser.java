@@ -24,6 +24,10 @@ package org.simlar.simlarserver.testdata;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectOutputStream;
+
 @AllArgsConstructor
 @Getter
 public enum TestUser {
@@ -37,4 +41,9 @@ public enum TestUser {
     private final String simlarId;
     private final String password;
     private final String passwordHash;
+
+    @SuppressWarnings({"OverlyBroadThrowsClause", "unused"})
+    private void writeObject(final ObjectOutputStream out) throws IOException {
+        throw new NotSerializableException(getClass().getSimpleName() + " not serializable");
+    }
 }

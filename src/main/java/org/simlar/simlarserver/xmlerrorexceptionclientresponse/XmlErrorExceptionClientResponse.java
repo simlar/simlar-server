@@ -40,6 +40,9 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureExcept
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -75,5 +78,10 @@ public enum XmlErrorExceptionClientResponse {
 
     public static XmlErrorExceptionClientResponse fromException(final Class<? extends XmlErrorException> exceptionClass) {
         return EXCEPTION_CLIENT_RESPONSE_MAP.get(exceptionClass);
+    }
+
+    @SuppressWarnings({"OverlyBroadThrowsClause", "unused"})
+    private void writeObject(final ObjectOutputStream out) throws IOException {
+        throw new NotSerializableException(getClass().getSimpleName() + " not serializable");
     }
 }
