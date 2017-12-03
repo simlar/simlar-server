@@ -97,6 +97,7 @@ findbugs {
     excludeFilter = file("$rootProject.projectDir/ides/findbugs/excludeFilter.xml")
 }
 
+//noinspection GroovyAssignabilityCheck
 tasks.withType(FindBugs) {
     reports {
         xml.enabled = false
