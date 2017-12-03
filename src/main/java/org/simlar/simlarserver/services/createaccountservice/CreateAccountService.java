@@ -54,7 +54,7 @@ import java.util.regex.Pattern;
 @Slf4j
 @Component
 public final class CreateAccountService {
-    private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{" + Password.REGISTRATION_CODE_LENGTH + "}");
+    private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{" + Password.REGISTRATION_CODE_LENGTH + '}');
 
     private final SmsService smsService;
     private final SettingsService settingsService;
