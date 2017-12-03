@@ -29,6 +29,7 @@ public final class Hash {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
+    @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static String md5(final String input) {
         return input == null ? "" : DigestUtils.md5Hex(input);
     }
