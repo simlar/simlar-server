@@ -45,6 +45,7 @@ public final class Password {
                 .toString();
     }
 
+    @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static String generateRegistrationCode() {
         return new SecureRandom().ints(REGISTRATION_CODE_LENGTH, 0, 10)
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
