@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
 
 @SuppressWarnings({"DesignForExtension", "unused", "MethodMayBeStatic"})
 @Configuration
-class MockConfiguration {
+class TestConfiguration {
     @Bean
     public SmsService smsService() {
         return Mockito.mock(SmsService.class);
