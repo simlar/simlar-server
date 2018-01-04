@@ -63,7 +63,7 @@ public final class TwilioSmsService implements SmsService {
         parameters.add("From", twilioSettingsService.getSmsSourceNumber());
         parameters.add("StatusCallback", "https://" +
                 twilioSettingsService.getCallbackUser() + ':' + twilioSettingsService.getCallbackPassword() + '@' +
-                settingsService.getDomain() + ":6161/" + REQUEST_PATH_DELIVERY);
+                settingsService.getDomain() + ':' + settingsService.getPort() + '/' + REQUEST_PATH_DELIVERY);
         parameters.add("Body", text);
 
         try {
