@@ -54,7 +54,7 @@ final class TwilioController {
      */
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = TwilioSmsService.REQUEST_PATH_DELIVERY, method = RequestMethod.POST)
-    public void postDeliveryReport(
+    public void deliveryReport(
             @RequestParam(name = "MessageSid")                  final String messageSid,
             @RequestParam(name = "To")                          final String to,
             @RequestParam(name = "MessageStatus")               final String messageStatus,
