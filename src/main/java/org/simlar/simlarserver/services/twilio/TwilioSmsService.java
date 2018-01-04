@@ -51,6 +51,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 public final class TwilioSmsService implements SmsService {
+    public static final String REQUEST_PATH = "twilio/delivery-report.json";
 
     private final SettingsService       settingsService;
     private final TwilioSettingsService twilioSettingsService;

@@ -23,6 +23,7 @@ package org.simlar.simlarserver.controllers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.simlar.simlarserver.xml.XmlError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -118,7 +119,7 @@ public final class ErrorControllerTest extends BaseControllerTest {
 
     @Test
     public void testHttpPostRequestWrongParameterTwilio() {
-        httpPost(TwilioController.REQUEST_PATH, createParameters(new String[][] {
+        httpPost(TwilioSmsService.REQUEST_PATH, createParameters(new String[][] {
                 { "ErrorCode", "404" },
                 { "SmsSid", "007" },
                 { "SmsStatus", "sent" }

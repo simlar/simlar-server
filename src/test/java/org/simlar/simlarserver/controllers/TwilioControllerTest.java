@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
+import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -48,7 +49,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
                                            final String accountSid,
                                            final String from,
                                            final String apiVersion) {
-        assertNull(postRequest(TwilioController.REQUEST_PATH, createParameters(new String[][] {
+        assertNull(postRequest(TwilioSmsService.REQUEST_PATH, createParameters(new String[][] {
                 { "SmsSid", smsSid },
                 { "SmsStatus", smsStatus },
                 { "MessageStatus", messageStatus },
@@ -69,7 +70,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
                                          final String accountSid,
                                          final String from,
                                          final String apiVersion) {
-        assertNull(postRequest(TwilioController.REQUEST_PATH, createParameters(new String[][] {
+        assertNull(postRequest(TwilioSmsService.REQUEST_PATH, createParameters(new String[][] {
                 { "ErrorCode", errorCode },
                 { "SmsSid", smsSid },
                 { "SmsStatus", smsStatus },
@@ -149,7 +150,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
         assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber, sid, "queued", message)));
 
-        assertNull(postRequest(TwilioController.REQUEST_PATH, createParameters(new String[][] {
+        assertNull(postRequest(TwilioSmsService.REQUEST_PATH, createParameters(new String[][] {
                 { "MessageStatus", twilioStatus },
                 { "To", telephoneNumber },
                 { "MessageSid", sid }
