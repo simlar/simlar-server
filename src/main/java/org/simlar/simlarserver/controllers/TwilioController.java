@@ -68,4 +68,28 @@ final class TwilioController {
 
         twilioSmsService.handleDeliveryReport(to, messageSid, messageStatus, errorCode);
     }
+
+    /**
+     * This method handles http post requests. You may test it with:
+     * <blockquote>
+     * curl --data "CallSid=12345678&To=123&MessageStatus=queued" http://localhost:8080/twilio/call-status.json
+     * </blockquote>
+     *
+     * @param callSid
+     *            Twilio's call id
+     * @param to
+     *            receipient's telephone number
+     * @param callStatus
+     *            e.g. queued, ringing, in-progress, completed, busy, failed, no-answer, canceled
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    @RequestMapping(value = TwilioSmsService.REQUEST_PATH_CALL_STATUS, method = RequestMethod.POST)
+    public void callStatus(final HttpServletRequest request,
+                           @RequestParam(name = "CallSid")    final String callSid,
+                           @RequestParam(name = "To")         final String to,
+                           @RequestParam(name = "CallStatus") final String callStatus
+    ) {
+        log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_CALL_STATUS, new RequestLogMessage(request, false));
+        log.info("'{}' requested with callSid='{}' To='{}' MessageStatus='{}'", TwilioSmsService.REQUEST_PATH_CALL_STATUS, callSid, to, callStatus);
+    }
 }
