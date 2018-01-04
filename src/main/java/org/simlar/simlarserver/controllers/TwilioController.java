@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 final class TwilioController {
-    public  static final String REQUEST_PATH = "twilio/delivery-report.json";
+    public static final String REQUEST_PATH = "twilio/delivery-report.json";
 
     private final TwilioSmsService twilioSmsService;
 
