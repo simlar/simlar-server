@@ -49,7 +49,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
                                            final String accountSid,
                                            final String from,
                                            final String apiVersion) {
-        assertNull(postRequest(TwilioSmsService.REQUEST_PATH, createParameters(new String[][] {
+        assertNull(postRequest(TwilioSmsService.REQUEST_PATH_DELIVERY, createParameters(new String[][] {
                 { "SmsSid", smsSid },
                 { "SmsStatus", smsStatus },
                 { "MessageStatus", messageStatus },
@@ -70,7 +70,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
                                          final String accountSid,
                                          final String from,
                                          final String apiVersion) {
-        assertNull(postRequest(TwilioSmsService.REQUEST_PATH, createParameters(new String[][] {
+        assertNull(postRequest(TwilioSmsService.REQUEST_PATH_DELIVERY, createParameters(new String[][] {
                 { "ErrorCode", errorCode },
                 { "SmsSid", smsSid },
                 { "SmsStatus", smsStatus },
@@ -150,7 +150,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
         assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber, sid, "queued", message)));
 
-        assertNull(postRequest(TwilioSmsService.REQUEST_PATH, createParameters(new String[][] {
+        assertNull(postRequest(TwilioSmsService.REQUEST_PATH_DELIVERY, createParameters(new String[][] {
                 { "MessageStatus", twilioStatus },
                 { "To", telephoneNumber },
                 { "MessageSid", sid }

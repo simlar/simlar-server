@@ -51,7 +51,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 public final class TwilioSmsService implements SmsService {
-    public static final String REQUEST_PATH = "twilio/delivery-report.json";
+    public static final String REQUEST_PATH_DELIVERY = "twilio/delivery-report.json";
 
     private final SettingsService       settingsService;
     private final TwilioSettingsService twilioSettingsService;
@@ -63,7 +63,7 @@ public final class TwilioSmsService implements SmsService {
         parameters.add("From", twilioSettingsService.getSmsSourceNumber());
         parameters.add("StatusCallback", "https://" +
                 twilioSettingsService.getCallbackUser() + ':' + twilioSettingsService.getCallbackPassword() + '@' +
-                settingsService.getDomain() + ":6161/twilio/delivery-report.json");
+                settingsService.getDomain() + ":6161/" + REQUEST_PATH_DELIVERY);
         parameters.add("Body", text);
 
         try {

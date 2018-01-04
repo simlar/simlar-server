@@ -119,7 +119,7 @@ public final class ErrorControllerTest extends BaseControllerTest {
 
     @Test
     public void testHttpPostRequestWrongParameterTwilio() {
-        httpPost(TwilioSmsService.REQUEST_PATH, createParameters(new String[][] {
+        httpPost(TwilioSmsService.REQUEST_PATH_DELIVERY, createParameters(new String[][] {
                 { "ErrorCode", "404" },
                 { "SmsSid", "007" },
                 { "SmsStatus", "sent" }

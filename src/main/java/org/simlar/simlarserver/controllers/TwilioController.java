@@ -53,14 +53,14 @@ final class TwilioController {
      *            Twilio error code
      */
     @SuppressWarnings("SpellCheckingInspection")
-    @RequestMapping(value = TwilioSmsService.REQUEST_PATH, method = RequestMethod.POST)
+    @RequestMapping(value = TwilioSmsService.REQUEST_PATH_DELIVERY, method = RequestMethod.POST)
     public void postDeliveryReport(
             @RequestParam(name = "MessageSid")                  final String messageSid,
             @RequestParam(name = "To")                          final String to,
             @RequestParam(name = "MessageStatus")               final String messageStatus,
             @RequestParam(name = "ErrorCode", required = false) final String errorCode
     ) {
-        log.info("'{}' requested with messageSid MessageSid='{}' To='{}' MessageStatus='{}' ErrorCode='{}'", TwilioSmsService.REQUEST_PATH, messageSid, to, messageStatus, errorCode);
+        log.info("'{}' requested with messageSid MessageSid='{}' To='{}' MessageStatus='{}' ErrorCode='{}'", TwilioSmsService.REQUEST_PATH_DELIVERY, messageSid, to, messageStatus, errorCode);
 
         twilioSmsService.handleDeliveryReport(to, messageSid, messageStatus, errorCode);
     }
