@@ -63,7 +63,7 @@ final class TwilioController {
             @RequestParam(name = "MessageStatus")               final String messageStatus,
             @RequestParam(name = "ErrorCode", required = false) final String errorCode
     ) {
-        log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_DELIVERY, new RequestLogMessage(request));
+        log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_DELIVERY, new RequestLogMessage(request, false));
         log.info("'{}' requested with messageSid MessageSid='{}' To='{}' MessageStatus='{}' ErrorCode='{}'", TwilioSmsService.REQUEST_PATH_DELIVERY, messageSid, to, messageStatus, errorCode);
 
         twilioSmsService.handleDeliveryReport(to, messageSid, messageStatus, errorCode);

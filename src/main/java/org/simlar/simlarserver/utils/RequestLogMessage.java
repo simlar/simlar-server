@@ -30,12 +30,22 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public final class RequestLogMessage {
     private final HttpServletRequest request;
+    private final boolean logUrl;
+
+    public RequestLogMessage(final HttpServletRequest request) {
+        this(request, true);
+    }
 
     @Override
     public String toString() {
-        return request == null
-                ? "no request object"
-                : "URL='" + request.getRequestURL() + "' IP='" + request.getRemoteAddr() + "' User-Agent='" + request.getHeader("User-Agent") + "' parameters='" + serializeParameters(request) + '\'';
+        if (request == null) {
+            return "no request object";
+        }
+
+        return (logUrl
+                ? "URL='" + request.getRequestURL() + "' "
+                : "")
+                + "IP='" + request.getRemoteAddr() + "' User-Agent='" + request.getHeader("User-Agent") + "' parameters='" + serializeParameters(request) + '\'';
     }
 
     private static String serializeParameters(final ServletRequest request) {
