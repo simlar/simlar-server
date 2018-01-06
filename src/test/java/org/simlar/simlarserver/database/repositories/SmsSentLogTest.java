@@ -58,7 +58,5 @@ public final class SmsSentLogTest {
         assertEquals(twilioStatus, logEntry.getTwilioStatus());
         assertEquals(StringUtils.left(twilioError, 64), logEntry.getTwilioError());
         assertNull(logEntry.getDlrTimestamp());
-        assertEquals(-2, logEntry.getSmsTradeStatus());
-        assertEquals(-1, logEntry.getDlrStatus());
     }
 }

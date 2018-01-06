@@ -25,7 +25,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,16 +55,8 @@ public final class SmsSentLog {
     @Column(length = 64)
     private String dlrNumber;
 
-    @Column(nullable = false)
-    @ColumnDefault("-1")
-    private int dlrStatus;
-
     @Column(columnDefinition = "TIMESTAMP NULL DEFAULT NULL") /// hibernate does not support columnDefinition = "TIMESTAMP DEFAULT '0000-00-00 00:00:00'"
     private Timestamp dlrTimestamp;
-
-    @Column(nullable = false)
-    @ColumnDefault("-1")
-    private int smsTradeStatus;
 
     @Column(length = 64)
     private String twilioStatus;
@@ -93,10 +84,8 @@ public final class SmsSentLog {
         this.telephoneNumber = telephoneNumber;
         this.timestamp       = Timestamp.from(Instant.now());
         this.dlrNumber       = dlrNumber;
-        this.dlrStatus       = -1;
         //noinspection AssignmentToNull
         this.dlrTimestamp    = dlrTimestamp == null ? null : Timestamp.from(dlrTimestamp);
-        this.smsTradeStatus  = -2;
         this.twilioStatus    = twilioStatus;
         this.twilioError     = StringUtils.left(twilioError, 64);
         this.message         = message;

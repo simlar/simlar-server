@@ -65,9 +65,7 @@ public final class Asserts {
             assertNotNull(message, dlrNumber);
             assertNotEquals(message, "", dlrNumber);
         }
-        assertEquals(message, expected.getDlrStatus(), actual.getDlrStatus());
         assertAlmostEquals(message, expected.getDlrTimestamp(), actual.getDlrTimestamp());
-        assertEquals(message, expected.getSmsTradeStatus(), actual.getSmsTradeStatus());
         assertEquals(message, expected.getTwilioStatus(), actual.getTwilioStatus());
         assertEquals(message, expected.getTwilioError(), actual.getTwilioError());
         assertEquals(message, expected.getMessage(), actual.getMessage());
