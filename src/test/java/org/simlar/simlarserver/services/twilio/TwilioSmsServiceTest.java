@@ -92,7 +92,7 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+0000000002";
         final String message         = "Test no network";
 
-        final TwilioSettingsService twilioSettings = new TwilioSettingsService("https://no.example.com", "+1", "007", "secret", "user", "password");
+        final TwilioSettingsService twilioSettings = new TwilioSettingsService("https://no.example.com/", "+1", "007", "secret", "user", "password");
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsSentLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));
@@ -141,5 +141,11 @@ public final class TwilioSmsServiceTest {
         assertAlmostEquals(message,
                 new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
+    }
+
+    @Test
+    public void testCallSuccess() {
+        final String telephoneNumber = "+15005550006";
+        assertTrue(twilioSmsService.call(telephoneNumber));
     }
 }
