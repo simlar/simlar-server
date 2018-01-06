@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.simlar.simlarserver.utils.RequestLogMessage;
+import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -91,5 +92,31 @@ final class TwilioController {
     ) {
         log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_CALL_STATUS, new RequestLogMessage(request, false));
         log.info("'{}' requested with callSid='{}' To='{}' MessageStatus='{}'", TwilioSmsService.REQUEST_PATH_CALL_STATUS, callSid, to, callStatus);
+    }
+
+    /**
+     * This method handles http post requests. You may test it with:
+     * <blockquote>
+     * curl --data "CallSid=12345678&To=123&MessageStatus=queued" http://localhost:8080/twilio/call.json
+     * </blockquote>
+     *
+     * @param callSid
+     *            Twilio's call id
+     * @param to
+     *            receipient's telephone number
+     * @param callStatus
+     *            e.g. queued, ringing, in-progress, completed, busy, failed, no-answer, canceled
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    @RequestMapping(value = TwilioSmsService.REQUEST_PATH_CALL, method = RequestMethod.POST)
+    public XmlTwilioCallResponse call(final HttpServletRequest request,
+                                      @RequestParam(name = "CallSid")    final String callSid,
+                                      @RequestParam(name = "To")         final String to,
+                                      @RequestParam(name = "CallStatus") final String callStatus
+    ) {
+        log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_CALL, new RequestLogMessage(request, false));
+        log.info("'{}' requested with callSid='{}' To='{}' MessageStatus='{}'", TwilioSmsService.REQUEST_PATH_CALL, callSid, to, callStatus);
+
+        return new XmlTwilioCallResponse("Welcome to simlar! Your registration number is: 123456");
     }
 }
