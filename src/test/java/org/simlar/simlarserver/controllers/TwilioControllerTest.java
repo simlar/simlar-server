@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
+import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -374,6 +375,93 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 null,
                 "US",
                 "+14102042044",
+                "ARBUTUS",
+                null,
+                "21229",
+                "MD");
+    }
+
+    private void postCallSuccess(final String called,
+                                 final String toState,
+                                 final String callerCountry,
+                                 final String direction,
+                                 final String callerState,
+                                 final String toZip,
+                                 final String callSid,
+                                 final String to,
+                                 final String callerZip,
+                                 final String toCountry,
+                                 final String apiVersion,
+                                 final String calledZip,
+                                 final String calledCity,
+                                 final String callStatus,
+                                 final String from,
+                                 final String accountSid,
+                                 final String calledCountry,
+                                 final String callerCity,
+                                 final String caller,
+                                 final String fromCountry,
+                                 final String toCity,
+                                 final String fromCity,
+                                 final String calledState,
+                                 final String fromZip,
+                                 final String fromState) {
+        final XmlTwilioCallResponse response = postRequest(XmlTwilioCallResponse.class, TwilioSmsService.REQUEST_PATH_CALL, createParameters(new String[][] {
+                { "Called", called },
+                { "ToState", toState },
+                { "CallerCountry", callerCountry },
+                { "Direction", direction },
+                { "CallerState", callerState },
+                { "ToZip", toZip },
+                { "CallSid", callSid },
+                { "To", to },
+                { "CallerZip", callerZip },
+                { "ToCountry", toCountry },
+                { "ApiVersion", apiVersion },
+                { "CalledZip", calledZip },
+                { "CalledCity", calledCity },
+                { "CallStatus", callStatus },
+                { "From", from },
+                { "AccountSid", accountSid },
+                { "CalledCountry", calledCountry },
+                { "CallerCity", callerCity },
+                { "Caller", caller },
+                { "FromCountry", fromCountry },
+                { "ToCity", toCity },
+                { "FromCity", fromCity },
+                { "CalledState", calledState },
+                { "FromZip", fromZip },
+                { "FromState", fromState }
+        }));
+
+        assertNotNull(response);
+        assertNotNull(response.getSay());
+    }
+
+    @Test
+    public void testPostCall() {
+        postCallSuccess(
+                "+49163123456",
+                null,
+                "US",
+                "outbound-api",
+                "MD",
+                null,
+                "CA852dcbc6945b13213dfaa7f808724e74",
+                "+49163123456",
+                "21229",
+                "DE",
+                "2010-04-01",
+                null,
+                null,
+                "in-progress",
+                "+14102042044",
+                "ACfegg76bace9937efaa9932aabbcc1122",
+                "DE",
+                "ARBUTUS",
+                "+14102042044",
+                "US",
+                null,
                 "ARBUTUS",
                 null,
                 "21229",

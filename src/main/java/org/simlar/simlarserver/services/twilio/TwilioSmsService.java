@@ -53,6 +53,7 @@ import java.io.IOException;
 public final class TwilioSmsService implements SmsService {
     public static final String REQUEST_PATH_DELIVERY    = "twilio/delivery-report.json";
     public static final String REQUEST_PATH_CALL_STATUS = "twilio/call-status.json";
+    public static final String REQUEST_PATH_CALL        = "twilio/call.xml";
 
     private final SettingsService       settingsService;
     private final TwilioSettingsService twilioSettingsService;
