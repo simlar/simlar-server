@@ -25,9 +25,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.simlar.simlarserver.data.TwilioRequestType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -48,6 +51,10 @@ public final class SmsSentLog {
 
     @Column(nullable = false, length = 64)
     private String telephoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 64)
+    private TwilioRequestType type;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp timestamp;
@@ -82,6 +89,7 @@ public final class SmsSentLog {
     @SuppressWarnings({"UnnecessaryThis", "ConstructorWithTooManyParameters"})
     public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message, final Instant dlrTimestamp) {
         this.telephoneNumber = telephoneNumber;
+        this.type            = TwilioRequestType.SMS;
         this.timestamp       = Timestamp.from(Instant.now());
         this.dlrNumber       = dlrNumber;
         //noinspection AssignmentToNull
