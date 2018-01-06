@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.simlar.simlarserver.utils.MarshalUtil;
 import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorExceptionClientResponse;
@@ -35,9 +36,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import java.io.StringWriter;
 
 @Slf4j
 @ControllerAdvice
@@ -48,15 +47,12 @@ final class ErrorController {
     }
 
     private static String createXmlErrorString(final XmlErrorExceptionClientResponse response) {
-        final StringWriter writer = new StringWriter();
-
         try {
-            JAXBContext.newInstance(XmlError.class).createMarshaller().marshal(createXmlError(response), writer);
+            return MarshalUtil.marshal(createXmlError(response));
         } catch (final JAXBException e) {
-            log.error("xmlParse error: ", e);
+            log.error("xml marshal error: ", e);
+            return "<error id=\"0\" message=\"unknown error\"/>";
         }
-
-        return writer.toString();
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

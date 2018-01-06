@@ -23,15 +23,14 @@ package org.simlar.simlarserver.controllers;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.utils.MarshalUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import java.io.StringReader;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -53,8 +52,7 @@ class BaseControllerTest {
         assertNotNull(xml);
 
         try {
-            //noinspection unchecked
-            return (T) JAXBContext.newInstance(resultClass).createUnmarshaller().unmarshal(new StringReader(xml));
+            return MarshalUtil.unmarshal(resultClass, xml);
         } catch (final JAXBException e) {
             throw new AssertionError("JAXBException for: " + xml, e);
         } catch (final ClassCastException e) {

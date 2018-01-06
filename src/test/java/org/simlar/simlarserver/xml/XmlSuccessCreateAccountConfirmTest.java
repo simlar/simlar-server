@@ -22,22 +22,17 @@
 package org.simlar.simlarserver.xml;
 
 import org.junit.Test;
+import org.simlar.simlarserver.utils.MarshalUtil;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import java.io.StringWriter;
 
 import static org.junit.Assert.assertEquals;
 
 public final class XmlSuccessCreateAccountConfirmTest {
     @Test
     public void testMarshal() throws JAXBException {
-        final XmlSuccessCreateAccountConfirm response = new XmlSuccessCreateAccountConfirm("*12345*", "123456");
-        final StringWriter writer = new StringWriter();
-        JAXBContext.newInstance(XmlSuccessCreateAccountConfirm.class).createMarshaller().marshal(response, writer);
-        final String xml = writer.toString();
         assertEquals(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><success simlarId=\"*12345*\" registrationCode=\"123456\"/>",
-                xml);
+                MarshalUtil.marshal(new XmlSuccessCreateAccountConfirm("*12345*", "123456")));
     }
 }
