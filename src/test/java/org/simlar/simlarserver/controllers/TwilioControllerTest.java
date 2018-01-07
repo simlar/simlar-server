@@ -349,8 +349,14 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
     @Test
     public void testPostCallStatus() {
+        final String telephoneNumber = "+49163123456";
+        final String sid             = "CA852dcbc6945b13213dfaa7f808724e74";
+        final String status          = "ringing";
+
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.CALL, telephoneNumber, sid, "queued", null)));
+
         postCallStatusSuccess(
-                "+49163123456",
+                telephoneNumber,
                 null,
                 "US",
                 "outbound-api",
@@ -359,13 +365,13 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 "MD",
                 "0",
                 null,
-                "+49163123456",
-                "CA852dcbc6945b13213dfaa7f808724e74",
+                telephoneNumber,
+                sid,
                 "DE",
                 "21229",
                 null,
                 "2010-04-01",
-                "completed",
+                status,
                 null,
                 "1",
                 "+14102042044",
@@ -380,6 +386,10 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 null,
                 "21229",
                 "MD");
+
+        assertAlmostEquals("callStatus",
+                new SmsSentLog(TwilioRequestType.CALL, telephoneNumber, sid, status, null, null, Instant.now()),
+                smsSentLogRepository.findByDlrNumber(sid));
     }
 
     private void postCallSuccess(final String called,

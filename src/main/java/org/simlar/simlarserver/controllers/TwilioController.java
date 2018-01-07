@@ -92,6 +92,8 @@ final class TwilioController {
     ) {
         log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_CALL_STATUS, new RequestLogMessage(request, false));
         log.info("'{}' requested with callSid='{}' To='{}' MessageStatus='{}'", TwilioSmsService.REQUEST_PATH_CALL_STATUS, callSid, to, callStatus);
+
+        twilioSmsService.handleStatusReport(to, callSid, callStatus, null);
     }
 
     /**
