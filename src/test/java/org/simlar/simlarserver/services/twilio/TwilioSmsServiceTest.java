@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
@@ -126,7 +127,7 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "4711";
         final String message         = "Number no status";
         final String response        = "{\"sid\": 21211}";
-        assertFalse(twilioSmsService.handleResponse(telephoneNumber, message, response));
+        assertFalse(twilioSmsService.handleResponse(TwilioRequestType.SMS, telephoneNumber, message, response));
         assertAlmostEquals(message,
                 new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
@@ -137,7 +138,7 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "23";
         final String message         = "Number no json";
         final String response        = "\"sid\": 21211";
-        assertFalse(twilioSmsService.handleResponse(telephoneNumber, message, response));
+        assertFalse(twilioSmsService.handleResponse(TwilioRequestType.SMS, telephoneNumber, message, response));
         assertAlmostEquals(message,
                 new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));

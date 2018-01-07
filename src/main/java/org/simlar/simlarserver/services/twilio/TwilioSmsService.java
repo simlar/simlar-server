@@ -99,35 +99,35 @@ public final class TwilioSmsService implements SmsService {
     }
 
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    boolean handleResponse(final String telephoneNumber, final String text, final String response) {
+    boolean handleResponse(final TwilioRequestType type, final String telephoneNumber, final String text, final String response) {
         if (StringUtils.isEmpty(response)) {
-            log.error("while sending sms to '{}' received empty response", telephoneNumber);
+            log.error("while sending '{}' request to '{}' received empty response", type, telephoneNumber);
             return false;
         }
 
         try {
             final MessageResponse messageResponse = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readValue(response, MessageResponse.class);
             if (StringUtils.isEmpty(messageResponse.getSid())) {
-                log.error("while sending sms to '{}' received message response without MessageSid '{}'", telephoneNumber, response);
+                log.error("while sending '{}' request to '{}' received message response without MessageSid '{}'", type, telephoneNumber, response);
                 smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, messageResponse.getStatus(), messageResponse.getErrorCode() + " - " + messageResponse.getErrorMessage(), text));
                 return false;
             }
 
             if (StringUtils.isEmpty(messageResponse.getStatus())) {
-                log.error("while sending sms to '{}' received message response without status '{}'", telephoneNumber, response);
+                log.error("while sending '{}' request to '{}' received message response without status '{}'", type, telephoneNumber, response);
                 smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
                 return false;
             }
 
-            log.info("while sending sms to '{}' received message response: '{}' ", telephoneNumber , messageResponse);
+            log.info("while sending '{}' request to '{}' received message response: '{}' ", type, telephoneNumber , messageResponse);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
             return true;
         } catch (final JsonMappingException | JsonParseException e) {
-            log.error("while sending sms to '{}' unable to parse response: '{}'", telephoneNumber, response, e);
+            log.error("while sending '{}' request to '{}' unable to parse response: '{}'", type, telephoneNumber, response, e);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         } catch (final IOException e) {
-            log.error("while sending sms to '{}' IOException during response parsing: '{}'", telephoneNumber, response, e);
+            log.error("while sending '{}' request to '{}' IOException during response parsing: '{}'", type, telephoneNumber, response, e);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
@@ -142,7 +142,7 @@ public final class TwilioSmsService implements SmsService {
             return false;
         }
 
-        return handleResponse(telephoneNumber, text, postRequest(TwilioRequestType.SMS, telephoneNumber, text));
+        return handleResponse(TwilioRequestType.SMS, telephoneNumber, text, postRequest(TwilioRequestType.SMS, telephoneNumber, text));
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
@@ -164,6 +164,6 @@ public final class TwilioSmsService implements SmsService {
     }
 
     public boolean call(final String telephoneNumber) {
-        return StringUtils.isNotEmpty(postRequest(TwilioRequestType.CALL, telephoneNumber, null));
+        return handleResponse(TwilioRequestType.CALL, telephoneNumber, null, postRequest(TwilioRequestType.CALL, telephoneNumber, null));
     }
 }
