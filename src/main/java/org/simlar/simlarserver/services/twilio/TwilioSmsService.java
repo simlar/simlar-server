@@ -98,18 +98,6 @@ public final class TwilioSmsService implements SmsService {
         }
     }
 
-    @Override
-    @SuppressWarnings({"BooleanMethodNameMustStartWithQuestion", "MethodWithMultipleReturnPoints"})
-    public boolean sendSms(final String telephoneNumber, final String text) {
-        if (!twilioSettingsService.isConfigured()) {
-            log.error("twilio not configured '{}'", twilioSettingsService);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
-            return false;
-        }
-
-        return handleResponse(telephoneNumber, text, postRequest(TwilioRequestType.SMS, telephoneNumber, text));
-    }
-
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
     boolean handleResponse(final String telephoneNumber, final String text, final String response) {
         if (StringUtils.isEmpty(response)) {
@@ -143,6 +131,18 @@ public final class TwilioSmsService implements SmsService {
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
+    }
+
+    @Override
+    @SuppressWarnings({"BooleanMethodNameMustStartWithQuestion", "MethodWithMultipleReturnPoints"})
+    public boolean sendSms(final String telephoneNumber, final String text) {
+        if (!twilioSettingsService.isConfigured()) {
+            log.error("twilio not configured '{}'", twilioSettingsService);
+            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
+            return false;
+        }
+
+        return handleResponse(telephoneNumber, text, postRequest(TwilioRequestType.SMS, telephoneNumber, text));
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
