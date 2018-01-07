@@ -392,32 +392,32 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 smsSentLogRepository.findByDlrNumber(sid));
     }
 
-    private void postCallSuccess(final String called,
-                                 final String toState,
-                                 final String callerCountry,
-                                 final String direction,
-                                 final String callerState,
-                                 final String toZip,
-                                 final String callSid,
-                                 final String to,
-                                 final String callerZip,
-                                 final String toCountry,
-                                 final String apiVersion,
-                                 final String calledZip,
-                                 final String calledCity,
-                                 final String callStatus,
-                                 final String from,
-                                 final String accountSid,
-                                 final String calledCountry,
-                                 final String callerCity,
-                                 final String caller,
-                                 final String fromCountry,
-                                 final String toCity,
-                                 final String fromCity,
-                                 final String calledState,
-                                 final String fromZip,
-                                 final String fromState) {
-        final XmlTwilioCallResponse response = postRequest(XmlTwilioCallResponse.class, TwilioSmsService.REQUEST_PATH_CALL, createParameters(new String[][] {
+    private XmlTwilioCallResponse postCall(final String called,
+                                           final String toState,
+                                           final String callerCountry,
+                                           final String direction,
+                                           final String callerState,
+                                           final String toZip,
+                                           final String callSid,
+                                           final String to,
+                                           final String callerZip,
+                                           final String toCountry,
+                                           final String apiVersion,
+                                           final String calledZip,
+                                           final String calledCity,
+                                           final String callStatus,
+                                           final String from,
+                                           final String accountSid,
+                                           final String calledCountry,
+                                           final String callerCity,
+                                           final String caller,
+                                           final String fromCountry,
+                                           final String toCity,
+                                           final String fromCity,
+                                           final String calledState,
+                                           final String fromZip,
+                                           final String fromState) {
+        return postRequest(XmlTwilioCallResponse.class, TwilioSmsService.REQUEST_PATH_CALL, createParameters(new String[][] {
                 { "Called", called },
                 { "ToState", toState },
                 { "CallerCountry", callerCountry },
@@ -444,14 +444,11 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 { "FromZip", fromZip },
                 { "FromState", fromState }
         }));
-
-        assertNotNull(response);
-        assertNotNull(response.getSay());
     }
 
     @Test
     public void testPostCall() {
-        postCallSuccess(
+        final XmlTwilioCallResponse response = postCall(
                 "+49163123456",
                 null,
                 "US",
@@ -477,5 +474,8 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 null,
                 "21229",
                 "MD");
+
+        assertNotNull(response);
+        assertNotNull(response.getSay());
     }
 }
