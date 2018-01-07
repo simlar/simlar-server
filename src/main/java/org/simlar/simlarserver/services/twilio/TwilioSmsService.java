@@ -151,8 +151,8 @@ public final class TwilioSmsService implements SmsService {
     }
 
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    public boolean call(final String telephoneNumber) {
-        return doPostRequest(TwilioRequestType.CALL, telephoneNumber, null);
+    public boolean call(final String telephoneNumber, final String text) {
+        return doPostRequest(TwilioRequestType.CALL, telephoneNumber, text);
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
