@@ -93,7 +93,7 @@ public final class TwilioSmsService implements SmsService {
         } catch (final RestClientException e) {
             final String cause = ExceptionUtils.getRootCauseMessage(e);
             log.error("while sending '{}' request to '{}' failed to connect to twilio server '{}'", type, telephoneNumber, cause, e);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", cause, text));
+            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", cause, text));
             return null;
         }
     }
@@ -109,26 +109,26 @@ public final class TwilioSmsService implements SmsService {
             final MessageResponse messageResponse = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readValue(response, MessageResponse.class);
             if (StringUtils.isEmpty(messageResponse.getSid())) {
                 log.error("while sending '{}' request to '{}' received message response without MessageSid '{}'", type, telephoneNumber, response);
-                smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, messageResponse.getStatus(), messageResponse.getErrorCode() + " - " + messageResponse.getErrorMessage(), text));
+                smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, messageResponse.getStatus(), messageResponse.getErrorCode() + " - " + messageResponse.getErrorMessage(), text));
                 return false;
             }
 
             if (StringUtils.isEmpty(messageResponse.getStatus())) {
                 log.error("while sending '{}' request to '{}' received message response without status '{}'", type, telephoneNumber, response);
-                smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
+                smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
                 return false;
             }
 
             log.info("while sending '{}' request to '{}' received message response: '{}' ", type, telephoneNumber , messageResponse);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
+            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
             return true;
         } catch (final JsonMappingException | JsonParseException e) {
             log.error("while sending '{}' request to '{}' unable to parse response: '{}'", type, telephoneNumber, response, e);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
+            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         } catch (final IOException e) {
             log.error("while sending '{}' request to '{}' IOException during response parsing: '{}'", type, telephoneNumber, response, e);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
+            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
     }
@@ -137,7 +137,7 @@ public final class TwilioSmsService implements SmsService {
     private boolean doPostRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {
         if (!twilioSettingsService.isConfigured()) {
             log.error("twilio not configured '{}'", twilioSettingsService);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
+            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
             return false;
         }
 

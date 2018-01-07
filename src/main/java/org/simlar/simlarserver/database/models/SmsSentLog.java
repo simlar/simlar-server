@@ -49,12 +49,12 @@ public final class SmsSentLog {
     @GeneratedValue
     private int id;
 
-    @Column(nullable = false, length = 64)
-    private String telephoneNumber;
-
     @Enumerated(EnumType.STRING)
     @Column(length = 64)
     private TwilioRequestType type;
+
+    @Column(nullable = false, length = 64)
+    private String telephoneNumber;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp timestamp;
@@ -74,22 +74,22 @@ public final class SmsSentLog {
     @Column(length = 170)
     private String message;
 
-    public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message) {
-        this(telephoneNumber, dlrNumber, twilioStatus, null, message);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message) {
+        this(type, telephoneNumber, dlrNumber, twilioStatus, null, message);
     }
 
-    public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message, final Instant dlrTimestamp) {
-        this(telephoneNumber, dlrNumber, twilioStatus, null, message, dlrTimestamp);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message, final Instant dlrTimestamp) {
+        this(type, telephoneNumber, dlrNumber, twilioStatus, null, message, dlrTimestamp);
     }
 
-    public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message) {
-        this(telephoneNumber, dlrNumber, twilioStatus, twilioError, message, null);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message) {
+        this(type, telephoneNumber, dlrNumber, twilioStatus, twilioError, message, null);
     }
 
     @SuppressWarnings({"UnnecessaryThis", "ConstructorWithTooManyParameters"})
-    public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message, final Instant dlrTimestamp) {
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message, final Instant dlrTimestamp) {
+        this.type            = type;
         this.telephoneNumber = telephoneNumber;
-        this.type            = TwilioRequestType.SMS;
         this.timestamp       = Timestamp.from(Instant.now());
         this.dlrNumber       = dlrNumber;
         //noinspection AssignmentToNull

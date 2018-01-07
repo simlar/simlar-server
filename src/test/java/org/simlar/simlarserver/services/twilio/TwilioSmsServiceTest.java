@@ -71,7 +71,7 @@ public final class TwilioSmsServiceTest {
         assertTrue(twilioSmsService.sendSms(telephoneNumber, message));
         final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
         assertNotNull(logEntry);
-        assertAlmostEquals("sms success", new SmsSentLog(telephoneNumber, "xxx", "queued", message), logEntry);
+        assertAlmostEquals("sms success", new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, "xxx", "queued", message), logEntry);
     }
 
     @Test
@@ -84,7 +84,7 @@ public final class TwilioSmsServiceTest {
 
         assertFalse(service.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, null, "SimlarServerException", "twilio not configured", message),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "twilio not configured", message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
@@ -98,7 +98,7 @@ public final class TwilioSmsServiceTest {
 
         assertFalse(service.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com", message),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com", message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
@@ -108,7 +108,7 @@ public final class TwilioSmsServiceTest {
         final String message         = "Test invalid number";
         assertFalse(twilioSmsService.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, null, "400", "null - The 'To' number " + telephoneNumber + " is not a valid phone number.", message),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, null, "400", "null - The 'To' number " + telephoneNumber + " is not a valid phone number.", message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
@@ -118,7 +118,7 @@ public final class TwilioSmsServiceTest {
         final String message         = "Number not reachable";
         assertFalse(twilioSmsService.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, null, "400", "null - The 'To' phone number: " + telephoneNumber + ", is not currently reachable using the 'From' phone number: +15005550006 via SMS.", message),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, null, "400", "null - The 'To' phone number: " + telephoneNumber + ", is not currently reachable using the 'From' phone number: +15005550006 via SMS.", message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
@@ -129,7 +129,7 @@ public final class TwilioSmsServiceTest {
         final String response        = "{\"sid\": 21211}";
         assertFalse(twilioSmsService.handleResponse(TwilioRequestType.SMS, telephoneNumber, message, response));
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, message),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
@@ -140,7 +140,7 @@ public final class TwilioSmsServiceTest {
         final String response        = "\"sid\": 21211";
         assertFalse(twilioSmsService.handleResponse(TwilioRequestType.SMS, telephoneNumber, message, response));
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, message),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, message),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 

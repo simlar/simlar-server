@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,7 +49,7 @@ public final class SmsSentLogTest {
         final String twilioStatus    = "42";
         final String twilioError     = "1234567890123456789012345678901234567890123456789012345678901234567890123456789";
 
-        smsSentLogRepository.save(new SmsSentLog(telephoneNumber, dlrNumber, twilioStatus, twilioError, message));
+        smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, dlrNumber, twilioStatus, twilioError, message));
         final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
         assertNotNull(logEntry);
         assertNotNull(logEntry.getTimestamp());

@@ -23,6 +23,7 @@ package org.simlar.simlarserver.controllers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
@@ -109,7 +110,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final String twilioStatus1   = "sent";
         final String twilioStatus2   = "delivered";
 
-        assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber, sid, "queued", message)));
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.CALL, telephoneNumber, sid, "queued", message)));
 
         postDeliveryReportSuccess(
                 sid,
@@ -123,7 +124,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         );
 
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, sid, twilioStatus1, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, twilioStatus1, message, Instant.now()),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
 
         postDeliveryReportSuccess(
@@ -138,7 +139,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         );
 
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, sid, twilioStatus2, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, twilioStatus2, message, Instant.now()),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
@@ -149,7 +150,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final String message         = "sms text success";
         final String twilioStatus    = "delivered";
 
-        assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber, sid, "queued", message)));
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, "queued", message)));
 
         assertNull(postRequest(TwilioSmsService.REQUEST_PATH_DELIVERY, createParameters(new String[][] {
                 { "MessageStatus", twilioStatus },
@@ -158,7 +159,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         })));
 
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, sid, twilioStatus, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, twilioStatus, message, Instant.now()),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
@@ -171,8 +172,8 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final String twilioStatus1   = "delivered";
         final String twilioStatus2   = "sent";
 
-        assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber, sid1, twilioStatus1, message, Instant.now())));
-        assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber, sid2, "queued", message)));
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid1, twilioStatus1, message, Instant.now())));
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid2, "queued", message)));
 
         postDeliveryReportSuccess(
                 sid2,
@@ -186,11 +187,11 @@ public final class TwilioControllerTest extends BaseControllerTest {
         );
 
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, sid1, twilioStatus1, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid1, twilioStatus1, message, Instant.now()),
                 smsSentLogRepository.findByDlrNumber(sid1));
 
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, sid2, twilioStatus2, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid2, twilioStatus2, message, Instant.now()),
                 smsSentLogRepository.findByDlrNumber(sid2));
     }
 
@@ -202,7 +203,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final String message          = "sms text success";
         final String twilioStatus     = "sent";
 
-        assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber1, sid, "queued", message)));
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber1, sid, "queued", message)));
 
         postDeliveryReportSuccess(
                 sid,
@@ -216,7 +217,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         );
 
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber1, sid, twilioStatus, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber1, sid, twilioStatus, message, Instant.now()),
                 smsSentLogRepository.findByDlrNumber(sid));
     }
 
@@ -227,7 +228,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final String message         = "sms text error";
         final String twilioStatus    = "undelivered";
 
-        assertNotNull(smsSentLogRepository.save(new SmsSentLog(telephoneNumber, sid, "queued", message)));
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, "queued", message)));
 
         postDeliveryReportError(
                 "30009",
@@ -241,7 +242,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 "2010-04-01");
 
         assertAlmostEquals(message,
-                new SmsSentLog(telephoneNumber, sid, twilioStatus, "30009 - Missing segment", message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, twilioStatus, "30009 - Missing segment", message, Instant.now()),
                 smsSentLogRepository.findByDlrNumber(sid));
     }
 
