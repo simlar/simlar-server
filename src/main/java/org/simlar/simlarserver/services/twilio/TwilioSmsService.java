@@ -31,8 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.simlar.simlarserver.data.TwilioRequestType;
-import org.simlar.simlarserver.database.models.SmsSentLog;
-import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
+import org.simlar.simlarserver.database.models.SmsProviderLog;
+import org.simlar.simlarserver.database.repositories.SmsProviderLogRepository;
 import org.simlar.simlarserver.json.twilio.MessageResponse;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
@@ -60,7 +60,7 @@ public final class TwilioSmsService implements SmsService {
 
     private final SettingsService       settingsService;
     private final TwilioSettingsService twilioSettingsService;
-    private final SmsSentLogRepository  smsSentLogRepository;
+    private final SmsProviderLogRepository smsProviderLogRepository;
 
     private String createCallbackBaseUrl() {
         return "https://" +
@@ -96,7 +96,7 @@ public final class TwilioSmsService implements SmsService {
         } catch (final RestClientException e) {
             final String cause = ExceptionUtils.getRootCauseMessage(e);
             log.error("while sending '{}' request to '{}' failed to connect to twilio server '{}'", type, telephoneNumber, cause, e);
-            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", cause, text));
+            smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, null, "SimlarServerException", cause, text));
             return null;
         }
     }
@@ -112,26 +112,26 @@ public final class TwilioSmsService implements SmsService {
             final MessageResponse messageResponse = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readValue(response, MessageResponse.class);
             if (StringUtils.isEmpty(messageResponse.getSid())) {
                 log.error("while sending '{}' request to '{}' received message response without MessageSid '{}'", type, telephoneNumber, response);
-                smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, messageResponse.getStatus(), messageResponse.getErrorCode() + " - " + messageResponse.getErrorMessage(), text));
+                smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, null, messageResponse.getStatus(), messageResponse.getErrorCode() + " - " + messageResponse.getErrorMessage(), text));
                 return false;
             }
 
             if (StringUtils.isEmpty(messageResponse.getStatus())) {
                 log.error("while sending '{}' request to '{}' received message response without status '{}'", type, telephoneNumber, response);
-                smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
+                smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
                 return false;
             }
 
             log.info("while sending '{}' request to '{}' received message response: '{}' ", type, telephoneNumber , messageResponse);
-            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
+            smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
             return true;
         } catch (final JsonMappingException | JsonParseException e) {
             log.error("while sending '{}' request to '{}' unable to parse response: '{}'", type, telephoneNumber, response, e);
-            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
+            smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         } catch (final IOException e) {
             log.error("while sending '{}' request to '{}' IOException during response parsing: '{}'", type, telephoneNumber, response, e);
-            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
+            smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
     }
@@ -140,7 +140,7 @@ public final class TwilioSmsService implements SmsService {
     private boolean doPostRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {
         if (!twilioSettingsService.isConfigured()) {
             log.error("twilio not configured '{}'", twilioSettingsService);
-            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
+            smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
             return false;
         }
 
@@ -160,47 +160,47 @@ public final class TwilioSmsService implements SmsService {
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public void handleStatusReport(final TwilioRequestType type, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
-        final SmsSentLog smsSentLog = smsSentLogRepository.findBySessionId(messageSid);
-        if (smsSentLog == null) {
+        final SmsProviderLog smsProviderLog = smsProviderLogRepository.findBySessionId(messageSid);
+        if (smsProviderLog == null) {
             log.error("no db entry");
             return;
         }
 
-        if (!StringUtils.equals(smsSentLog.getTelephoneNumber(), telephoneNumber)) {
-            log.warn("status report with unequal telephone numbers: saved='{}' received '{}'", smsSentLog.getTelephoneNumber(), telephoneNumber);
+        if (!StringUtils.equals(smsProviderLog.getTelephoneNumber(), telephoneNumber)) {
+            log.warn("status report with unequal telephone numbers: saved='{}' received '{}'", smsProviderLog.getTelephoneNumber(), telephoneNumber);
         }
 
-        if (smsSentLog.getType() != type) {
-            log.warn("status report with unequal type: saved='{}' received '{}'", smsSentLog.getType(), type);
+        if (smsProviderLog.getType() != type) {
+            log.warn("status report with unequal type: saved='{}' received '{}'", smsProviderLog.getType(), type);
         }
 
-        smsSentLog.setCallbackTimestampToNow();
-        smsSentLog.setStatus(messageStatus);
-        smsSentLog.setError(TwilioCallBackErrorCode.createString(errorCode));
-        smsSentLogRepository.save(smsSentLog);
+        smsProviderLog.setCallbackTimestampToNow();
+        smsProviderLog.setStatus(messageStatus);
+        smsProviderLog.setError(TwilioCallBackErrorCode.createString(errorCode));
+        smsProviderLogRepository.save(smsProviderLog);
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public XmlTwilioCallResponse handleCall(final String callSid, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String callStatus) {
-        final SmsSentLog smsSentLog = smsSentLogRepository.findBySessionId(callSid);
-        if (smsSentLog == null) {
+        final SmsProviderLog smsProviderLog = smsProviderLogRepository.findBySessionId(callSid);
+        if (smsProviderLog == null) {
             log.error("no db entry");
             throw new XmlErrorNoCallSessionException("callSid='" + callSid + "' not found in DB");
         }
 
-        if (smsSentLog.getType() != TwilioRequestType.CALL) {
-            log.error("call matches db entry for sms: '{}'", smsSentLog);
+        if (smsProviderLog.getType() != TwilioRequestType.CALL) {
+            log.error("call matches db entry for sms: '{}'", smsProviderLog);
             throw new XmlErrorNoCallSessionException("callSid='" + callSid + "' matches SMS");
         }
 
-        if (!StringUtils.equals(smsSentLog.getTelephoneNumber(), telephoneNumber)) {
-            log.warn("call with unequal telephone numbers: saved='{}' received '{}'", smsSentLog.getTelephoneNumber(), telephoneNumber);
+        if (!StringUtils.equals(smsProviderLog.getTelephoneNumber(), telephoneNumber)) {
+            log.warn("call with unequal telephone numbers: saved='{}' received '{}'", smsProviderLog.getTelephoneNumber(), telephoneNumber);
         }
 
-        smsSentLog.setCallbackTimestampToNow();
-        smsSentLog.setStatus(callStatus);
-        smsSentLogRepository.save(smsSentLog);
+        smsProviderLog.setCallbackTimestampToNow();
+        smsProviderLog.setStatus(callStatus);
+        smsProviderLogRepository.save(smsProviderLog);
 
-        return new XmlTwilioCallResponse(smsSentLog.getMessage());
+        return new XmlTwilioCallResponse(smsProviderLog.getMessage());
     }
 }

@@ -21,12 +21,12 @@
 
 package org.simlar.simlarserver.database.repositories;
 
-import org.simlar.simlarserver.database.models.SmsSentLog;
+import org.simlar.simlarserver.database.models.SmsProviderLog;
 import org.springframework.data.repository.CrudRepository;
 
 @SuppressWarnings({"unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
-public interface SmsSentLogRepository extends CrudRepository<SmsSentLog, Integer> {
-    SmsSentLog findByTelephoneNumber(final String telephoneNumber);
+public interface SmsProviderLogRepository extends CrudRepository<SmsProviderLog, Integer> {
+    SmsProviderLog findByTelephoneNumber(final String telephoneNumber);
 
-    SmsSentLog findBySessionId(final String sessionId);
+    SmsProviderLog findBySessionId(final String sessionId);
 }

@@ -42,8 +42,8 @@ import java.time.Instant;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "simlar_sms_sent_log_java")
-public final class SmsSentLog {
+@Table(name = "simlar_sms_provider_log")
+public final class SmsProviderLog {
     @SuppressWarnings("unused")
     @Id
     @GeneratedValue
@@ -73,22 +73,22 @@ public final class SmsSentLog {
     @Column(length = 170)
     private String message;
 
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String message) {
+    public SmsProviderLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String message) {
         this(type, telephoneNumber, sessionId, status, null, message);
     }
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String message, final Instant callbackTimestamp) {
+    public SmsProviderLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String message, final Instant callbackTimestamp) {
         this(type, telephoneNumber, sessionId, status, null, message, callbackTimestamp);
     }
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String error, final String message) {
+    public SmsProviderLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String error, final String message) {
         this(type, telephoneNumber, sessionId, status, error, message, null);
     }
 
     @SuppressWarnings({"UnnecessaryThis", "ConstructorWithTooManyParameters"})
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String error, final String message, final Instant callbackTimestamp) {
+    public SmsProviderLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String error, final String message, final Instant callbackTimestamp) {
         this.type              = type;
         this.telephoneNumber   = telephoneNumber;
         this.timestamp         = Timestamp.from(Instant.now());

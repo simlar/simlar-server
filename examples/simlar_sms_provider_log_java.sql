@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS simlar_sms_sent_log_java (
+CREATE TABLE IF NOT EXISTS simlar_sms_provider_log (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`type` varchar(64) DEFAULT NULL,
 	`telephoneNumber` varchar(64) NOT NULL,

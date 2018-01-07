@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.helper;
 
-import org.simlar.simlarserver.database.models.SmsSentLog;
+import org.simlar.simlarserver.database.models.SmsProviderLog;
 
 import java.time.Duration;
 import java.time.temporal.Temporal;
@@ -50,7 +50,7 @@ public final class Asserts {
         assertTrue(message, abs(Duration.between(expected, actual).getSeconds()) <= 1);
     }
 
-    public static void assertAlmostEquals(final String message, final SmsSentLog expected, final SmsSentLog actual) {
+    public static void assertAlmostEquals(final String message, final SmsProviderLog expected, final SmsProviderLog actual) {
         if (expected == null || actual == null) {
             assertSame(message, expected, actual);
             return;

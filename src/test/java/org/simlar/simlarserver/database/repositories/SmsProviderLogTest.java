@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.data.TwilioRequestType;
-import org.simlar.simlarserver.database.models.SmsSentLog;
+import org.simlar.simlarserver.database.models.SmsProviderLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -37,9 +37,9 @@ import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
-public final class SmsSentLogTest {
+public final class SmsProviderLogTest {
     @Autowired
-    private SmsSentLogRepository smsSentLogRepository;
+    private SmsProviderLogRepository smsProviderLogRepository;
 
     @Test
     public void testSendSmsInvalidNumber() {
@@ -49,8 +49,8 @@ public final class SmsSentLogTest {
         final String status          = "42";
         final String error           = "1234567890123456789012345678901234567890123456789012345678901234567890123456789";
 
-        smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sessionId, status, error, message));
-        final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
+        smsProviderLogRepository.save(new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, sessionId, status, error, message));
+        final SmsProviderLog logEntry = smsProviderLogRepository.findByTelephoneNumber(telephoneNumber);
         assertNotNull(logEntry);
         assertNotNull(logEntry.getTimestamp());
         assertEquals(telephoneNumber, logEntry.getTelephoneNumber());
