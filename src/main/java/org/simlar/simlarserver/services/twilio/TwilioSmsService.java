@@ -37,6 +37,8 @@ import org.simlar.simlarserver.json.twilio.MessageResponse;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.TwilioCallBackErrorCode;
+import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoCallSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
@@ -175,5 +177,29 @@ public final class TwilioSmsService implements SmsService {
         smsSentLog.setTwilioStatus(messageStatus);
         smsSentLog.setTwilioError(TwilioCallBackErrorCode.createString(errorCode));
         smsSentLogRepository.save(smsSentLog);
+    }
+
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
+    public XmlTwilioCallResponse handleCall(final String callSid, final String telephoneNumber, final String callStatus) {
+        final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(callSid);
+        if (smsSentLog == null) {
+            log.error("no db entry");
+            throw new XmlErrorNoCallSessionException("callSid='" + callSid + "' not found in DB");
+        }
+
+        if (smsSentLog.getType() != TwilioRequestType.CALL) {
+            log.error("call matches db entry for sms: '{}'", smsSentLog);
+            throw new XmlErrorNoCallSessionException("callSid='" + callSid + "' matches SMS");
+        }
+
+        if (!StringUtils.equals(smsSentLog.getTelephoneNumber(), telephoneNumber)) {
+            log.warn("call with unequal telephone numbers: saved='{}' received '{}'", smsSentLog.getTelephoneNumber(), telephoneNumber);
+        }
+
+        smsSentLog.setDlrTimestampToNow();
+        smsSentLog.setTwilioStatus(callStatus);
+        smsSentLogRepository.save(smsSentLog);
+
+        return new XmlTwilioCallResponse(smsSentLog.getMessage());
     }
 }

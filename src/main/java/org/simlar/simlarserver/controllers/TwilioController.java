@@ -120,6 +120,6 @@ final class TwilioController {
         log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_CALL, new RequestLogMessage(request, false));
         log.info("'{}' requested with callSid='{}' To='{}' MessageStatus='{}'", TwilioSmsService.REQUEST_PATH_CALL, callSid, to, callStatus);
 
-        return new XmlTwilioCallResponse("Welcome to simlar! Your registration number is: 123456");
+        return twilioSmsService.handleCall(callSid, to, callStatus);
     }
 }
