@@ -180,7 +180,7 @@ public final class TwilioSmsService implements SmsService {
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
-    public XmlTwilioCallResponse handleCall(final String callSid, final String telephoneNumber, final String callStatus) {
+    public XmlTwilioCallResponse handleCall(final String callSid, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String callStatus) {
         final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(callSid);
         if (smsSentLog == null) {
             log.error("no db entry");
