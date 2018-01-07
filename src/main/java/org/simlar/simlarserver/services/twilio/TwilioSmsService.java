@@ -156,7 +156,7 @@ public final class TwilioSmsService implements SmsService {
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
-    public void handleStatusReport(@SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
+    public void handleStatusReport(final TwilioRequestType type, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
         final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(messageSid);
         if (smsSentLog == null) {
             log.error("no db entry");
@@ -165,6 +165,10 @@ public final class TwilioSmsService implements SmsService {
 
         if (!StringUtils.equals(smsSentLog.getTelephoneNumber(), telephoneNumber)) {
             log.warn("status report with unequal telephone numbers: saved='{}' received '{}'", smsSentLog.getTelephoneNumber(), telephoneNumber);
+        }
+
+        if (smsSentLog.getType() != type) {
+            log.warn("status report with unequal type: saved='{}' received '{}'", smsSentLog.getType(), type);
         }
 
         smsSentLog.setDlrTimestampToNow();
