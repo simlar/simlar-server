@@ -28,6 +28,7 @@ import lombok.Getter;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoCallSessionException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
@@ -61,7 +62,8 @@ public enum XmlErrorExceptionClientResponse {
         NO_REGISTRATION_CODE       (XmlErrorNoRegistrationCodeException.class,       28, "no registration code"),
         UNKNOWN_PUSH_ID_TYPE       (XmlErrorUnknownPushIdTypeException.class,        30, "unknown push id type"),
         UNKNOWN_APPLE_PUSH_ID      (XmlErrorUnknownApplePushIdException.class,       31, "unknown apple pushId"),
-        REQUESTED_TOO_MANY_CONTACTS(XmlErrorRequestedTooManyContactsException.class, 50, "requested too many contacts")
+        REQUESTED_TOO_MANY_CONTACTS(XmlErrorRequestedTooManyContactsException.class, 50, "requested too many contacts"),
+        NO_CALL_SESSION            (XmlErrorNoCallSessionException.class,            64, "unknown call session")
     ;
 
 

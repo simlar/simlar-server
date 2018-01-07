@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoCallSessionException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
@@ -68,5 +69,6 @@ public final class XmlErrorExceptionClientResponseTest {
         assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_PUSH_ID_TYPE, XmlErrorExceptionClientResponse.fromException(XmlErrorUnknownPushIdTypeException.class));
         assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_APPLE_PUSH_ID, XmlErrorExceptionClientResponse.fromException(XmlErrorUnknownApplePushIdException.class));
         assertEquals(XmlErrorExceptionClientResponse.REQUESTED_TOO_MANY_CONTACTS, XmlErrorExceptionClientResponse.fromException(XmlErrorRequestedTooManyContactsException.class));
+        assertEquals(XmlErrorExceptionClientResponse.NO_CALL_SESSION, XmlErrorExceptionClientResponse.fromException(XmlErrorNoCallSessionException.class));
     }
 }
