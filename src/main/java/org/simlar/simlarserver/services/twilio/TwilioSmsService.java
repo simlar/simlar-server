@@ -133,16 +133,21 @@ public final class TwilioSmsService implements SmsService {
         }
     }
 
-    @Override
     @SuppressWarnings({"BooleanMethodNameMustStartWithQuestion", "MethodWithMultipleReturnPoints"})
-    public boolean sendSms(final String telephoneNumber, final String text) {
+    private boolean doPostRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {
         if (!twilioSettingsService.isConfigured()) {
             log.error("twilio not configured '{}'", twilioSettingsService);
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
             return false;
         }
 
-        return handleResponse(TwilioRequestType.SMS, telephoneNumber, text, postRequest(TwilioRequestType.SMS, telephoneNumber, text));
+        return handleResponse(type, telephoneNumber, text, postRequest(type, telephoneNumber, text));
+    }
+
+    @Override
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+    public boolean sendSms(final String telephoneNumber, final String text) {
+        return doPostRequest(TwilioRequestType.SMS, telephoneNumber, text);
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
@@ -164,6 +169,6 @@ public final class TwilioSmsService implements SmsService {
     }
 
     public boolean call(final String telephoneNumber) {
-        return handleResponse(TwilioRequestType.CALL, telephoneNumber, null, postRequest(TwilioRequestType.CALL, telephoneNumber, null));
+        return doPostRequest(TwilioRequestType.CALL, telephoneNumber, null);
     }
 }
