@@ -150,6 +150,11 @@ public final class TwilioSmsService implements SmsService {
         return doPostRequest(TwilioRequestType.SMS, telephoneNumber, text);
     }
 
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+    public boolean call(final String telephoneNumber) {
+        return doPostRequest(TwilioRequestType.CALL, telephoneNumber, null);
+    }
+
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public void handleDeliveryReport(@SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
         final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(messageSid);
@@ -166,9 +171,5 @@ public final class TwilioSmsService implements SmsService {
         smsSentLog.setTwilioStatus(messageStatus);
         smsSentLog.setTwilioError(TwilioCallBackErrorCode.createString(errorCode));
         smsSentLogRepository.save(smsSentLog);
-    }
-
-    public boolean call(final String telephoneNumber) {
-        return doPostRequest(TwilioRequestType.CALL, telephoneNumber, null);
     }
 }
