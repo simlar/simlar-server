@@ -21,8 +21,10 @@
 
 package org.simlar.simlarserver.services.smsservice;
 
-@FunctionalInterface
 public interface SmsService {
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
     boolean sendSms(final String telephoneNumber, final String text);
+
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+    boolean call(final String telephoneNumber, final String text);
 }
