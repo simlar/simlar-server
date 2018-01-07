@@ -59,13 +59,17 @@ public final class TwilioSmsService implements SmsService {
     private final TwilioSettingsService twilioSettingsService;
     private final SmsSentLogRepository  smsSentLogRepository;
 
+    private String createCallbackBaseUrl() {
+        return "https://" +
+                twilioSettingsService.getCallbackUser() + ':' + twilioSettingsService.getCallbackPassword() + '@' +
+                settingsService.getDomain() + ':' + settingsService.getPort() + '/';
+    }
+
     private String postRequest(final String telephoneNumber, final String text) {
         final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("To", telephoneNumber);
         parameters.add("From", twilioSettingsService.getSmsSourceNumber());
-        parameters.add("StatusCallback", "https://" +
-                twilioSettingsService.getCallbackUser() + ':' + twilioSettingsService.getCallbackPassword() + '@' +
-                settingsService.getDomain() + ':' + settingsService.getPort() + '/' + REQUEST_PATH_DELIVERY);
+        parameters.add("StatusCallback", createCallbackBaseUrl() + REQUEST_PATH_DELIVERY);
         parameters.add("Body", text);
 
         try {
