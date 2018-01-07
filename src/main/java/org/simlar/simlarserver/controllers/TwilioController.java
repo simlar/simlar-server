@@ -67,7 +67,7 @@ final class TwilioController {
         log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_DELIVERY, new RequestLogMessage(request, false));
         log.info("'{}' requested with messageSid MessageSid='{}' To='{}' MessageStatus='{}' ErrorCode='{}'", TwilioSmsService.REQUEST_PATH_DELIVERY, messageSid, to, messageStatus, errorCode);
 
-        twilioSmsService.handleDeliveryReport(to, messageSid, messageStatus, errorCode);
+        twilioSmsService.handleStatusReport(to, messageSid, messageStatus, errorCode);
     }
 
     /**
