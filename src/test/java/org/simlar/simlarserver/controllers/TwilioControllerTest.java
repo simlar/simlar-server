@@ -29,6 +29,7 @@ import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
+import org.simlar.simlarserver.xml.XmlTwilioSay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -503,6 +504,8 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final XmlTwilioCallResponse response = postCallSuccess(callSid, telephoneNumber);
 
         assertNotNull(response);
-        assertEquals(message, response.getSay());
+        final XmlTwilioSay say = response.getSay();
+        assertNotNull(say);
+        assertEquals(message, say.getMessage());
     }
 }
