@@ -22,27 +22,22 @@
 package org.simlar.simlarserver.xml;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
+@Data
+@XmlAccessorType(XmlAccessType.FIELD)
 public final class XmlTwilioSay {
-    private String message;
-    private int loop;
-
     @XmlValue
-    public String getMessage() {
-        return message;
-    }
+    private String message;
 
-    @SuppressWarnings("unused")
     @XmlAttribute
-    public int getLoop() {
-        return loop;
-    }
+    private int loop;
 }
