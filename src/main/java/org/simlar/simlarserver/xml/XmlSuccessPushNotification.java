@@ -25,24 +25,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "success")
 public final class XmlSuccessPushNotification {
+    @XmlAttribute
     private int deviceType;
+
+    @XmlAttribute
     private String pushId;
-
-    @XmlAttribute
-    public int getDeviceType() {
-        return deviceType;
-    }
-
-    @XmlAttribute
-    public String getPushId() {
-        return pushId;
-    }
 }
