@@ -25,4 +25,4 @@ Thumbs.db
 
 ### simlar
 ## local properties are not meant to be checked in
-src/main/resources/local.properties
+src/main/resources/application-default.properties
