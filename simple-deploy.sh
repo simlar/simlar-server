@@ -16,4 +16,4 @@ echo "wait"
 sleep 15s
 
 echo "check version"
-ssh root@"${SERVER}" "curl http://127.0.0.1:8080/simlar-server/version"
+ssh root@"${SERVER}" "curl --silent http://127.0.0.1:8080/simlar-server/version"
