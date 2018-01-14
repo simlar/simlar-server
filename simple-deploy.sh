@@ -3,6 +3,9 @@ set -eu -o pipefail
 
 declare -r  SERVER=${1:?"USAGE: $0 your.server.org"}
 
+echo "build war file with version: $(git describe --tags --always)"
+./gradlew clean war
+
 echo "copy war file"
 scp build/libs/simlar-server*.war root@"${SERVER}":/tmp/
 
