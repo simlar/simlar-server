@@ -89,6 +89,8 @@ test {
 }
 
 pmd {
+    /// IntelliJ plugin use this version
+    /// see: https://github.com/amitdev/PMD-Intellij/blob/master/PMD-Intellij.iml
     toolVersion = '5.8.1'
 }
 
