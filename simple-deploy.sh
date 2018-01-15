@@ -7,6 +7,7 @@ echo "build war file with version: $(git describe --tags --always)"
 ./gradlew clean war
 
 echo "copy war file"
+ssh root@"${SERVER}" "rm -f /tmp/simlar-server*.war"
 scp build/libs/simlar-server*.war root@"${SERVER}":/tmp/
 
 echo "install war file"
