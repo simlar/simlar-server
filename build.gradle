@@ -113,7 +113,9 @@ task wrapper(type: Wrapper) {
 }
 
 processResources {
-    expand(project.properties)
+    filesMatching("**/application.properties") {
+        expand(project.properties)
+    }
 }
 
 idea {
