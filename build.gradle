@@ -53,6 +53,9 @@ war {
     baseName = 'simlar-server'
     archiveName = "${baseName}##${version}.war"
     rootSpec.exclude('application-default.properties')
+    manifest {
+        attributes("Implementation-Version": version)
+    }
 }
 
 repositories {
