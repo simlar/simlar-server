@@ -24,7 +24,7 @@ package org.simlar.simlarserver.services.twilio;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
@@ -44,7 +44,7 @@ import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
 
 @TestPropertySource(properties = "domain = sip.simlar.org") // domain is an essential part of the callback url
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = SimlarServer.class)
 public final class TwilioSmsServiceTest {
     @Autowired
     private TwilioSmsService twilioSmsService;

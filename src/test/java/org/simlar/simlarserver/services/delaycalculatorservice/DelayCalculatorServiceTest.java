@@ -23,7 +23,7 @@ package org.simlar.simlarserver.services.delaycalculatorservice;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.helper.SimlarIds;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = SimlarServer.class)
 public final class DelayCalculatorServiceTest {
     @Autowired
     private DelayCalculatorService delayCalculatorService;

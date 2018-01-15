@@ -29,14 +29,14 @@ import org.springframework.context.annotation.PropertySource;
 
 @PropertySource(value = "file:/etc/simlar-server/config.properties", ignoreResourceNotFound = true)
 @SpringBootApplication
-public class Application extends SpringBootServletInitializer {
+public class SimlarServer extends SpringBootServletInitializer {
 
     @Override
     protected final SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
-        return builder.sources(Application.class);
+        return builder.sources(SimlarServer.class);
     }
 
     public static void main(final String... args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(SimlarServer.class, args);
     }
 }

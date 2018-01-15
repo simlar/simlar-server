@@ -24,7 +24,7 @@ package org.simlar.simlarserver.database.repositories;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = SimlarServer.class)
 public final class SmsSentLogTest {
     @Autowired
     private SmsSentLogRepository smsSentLogRepository;

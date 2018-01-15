@@ -24,7 +24,7 @@ package org.simlar.simlarserver.services.subscriberservice;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.testdata.TestUser;
@@ -39,7 +39,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = SimlarServer.class)
 public final class SubscriberServiceTest {
     @Autowired
     private SubscriberService subscriberService;
