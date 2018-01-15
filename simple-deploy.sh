@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu -o pipefail
 
 declare -r  SERVER=${1:?"USAGE: $0 your.server.org"}
 
