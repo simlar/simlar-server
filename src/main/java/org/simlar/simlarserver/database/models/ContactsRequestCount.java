@@ -66,4 +66,8 @@ public final class ContactsRequestCount {
     public void setTimestamp(final Instant timestamp) {
         this.timestamp = Timestamp.from(timestamp);
     }
+
+    public void incrementCount() {
+        count++;
+    }
 }
