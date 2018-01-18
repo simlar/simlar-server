@@ -121,7 +121,7 @@ public final class DelayCalculatorServiceTest {
     }
 
     @Test
-    public void testCalculateRequestDelayOneContact() {
+    public void testCalculateRequestDelayOneContactPermission() {
         /// This test simulates a user removing contacts permission and granting it again.
         final SimlarId simlarId = SimlarId.create("*0005*");
         final Instant now = Instant.now();
@@ -130,5 +130,16 @@ public final class DelayCalculatorServiceTest {
         assertEquals(100, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(100), now));
         assertEquals(101, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(1), now));
         assertEquals(101, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(100), now));
+    }
+
+    @Test
+    public void testCalculateRequestDelayOneContactInTelephoneBook() {
+        final SimlarId simlarId = SimlarId.create("*0006*");
+        final Instant now = Instant.now();
+
+        assertEquals(1, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(1), now));
+        assertEquals(1, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(1), now));
+        assertEquals(1, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(1), now));
+        assertEquals(1, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(1), now));
     }
 }

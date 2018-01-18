@@ -69,7 +69,7 @@ public final class DelayCalculatorService {
         return transactionTemplate.execute(status -> {
             final ContactsRequestCount saved = contactsRequestCountRepository.findBySimlarId(simlarId.get());
 
-            if (saved != null && count == 1) {
+            if (saved != null && count == 1 && !StringUtils.equals(saved.getHash(), hash)) {
                 saved.setCount(saved.getCount() + 1);
                 saved.setTimestamp(Timestamp.from(now));
                 contactsRequestCountRepository.save(saved);
