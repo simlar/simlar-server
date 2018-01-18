@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
@@ -67,6 +68,14 @@ public final class DelayCalculatorService {
     private Integer calculateTotalRequestedContacts(final SimlarId simlarId, final Instant now, final String hash, final int count) {
         return transactionTemplate.execute(status -> {
             final ContactsRequestCount saved = contactsRequestCountRepository.findBySimlarId(simlarId.get());
+
+            if (saved != null && count == 1) {
+                saved.setCount(saved.getCount() + 1);
+                saved.setTimestamp(Timestamp.from(now));
+                contactsRequestCountRepository.save(saved);
+                return saved.getCount();
+            }
+
             final int totalCount = calculateTotalRequestedContactsStatic(saved, now, hash, count);
             contactsRequestCountRepository.save(new ContactsRequestCount(simlarId, now, hash, totalCount));
             return totalCount;
