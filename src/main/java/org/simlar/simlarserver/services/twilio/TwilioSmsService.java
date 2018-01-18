@@ -72,6 +72,7 @@ public final class TwilioSmsService implements SmsService {
         final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("To", telephoneNumber);
         parameters.add("From", twilioSettingsService.getSmsSourceNumber());
+        //noinspection SwitchStatement
         switch (type) {
             case SMS:
                 parameters.add("StatusCallback", createCallbackBaseUrl() + REQUEST_PATH_DELIVERY);
