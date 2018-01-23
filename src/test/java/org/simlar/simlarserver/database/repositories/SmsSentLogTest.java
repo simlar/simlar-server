@@ -58,6 +58,6 @@ public final class SmsSentLogTest {
         assertEquals(sessionId, logEntry.getSessionId());
         assertEquals(twilioStatus, logEntry.getTwilioStatus());
         assertEquals(StringUtils.left(twilioError, 64), logEntry.getTwilioError());
-        assertNull(logEntry.getDlrTimestamp());
+        assertNull(logEntry.getCallbackTimestamp());
     }
 }

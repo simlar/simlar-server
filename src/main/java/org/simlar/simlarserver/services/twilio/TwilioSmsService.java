@@ -174,7 +174,7 @@ public final class TwilioSmsService implements SmsService {
             log.warn("status report with unequal type: saved='{}' received '{}'", smsSentLog.getType(), type);
         }
 
-        smsSentLog.setDlrTimestampToNow();
+        smsSentLog.setCallbackTimestampToNow();
         smsSentLog.setTwilioStatus(messageStatus);
         smsSentLog.setTwilioError(TwilioCallBackErrorCode.createString(errorCode));
         smsSentLogRepository.save(smsSentLog);
@@ -197,7 +197,7 @@ public final class TwilioSmsService implements SmsService {
             log.warn("call with unequal telephone numbers: saved='{}' received '{}'", smsSentLog.getTelephoneNumber(), telephoneNumber);
         }
 
-        smsSentLog.setDlrTimestampToNow();
+        smsSentLog.setCallbackTimestampToNow();
         smsSentLog.setTwilioStatus(callStatus);
         smsSentLogRepository.save(smsSentLog);
 

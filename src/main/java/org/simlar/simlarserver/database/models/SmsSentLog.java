@@ -62,8 +62,7 @@ public final class SmsSentLog {
     @Column(length = 64)
     private String sessionId;
 
-    @Column(columnDefinition = "TIMESTAMP NULL DEFAULT NULL") /// hibernate does not support columnDefinition = "TIMESTAMP DEFAULT '0000-00-00 00:00:00'"
-    private Timestamp dlrTimestamp;
+    private Timestamp callbackTimestamp;
 
     @Column(length = 64)
     private String twilioStatus;
@@ -79,8 +78,8 @@ public final class SmsSentLog {
     }
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String twilioStatus, final String message, final Instant dlrTimestamp) {
-        this(type, telephoneNumber, sessionId, twilioStatus, null, message, dlrTimestamp);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String twilioStatus, final String message, final Instant callbackTimestamp) {
+        this(type, telephoneNumber, sessionId, twilioStatus, null, message, callbackTimestamp);
     }
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
@@ -89,16 +88,16 @@ public final class SmsSentLog {
     }
 
     @SuppressWarnings({"UnnecessaryThis", "ConstructorWithTooManyParameters"})
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String twilioStatus, final String twilioError, final String message, final Instant dlrTimestamp) {
-        this.type            = type;
-        this.telephoneNumber = telephoneNumber;
-        this.timestamp       = Timestamp.from(Instant.now());
-        this.sessionId       = sessionId;
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String twilioStatus, final String twilioError, final String message, final Instant callbackTimestamp) {
+        this.type              = type;
+        this.telephoneNumber   = telephoneNumber;
+        this.timestamp         = Timestamp.from(Instant.now());
+        this.sessionId         = sessionId;
         //noinspection AssignmentToNull
-        this.dlrTimestamp    = dlrTimestamp == null ? null : Timestamp.from(dlrTimestamp);
-        this.twilioStatus    = twilioStatus;
-        this.twilioError     = StringUtils.left(twilioError, 64);
-        this.message         = message;
+        this.callbackTimestamp = callbackTimestamp == null ? null : Timestamp.from(callbackTimestamp);
+        this.twilioStatus      = twilioStatus;
+        this.twilioError       = StringUtils.left(twilioError, 64);
+        this.message           = message;
     }
 
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
@@ -107,11 +106,11 @@ public final class SmsSentLog {
     }
 
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
-    public Instant getDlrTimestamp() {
-        return dlrTimestamp == null ? null : dlrTimestamp.toInstant();
+    public Instant getCallbackTimestamp() {
+        return callbackTimestamp == null ? null : callbackTimestamp.toInstant();
     }
 
-    public void setDlrTimestampToNow() {
-        dlrTimestamp = Timestamp.from(Instant.now());
+    public void setCallbackTimestampToNow() {
+        callbackTimestamp = Timestamp.from(Instant.now());
     }
 }

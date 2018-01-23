@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS simlar_sms_sent_log_java (
 	`telephoneNumber` varchar(64) NOT NULL,
 	`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`sessionId` varchar(64) DEFAULT NULL,
-	`dlrTimestamp` timestamp NULL DEFAULT NULL,
+	`callbackTimestamp` timestamp NULL DEFAULT NULL,
 	`twilioStatus` varchar(64) DEFAULT NULL,
 	`twilioError` varchar(64) DEFAULT NULL,
 	`message` varchar(170) DEFAULT NULL,
