@@ -113,15 +113,15 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final String telephoneNumber = "992";
         final String sid             = "y2390ß1jc";
         final String message         = "sms text success";
-        final String twilioStatus1   = "sent";
-        final String twilioStatus2   = "delivered";
+        final String status1         = "sent";
+        final String status2         = "delivered";
 
         assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.CALL, telephoneNumber, sid, "queued", message)));
 
         postDeliveryReportSuccess(
                 sid,
-                twilioStatus1,
-                twilioStatus1,
+                status1,
+                status1,
                 telephoneNumber,
                 sid,
                 "ACfegg76bace9937efaa9932aabbcc1122",
@@ -130,13 +130,13 @@ public final class TwilioControllerTest extends BaseControllerTest {
         );
 
         assertAlmostEquals(message,
-                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, twilioStatus1, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, status1, message, Instant.now()),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
 
         postDeliveryReportSuccess(
                 sid,
-                twilioStatus2,
-                twilioStatus2,
+                status2,
+                status2,
                 telephoneNumber,
                 sid,
                 "ACfegg76bace9937efaa9932aabbcc1122",
@@ -145,7 +145,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         );
 
         assertAlmostEquals(message,
-                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, twilioStatus2, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, status2, message, Instant.now()),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
@@ -154,18 +154,18 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final String telephoneNumber = "993";
         final String sid             = "yxyxcvyxc";
         final String message         = "sms text success";
-        final String twilioStatus    = "delivered";
+        final String status          = "delivered";
 
         assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, "queued", message)));
 
         assertNull(postRequest(TwilioSmsService.REQUEST_PATH_DELIVERY, createParameters(new String[][] {
-                { "MessageStatus", twilioStatus },
+                { "MessageStatus", status },
                 { "To", telephoneNumber },
                 { "MessageSid", sid }
         })));
 
         assertAlmostEquals(message,
-                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, twilioStatus, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, status, message, Instant.now()),
                 smsSentLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
@@ -175,16 +175,16 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final String sid1            = "yxyxcvyxc1";
         final String sid2            = "yxyxcvyxc2";
         final String message         = "sms text success";
-        final String twilioStatus1   = "delivered";
-        final String twilioStatus2   = "sent";
+        final String status1         = "delivered";
+        final String status2         = "sent";
 
-        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid1, twilioStatus1, message, Instant.now())));
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid1, status1, message, Instant.now())));
         assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid2, "queued", message)));
 
         postDeliveryReportSuccess(
                 sid2,
-                twilioStatus2,
-                twilioStatus2,
+                status2,
+                status2,
                 telephoneNumber,
                 sid2,
                 "ACfegg76bace9937efaa9932aabbcc1122",
@@ -193,11 +193,11 @@ public final class TwilioControllerTest extends BaseControllerTest {
         );
 
         assertAlmostEquals(message,
-                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid1, twilioStatus1, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid1, status1, message, Instant.now()),
                 smsSentLogRepository.findBySessionId(sid1));
 
         assertAlmostEquals(message,
-                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid2, twilioStatus2, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid2, status2, message, Instant.now()),
                 smsSentLogRepository.findBySessionId(sid2));
     }
 
@@ -207,14 +207,14 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final String telephoneNumber2 = "996";
         final String sid              = "sdfster57";
         final String message          = "sms text success";
-        final String twilioStatus     = "sent";
+        final String status           = "sent";
 
         assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber1, sid, "queued", message)));
 
         postDeliveryReportSuccess(
                 sid,
-                twilioStatus,
-                twilioStatus,
+                status,
+                status,
                 telephoneNumber2,
                 sid,
                 "ACfegg76bace9937efaa9932aabbcc1122",
@@ -223,7 +223,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         );
 
         assertAlmostEquals(message,
-                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber1, sid, twilioStatus, message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber1, sid, status, message, Instant.now()),
                 smsSentLogRepository.findBySessionId(sid));
     }
 
@@ -232,15 +232,15 @@ public final class TwilioControllerTest extends BaseControllerTest {
         final String telephoneNumber = "997";
         final String sid             = "SM861a2b3299db4af1996d4ff9cb07f4cc";
         final String message         = "sms text error";
-        final String twilioStatus    = "undelivered";
+        final String status          = "undelivered";
 
         assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, "queued", message)));
 
         postDeliveryReportError(
                 "30009",
                 sid,
-                twilioStatus,
-                twilioStatus,
+                status,
+                status,
                 telephoneNumber,
                 sid,
                 "ACfegg76bace9937efaa9932aabbcc1122",
@@ -248,7 +248,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 "2010-04-01");
 
         assertAlmostEquals(message,
-                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, twilioStatus, "30009 - Missing segment", message, Instant.now()),
+                new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, status, "30009 - Missing segment", message, Instant.now()),
                 smsSentLogRepository.findBySessionId(sid));
     }
 

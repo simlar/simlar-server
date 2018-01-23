@@ -66,7 +66,7 @@ public final class Asserts {
             assertNotEquals(message, "", sessionId);
         }
         assertAlmostEquals(message, expected.getCallbackTimestamp(), actual.getCallbackTimestamp());
-        assertEquals(message, expected.getTwilioStatus(), actual.getTwilioStatus());
+        assertEquals(message, expected.getStatus(), actual.getStatus());
         assertEquals(message, expected.getTwilioError(), actual.getTwilioError());
         assertEquals(message, expected.getMessage(), actual.getMessage());
     }

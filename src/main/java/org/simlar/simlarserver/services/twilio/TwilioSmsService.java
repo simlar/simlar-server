@@ -175,7 +175,7 @@ public final class TwilioSmsService implements SmsService {
         }
 
         smsSentLog.setCallbackTimestampToNow();
-        smsSentLog.setTwilioStatus(messageStatus);
+        smsSentLog.setStatus(messageStatus);
         smsSentLog.setTwilioError(TwilioCallBackErrorCode.createString(errorCode));
         smsSentLogRepository.save(smsSentLog);
     }
@@ -198,7 +198,7 @@ public final class TwilioSmsService implements SmsService {
         }
 
         smsSentLog.setCallbackTimestampToNow();
-        smsSentLog.setTwilioStatus(callStatus);
+        smsSentLog.setStatus(callStatus);
         smsSentLogRepository.save(smsSentLog);
 
         return new XmlTwilioCallResponse(smsSentLog.getMessage());

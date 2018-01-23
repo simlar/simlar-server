@@ -65,7 +65,7 @@ public final class SmsSentLog {
     private Timestamp callbackTimestamp;
 
     @Column(length = 64)
-    private String twilioStatus;
+    private String status;
 
     @Column(length = 64)
     private String twilioError;
@@ -73,29 +73,29 @@ public final class SmsSentLog {
     @Column(length = 170)
     private String message;
 
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String twilioStatus, final String message) {
-        this(type, telephoneNumber, sessionId, twilioStatus, null, message);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String message) {
+        this(type, telephoneNumber, sessionId, status, null, message);
     }
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String twilioStatus, final String message, final Instant callbackTimestamp) {
-        this(type, telephoneNumber, sessionId, twilioStatus, null, message, callbackTimestamp);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String message, final Instant callbackTimestamp) {
+        this(type, telephoneNumber, sessionId, status, null, message, callbackTimestamp);
     }
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String twilioStatus, final String twilioError, final String message) {
-        this(type, telephoneNumber, sessionId, twilioStatus, twilioError, message, null);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String twilioError, final String message) {
+        this(type, telephoneNumber, sessionId, status, twilioError, message, null);
     }
 
     @SuppressWarnings({"UnnecessaryThis", "ConstructorWithTooManyParameters"})
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String twilioStatus, final String twilioError, final String message, final Instant callbackTimestamp) {
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String twilioError, final String message, final Instant callbackTimestamp) {
         this.type              = type;
         this.telephoneNumber   = telephoneNumber;
         this.timestamp         = Timestamp.from(Instant.now());
         this.sessionId         = sessionId;
         //noinspection AssignmentToNull
         this.callbackTimestamp = callbackTimestamp == null ? null : Timestamp.from(callbackTimestamp);
-        this.twilioStatus      = twilioStatus;
+        this.status            = status;
         this.twilioError       = StringUtils.left(twilioError, 64);
         this.message           = message;
     }
