@@ -67,7 +67,7 @@ public final class Asserts {
         }
         assertAlmostEquals(message, expected.getCallbackTimestamp(), actual.getCallbackTimestamp());
         assertEquals(message, expected.getStatus(), actual.getStatus());
-        assertEquals(message, expected.getTwilioError(), actual.getTwilioError());
+        assertEquals(message, expected.getError(), actual.getError());
         assertEquals(message, expected.getMessage(), actual.getMessage());
     }
 }

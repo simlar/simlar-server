@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS simlar_sms_sent_log_java (
 	`sessionId` varchar(64) DEFAULT NULL,
 	`callbackTimestamp` timestamp NULL DEFAULT NULL,
 	`status` varchar(64) DEFAULT NULL,
-	`twilioError` varchar(64) DEFAULT NULL,
+	`error` varchar(64) DEFAULT NULL,
 	`message` varchar(170) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

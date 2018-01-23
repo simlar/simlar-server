@@ -47,9 +47,9 @@ public final class SmsSentLogTest {
         final String message         = "Test invalid number";
         final String sessionId       = "error127";
         final String status          = "42";
-        final String twilioError     = "1234567890123456789012345678901234567890123456789012345678901234567890123456789";
+        final String error           = "1234567890123456789012345678901234567890123456789012345678901234567890123456789";
 
-        smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sessionId, status, twilioError, message));
+        smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sessionId, status, error, message));
         final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
         assertNotNull(logEntry);
         assertNotNull(logEntry.getTimestamp());
@@ -57,7 +57,7 @@ public final class SmsSentLogTest {
         assertEquals(message, logEntry.getMessage());
         assertEquals(sessionId, logEntry.getSessionId());
         assertEquals(status, logEntry.getStatus());
-        assertEquals(StringUtils.left(twilioError, 64), logEntry.getTwilioError());
+        assertEquals(StringUtils.left(error, 64), logEntry.getError());
         assertNull(logEntry.getCallbackTimestamp());
     }
 }

@@ -68,7 +68,7 @@ public final class SmsSentLog {
     private String status;
 
     @Column(length = 64)
-    private String twilioError;
+    private String error;
 
     @Column(length = 170)
     private String message;
@@ -83,12 +83,12 @@ public final class SmsSentLog {
     }
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String twilioError, final String message) {
-        this(type, telephoneNumber, sessionId, status, twilioError, message, null);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String error, final String message) {
+        this(type, telephoneNumber, sessionId, status, error, message, null);
     }
 
     @SuppressWarnings({"UnnecessaryThis", "ConstructorWithTooManyParameters"})
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String twilioError, final String message, final Instant callbackTimestamp) {
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String error, final String message, final Instant callbackTimestamp) {
         this.type              = type;
         this.telephoneNumber   = telephoneNumber;
         this.timestamp         = Timestamp.from(Instant.now());
@@ -96,7 +96,7 @@ public final class SmsSentLog {
         //noinspection AssignmentToNull
         this.callbackTimestamp = callbackTimestamp == null ? null : Timestamp.from(callbackTimestamp);
         this.status            = status;
-        this.twilioError       = StringUtils.left(twilioError, 64);
+        this.error             = StringUtils.left(error, 64);
         this.message           = message;
     }
 

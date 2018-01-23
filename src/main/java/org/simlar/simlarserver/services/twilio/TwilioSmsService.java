@@ -176,7 +176,7 @@ public final class TwilioSmsService implements SmsService {
 
         smsSentLog.setCallbackTimestampToNow();
         smsSentLog.setStatus(messageStatus);
-        smsSentLog.setTwilioError(TwilioCallBackErrorCode.createString(errorCode));
+        smsSentLog.setError(TwilioCallBackErrorCode.createString(errorCode));
         smsSentLogRepository.save(smsSentLog);
     }
 
