@@ -160,7 +160,7 @@ public final class TwilioSmsService implements SmsService {
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public void handleStatusReport(final TwilioRequestType type, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
-        final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(messageSid);
+        final SmsSentLog smsSentLog = smsSentLogRepository.findBySessionId(messageSid);
         if (smsSentLog == null) {
             log.error("no db entry");
             return;
@@ -182,7 +182,7 @@ public final class TwilioSmsService implements SmsService {
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public XmlTwilioCallResponse handleCall(final String callSid, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String callStatus) {
-        final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(callSid);
+        final SmsSentLog smsSentLog = smsSentLogRepository.findBySessionId(callSid);
         if (smsSentLog == null) {
             log.error("no db entry");
             throw new XmlErrorNoCallSessionException("callSid='" + callSid + "' not found in DB");

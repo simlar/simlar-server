@@ -194,11 +194,11 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
         assertAlmostEquals(message,
                 new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid1, twilioStatus1, message, Instant.now()),
-                smsSentLogRepository.findByDlrNumber(sid1));
+                smsSentLogRepository.findBySessionId(sid1));
 
         assertAlmostEquals(message,
                 new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid2, twilioStatus2, message, Instant.now()),
-                smsSentLogRepository.findByDlrNumber(sid2));
+                smsSentLogRepository.findBySessionId(sid2));
     }
 
     @Test
@@ -224,7 +224,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
         assertAlmostEquals(message,
                 new SmsSentLog(TwilioRequestType.SMS, telephoneNumber1, sid, twilioStatus, message, Instant.now()),
-                smsSentLogRepository.findByDlrNumber(sid));
+                smsSentLogRepository.findBySessionId(sid));
     }
 
     @Test
@@ -249,7 +249,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
         assertAlmostEquals(message,
                 new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sid, twilioStatus, "30009 - Missing segment", message, Instant.now()),
-                smsSentLogRepository.findByDlrNumber(sid));
+                smsSentLogRepository.findBySessionId(sid));
     }
 
     @Test
@@ -395,7 +395,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
         assertAlmostEquals("callStatus",
                 new SmsSentLog(TwilioRequestType.CALL, telephoneNumber, sid, status, null, null, Instant.now()),
-                smsSentLogRepository.findByDlrNumber(sid));
+                smsSentLogRepository.findBySessionId(sid));
     }
 
     private static MultiValueMap<String, String> createPostCallParameters(final String called,

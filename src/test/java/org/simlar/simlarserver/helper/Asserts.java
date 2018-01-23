@@ -58,12 +58,12 @@ public final class Asserts {
 
         assertEquals(message, expected.getTelephoneNumber(), actual.getTelephoneNumber());
         assertAlmostEquals(message, expected.getTimestamp(), actual.getTimestamp());
-        final String dlrNumber = actual.getDlrNumber();
-        if (expected.getDlrNumber() == null) {
-            assertNull(message, dlrNumber);
+        final String sessionId = actual.getSessionId();
+        if (expected.getSessionId() == null) {
+            assertNull(message, sessionId);
         } else {
-            assertNotNull(message, dlrNumber);
-            assertNotEquals(message, "", dlrNumber);
+            assertNotNull(message, sessionId);
+            assertNotEquals(message, "", sessionId);
         }
         assertAlmostEquals(message, expected.getDlrTimestamp(), actual.getDlrTimestamp());
         assertEquals(message, expected.getTwilioStatus(), actual.getTwilioStatus());

@@ -45,17 +45,17 @@ public final class SmsSentLogTest {
     public void testSendSmsInvalidNumber() {
         final String telephoneNumber = "+123456789";
         final String message         = "Test invalid number";
-        final String dlrNumber       = "error127";
+        final String sessionId       = "error127";
         final String twilioStatus    = "42";
         final String twilioError     = "1234567890123456789012345678901234567890123456789012345678901234567890123456789";
 
-        smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, dlrNumber, twilioStatus, twilioError, message));
+        smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, sessionId, twilioStatus, twilioError, message));
         final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
         assertNotNull(logEntry);
         assertNotNull(logEntry.getTimestamp());
         assertEquals(telephoneNumber, logEntry.getTelephoneNumber());
         assertEquals(message, logEntry.getMessage());
-        assertEquals(dlrNumber, logEntry.getDlrNumber());
+        assertEquals(sessionId, logEntry.getSessionId());
         assertEquals(twilioStatus, logEntry.getTwilioStatus());
         assertEquals(StringUtils.left(twilioError, 64), logEntry.getTwilioError());
         assertNull(logEntry.getDlrTimestamp());
