@@ -5,7 +5,7 @@ declare -r SERVER=${1:?"USAGE: $0 your.server.org"}
 
 declare -r REMOTE="root@${SERVER}"
 
-declare -r REMOTE_DIR=$(ssh root@"${SERVER}" "mktemp -d -t simlar-server-XXXXXXXX")
+declare -r REMOTE_DIR=$(ssh root@"${SERVER}" "mktemp -d -t simlar-server-XXXXXXX")
 echo "created temporary directory: ${REMOTE}:${REMOTE_DIR}"
 
 function cleanup {
