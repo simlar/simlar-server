@@ -33,7 +33,13 @@ ssh ${REMOTE} "rm /var/lib/tomcat8/webapps/simlar-server*.war ; mv "${REMOTE_DIR
 
 
 echo "waiting"
-sleep 15s
+for (( i = 0; i < 15; ++i )) ; do
+    echo -n "."
+    sleep 1s
+done
+echo
+
+
 echo "check version"
 declare -r VERSION_NEW=$(ssh ${REMOTE} "curl --silent http://127.0.0.1:8080/simlar-server/version")
 echo "update success: ${VERSION_OLD} -> ${VERSION_NEW}"
