@@ -171,7 +171,7 @@ public final class CreateAccountService {
             throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);
         }
 
-        if (!checkRegistrationCode(registrationCode)) {
+        if (!checkRegistrationCodeFormat(registrationCode)) {
             throw new XmlErrorNoRegistrationCodeException("confirm account request with simlarId: " + simlarId + " and registrationCode: " + registrationCode);
         }
 
@@ -197,7 +197,7 @@ public final class CreateAccountService {
         subscriberService.save(simlarId, creationRequest.getPassword());
     }
 
-    private static boolean checkRegistrationCode(final CharSequence input) {
+    private static boolean checkRegistrationCodeFormat(final CharSequence input) {
         return input != null && REGEX_REGISTRATION_CODE.matcher(input).matches();
     }
 }
