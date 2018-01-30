@@ -85,7 +85,7 @@ final class CreateAccountController {
     /**
      * This method handles http post requests. You may test it with:
      * <blockquote>
-     * curl --data "command=confirm&simlarId=*1111*&registrationCode=123456"" http://localhost:8080/create-account.xml
+     * curl --data "command=confirm&simlarId=*1111*&registrationCode=123456" http://localhost:8080/create-account.xml
      * </blockquote>
      *
      * @param command
