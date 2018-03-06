@@ -163,6 +163,19 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals(1, accountCreationRepository.findBySimlarId(simlarId).getRequestTries());
     }
 
+    private <T> T postCall(final Class<T> responseClass, final String telephoneNumber, final String password) {
+        return postRequest(responseClass, CreateAccountController.REQUEST_PATH_CALL, createParameters(new String[][] {
+                { "telephoneNumber", telephoneNumber },
+                { "password", password }
+        }));
+    }
+
+    @Test
+    public void testCallSuccess() {
+        final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, "+15005550006", "password");
+        assertNotNull(response);
+    }
+
     private <T> T postConfirmAccount(final Class<T> responseClass, final String command, final String simlarId, final String registrationCode) {
         return postRequest(responseClass, CreateAccountController.REQUEST_PATH, createParameters(new String[][] {
                 { "command", command },
