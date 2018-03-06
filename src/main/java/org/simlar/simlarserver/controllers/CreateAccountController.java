@@ -64,7 +64,7 @@ final class CreateAccountController {
      *            android-de
      *            android-es
      *
-     * @return XmlError or XmlSuccessPushNotification
+     * @return XmlError or XmlSuccessCreateAccountRequest
      *            error message or success message containing simlarId and password
      */
     @SuppressWarnings("SpellCheckingInspection")
