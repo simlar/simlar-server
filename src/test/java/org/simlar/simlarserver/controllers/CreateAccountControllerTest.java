@@ -169,17 +169,39 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals(1, accountCreationRepository.findBySimlarId(simlarId).getRequestTries());
     }
 
-    private <T> T postCall(final Class<T> responseClass, final String telephoneNumber, final String password) {
-        return postRequest(responseClass, CreateAccountController.REQUEST_PATH_CALL, createParameters(new String[][] {
+    private <T> T postCall(final Class<T> responseClass, final boolean callSmsService, final boolean smsServiceResult, final String telephoneNumber, final String password) {
+        reset(smsService);
+
+        if (callSmsService) {
+            when(smsService.call(eq(telephoneNumber), anyString())).thenReturn(smsServiceResult);
+        }
+
+        final T result = postRequest(responseClass, CreateAccountController.REQUEST_PATH_CALL, createParameters(new String[][] {
                 { "telephoneNumber", telephoneNumber },
                 { "password", password }
         }));
+
+        if (callSmsService) {
+            verify(smsService).call(eq(telephoneNumber), anyString());
+        }
+
+        verifyNoMoreInteractions(smsService);
+
+        return result;
+    }
+
+    private void assertPostCallError(final int expectedErrorId, final boolean callSmsService, final boolean smsServiceResult, final String telephoneNumber, final String password) {
+        final XmlError response = postCall(XmlError.class, callSmsService, smsServiceResult, telephoneNumber, password);
+        assertNotNull(response);
+        assertEquals(expectedErrorId, response.getId());
+    }
+
+    private void assertPostCallError(final int expectedErrorId, final boolean smsServiceResult, final String telephoneNumber, final String password) {
+        assertPostCallError(expectedErrorId, true, smsServiceResult, telephoneNumber, password);
     }
 
     private void assertPostCallError(final int expectedErrorId, final String telephoneNumber, final String password) {
-        final XmlError response = postCall(XmlError.class, telephoneNumber, password);
-        assertNotNull(response);
-        assertEquals(expectedErrorId, response.getId());
+        assertPostCallError(expectedErrorId, false, true, telephoneNumber, password);
     }
 
     @Test
@@ -199,11 +221,19 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testCallTriggerFails() {
+        final String telephoneNumber = "+15005023027";
+        final String password = assertPostCreateAccountSuccess("*15005023027*", telephoneNumber, "ios-en");
+
+        assertPostCallError(65, false, telephoneNumber, password);
+    }
+
+    @Test
     public void testCallSuccess() {
         final String telephoneNumber = "+15005023026";
         final String password = assertPostCreateAccountSuccess("*15005023026*", telephoneNumber, "ios-en");
 
-        final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, telephoneNumber, password);
+        final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, true, true, telephoneNumber, password);
         assertNotNull(response);
     }
 

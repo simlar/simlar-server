@@ -28,11 +28,13 @@ import org.simlar.simlarserver.database.repositories.AccountCreationRequestCount
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.utils.CallText;
 import org.simlar.simlarserver.utils.LibPhoneNumber;
 import org.simlar.simlarserver.utils.Password;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.utils.SmsText;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToTriggerCallException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
@@ -183,6 +185,10 @@ public final class CreateAccountService {
 
         if (StringUtils.isEmpty(password) || !Objects.equals(dbEntry.getPassword(), password)) {
             throw new XmlErrorWrongCredentialsException("call request with wrong password for simlarId: " + simlarId);
+        }
+
+        if (!smsService.call(telephoneNumber, CallText.format(dbEntry.getRegistrationCode()))) {
+            throw new XmlErrorFailedToTriggerCallException("failed to trigger call for simlarId: " + simlarId);
         }
 
         return simlarId;
