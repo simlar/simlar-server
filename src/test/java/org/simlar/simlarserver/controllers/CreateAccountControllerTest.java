@@ -189,8 +189,21 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testCallWithInvalidCredentials() {
+        final String telephoneNumber = "+15005023025";
+        assertPostCallError(10, telephoneNumber, "password1");
+        assertPostCallError(10, telephoneNumber, "password2");
+
+        assertPostCreateAccountSuccess("*15005023025*", telephoneNumber, "ios-en");
+        assertPostCallError(10, telephoneNumber, "password2");
+    }
+
+    @Test
     public void testCallSuccess() {
-        final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, "+15005550006", "password");
+        final String telephoneNumber = "+15005023026";
+        final String password = assertPostCreateAccountSuccess("*15005023026*", telephoneNumber, "ios-en");
+
+        final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, telephoneNumber, password);
         assertNotNull(response);
     }
 

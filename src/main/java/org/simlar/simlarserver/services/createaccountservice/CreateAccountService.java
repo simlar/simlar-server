@@ -39,6 +39,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeExce
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
@@ -173,7 +174,18 @@ public final class CreateAccountService {
     }
 
     public SimlarId call(final String telephoneNumber, final String password) {
-        return checkTelephoneNumber(telephoneNumber);
+        final SimlarId simlarId = checkTelephoneNumber(telephoneNumber);
+
+        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
+        if (dbEntry == null) {
+            throw new XmlErrorWrongCredentialsException("no sms request found for simlarId: " + simlarId);
+        }
+
+        if (StringUtils.isEmpty(password) || !Objects.equals(dbEntry.getPassword(), password)) {
+            throw new XmlErrorWrongCredentialsException("call request with wrong password for simlarId: " + simlarId);
+        }
+
+        return simlarId;
     }
 
     public void confirmAccount(final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
