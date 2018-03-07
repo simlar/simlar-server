@@ -43,10 +43,10 @@ import java.util.Objects;
 @Slf4j
 @RestController
 final class CreateAccountController {
-    public  static final String REQUEST_PATH      = "/create-account.xml";
-    public  static final String REQUEST_PATH_CALL = "/create-account-call.xml";
-    public  static final String COMMAND_REQUEST   = "request";
-    public  static final String COMMAND_CONFIRM   = "confirm";
+    public static final String REQUEST_PATH      = "/create-account.xml";
+    public static final String REQUEST_PATH_CALL = "/create-account-call.xml";
+    public static final String COMMAND_REQUEST   = "request";
+    public static final String COMMAND_CONFIRM   = "confirm";
 
     private final CreateAccountService createAccountService;
 
