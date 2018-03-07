@@ -94,17 +94,23 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals(expectedErrorId, response.getId());
     }
 
-    @Test
-    public void testRequestSuccess() {
-        final XmlSuccessCreateAccountRequest success = postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST,"+15005550006", "android-en");
+    private String assertPostCreateAccountSuccess(final String expectedSimlarId, final String telephoneNumber, final String smsText) {
+        final XmlSuccessCreateAccountRequest success = postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST,telephoneNumber, smsText);
         assertNotNull(success);
-        assertEquals("*15005550006*", success.getSimlarId());
+        assertEquals(expectedSimlarId, success.getSimlarId());
         assertNotNull(success.getPassword());
         assertEquals("password '" + success.getPassword() + "' does not match expected size",14, success.getPassword().length());
+        return success.getPassword();
+    }
 
-        final AccountCreationRequestCount count = accountCreationRepository.findBySimlarId(success.getSimlarId());
+    @Test
+    public void testRequestSuccess() {
+        final String simlarId = "*15005550006*";
+        final String password = assertPostCreateAccountSuccess(simlarId, "+15005550006", "android-en");
+
+        final AccountCreationRequestCount count = accountCreationRepository.findBySimlarId(simlarId);
         assertNotNull(count);
-        assertEquals(success.getPassword(), count.getPassword());
+        assertEquals(password, count.getPassword());
         assertNotNull(count.getRegistrationCode());
         assertEquals("password '" + count.getRegistrationCode() + "' does not match expected size",6, count.getRegistrationCode().length());
         assertEquals(1, count.getRequestTries());
@@ -139,7 +145,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
             if ((i & 1) == 0) {
                 assertPostCreateAccountError(24, true, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-de");
             } else {
-                postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-en");
+                assertPostCreateAccountSuccess("*15005023024*", telephoneNumber, "android-en");
             }
         }
 
@@ -159,7 +165,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertNotNull(after.getTimestamp());
         after.setTimestamp(after.getTimestamp().minus(Duration.ofHours(25)));
         accountCreationRepository.save(after);
-        postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-en");
+        assertPostCreateAccountSuccess("*15005023024*", telephoneNumber, "android-en");
         assertEquals(1, accountCreationRepository.findBySimlarId(simlarId).getRequestTries());
     }
 
@@ -287,26 +293,21 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
     @Test
     public void testCompleteAccountCreation() {
-        // request
-        final XmlSuccessCreateAccountRequest request = postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST,"+15005042023", "android-en");
-        assertNotNull(request);
-        assertEquals("*15005042023*", request.getSimlarId());
-        assertNotNull(request.getPassword());
-        assertEquals("password '" + request.getPassword() + "' does not match expected size",14, request.getPassword().length());
+        final SimlarId simlarId = SimlarId.create("*15005042023*");
+        assertNotNull(simlarId);
 
-        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(request.getSimlarId());
+        // request
+        final String password = assertPostCreateAccountSuccess(simlarId.get(), "+15005042023", "android-en");
+        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
         assertNotNull(dbEntry);
         assertNotNull(dbEntry.getRegistrationCode());
 
-
         // confirm
-        final XmlSuccessCreateAccountConfirm response = postConfirmAccount(XmlSuccessCreateAccountConfirm.class, CreateAccountController.COMMAND_CONFIRM, request.getSimlarId(), dbEntry.getRegistrationCode());
-        assertEquals(request.getSimlarId(), response.getSimlarId());
+        final XmlSuccessCreateAccountConfirm response = postConfirmAccount(XmlSuccessCreateAccountConfirm.class, CreateAccountController.COMMAND_CONFIRM, simlarId.get(), dbEntry.getRegistrationCode());
+        assertEquals(simlarId.get(), response.getSimlarId());
         assertEquals(dbEntry.getRegistrationCode(), response.getRegistrationCode());
 
         // check
-        final SimlarId simlarId = SimlarId.create(request.getSimlarId());
-        assertNotNull(simlarId);
-        assertTrue(subscriberService.checkCredentials(request.getSimlarId(), subscriberService.createHashHa1(simlarId, request.getPassword())));
+        assertTrue(subscriberService.checkCredentials(simlarId.get(), subscriberService.createHashHa1(simlarId, password)));
     }
 }
