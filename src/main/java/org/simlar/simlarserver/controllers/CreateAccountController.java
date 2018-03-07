@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.createaccountservice.AccountRequest;
 import org.simlar.simlarserver.services.createaccountservice.CreateAccountService;
+import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
@@ -101,7 +102,9 @@ final class CreateAccountController {
     public XmlSuccessCreateAccountRequest createAccountCall(final HttpServletRequest request, @RequestParam final String telephoneNumber, @RequestParam final String password) {
         log.info("'{}' requested with telephoneNumber= '{}' and User-Agent '{}'", REQUEST_PATH_CALL, telephoneNumber, request.getHeader("User-Agent"));
 
-        return new XmlSuccessCreateAccountRequest("", password);
+        final SimlarId simlarId = createAccountService.call(telephoneNumber, password);
+
+        return new XmlSuccessCreateAccountRequest(simlarId.get(), password);
     }
 
     /**

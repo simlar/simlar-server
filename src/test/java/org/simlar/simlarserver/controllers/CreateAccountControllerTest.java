@@ -170,6 +170,18 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         }));
     }
 
+    private void assertPostCallError(final int expectedErrorId, final String telephoneNumber, final String password) {
+        final XmlError response = postCall(XmlError.class, telephoneNumber, password);
+        assertNotNull(response);
+        assertEquals(expectedErrorId, response.getId());
+    }
+
+    @Test
+    public void testCallWithInvalidTelephoneNumber() {
+        assertPostCallError(22, "NO-NUMBER", "password1");
+        assertPostCallError(22, "+49163123456", "password2");
+    }
+
     @Test
     public void testCallSuccess() {
         final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, "+15005550006", "password");

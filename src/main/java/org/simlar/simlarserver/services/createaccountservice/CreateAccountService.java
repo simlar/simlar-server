@@ -78,14 +78,7 @@ public final class CreateAccountService {
     }
 
     public AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip) {
-        final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
-        if (simlarId == null) {
-            throw new XmlErrorInvalidTelephoneNumberException("invalid telephone number: " + telephoneNumber);
-        }
-
-        if (!LibPhoneNumber.isValid(telephoneNumber)) {
-            throw new XmlErrorInvalidTelephoneNumberException("libphonenumber invalidates telephone number: " + telephoneNumber);
-        }
+        final SimlarId simlarId = checkTelephoneNumber(telephoneNumber);
 
         if (StringUtils.isEmpty(ip)) {
             throw new XmlErrorNoIpException("request account creation with empty ip for telephone number:  " + telephoneNumber);
@@ -123,6 +116,20 @@ public final class CreateAccountService {
 
         log.info("created account request for simlarId: {}", simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
+    }
+
+    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
+    private static SimlarId checkTelephoneNumber(final String telephoneNumber) {
+        final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
+        if (simlarId == null) {
+            throw new XmlErrorInvalidTelephoneNumberException("invalid telephone number: " + telephoneNumber);
+        }
+
+        if (!LibPhoneNumber.isValid(telephoneNumber)) {
+            throw new XmlErrorInvalidTelephoneNumberException("libphonenumber invalidates telephone number: " + telephoneNumber);
+        }
+
+        return simlarId;
     }
 
     private AccountCreationRequestCount readAccountCreationRequest(final SimlarId simlarId) {
@@ -163,6 +170,10 @@ public final class CreateAccountService {
         } else {
             checkRequestTriesLimit(requestTries, limit, message);
         }
+    }
+
+    public SimlarId call(final String telephoneNumber, final String password) {
+        return checkTelephoneNumber(telephoneNumber);
     }
 
     public void confirmAccount(final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
