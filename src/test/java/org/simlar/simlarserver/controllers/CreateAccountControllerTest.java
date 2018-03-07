@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Duration;
+import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -223,7 +224,13 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     @Test
     public void testCallTriggerFails() {
         final String telephoneNumber = "+15005023027";
-        final String password = assertPostCreateAccountSuccess("*15005023027*", telephoneNumber, "ios-en");
+        final String simlarId = "*15005023027*";
+        final String password = assertPostCreateAccountSuccess(simlarId, telephoneNumber, "ios-en");
+
+        final AccountCreationRequestCount requestCount = accountCreationRepository.findBySimlarId(simlarId);
+        assertNotNull(requestCount.getTimestamp());
+        requestCount.setTimestamp(requestCount.getTimestamp().minusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
+        accountCreationRepository.save(requestCount);
 
         assertPostCallError(65, false, telephoneNumber, password);
     }
@@ -231,8 +238,44 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     @Test
     public void testCallSuccess() {
         final String telephoneNumber = "+15005023026";
-        final String password = assertPostCreateAccountSuccess("*15005023026*", telephoneNumber, "ios-en");
+        final String simlarId = "*15005023026*";
+        final String password = assertPostCreateAccountSuccess(simlarId, telephoneNumber, "ios-en");
 
+        final AccountCreationRequestCount requestCount = accountCreationRepository.findBySimlarId(simlarId);
+        assertNotNull(requestCount.getTimestamp());
+        requestCount.setTimestamp(requestCount.getTimestamp().minusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
+        accountCreationRepository.save(requestCount);
+
+        final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, true, true, telephoneNumber, password);
+        assertNotNull(response);
+    }
+
+    @Test
+    public void testCallDelay() {
+        final String telephoneNumber = "+15005023028";
+        final String simlarId = "*15005023028*";
+        final String password = assertPostCreateAccountSuccess(simlarId, telephoneNumber, "ios-en");
+
+        assertPostCallError(68, telephoneNumber, password);
+
+        final AccountCreationRequestCount requestCount = accountCreationRepository.findBySimlarId(simlarId);
+        final Instant originalTimestamp = requestCount.getTimestamp();
+        assertNotNull(originalTimestamp);
+
+        requestCount.setTimestamp(originalTimestamp.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMax() + 2));
+        accountCreationRepository.save(requestCount);
+        assertPostCallError(68, telephoneNumber, password);
+
+        requestCount.setTimestamp(originalTimestamp.minusSeconds(settingsService.getAccountCreationCallDelaySecondsMax() + 2));
+        accountCreationRepository.save(requestCount);
+        assertPostCallError(68, telephoneNumber, password);
+
+        requestCount.setTimestamp(originalTimestamp.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
+        accountCreationRepository.save(requestCount);
+        assertPostCallError(68, telephoneNumber, password);
+
+        requestCount.setTimestamp(originalTimestamp.minusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
+        accountCreationRepository.save(requestCount);
         final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, true, true, telephoneNumber, password);
         assertNotNull(response);
     }

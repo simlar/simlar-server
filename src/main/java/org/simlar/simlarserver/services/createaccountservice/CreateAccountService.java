@@ -33,6 +33,7 @@ import org.simlar.simlarserver.utils.LibPhoneNumber;
 import org.simlar.simlarserver.utils.Password;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.utils.SmsText;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorCallNotAllowedAtTheMomentException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToTriggerCallException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
@@ -182,9 +183,16 @@ public final class CreateAccountService {
         if (dbEntry == null) {
             throw new XmlErrorWrongCredentialsException("no sms request found for simlarId: " + simlarId);
         }
-
         if (StringUtils.isEmpty(password) || !Objects.equals(dbEntry.getPassword(), password)) {
             throw new XmlErrorWrongCredentialsException("call request with wrong password for simlarId: " + simlarId);
+        }
+
+        final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), Instant.now()).getSeconds();
+        if (secondsSinceRequest < settingsService.getAccountCreationCallDelaySecondsMin()) {
+            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since Request: " + secondsSinceRequest + 's');
+        }
+        if (secondsSinceRequest > settingsService.getAccountCreationCallDelaySecondsMax()) {
+            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since Request: " + secondsSinceRequest + 's');
         }
 
         if (!smsService.call(telephoneNumber, CallText.format(dbEntry.getRegistrationCode()))) {
