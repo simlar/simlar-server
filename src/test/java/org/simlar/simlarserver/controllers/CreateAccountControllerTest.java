@@ -197,8 +197,8 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals(expectedErrorId, response.getId());
     }
 
-    private void assertPostCallError(final int expectedErrorId, final boolean smsServiceResult, final String telephoneNumber, final String password) {
-        assertPostCallError(expectedErrorId, true, smsServiceResult, telephoneNumber, password);
+    private void assertPostCallErrorBecauseOfFailedTrigger(final String telephoneNumber, final String password) {
+        assertPostCallError(65, true, false, telephoneNumber, password);
     }
 
     private void assertPostCallError(final int expectedErrorId, final String telephoneNumber, final String password) {
@@ -232,7 +232,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         requestCount.setTimestamp(requestCount.getTimestamp().minusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
         accountCreationRepository.save(requestCount);
 
-        assertPostCallError(65, false, telephoneNumber, password);
+        assertPostCallErrorBecauseOfFailedTrigger(telephoneNumber, password);
     }
 
     @Test
