@@ -176,7 +176,7 @@ public final class CreateAccountService {
         }
     }
 
-    public SimlarId call(final String telephoneNumber, final String password) {
+    public SimlarId call(final String telephoneNumber, @SuppressWarnings("TypeMayBeWeakened") final String password) {
         final SimlarId simlarId = checkTelephoneNumber(telephoneNumber);
 
         final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
