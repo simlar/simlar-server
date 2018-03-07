@@ -25,6 +25,7 @@ package org.simlar.simlarserver.xmlerrorexceptionclientresponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorCallNotAllowedAtTheMomentException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToTriggerCallException;
@@ -50,22 +51,23 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 public enum XmlErrorExceptionClientResponse {
-        UNKNOWN_ERROR              (null,                                             0, "unknown error"),
-        UNKNOWN_STRUCTURE          (XmlErrorUnknownStructureException.class,          1, "unknown structure"),
-        WRONG_CREDENTIALS          (XmlErrorWrongCredentialsException.class,         10, "wrong credentials"),
-        NO_IP                      (XmlErrorNoIpException.class,                     21, "no ip"),
-        INVALID_TELEPHONE_NUMBER   (XmlErrorInvalidTelephoneNumberException.class,   22, "unable to create simlar id"),
-        TOO_MANY_REQUEST_TRIES     (XmlErrorTooManyRequestTriesException.class,      23, "too many account creation requests"),
-        FAILED_TO_SEND_SMS         (XmlErrorFailedToSendSmsException.class,          24, "failed to send sms"),
-        TOO_MANY_CONFIRM_TRIES     (XmlErrorTooManyConfirmTriesException.class,      25, "too many confirm tries"),
-        WRONG_REGISTRATION_CODE    (XmlErrorWrongRegistrationCodeException.class,    26, "wrong registration code"),
-        NO_SIMLAR_ID               (XmlErrorNoSimlarIdException.class,               27, "no simlarId"),
-        NO_REGISTRATION_CODE       (XmlErrorNoRegistrationCodeException.class,       28, "no registration code"),
-        UNKNOWN_PUSH_ID_TYPE       (XmlErrorUnknownPushIdTypeException.class,        30, "unknown push id type"),
-        UNKNOWN_APPLE_PUSH_ID      (XmlErrorUnknownApplePushIdException.class,       31, "unknown apple pushId"),
-        REQUESTED_TOO_MANY_CONTACTS(XmlErrorRequestedTooManyContactsException.class, 50, "You have requested too many contacts. Try again in 24 hours."),
-        NO_CALL_SESSION            (XmlErrorNoCallSessionException.class,            64, "unknown call session"),
-        FAILED_TO_TRIGGER_CALL     (XmlErrorFailedToTriggerCallException.class,      65, "failed to call you")
+        UNKNOWN_ERROR              (null,                                              0, "unknown error"),
+        UNKNOWN_STRUCTURE          (XmlErrorUnknownStructureException.class,           1, "unknown structure"),
+        WRONG_CREDENTIALS          (XmlErrorWrongCredentialsException.class,          10, "wrong credentials"),
+        NO_IP                      (XmlErrorNoIpException.class,                      21, "no ip"),
+        INVALID_TELEPHONE_NUMBER   (XmlErrorInvalidTelephoneNumberException.class,    22, "unable to create simlar id"),
+        TOO_MANY_REQUEST_TRIES     (XmlErrorTooManyRequestTriesException.class,       23, "too many account creation requests"),
+        FAILED_TO_SEND_SMS         (XmlErrorFailedToSendSmsException.class,           24, "failed to send sms"),
+        TOO_MANY_CONFIRM_TRIES     (XmlErrorTooManyConfirmTriesException.class,       25, "too many confirm tries"),
+        WRONG_REGISTRATION_CODE    (XmlErrorWrongRegistrationCodeException.class,     26, "wrong registration code"),
+        NO_SIMLAR_ID               (XmlErrorNoSimlarIdException.class,                27, "no simlarId"),
+        NO_REGISTRATION_CODE       (XmlErrorNoRegistrationCodeException.class,        28, "no registration code"),
+        UNKNOWN_PUSH_ID_TYPE       (XmlErrorUnknownPushIdTypeException.class,         30, "unknown push id type"),
+        UNKNOWN_APPLE_PUSH_ID      (XmlErrorUnknownApplePushIdException.class,        31, "unknown apple pushId"),
+        REQUESTED_TOO_MANY_CONTACTS(XmlErrorRequestedTooManyContactsException.class,  50, "You have requested too many contacts. Try again in 24 hours."),
+        NO_CALL_SESSION            (XmlErrorNoCallSessionException.class,             64, "unknown call session"),
+        FAILED_TO_TRIGGER_CALL     (XmlErrorFailedToTriggerCallException.class,       65, "failed to call you"),
+        CALL_NPT_ALLOWED_ATM       (XmlErrorCallNotAllowedAtTheMomentException.class, 68, "call not allowed at the moment")
     ;
 
 
