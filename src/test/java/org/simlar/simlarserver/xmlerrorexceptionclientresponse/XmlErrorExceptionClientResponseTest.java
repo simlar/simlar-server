@@ -21,25 +21,20 @@
 
 package org.simlar.simlarserver.xmlerrorexceptionclientresponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoCallSessionException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
-import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AssignableTypeFilter;
+
+import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public final class XmlErrorExceptionClientResponseTest {
 
@@ -51,24 +46,31 @@ public final class XmlErrorExceptionClientResponseTest {
         }
     }
 
-    @SuppressWarnings("OverlyCoupledMethod")
     @Test
-    public void testFromException() {
+    public void testUnregisteredXmlErrorException() {
         assertNull(XmlErrorExceptionClientResponse.fromException(XmlErrorNoResponseRegisteredException.class));
         assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_ERROR, XmlErrorExceptionClientResponse.fromException(null));
-        assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE, XmlErrorExceptionClientResponse.fromException(XmlErrorUnknownStructureException.class));
-        assertEquals(XmlErrorExceptionClientResponse.WRONG_CREDENTIALS, XmlErrorExceptionClientResponse.fromException(XmlErrorWrongCredentialsException.class));
-        assertEquals(XmlErrorExceptionClientResponse.NO_IP, XmlErrorExceptionClientResponse.fromException(XmlErrorNoIpException.class));
-        assertEquals(XmlErrorExceptionClientResponse.INVALID_TELEPHONE_NUMBER, XmlErrorExceptionClientResponse.fromException(XmlErrorInvalidTelephoneNumberException.class));
-        assertEquals(XmlErrorExceptionClientResponse.TOO_MANY_REQUEST_TRIES, XmlErrorExceptionClientResponse.fromException(XmlErrorTooManyRequestTriesException.class));
-        assertEquals(XmlErrorExceptionClientResponse.FAILED_TO_SEND_SMS, XmlErrorExceptionClientResponse.fromException(XmlErrorFailedToSendSmsException.class));
-        assertEquals(XmlErrorExceptionClientResponse.TOO_MANY_CONFIRM_TRIES, XmlErrorExceptionClientResponse.fromException(XmlErrorTooManyConfirmTriesException.class));
-        assertEquals(XmlErrorExceptionClientResponse.WRONG_REGISTRATION_CODE, XmlErrorExceptionClientResponse.fromException(XmlErrorWrongRegistrationCodeException.class));
-        assertEquals(XmlErrorExceptionClientResponse.NO_SIMLAR_ID, XmlErrorExceptionClientResponse.fromException(XmlErrorNoSimlarIdException.class));
-        assertEquals(XmlErrorExceptionClientResponse.NO_REGISTRATION_CODE, XmlErrorExceptionClientResponse.fromException(XmlErrorNoRegistrationCodeException.class));
-        assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_PUSH_ID_TYPE, XmlErrorExceptionClientResponse.fromException(XmlErrorUnknownPushIdTypeException.class));
-        assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_APPLE_PUSH_ID, XmlErrorExceptionClientResponse.fromException(XmlErrorUnknownApplePushIdException.class));
-        assertEquals(XmlErrorExceptionClientResponse.REQUESTED_TOO_MANY_CONTACTS, XmlErrorExceptionClientResponse.fromException(XmlErrorRequestedTooManyContactsException.class));
-        assertEquals(XmlErrorExceptionClientResponse.NO_CALL_SESSION, XmlErrorExceptionClientResponse.fromException(XmlErrorNoCallSessionException.class));
+    }
+
+    @Test
+    public void testEveryXmlErrorExceptionIsRegistered() throws ClassNotFoundException {
+        final ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+        scanner.addIncludeFilter(new AssignableTypeFilter(XmlErrorException.class));
+
+        final EnumSet<XmlErrorExceptionClientResponse> mappings = EnumSet.of(XmlErrorExceptionClientResponse.UNKNOWN_ERROR);
+
+        for (final BeanDefinition definition : scanner.findCandidateComponents(XmlErrorException.class.getPackage().getName())) {
+            final String name = definition.getBeanClassName();
+            @SuppressWarnings("unchecked")
+            final XmlErrorExceptionClientResponse mapping = XmlErrorExceptionClientResponse.fromException((Class<? extends XmlErrorException>)Class.forName(name));
+            assertNotNull("No mapping found for: " + name, mapping);
+            assertTrue(name + " has no message", StringUtils.isNotEmpty(mapping.getMessage()));
+            assertTrue(name + " id = " + mapping.getId(), mapping.getId() > 0);
+
+            assertFalse(name + " -> " + mapping + " Already registered", mappings.contains(mapping));
+            mappings.add(mapping);
+        }
+
+        assertEquals(EnumSet.allOf(XmlErrorExceptionClientResponse.class), mappings);
     }
 }
