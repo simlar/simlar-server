@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS simlar_account_creation_request (
     `password` varchar(64) NOT NULL,
     `registrationCode` varchar(64) NOT NULL,
     `requestTries` int(10) unsigned NOT NULL DEFAULT 1,
+    `calls` int(10) unsigned NOT NULL DEFAULT 0,
     `confirmTries` int(10) unsigned NOT NULL DEFAULT 0,
     `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `ip` varchar(64) NOT NULL,

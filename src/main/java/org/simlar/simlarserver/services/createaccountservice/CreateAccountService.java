@@ -174,23 +174,43 @@ public final class CreateAccountService {
         }
     }
 
+    private AccountCreationRequestCount updateCalls(final SimlarId simlarId, @SuppressWarnings("TypeMayBeWeakened") final String password) {
+        return transactionTemplate.execute(status -> {
+            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
+            if (dbEntry == null || dbEntry.getTimestamp() == null) {
+                throw new XmlErrorWrongCredentialsException("no sms request found for simlarId: " + simlarId);
+            }
+            if (StringUtils.isEmpty(password) || !Objects.equals(dbEntry.getPassword(), password)) {
+                throw new XmlErrorWrongCredentialsException("call request with wrong password for simlarId: " + simlarId);
+            }
+
+            final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), Instant.now()).getSeconds();
+            if (secondsSinceRequest < settingsService.getAccountCreationCallDelaySecondsMin()) {
+                throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since request: " + secondsSinceRequest + 's');
+            }
+            if (secondsSinceRequest > settingsService.getAccountCreationCallDelaySecondsMax()) {
+                throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since request: " + secondsSinceRequest + 's');
+            }
+
+            final Instant now = Instant.now();
+            final Instant savedTimestamp = dbEntry.getTimestamp();
+            if (savedTimestamp != null && Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
+                dbEntry.setCalls(1);
+            } else{
+                dbEntry.incrementCalls();
+            }
+            dbEntry.setTimestamp(now);
+            return accountCreationRepository.save(dbEntry);
+        });
+    }
+
     public SimlarId call(final String telephoneNumber, @SuppressWarnings("TypeMayBeWeakened") final String password) {
         final SimlarId simlarId = checkTelephoneNumber(telephoneNumber);
 
-        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
-        if (dbEntry == null || dbEntry.getTimestamp() == null) {
-            throw new XmlErrorWrongCredentialsException("no sms request found for simlarId: " + simlarId);
-        }
-        if (StringUtils.isEmpty(password) || !Objects.equals(dbEntry.getPassword(), password)) {
-            throw new XmlErrorWrongCredentialsException("call request with wrong password for simlarId: " + simlarId);
-        }
+        final AccountCreationRequestCount dbEntry = updateCalls(simlarId, password);
 
-        final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), Instant.now()).getSeconds();
-        if (secondsSinceRequest < settingsService.getAccountCreationCallDelaySecondsMin()) {
-            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since request: " + secondsSinceRequest + 's');
-        }
-        if (secondsSinceRequest > settingsService.getAccountCreationCallDelaySecondsMax()) {
-            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since request: " + secondsSinceRequest + 's');
+        if (dbEntry.getCalls() > settingsService.getAccountCreationMaxCalls()) {
+            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too many calls within the last 24 hours");
         }
 
         if (!smsService.call(telephoneNumber, CallText.format(dbEntry.getRegistrationCode()))) {

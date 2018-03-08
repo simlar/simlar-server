@@ -33,6 +33,7 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+@SuppressWarnings("ClassWithTooManyMethods")
 @Data
 @NoArgsConstructor
 @Entity
@@ -57,6 +58,10 @@ public final class AccountCreationRequestCount {
 
     @Column(nullable = false, columnDefinition = "int(10) unsigned")
     @ColumnDefault("0")
+    private int calls;
+
+    @Column(nullable = false, columnDefinition = "int(10) unsigned")
+    @ColumnDefault("0")
     private int confirmTries;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -78,6 +83,10 @@ public final class AccountCreationRequestCount {
 
     public void incrementRequestTries() {
         requestTries++;
+    }
+
+    public void incrementCalls() {
+        calls++;
     }
 
     public void incrementConfirmTries() {
