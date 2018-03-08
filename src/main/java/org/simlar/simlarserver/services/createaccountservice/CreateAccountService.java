@@ -180,7 +180,7 @@ public final class CreateAccountService {
         final SimlarId simlarId = checkTelephoneNumber(telephoneNumber);
 
         final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
-        if (dbEntry == null) {
+        if (dbEntry == null || dbEntry.getTimestamp() == null) {
             throw new XmlErrorWrongCredentialsException("no sms request found for simlarId: " + simlarId);
         }
         if (StringUtils.isEmpty(password) || !Objects.equals(dbEntry.getPassword(), password)) {
