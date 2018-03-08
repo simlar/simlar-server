@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings({"InstanceVariableNamingConvention", "MethodParameterNamingConvention"})
+@SuppressWarnings({"InstanceVariableNamingConvention", "MethodParameterNamingConvention", "ClassWithTooManyFields"})
 @Getter
 @Component
 public class SettingsService {
