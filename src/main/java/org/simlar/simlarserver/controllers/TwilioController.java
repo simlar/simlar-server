@@ -100,7 +100,7 @@ final class TwilioController {
     /**
      * This method handles http post requests. You may test it with:
      * <blockquote>
-     * curl --data "CallSid=12345678&To=123&MessageStatus=queued" http://localhost:8080/twilio/call.json
+     * curl --data "CallSid=12345678&To=123&MessageStatus=queued" http://localhost:8080/twilio/call.xml
      * </blockquote>
      *
      * @param callSid
