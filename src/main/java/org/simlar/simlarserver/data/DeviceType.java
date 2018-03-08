@@ -33,10 +33,10 @@ public enum DeviceType {
     IOS_VOIP(4),
     IOS_VOIP_DEVELOPMENT(5);
 
-    private final int id;
-
     private static final Map<Integer, DeviceType> INTEGER_DEVICE_TYPE_MAP =
             Arrays.stream(DeviceType.values()).collect(Collectors.toMap(DeviceType::toInt, type -> type));
+
+    private final int id;
 
     DeviceType(final int id) {
         this.id = id;
