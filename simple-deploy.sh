@@ -20,7 +20,7 @@ echo "current version on server: ${VERSION_OLD}"
 
 
 echo "build war file with version: $(git describe --tags --always)"
-./gradlew clean war
+./gradlew clean bootWar
 
 
 echo -e "\n\n"
