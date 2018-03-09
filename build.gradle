@@ -50,7 +50,7 @@ buildscript {
     }
 }
 
-war {
+bootWar {
     baseName = 'simlar-server'
     archiveName = "${baseName}##${version}.war"
     rootSpec.exclude('application-default.properties')
