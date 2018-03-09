@@ -54,6 +54,7 @@ bootWar {
     baseName = 'simlar-server'
     archiveName = "${baseName}##${version}.war"
     rootSpec.exclude('application-default.properties')
+    exclude 'WEB-INF/lib-provided'
     manifest {
         attributes("Implementation-Version": version)
     }
