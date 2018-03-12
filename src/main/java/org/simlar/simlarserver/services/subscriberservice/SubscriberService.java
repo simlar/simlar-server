@@ -30,6 +30,7 @@ import org.simlar.simlarserver.utils.Hash;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -64,7 +65,7 @@ public final class SubscriberService {
         //noinspection AnonymousInnerClass
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
-            protected void doInTransactionWithoutResult(final TransactionStatus status) {
+            protected void doInTransactionWithoutResult(@NonNull final TransactionStatus status) {
                 subscriber.setId(findSubscriberId(simlarId));
                 subscriberRepository.save(subscriber);
             }
