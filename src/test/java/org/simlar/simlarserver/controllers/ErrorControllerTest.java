@@ -28,6 +28,7 @@ import org.simlar.simlarserver.xml.XmlError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -44,12 +45,12 @@ public final class ErrorControllerTest extends BaseControllerTest {
     private static final class NoExceptionResponseErrorHandler implements ResponseErrorHandler {
         @SuppressWarnings("MethodReturnAlwaysConstant")
         @Override
-        public boolean hasError(final ClientHttpResponse response) {
+        public boolean hasError(@NonNull final ClientHttpResponse response) {
             return false;
         }
 
         @Override
-        public void handleError(final ClientHttpResponse response) {
+        public void handleError(@NonNull final ClientHttpResponse response) {
         }
     }
 
