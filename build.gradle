@@ -79,7 +79,7 @@ dependencies {
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
-    /// IntelliJ plugin use this version
+    /// IntelliJ plugin uses this version
     /// see: https://github.com/andrepdo/findbugs-idea/tree/master/src/src/impl/org/twodividedbyzero/idea/findbugs/plugins
     findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.8.2")
 }
@@ -92,7 +92,7 @@ test {
 }
 
 pmd {
-    /// IntelliJ plugin use this version
+    /// IntelliJ plugin uses this version
     /// see: https://github.com/amitdev/PMD-Intellij/blob/master/PMD-Intellij.iml
     toolVersion = '5.8.1'
 }
