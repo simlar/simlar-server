@@ -118,7 +118,7 @@ public final class CreateAccountService {
             }
         }, Date.from(Instant.now().plus(WARN_TIMEOUT)));
 
-        log.info("created account request for simlarId: {}", simlarId);
+        log.info("created account request for simlarId '{}'", simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
     }
 
@@ -236,6 +236,8 @@ public final class CreateAccountService {
         }
 
         subscriberService.save(simlarId, creationRequest.getPassword());
+
+        log.info("confirmed account with simlarId '{}'", simlarId);
     }
 
     private static boolean checkRegistrationCodeFormat(final CharSequence input) {
