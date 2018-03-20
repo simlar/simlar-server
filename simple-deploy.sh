@@ -33,7 +33,7 @@ ssh ${REMOTE} "rm /var/lib/tomcat8/webapps/simlar-server*.war ; mv "${REMOTE_DIR
 
 
 echo "waiting"
-for (( i = 0; i < 15; ++i )) ; do
+for I in $(seq 1 15) ; do
     echo -n "."
     sleep 1s
 done
