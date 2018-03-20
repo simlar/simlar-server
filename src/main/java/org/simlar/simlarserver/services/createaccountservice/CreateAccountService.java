@@ -56,7 +56,7 @@ import java.util.regex.Pattern;
 @Slf4j
 @Component
 public final class CreateAccountService {
-    private static final long WARN_TIMEOUT = 180L;
+    private static final Duration WARN_TIMEOUT = Duration.ofSeconds(180);
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{" + Password.REGISTRATION_CODE_LENGTH + '}');
 
     private final SmsService smsService;
@@ -117,9 +117,9 @@ public final class CreateAccountService {
 
         taskScheduler.schedule(() -> {
             if (!subscriberService.checkCredentials(dbEntry.getSimlarId(), dbEntry.getPassword())) {
-                log.warn("no confirmation after '{}' seconds for number '{}'", WARN_TIMEOUT, telephoneNumber);
+                log.warn("no confirmation after '{}' for number '{}'", WARN_TIMEOUT, telephoneNumber);
             }
-        }, Date.from(Instant.now().plusSeconds(WARN_TIMEOUT)));
+        }, Date.from(Instant.now().plus(WARN_TIMEOUT)));
 
         log.info("created account request for simlarId: {}", simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
