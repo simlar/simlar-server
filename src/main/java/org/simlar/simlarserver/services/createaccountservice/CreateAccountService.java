@@ -212,7 +212,7 @@ public final class CreateAccountService {
             throw new XmlErrorNoRegistrationCodeException("confirm account request with simlarId: " + simlarId + " and registrationCode: " + registrationCode);
         }
 
-        final AccountCreationRequestCount creationRequest = Objects.requireNonNull(transactionTemplate.execute(status -> {
+        final AccountCreationRequestCount creationRequest = transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
             if (dbEntry == null) {
                 throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
@@ -220,7 +220,7 @@ public final class CreateAccountService {
 
             dbEntry.incrementConfirmTries();
             return accountCreationRepository.save(dbEntry);
-        }));
+        });
 
         final int confirmTries = creationRequest.getConfirmTries();
         if (confirmTries > settingsService.getAccountCreationMaxConfirms()) {
