@@ -43,6 +43,7 @@ public class SettingsService {
     private final int accountCreationMaxRequestsTotalPerHour;
     private final int accountCreationMaxRequestsTotalPerDay;
     private final int accountCreationMaxConfirms;
+    private final int accountCreationMaxCalls;
     private final int accountCreationCallDelaySecondsMin;
     private final int accountCreationCallDelaySecondsMax;
 
@@ -58,6 +59,7 @@ public class SettingsService {
             @Value("${accountCreation.maxRequestsTotalPerHour:220}") final int     accountCreationMaxRequestsTotalPerHour,
             @Value("${accountCreation.maxRequestsTotalPerDay:1440}") final int     accountCreationMaxRequestsTotalPerDay,
             @Value("${accountCreation.maxConfirms:10}") final int                  accountCreationMaxConfirms,
+            @Value("${accountCreation.maxCalls:3}") final int                      accountCreationMaxCalls,
             @Value("${accountCreation.CallDelaySecondsMin:90}") final int          accountCreationCallDelaySecondsMin,
             @Value("${accountCreation.CallDelaySecondsMax:600}") final int         accountCreationCallDelaySecondsMax
             ) {
@@ -70,6 +72,7 @@ public class SettingsService {
         this.accountCreationMaxRequestsTotalPerHour      = accountCreationMaxRequestsTotalPerHour;
         this.accountCreationMaxRequestsTotalPerDay       = accountCreationMaxRequestsTotalPerDay;
         this.accountCreationMaxConfirms                  = accountCreationMaxConfirms;
+        this.accountCreationMaxCalls                     = accountCreationMaxCalls;
         this.accountCreationCallDelaySecondsMin          = accountCreationCallDelaySecondsMin;
         this.accountCreationCallDelaySecondsMax          = accountCreationCallDelaySecondsMax;
     }
