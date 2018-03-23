@@ -75,7 +75,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.16.20")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.mockito:mockito-core:2.15.0")
-    runtime("org.mariadb.jdbc:mariadb-java-client:2.2.2")
+    runtime("org.mariadb.jdbc:mariadb-java-client:2.2.3")
 
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
 
