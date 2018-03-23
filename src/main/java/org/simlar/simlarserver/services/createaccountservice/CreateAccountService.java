@@ -22,7 +22,6 @@
 package org.simlar.simlarserver.services.createaccountservice;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
@@ -220,7 +219,7 @@ public final class CreateAccountService {
             }
 
             dbEntry.incrementConfirmTries();
-            return ObjectUtils.defaultIfNull(accountCreationRepository.save(dbEntry), dbEntry);
+            return accountCreationRepository.save(dbEntry);
         });
 
         final int confirmTries = creationRequest.getConfirmTries();
