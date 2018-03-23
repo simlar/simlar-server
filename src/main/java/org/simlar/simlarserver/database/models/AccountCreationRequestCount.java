@@ -66,24 +66,14 @@ public final class AccountCreationRequestCount {
     private String ip;
 
     @SuppressWarnings("UnnecessaryThis")
-    public AccountCreationRequestCount(final String simlarId, final String password, final String registrationCode) {
+    public AccountCreationRequestCount(final String simlarId, final String password, final String registrationCode, final String ip) {
         this.simlarId         = simlarId;
         this.password         = password;
         this.registrationCode = registrationCode;
-        this.requestTries     = 0;
+        this.requestTries     = 1;
         this.confirmTries     = 0;
-    }
-
-    @SuppressWarnings("ConstructorWithTooManyParameters")
-    public AccountCreationRequestCount(final String simlarId, final String password, final String registrationCode, final int requestTries, final int confirmTries, final String ip) {
-        this.simlarId = simlarId;
-        this.password = password;
-        this.registrationCode = registrationCode;
-        this.requestTries = requestTries;
-        this.confirmTries = confirmTries;
-        //noinspection UnnecessaryThis
-        this.timestamp = Timestamp.from(Instant.now());
-        this.ip = ip;
+        this.timestamp        = Timestamp.from(Instant.now());
+        this.ip               = ip;
     }
 
     public void incrementRequestTries() {
