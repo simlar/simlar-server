@@ -19,15 +19,15 @@
  *
  */
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'war'
-apply plugin: 'findbugs'
-apply plugin: 'pmd'
-apply plugin: 'com.github.ben-manes.versions'
+apply plugin: "java"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "war"
+apply plugin: "findbugs"
+apply plugin: "pmd"
+apply plugin: "com.github.ben-manes.versions"
 
 def getGitVersion = { ->
     try {
@@ -51,9 +51,9 @@ buildscript {
 }
 
 bootWar {
-    baseName = 'simlar-server'
+    baseName = "simlar-server"
     archiveName = "${baseName}##${version}.war"
-    rootSpec.exclude('application-default.properties')
+    rootSpec.exclude("application-default.properties")
     manifest {
         attributes("Implementation-Version": version)
     }
@@ -95,7 +95,7 @@ test {
 pmd {
     /// IntelliJ plugin uses this version
     /// see: https://github.com/amitdev/PMD-Intellij/blob/master/PMD-Intellij.iml
-    toolVersion = '5.8.1'
+    toolVersion = "5.8.1"
 }
 
 findbugs {
@@ -113,7 +113,7 @@ tasks.withType(FindBugs) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3'
+    gradleVersion = "4.3"
 }
 
 processResources {
@@ -124,7 +124,7 @@ processResources {
 
 idea {
     module {
-        excludeDirs += file('ides')
-        excludeDirs += file('examples')
+        excludeDirs += file("ides")
+        excludeDirs += file("examples")
     }
 }
