@@ -92,7 +92,7 @@ final class CreateAccountController {
      * @param telephoneNumber
      *            the telephone number identifying the account
      * @param password
-     *            the password you received withe create account request
+     *            the password you received with create account request
      *
      * @return XmlError or XmlSuccessCreateAccountRequest
      *            error message or success message containing simlarId and password
