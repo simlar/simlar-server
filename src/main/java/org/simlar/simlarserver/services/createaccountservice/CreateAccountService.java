@@ -82,8 +82,7 @@ public final class CreateAccountService {
     }
 
     public AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip) {
-        validateTelephoneNumber(telephoneNumber);
-        final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
+        final SimlarId simlarId = validateTelephoneNumber(telephoneNumber);
 
         if (StringUtils.isEmpty(ip)) {
             throw new XmlErrorNoIpException("request account creation with empty ip for telephone number:  " + telephoneNumber);
@@ -123,14 +122,17 @@ public final class CreateAccountService {
         return new AccountRequest(simlarId, dbEntry.getPassword());
     }
 
-    private static void validateTelephoneNumber(final String telephoneNumber) {
-        if (SimlarId.createWithTelephoneNumber(telephoneNumber) == null) {
+    private static SimlarId validateTelephoneNumber(final String telephoneNumber) {
+        final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
+        if (simlarId == null) {
             throw new XmlErrorInvalidTelephoneNumberException("invalid telephone number: " + telephoneNumber);
         }
 
         if (!LibPhoneNumber.isValid(telephoneNumber)) {
             throw new XmlErrorInvalidTelephoneNumberException("libphonenumber invalidates telephone number: " + telephoneNumber);
         }
+
+        return simlarId;
     }
 
     private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip) {
@@ -202,8 +204,7 @@ public final class CreateAccountService {
     }
 
     public SimlarId call(final String telephoneNumber, @SuppressWarnings("TypeMayBeWeakened") final String password) {
-        validateTelephoneNumber(telephoneNumber);
-        final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
+        final SimlarId simlarId = validateTelephoneNumber(telephoneNumber);
 
         final AccountCreationRequestCount dbEntry = updateCalls(simlarId, password);
 
