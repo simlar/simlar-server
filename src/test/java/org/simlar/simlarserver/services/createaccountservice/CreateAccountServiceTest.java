@@ -120,6 +120,7 @@ public final class CreateAccountServiceTest {
         createAccountService.createAccountRequest("+15005550006", "", null);
     }
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void assertCreateAccountRequestSuccess(final String telephoneNumber, final String ip) {
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
         createAccountService.createAccountRequest(telephoneNumber, "", ip);
@@ -127,6 +128,7 @@ public final class CreateAccountServiceTest {
     }
 
     @SuppressWarnings("MethodWithMultipleLoops")
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private void assertCreateAccountRequestSuccessWithSmsAlert(final String telephoneNumber, final String ip) {
         for (final String alertNumber: settingsService.getAccountCreationAlertSmsNumbers()) {
             when(smsService.sendSms(eq(alertNumber), anyString())).thenReturn(Boolean.TRUE);
@@ -203,6 +205,7 @@ public final class CreateAccountServiceTest {
     }
 
     @DirtiesContext
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testCreateAccountRequestIpLimitWithinOneHour() {
         final String ip = "192.168.23.42";
@@ -233,6 +236,7 @@ public final class CreateAccountServiceTest {
     }
 
     @DirtiesContext
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHour() {
         final int max = settingsService.getAccountCreationMaxRequestsTotalPerHour();
@@ -266,6 +270,7 @@ public final class CreateAccountServiceTest {
     }
 
     @DirtiesContext
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneDay() {
         final int max = settingsService.getAccountCreationMaxRequestsTotalPerDay();

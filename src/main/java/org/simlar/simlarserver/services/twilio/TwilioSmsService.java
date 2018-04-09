@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -158,6 +159,7 @@ public final class TwilioSmsService implements SmsService {
         return doPostRequest(TwilioRequestType.CALL, telephoneNumber, text);
     }
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public void handleStatusReport(final TwilioRequestType type, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
         final SmsProviderLog smsProviderLog = smsProviderLogRepository.findBySessionId(messageSid);
         if (smsProviderLog == null) {
@@ -179,6 +181,7 @@ public final class TwilioSmsService implements SmsService {
         smsProviderLogRepository.save(smsProviderLog);
     }
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     public XmlTwilioCallResponse handleCall(final String callSid, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String callStatus) {
         final SmsProviderLog smsProviderLog = smsProviderLogRepository.findBySessionId(callSid);
         if (smsProviderLog == null) {

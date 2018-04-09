@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.utils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -33,6 +34,7 @@ import static org.junit.Assert.assertTrue;
 public final class ApplePushIdTest {
     private static final String APPLE_ID="7fd224670ab46d041e08101cd2bc3a5646c252a1dd5bfcb02f667203338f89a9";
 
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testApplePushIdCheckSuccess() {
         assertTrue(ApplePushId.check(APPLE_ID));
