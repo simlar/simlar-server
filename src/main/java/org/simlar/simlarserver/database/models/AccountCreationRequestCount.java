@@ -24,6 +24,7 @@ package org.simlar.simlarserver.database.models;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.simlar.simlarserver.utils.SimlarId;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -79,6 +80,10 @@ public final class AccountCreationRequestCount {
         this.confirmTries     = 0;
         this.timestamp        = Timestamp.from(Instant.now());
         this.ip               = ip;
+    }
+
+    public AccountCreationRequestCount(final SimlarId simlarId, final String password, final String registrationCode, final String ip) {
+        this(simlarId.get(), password, registrationCode, ip);
     }
 
     public void incrementRequestTries() {

@@ -21,7 +21,6 @@
 
 package org.simlar.simlarserver.services.createaccountservice;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
@@ -136,12 +135,11 @@ public final class CreateAccountService {
         return simlarId;
     }
 
-    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip) {
         return transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
             if (dbEntry == null) {
-                return accountCreationRepository.save(new AccountCreationRequestCount(simlarId.get(), Password.generate(), Password.generateRegistrationCode(), ip));
+                return accountCreationRepository.save(new AccountCreationRequestCount(simlarId, Password.generate(), Password.generateRegistrationCode(), ip));
             }
 
             final Instant now = Instant.now();
