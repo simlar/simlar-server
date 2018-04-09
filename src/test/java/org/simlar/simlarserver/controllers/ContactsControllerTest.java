@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-@SuppressFBWarnings({"PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS", "UCPM_USE_CHARACTER_PARAMETERIZED_METHOD"})
+@SuppressFBWarnings("UCPM_USE_CHARACTER_PARAMETERIZED_METHOD")
 @RunWith(SpringRunner.class)
 public final class ContactsControllerTest extends ContactsControllerBaseTest {
     private void wrongCredentials(final String username, final String password) {

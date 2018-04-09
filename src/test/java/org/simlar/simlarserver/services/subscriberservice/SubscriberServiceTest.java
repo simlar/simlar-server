@@ -21,7 +21,6 @@
 
 package org.simlar.simlarserver.services.subscriberservice;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
@@ -85,7 +84,6 @@ public final class SubscriberServiceTest {
     }
 
     @SuppressWarnings("TooBroadScope")
-    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void testCheckCredentials() {
         final String simlarId = "*2001*";
