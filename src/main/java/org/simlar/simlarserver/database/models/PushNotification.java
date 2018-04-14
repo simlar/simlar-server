@@ -36,7 +36,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "simlar_push_notifications")
 public class PushNotification {
-
     @Id
     @Column(nullable = false, length = 64)
     private String simlarId;
