@@ -198,7 +198,7 @@ public final class CreateAccountService {
             } else{
                 dbEntry.incrementCalls();
             }
-            dbEntry.setTimestamp(now);
+
             return accountCreationRepository.save(dbEntry);
         });
     }
