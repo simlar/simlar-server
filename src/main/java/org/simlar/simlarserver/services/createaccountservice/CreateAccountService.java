@@ -50,7 +50,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -92,14 +91,14 @@ public final class CreateAccountService {
         checkRequestTriesLimit(dbEntry.getRequestTries(), settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay(),
                 "too many create account requests %d >= %d for number: " + telephoneNumber);
 
-        final Timestamp anHourAgo = Timestamp.from(Instant.now().minus(Duration.ofHours(1)));
+        final Instant anHourAgo = Instant.now().minus(Duration.ofHours(1));
         checkRequestTriesLimit(accountCreationRepository.sumRequestTries(ip, anHourAgo), settingsService.getAccountCreationMaxRequestsPerIpPerHour(),
                 "too many create account requests %d >= %d for ip: " + ip);
 
         checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(anHourAgo), settingsService.getAccountCreationMaxRequestsTotalPerHour(),
                 "too many total create account requests %d >= %d within one hour");
 
-        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(Timestamp.from(Instant.now().minus(Duration.ofDays(1)))),
+        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(Instant.now().minus(Duration.ofDays(1))),
                 settingsService.getAccountCreationMaxRequestsTotalPerDay(),
                 "too many total create account requests %d >= %d within one day");
 
