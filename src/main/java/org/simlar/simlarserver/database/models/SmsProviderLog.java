@@ -63,6 +63,7 @@ public final class SmsProviderLog {
     @Column(length = 64)
     private String sessionId;
 
+    @Column(nullable = true, columnDefinition = "TIMESTAMP NULL DEFAULT NULL")
     private Timestamp callbackTimestamp;
 
     @Column(length = 64)
