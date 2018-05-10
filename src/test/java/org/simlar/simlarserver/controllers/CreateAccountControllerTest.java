@@ -410,6 +410,44 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testAccountCreationRequestResetsConfirms() {
+        final SimlarId simlarId = SimlarId.create("*15005042022*");
+        assertNotNull(simlarId);
+        final String telephoneNumber = "+15005042022";
+
+        // first request
+        assertPostCreateAccountSuccess(simlarId.get(), telephoneNumber, "android-en");
+        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
+        assertNotNull(dbEntry);
+        assertNotNull(dbEntry.getRegistrationCode());
+
+
+        // wrong confirms
+        //noinspection MethodCallInLoopCondition
+        for (int i = 0; i < settingsService.getAccountCreationMaxConfirms(); ++i) {
+            assertPostConfirmAccountError(26, CreateAccountController.COMMAND_CONFIRM, simlarId.get(), "123456");
+        }
+
+        // too many confirms
+        assertPostConfirmAccountError(25, CreateAccountController.COMMAND_CONFIRM, simlarId.get(), dbEntry.getRegistrationCode());
+
+
+        // second request
+        final String password = assertPostCreateAccountSuccess(simlarId.get(), telephoneNumber, "android-en");
+        final AccountCreationRequestCount dbEntry2 = accountCreationRepository.findBySimlarId(simlarId.get());
+        assertNotNull(dbEntry2);
+        assertNotNull(dbEntry2.getRegistrationCode());
+
+        // confirm
+        final XmlSuccessCreateAccountConfirm response = postConfirmAccount(XmlSuccessCreateAccountConfirm.class, CreateAccountController.COMMAND_CONFIRM, simlarId.get(), dbEntry2.getRegistrationCode());
+        assertEquals(simlarId.get(), response.getSimlarId());
+        assertEquals(dbEntry2.getRegistrationCode(), response.getRegistrationCode());
+
+        // check
+        assertTrue(subscriberService.checkCredentials(simlarId.get(), subscriberService.createHashHa1(simlarId, password)));
+    }
+
+    @Test
     public void testCompleteAccountCreation() {
         final SimlarId simlarId = SimlarId.create("*15005042023*");
         assertNotNull(simlarId);
