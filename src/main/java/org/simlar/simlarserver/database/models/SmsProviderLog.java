@@ -35,7 +35,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Timestamp;
 import java.time.Instant;
 
 @SuppressWarnings("ClassWithTooManyMethods")
@@ -58,13 +57,13 @@ public final class SmsProviderLog {
     private String telephoneNumber;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp timestamp;
+    private Instant timestamp;
 
     @Column(length = 64)
     private String sessionId;
 
     @Column(columnDefinition = "TIMESTAMP NULL DEFAULT NULL")
-    private Timestamp callbackTimestamp;
+    private Instant callbackTimestamp;
 
     @Column(length = 64)
     private String status;
@@ -93,26 +92,16 @@ public final class SmsProviderLog {
     public SmsProviderLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String error, final String message, final Instant callbackTimestamp) {
         this.type              = type;
         this.telephoneNumber   = telephoneNumber;
-        this.timestamp         = Timestamp.from(Instant.now());
+        this.timestamp         = Instant.now();
         this.sessionId         = sessionId;
         //noinspection AssignmentToNull
-        this.callbackTimestamp = callbackTimestamp == null ? null : Timestamp.from(callbackTimestamp);
+        this.callbackTimestamp = callbackTimestamp;
         this.status            = status;
         this.error             = StringUtils.left(error, 64);
         this.message           = message;
     }
 
-    @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
-    public Instant getTimestamp() {
-        return timestamp == null ? null : timestamp.toInstant();
-    }
-
-    @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
-    public Instant getCallbackTimestamp() {
-        return callbackTimestamp == null ? null : callbackTimestamp.toInstant();
-    }
-
     public void setCallbackTimestampToNow() {
-        callbackTimestamp = Timestamp.from(Instant.now());
+        callbackTimestamp = Instant.now();
     }
 }
