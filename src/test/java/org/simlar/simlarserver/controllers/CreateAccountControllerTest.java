@@ -431,29 +431,16 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         // too many confirms
         assertPostConfirmAccountError(25, CreateAccountController.COMMAND_CONFIRM, simlarId.get(), dbEntry.getRegistrationCode());
 
-
-        // second request
-        final String password = assertPostCreateAccountSuccess(simlarId.get(), telephoneNumber, "android-en");
-        final AccountCreationRequestCount dbEntry2 = accountCreationRepository.findBySimlarId(simlarId.get());
-        assertNotNull(dbEntry2);
-        assertNotNull(dbEntry2.getRegistrationCode());
-
-        // confirm
-        final XmlSuccessCreateAccountConfirm response = postConfirmAccount(XmlSuccessCreateAccountConfirm.class, CreateAccountController.COMMAND_CONFIRM, simlarId.get(), dbEntry2.getRegistrationCode());
-        assertEquals(simlarId.get(), response.getSimlarId());
-        assertEquals(dbEntry2.getRegistrationCode(), response.getRegistrationCode());
-
-        // check
-        assertTrue(subscriberService.checkCredentials(simlarId.get(), subscriberService.createHashHa1(simlarId, password)));
+        // second request working
+        assertCompleteAccountCreation(telephoneNumber);
     }
 
-    @Test
-    public void testCompleteAccountCreation() {
-        final SimlarId simlarId = SimlarId.create("*15005042023*");
+    private void assertCompleteAccountCreation(final String telephoneNumber) {
+        final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
         assertNotNull(simlarId);
 
         // request
-        final String password = assertPostCreateAccountSuccess(simlarId.get(), "+15005042023", "android-en");
+        final String password = assertPostCreateAccountSuccess(simlarId.get(), telephoneNumber, "android-en");
         final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
         assertNotNull(dbEntry);
         assertNotNull(dbEntry.getRegistrationCode());
@@ -465,5 +452,10 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
         // check
         assertTrue(subscriberService.checkCredentials(simlarId.get(), subscriberService.createHashHa1(simlarId, password)));
+    }
+
+    @Test
+    public void testCompleteAccountCreation() {
+        assertCompleteAccountCreation("+15005042023");
     }
 }
