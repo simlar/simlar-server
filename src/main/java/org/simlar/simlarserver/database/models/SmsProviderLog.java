@@ -48,7 +48,7 @@ public final class SmsProviderLog {
     @SuppressWarnings("unused")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 64)
