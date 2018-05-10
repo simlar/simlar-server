@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS simlar_sms_provider_log (
     `telephoneNumber` varchar(64) NOT NULL,
     `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `sessionId` varchar(64) DEFAULT NULL,
-    `callbackTimestamp` datetime(6) DEFAULT NULL,
+    `callbackTimestamp` timestamp NULL DEFAULT NULL,
     `status` varchar(64) DEFAULT NULL,
     `error` varchar(64) DEFAULT NULL,
     `message` varchar(170) DEFAULT NULL,
