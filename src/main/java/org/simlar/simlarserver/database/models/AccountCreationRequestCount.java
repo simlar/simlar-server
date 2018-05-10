@@ -31,7 +31,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
-import java.sql.Timestamp;
 import java.time.Instant;
 
 @SuppressWarnings("ClassWithTooManyMethods")
@@ -66,7 +65,7 @@ public final class AccountCreationRequestCount {
     private int confirmTries;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp timestamp;
+    private Instant timestamp;
 
     @Column(nullable = false, length = 64)
     private String ip;
@@ -78,7 +77,7 @@ public final class AccountCreationRequestCount {
         this.registrationCode = registrationCode;
         this.requestTries     = 1;
         this.confirmTries     = 0;
-        this.timestamp        = Timestamp.from(Instant.now());
+        this.timestamp        = Instant.now();
         this.ip               = ip;
     }
 
@@ -96,14 +95,5 @@ public final class AccountCreationRequestCount {
 
     public void incrementConfirmTries() {
         confirmTries++;
-    }
-
-    @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
-    public Instant getTimestamp() {
-        return timestamp == null ? null : timestamp.toInstant();
-    }
-
-    public void setTimestamp(final Instant instant) {
-        timestamp = Timestamp.from(instant);
     }
 }
