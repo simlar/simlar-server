@@ -49,8 +49,9 @@ public final class TwilioCallBackErrorCode {
     }
 
     public static String createString(final String errorCode) {
-        return KNOWN_ERROR_CODES.containsKey(errorCode)
-                ? errorCode + " - " + KNOWN_ERROR_CODES.get(errorCode)
+        final String knownErrorCode = KNOWN_ERROR_CODES.get(errorCode);
+        return knownErrorCode != null
+                ? errorCode + " - " + knownErrorCode
                 : errorCode;
     }
 }
