@@ -28,6 +28,7 @@ apply plugin: "war"
 apply plugin: "findbugs"
 apply plugin: "pmd"
 apply plugin: "com.github.ben-manes.versions"
+apply plugin: "org.owasp.dependencycheck"
 
 def getGitVersion = { ->
     try {
@@ -47,6 +48,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.2.RELEASE")
         classpath("com.github.ben-manes:gradle-versions-plugin:0.17.0")
+        classpath("org.owasp:dependency-check-gradle:3.1.2")
     }
 }
 
@@ -116,6 +118,11 @@ tasks.withType(FindBugs) {
         html.enabled = true
     }
 }
+
+dependencyCheck {
+    failBuildOnCVSS = 0
+}
+check.dependsOn dependencyCheckAnalyze
 
 task wrapper(type: Wrapper) {
     gradleVersion = "4.7"
