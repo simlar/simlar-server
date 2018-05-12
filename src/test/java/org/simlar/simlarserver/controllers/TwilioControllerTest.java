@@ -49,14 +49,14 @@ public final class TwilioControllerTest extends BaseControllerTest {
     @Autowired
     private SmsProviderLogRepository smsProviderLogRepository;
 
-    private void postDeliveryReportSuccess(final String smsSid,
-                                           final String smsStatus,
-                                           final String messageStatus,
-                                           final String to,
-                                           final String messageSid,
-                                           final String accountSid,
-                                           final String from,
-                                           final String apiVersion) {
+    private void assertPostDeliveryReportSuccess(final String smsSid,
+                                                 final String smsStatus,
+                                                 final String messageStatus,
+                                                 final String to,
+                                                 final String messageSid,
+                                                 final String accountSid,
+                                                 final String from,
+                                                 final String apiVersion) {
         assertNull(postRequest(TwilioSmsService.REQUEST_PATH_DELIVERY, createParameters(new String[][] {
                 { "SmsSid", smsSid },
                 { "SmsStatus", smsStatus },
@@ -69,15 +69,15 @@ public final class TwilioControllerTest extends BaseControllerTest {
         })));
     }
 
-    private void postDeliveryReportError(final String errorCode,
-                                         final String smsSid,
-                                         final String smsStatus,
-                                         final String messageStatus,
-                                         final String to,
-                                         final String messageSid,
-                                         final String accountSid,
-                                         final String from,
-                                         final String apiVersion) {
+    private void assertPostDeliveryReportError(final String errorCode,
+                                               final String smsSid,
+                                               final String smsStatus,
+                                               final String messageStatus,
+                                               final String to,
+                                               final String messageSid,
+                                               final String accountSid,
+                                               final String from,
+                                               final String apiVersion) {
         assertNull(postRequest(TwilioSmsService.REQUEST_PATH_DELIVERY, createParameters(new String[][] {
                 { "ErrorCode", errorCode },
                 { "SmsSid", smsSid },
@@ -94,7 +94,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
     @Test
     public void testPostDeliveryReportNoSentEntryInDB() {
         final String telephoneNumber = "991";
-        postDeliveryReportSuccess(
+        assertPostDeliveryReportSuccess(
                 "SM5dbcbffd029d4eb18de4068b58e31234",
                 "delivered",
                 "delivered",
@@ -118,7 +118,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
         assertNotNull(smsProviderLogRepository.save(new SmsProviderLog(TwilioRequestType.CALL, telephoneNumber, sid, "queued", message)));
 
-        postDeliveryReportSuccess(
+        assertPostDeliveryReportSuccess(
                 sid,
                 status1,
                 status1,
@@ -133,7 +133,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, sid, status1, message, Instant.now()),
                 smsProviderLogRepository.findByTelephoneNumber(telephoneNumber));
 
-        postDeliveryReportSuccess(
+        assertPostDeliveryReportSuccess(
                 sid,
                 status2,
                 status2,
@@ -181,7 +181,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
         assertNotNull(smsProviderLogRepository.save(new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, sid1, status1, message, Instant.now())));
         assertNotNull(smsProviderLogRepository.save(new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, sid2, "queued", message)));
 
-        postDeliveryReportSuccess(
+        assertPostDeliveryReportSuccess(
                 sid2,
                 status2,
                 status2,
@@ -211,7 +211,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
         assertNotNull(smsProviderLogRepository.save(new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber1, sid, "queued", message)));
 
-        postDeliveryReportSuccess(
+        assertPostDeliveryReportSuccess(
                 sid,
                 status,
                 status,
@@ -236,7 +236,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
         assertNotNull(smsProviderLogRepository.save(new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, sid, "queued", message)));
 
-        postDeliveryReportError(
+        assertPostDeliveryReportError(
                 "30009",
                 sid,
                 status,
@@ -254,7 +254,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
     @Test
     public void testPostDeliveryReport() {
-        postDeliveryReportSuccess(
+        assertPostDeliveryReportSuccess(
                 "SM5dbcbffd029d4eb18de4068b58e31234",
                 "sent",
                 "sent",
@@ -265,7 +265,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 "2010-04-01"
         );
 
-        postDeliveryReportSuccess(
+        assertPostDeliveryReportSuccess(
                 "SM5dbcbffd029d4eb18de4068b58e31234",
                 "delivered",
                 "delivered",
@@ -276,7 +276,7 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 "2010-04-01"
         );
 
-        postDeliveryReportError(
+        assertPostDeliveryReportError(
                 "30008",
                 "SM5dbcbffd029d4eb18de4068b58e31234",
                 "delivered",
