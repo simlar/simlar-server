@@ -43,29 +43,29 @@ public final class DelayCalculatorServiceTest {
     @Autowired
     private DelayCalculatorService delayCalculatorService;
 
-    private static void calculateDelay(final Duration min, final int count, final Duration max) {
+    private static void assertCalculateDelay(final Duration min, final int count, final Duration max) {
         final Duration resultDelay = DelayCalculatorService.calculateDelay(count);
-        final String result = "calculateDelay(" + count + ") = " + resultDelay;
+        final String result = "assertCalculateDelay(" + count + ") = " + resultDelay;
         assertTrue(min + " <= " + result, resultDelay.compareTo(min) >= 0);
         assertTrue(result + " <= " + max, resultDelay.compareTo(max) <= 0);
     }
 
     @Test
     public void testCalculateDelay() {
-        calculateDelay(Duration.ZERO,                   0,                  Duration.ZERO);
-        calculateDelay(Duration.ZERO,                   100,                Duration.ZERO);
-        calculateDelay(Duration.ZERO,                   1000,               Duration.ZERO);
-        calculateDelay(Duration.ZERO,                   2000,               Duration.ofSeconds(1));
-        calculateDelay(Duration.ZERO,                   5000,               Duration.ofSeconds(1));
-        calculateDelay(Duration.ofSeconds(1),           6000,               Duration.ofSeconds(2));
-        calculateDelay(Duration.ofSeconds(3),           8000,               Duration.ofSeconds(6));
-        calculateDelay(Duration.ofSeconds(5),           10000,              Duration.ofSeconds(8));
-        calculateDelay(Duration.ofDays(1),              100000,             Duration.ofDays(10));
-        calculateDelay(Duration.ofDays(5 * 364),        100000000,          DelayCalculatorService.MAXIMUM);
-        calculateDelay(DelayCalculatorService.MAXIMUM,  Integer.MAX_VALUE,  DelayCalculatorService.MAXIMUM);
-        calculateDelay(DelayCalculatorService.MAXIMUM,  -1,                 DelayCalculatorService.MAXIMUM);
-        calculateDelay(DelayCalculatorService.MAXIMUM,  -1000,              DelayCalculatorService.MAXIMUM);
-        calculateDelay(DelayCalculatorService.MAXIMUM,  Integer.MIN_VALUE,  DelayCalculatorService.MAXIMUM);
+        assertCalculateDelay(Duration.ZERO,                   0,                  Duration.ZERO);
+        assertCalculateDelay(Duration.ZERO,                   100,                Duration.ZERO);
+        assertCalculateDelay(Duration.ZERO,                   1000,               Duration.ZERO);
+        assertCalculateDelay(Duration.ZERO,                   2000,               Duration.ofSeconds(1));
+        assertCalculateDelay(Duration.ZERO,                   5000,               Duration.ofSeconds(1));
+        assertCalculateDelay(Duration.ofSeconds(1),           6000,               Duration.ofSeconds(2));
+        assertCalculateDelay(Duration.ofSeconds(3),           8000,               Duration.ofSeconds(6));
+        assertCalculateDelay(Duration.ofSeconds(5),           10000,              Duration.ofSeconds(8));
+        assertCalculateDelay(Duration.ofDays(1),              100000,             Duration.ofDays(10));
+        assertCalculateDelay(Duration.ofDays(5 * 364),        100000000,          DelayCalculatorService.MAXIMUM);
+        assertCalculateDelay(DelayCalculatorService.MAXIMUM,  Integer.MAX_VALUE,  DelayCalculatorService.MAXIMUM);
+        assertCalculateDelay(DelayCalculatorService.MAXIMUM,  -1,                 DelayCalculatorService.MAXIMUM);
+        assertCalculateDelay(DelayCalculatorService.MAXIMUM,  -1000,              DelayCalculatorService.MAXIMUM);
+        assertCalculateDelay(DelayCalculatorService.MAXIMUM,  Integer.MIN_VALUE,  DelayCalculatorService.MAXIMUM);
     }
 
     @Test
