@@ -120,6 +120,7 @@ tasks.withType(FindBugs) {
 }
 
 dependencyCheck {
+    suppressionFile = "owasp-dependency-check-suppression.xml"
     failBuildOnCVSS = 0
 }
 check.dependsOn dependencyCheckAnalyze
