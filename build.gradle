@@ -73,6 +73,7 @@ dependencies {
     implementation("commons-codec:commons-codec:1.11")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.9.5")
     implementation("org.projectlombok:lombok:1.16.20")
+    annotationProcessor("org.projectlombok:lombok:1.16.20")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito:mockito-core:2.18.3")
     runtime("org.mariadb.jdbc:mariadb-java-client:2.2.3")
