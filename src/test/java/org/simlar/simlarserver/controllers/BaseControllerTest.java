@@ -64,7 +64,7 @@ class BaseControllerTest {
         return "http://localhost:" + port;
     }
 
-    @SuppressWarnings("MethodCanBeVariableArityMethod") /// varargs are simply not possible here
+    @SuppressWarnings({"MethodCanBeVariableArityMethod", "PMD.UseVarargs"}) /// varargs are simply not possible here
     @SuppressFBWarnings("CLI_CONSTANT_LIST_INDEX")
     static MultiValueMap<String, String> createParameters(final String[][] parameters) {
         assertNotNull(parameters);
