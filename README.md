@@ -40,10 +40,15 @@ As the simlar-server is a spring-boot application you may start it with an embed
 ```
 ./gradlew bootWar
 ```
+
 ### Check dependencies ###
-The simlar-server uses the [gradle versions plugin](https://github.com/ben-manes/gradle-versions-plugin). You may check for dependency updates like:
+The simlar-server uses the [owasp-dependency-checker](https://www.owasp.org/index.php/OWASP_Dependency_Check). Execute it with:
 ```
-./gradlew dependencyUpdates -Drevision=release
+./gradlew dependencyCheckAnalyze
+```
+The simlar-server uses the [gradle versions plugin](https://github.com/ben-manes/gradle-versions-plugin). Run it with:
+```
+./gradlew dependencyUpdates
 ```
 
 ## IntelliJ IDEA CE ##
