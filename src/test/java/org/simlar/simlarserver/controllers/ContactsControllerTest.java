@@ -49,15 +49,15 @@ public final class ContactsControllerTest extends ContactsControllerBaseTest {
         assertWrongCredentials(TestUser.U1.getSimlarId(), "xxxxxxx");
     }
 
-    private void emptyContactList(final String contactList) {
+    private void assertEmptyContactList(final String contactList) {
         assertNull(requestContactList(TestUser.U1, contactList));
     }
 
     @Test
     public void testEmptyContactList() {
-        emptyContactList(null);
-        emptyContactList("");
-        emptyContactList(TestUser.U2.getSimlarId() + ' ' + TestUser.SIMLAR_ID_NOT_REGISTERED);
+        assertEmptyContactList(null);
+        assertEmptyContactList("");
+        assertEmptyContactList(TestUser.U2.getSimlarId() + ' ' + TestUser.SIMLAR_ID_NOT_REGISTERED);
     }
 
     @Test
