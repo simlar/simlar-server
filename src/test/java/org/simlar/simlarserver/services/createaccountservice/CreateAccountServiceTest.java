@@ -152,6 +152,7 @@ public final class CreateAccountServiceTest {
         assertCreateAccountRequestSuccess("+15005510001");
     }
 
+    @SuppressWarnings("PMD.DoNotUseThreads")
     private static void assertException(final Class<? extends Exception> expected, final Runnable runnable) {
         //noinspection OverlyBroadCatchBlock
         try {
