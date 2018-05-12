@@ -22,15 +22,15 @@
 package org.simlar.simlarserver.utils;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("UtilityClass")
 public final class TwilioCallBackErrorCode {
     private static final Map<String, String> KNOWN_ERROR_CODES = initKnownErrorCodes();
 
     private static Map<String, String> initKnownErrorCodes() {
-        final Map<String, String> knownErrorCodes = new HashMap<>(10);
+        final Map<String, String> knownErrorCodes = new ConcurrentHashMap<>(10);
         knownErrorCodes.put("30001", "Queue overflow");
         knownErrorCodes.put("30002", "Account suspended");
         knownErrorCodes.put("30003", "Unreachable destination handset");
@@ -49,6 +49,10 @@ public final class TwilioCallBackErrorCode {
     }
 
     public static String createString(final String errorCode) {
+        if (errorCode == null) {
+            return null;
+        }
+
         final String knownErrorCode = KNOWN_ERROR_CODES.get(errorCode);
         return knownErrorCode != null
                 ? errorCode + " - " + knownErrorCode
