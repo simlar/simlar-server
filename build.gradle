@@ -103,6 +103,7 @@ pmd {
     /// IntelliJ plugin uses this version
     /// see: https://github.com/amitdev/PMD-Intellij/blob/master/PMD-Intellij.iml
     toolVersion = "6.0.1"
+    ruleSetFiles = files("pmd-ruleset.xml")
 }
 
 findbugs {
