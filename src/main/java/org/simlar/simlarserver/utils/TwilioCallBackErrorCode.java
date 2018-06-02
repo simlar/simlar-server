@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.utils;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +50,7 @@ public final class TwilioCallBackErrorCode {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
-    @SuppressWarnings("ReturnOfNull")
+    @Nullable
     public static String createString(final String errorCode) {
         if (errorCode == null) {
             return null;
