@@ -49,6 +49,7 @@ public final class TwilioCallBackErrorCode {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
+    @SuppressWarnings("ReturnOfNull")
     public static String createString(final String errorCode) {
         if (errorCode == null) {
             return null;
