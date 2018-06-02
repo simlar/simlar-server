@@ -30,6 +30,7 @@ public final class TwilioCallBackErrorCode {
     private static final Map<String, String> KNOWN_ERROR_CODES = initKnownErrorCodes();
 
     private static Map<String, String> initKnownErrorCodes() {
+        @SuppressWarnings("PMD.UseConcurrentHashMap")
         final Map<String, String> knownErrorCodes = new HashMap<>(10);
         knownErrorCodes.put("30001", "Queue overflow");
         knownErrorCodes.put("30002", "Account suspended");
