@@ -22,8 +22,11 @@
 package org.simlar.simlarserver.database.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.data.TwilioRequestType;
 
@@ -39,8 +42,11 @@ import java.time.Instant;
 
 @SuppressWarnings("ClassWithTooManyMethods")
 @SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "simlar_sms_provider_log")
 public final class SmsProviderLog {
