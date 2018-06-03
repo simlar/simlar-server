@@ -21,8 +21,11 @@
 
 package org.simlar.simlarserver.database.models;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.simlar.simlarserver.utils.SimlarId;
 
@@ -34,8 +37,11 @@ import javax.persistence.Table;
 import java.time.Instant;
 
 @SuppressWarnings("ClassWithTooManyMethods")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "simlar_account_creation_request", indexes = {
         @Index(name = "request_timestamp", columnList = "timestamp"),
