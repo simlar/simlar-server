@@ -22,11 +22,15 @@
 package org.simlar.simlarserver.services.createaccountservice;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import org.simlar.simlarserver.utils.SimlarId;
 
-@Data
 @AllArgsConstructor
+@Getter
+@ToString
+@EqualsAndHashCode
 public final class AccountRequest {
     private final SimlarId simlarId;
     private final String password;
