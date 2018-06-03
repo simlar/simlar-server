@@ -126,6 +126,11 @@ dependencyCheck {
     failBuildOnCVSS = 0
 }
 
+task dependencyChecks {
+}
+dependencyChecks.dependsOn dependencyCheckAnalyze
+dependencyChecks.dependsOn dependencyUpdates
+
 task wrapper(type: Wrapper) {
     gradleVersion = "4.7"
 }
