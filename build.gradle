@@ -141,5 +141,6 @@ idea {
     module {
         excludeDirs += file("ides")
         excludeDirs += file("examples")
+        excludeDirs += file("pmd-ruleset.xml")
     }
 }
