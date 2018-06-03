@@ -29,9 +29,9 @@ import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
+import org.simlar.simlarserver.helper.SimlarIdHelper;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
-import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
@@ -180,7 +180,7 @@ public final class CreateAccountServiceTest {
             }
         }
 
-        final String simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber).get();
+        final String simlarId = SimlarIdHelper.createSimlarId(telephoneNumber);
         final AccountCreationRequestCount before = accountCreationRepository.findBySimlarId(simlarId);
 
         assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
