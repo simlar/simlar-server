@@ -21,8 +21,11 @@
 
 package org.simlar.simlarserver.database.models;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.simlar.simlarserver.data.DeviceType;
 
 import javax.persistence.Column;
@@ -31,8 +34,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @SuppressWarnings("FieldCanBeLocal")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "simlar_push_notifications")
 public class PushNotification {
