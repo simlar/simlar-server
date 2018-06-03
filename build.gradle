@@ -125,7 +125,6 @@ dependencyCheck {
     suppressionFile = "owasp-dependency-check-suppression.xml"
     failBuildOnCVSS = 0
 }
-check.dependsOn dependencyCheckAnalyze
 
 task wrapper(type: Wrapper) {
     gradleVersion = "4.7"
