@@ -19,9 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver.helper;
-
-import org.simlar.simlarserver.utils.SimlarId;
+package org.simlar.simlarserver.utils;
 
 import static org.junit.Assert.assertNotNull;
 

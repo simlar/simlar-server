@@ -22,7 +22,6 @@
 package org.simlar.simlarserver.utils;
 
 import org.junit.Test;
-import org.simlar.simlarserver.helper.SimlarIdHelper;
 
 import java.util.Arrays;
 import java.util.Collection;
