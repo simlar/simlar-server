@@ -66,7 +66,7 @@ repositories {
 }
 
 ext {
-    lombokVersion = "1.16.22"
+    lombokVersion = "1.18.0"
 }
 
 dependencies {
