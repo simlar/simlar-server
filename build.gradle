@@ -100,9 +100,7 @@ test {
 }
 
 pmd {
-    /// IntelliJ plugin uses this version
-    /// see: https://github.com/amitdev/PMD-Intellij/blob/master/PMD-Intellij.iml
-    toolVersion = "6.0.1"
+    toolVersion = "6.5.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = [ ]
 }
