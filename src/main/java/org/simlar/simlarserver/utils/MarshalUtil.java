@@ -22,6 +22,7 @@ package org.simlar.simlarserver.utils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -31,9 +32,8 @@ public final class MarshalUtil {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> T unmarshal(final Class<T> resultClass, final String xml) throws JAXBException {
-        return (T) JAXBContext.newInstance(resultClass).createUnmarshaller().unmarshal(new StringReader(xml));
+        return JAXBContext.newInstance(resultClass).createUnmarshaller().unmarshal(new StreamSource(new StringReader(xml)), resultClass).getValue();
     }
 
     public static String marshal(final Object o) throws JAXBException {
