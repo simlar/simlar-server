@@ -20,9 +20,15 @@
 
 package org.simlar.simlarserver.utils;
 
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.sax.SAXSource;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -32,8 +38,19 @@ public final class MarshalUtil {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
-    public static <T> T unmarshal(final Class<T> resultClass, final String xml) throws JAXBException {
-        return JAXBContext.newInstance(resultClass).createUnmarshaller().unmarshal(new StreamSource(new StringReader(xml)), resultClass).getValue();
+    @SuppressWarnings("OverlyBroadThrowsClause")
+    private static SAXParser createSAXParser() throws SAXException, ParserConfigurationException {
+        final SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        return factory.newSAXParser();
+    }
+
+    public static <T> T unmarshal(final Class<T> resultClass, final String xml) throws JAXBException, ParserConfigurationException, SAXException {
+        return JAXBContext.newInstance(resultClass).createUnmarshaller().unmarshal(
+                new SAXSource(createSAXParser().getXMLReader(), new InputSource(new StringReader(xml))),
+                resultClass).getValue();
     }
 
     public static String marshal(final Object o) throws JAXBException {
