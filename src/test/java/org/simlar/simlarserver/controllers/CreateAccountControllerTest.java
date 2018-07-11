@@ -218,11 +218,15 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertPostCallError(10, telephoneNumber, "password2");
     }
 
-    private void adjustDbTimestampByCallDelaySecondsMin(final String simlarId) {
+    private void adjustDbTimestampMinusSeconds(final String simlarId, final long seconds) {
         final AccountCreationRequestCount requestCount = accountCreationRepository.findBySimlarId(simlarId);
         assertNotNull(requestCount.getTimestamp());
-        requestCount.setTimestamp(requestCount.getTimestamp().minusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
+        requestCount.setTimestamp(requestCount.getTimestamp().minusSeconds(seconds));
         accountCreationRepository.save(requestCount);
+    }
+
+    private void adjustDbTimestampByCallDelaySecondsMin(final String simlarId) {
+        adjustDbTimestampMinusSeconds(simlarId, settingsService.getAccountCreationCallDelaySecondsMin() + 2);
     }
 
     @Test
@@ -296,8 +300,14 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final String password = assertPostCreateAccountSuccess(simlarId, telephoneNumber, "ios-en");
 
         adjustDbTimestampByCallDelaySecondsMin(simlarId);
-
         assertPostCallError(68, telephoneNumber, password);
+
+        // wait 24 hours and try again
+        adjustDbTimestampMinusSeconds(simlarId, 24 * 60 * 60 + 2);
+        final String password2 = assertPostCreateAccountSuccess(simlarId, telephoneNumber, "ios-en");
+
+        adjustDbTimestampByCallDelaySecondsMin(simlarId);
+        assertNotNull(postCall(XmlSuccessCreateAccountRequest.class, true, true, telephoneNumber, password2));
     }
 
     private <T> T postConfirmAccount(final Class<T> responseClass, final String command, final String simlarId, final String registrationCode) {
