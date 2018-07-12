@@ -142,7 +142,7 @@ public final class CreateAccountService {
         return transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
             if (dbEntry == null) {
-                return accountCreationRepository.save(new AccountCreationRequestCount(simlarId, Password.generate(), Password.generateRegistrationCode(), ip));
+                return accountCreationRepository.save(new AccountCreationRequestCount(simlarId, Password.generate(), Password.generateRegistrationCode(), now, ip));
             }
 
             final Instant savedTimestamp = dbEntry.getTimestamp();
