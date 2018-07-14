@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS simlar_account_creation_request (
     `confirmTries` int(10) unsigned NOT NULL DEFAULT 0,
     `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `ip` varchar(64) NOT NULL,
+    `callTimestamp` timestamp NULL DEFAULT NULL,
     PRIMARY KEY (`simlarId`),
     KEY `request_timestamp` (`timestamp`),
     KEY `request_ip` (`ip`)
@@ -30,3 +31,4 @@ CREATE TABLE IF NOT EXISTS simlar_account_creation_request (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 ALTER TABLE `simlar_account_creation_request` ADD COLUMN `calls` int(10) unsigned NOT NULL DEFAULT '0' AFTER `requestTries`;
+ALTER TABLE `simlar_account_creation_request` ADD COLUMN `callTimestamp`timestamp NULL DEFAULT NULL AFTER `ip`;
