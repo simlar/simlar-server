@@ -189,8 +189,7 @@ public final class CreateAccountService {
                 throw new XmlErrorWrongCredentialsException("call request with wrong password for simlarId: " + simlarId);
             }
 
-            final Instant savedTimestamp = dbEntry.getTimestamp();
-            final long secondsSinceRequest = Duration.between(savedTimestamp, now).getSeconds();
+            final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), now).getSeconds();
             if (secondsSinceRequest < settingsService.getAccountCreationCallDelaySecondsMin()) {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since request: " + secondsSinceRequest + 's');
             }
