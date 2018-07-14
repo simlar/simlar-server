@@ -32,6 +32,8 @@ import org.simlar.simlarserver.database.repositories.AccountCreationRequestCount
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.SimlarIdHelper;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorCallNotAllowedAtTheMomentException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
@@ -43,6 +45,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.containsString;
@@ -120,10 +123,30 @@ public final class CreateAccountServiceTest {
         createAccountService.createAccountRequest("+15005550006", "", null);
     }
 
-    private void assertCreateAccountRequestSuccess(final String telephoneNumber, final String ip) {
+    private AccountRequest assertCreateAccountRequestSuccess(final String telephoneNumber, final String ip, final Instant timestamp) {
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
-        createAccountService.createAccountRequest(telephoneNumber, "", ip);
+        final AccountRequest accountRequest = createAccountService.createAccountRequest(telephoneNumber, "", ip, timestamp);
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
+        assertNotNull(accountRequest);
+        assertNotNull(accountRequest.getSimlarId());
+        assertNotNull(accountRequest.getPassword());
+
+        reset(smsService);
+
+        return accountRequest;
+    }
+
+    private void assertCreateAccountRequestSuccess(final String telephoneNumber) {
+        assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.1", Instant.now());
+    }
+
+    private void assertCreateAccountRequestSuccess(final String telephoneNumber, final String ip) {
+        assertCreateAccountRequestSuccess(telephoneNumber, ip, Instant.now());
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private AccountRequest assertCreateAccountRequestSuccess(final String telephoneNumber, final Instant timestamp) {
+        return assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.1", timestamp);
     }
 
     @SuppressWarnings("MethodWithMultipleLoops")
@@ -139,10 +162,6 @@ public final class CreateAccountServiceTest {
             verify(smsService).sendSms(eq(alertNumber), anyString());
         }
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
-    }
-
-    private void assertCreateAccountRequestSuccess(final String telephoneNumber) {
-        assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.1");
     }
 
     @DirtiesContext
@@ -306,5 +325,44 @@ public final class CreateAccountServiceTest {
 
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private void assertCreateAccountCallSuccess(final String telephoneNumber, final String password, final Instant timestamp) {
+        when(smsService.call(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
+
+        createAccountService.call(telephoneNumber, password, timestamp);
+
+        verify(smsService).call(eq(telephoneNumber), anyString());
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private void assertCreateAccountCallError(final Class<? extends XmlErrorException> error, final String telephoneNumber, final String password, final Instant timestamp) {
+        assertException(error, () -> createAccountService.call(telephoneNumber, password, timestamp));
+    }
+
+    @DirtiesContext
+    @Test
+    public void testTooManyCalls() {
+        final String telephoneNumber = "+15005012150";
+        Instant now = Instant.now();
+
+        final int max = settingsService.getAccountCreationMaxCalls();
+        for (int i = 0; i < max; ++i) {
+            final AccountRequest accountRequest = assertCreateAccountRequestSuccess(telephoneNumber, now);
+            now = now.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2);
+            assertCreateAccountCallSuccess(telephoneNumber, accountRequest.getPassword(), now);
+        }
+
+        final AccountRequest accountRequest = assertCreateAccountRequestSuccess(telephoneNumber, now);
+        now = now.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2);
+        assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest.getPassword(), now);
+
+
+        // wait 24 hours and try again
+        now = now.plusSeconds(24 * 60 * 60 + 2);
+        final AccountRequest accountRequest2 = assertCreateAccountRequestSuccess(telephoneNumber, now);
+        now = now.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2);
+        assertCreateAccountCallSuccess(telephoneNumber, accountRequest2.getPassword(), now);
     }
 }
