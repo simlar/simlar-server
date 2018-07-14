@@ -359,14 +359,16 @@ public final class CreateAccountServiceTest {
         assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest.getPassword(), now);
 
 
-        // wait 12 hours and try again without call
-        now = now.plusSeconds(12 * 60 * 60 + 2);
-        assertCreateAccountRequestSuccess(telephoneNumber, now);
-
         // wait 12 hours and try again
         now = now.plusSeconds(12 * 60 * 60 + 2);
         final AccountRequest accountRequest2 = assertCreateAccountRequestSuccess(telephoneNumber, now);
         now = now.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2);
-        assertCreateAccountCallSuccess(telephoneNumber, accountRequest2.getPassword(), now);
+        assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest2.getPassword(), now);
+
+        // wait 12 hours and try again with success
+        now = now.plusSeconds(12 * 60 * 60 + 2);
+        final AccountRequest accountRequest3 = assertCreateAccountRequestSuccess(telephoneNumber, now);
+        now = now.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2);
+        assertCreateAccountCallSuccess(telephoneNumber, accountRequest3.getPassword(), now);
     }
 }
