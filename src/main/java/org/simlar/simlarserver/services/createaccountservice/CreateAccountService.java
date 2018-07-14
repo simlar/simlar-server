@@ -148,7 +148,6 @@ public final class CreateAccountService {
             final Instant savedTimestamp = dbEntry.getTimestamp();
             if (savedTimestamp != null && Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
                 dbEntry.setRequestTries(1);
-                dbEntry.setCalls(0);
             } else{
                 dbEntry.incrementRequestTries();
             }
@@ -197,7 +196,12 @@ public final class CreateAccountService {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since request: " + secondsSinceRequest + 's');
             }
 
-            dbEntry.incrementCalls();
+            if (Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
+                dbEntry.setCalls(1);
+            } else{
+                dbEntry.incrementCalls();
+            }
+
             return accountCreationRepository.save(dbEntry);
         });
     }
