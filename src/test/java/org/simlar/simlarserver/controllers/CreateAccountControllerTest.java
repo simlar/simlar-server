@@ -303,7 +303,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertPostCallError(68, telephoneNumber, password);
 
         // wait 24 hours and try again
-        adjustDbTimestampMinusSeconds(simlarId, 24 * 60 * 60 + 2);
+        adjustDbTimestampMinusSeconds(simlarId, Duration.ofDays(1).getSeconds() + 2);
         final String password2 = assertPostCreateAccountSuccess(simlarId, telephoneNumber, "ios-en");
 
         adjustDbTimestampByCallDelaySecondsMin(simlarId);
