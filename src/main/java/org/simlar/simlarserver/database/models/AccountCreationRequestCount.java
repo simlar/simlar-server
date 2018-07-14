@@ -76,6 +76,9 @@ public final class AccountCreationRequestCount {
     @Column(nullable = false, length = 64)
     private String ip;
 
+    @Column(columnDefinition = "TIMESTAMP NULL DEFAULT NULL")
+    private Instant callTimestamp;
+
     @SuppressWarnings("UnnecessaryThis")
     public AccountCreationRequestCount(final String simlarId, final String password, final String registrationCode, final Instant timestamp, final String ip) {
         this.simlarId         = simlarId;
@@ -85,6 +88,8 @@ public final class AccountCreationRequestCount {
         this.confirmTries     = 0;
         this.timestamp        = timestamp;
         this.ip               = ip;
+        //noinspection AssignmentToNull
+        this.callTimestamp    = null;
     }
 
     public AccountCreationRequestCount(final SimlarId simlarId, final String password, final String registrationCode, final Instant timestamp, final String ip) {
