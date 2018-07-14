@@ -222,6 +222,12 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final AccountCreationRequestCount requestCount = accountCreationRepository.findBySimlarId(simlarId);
         assertNotNull(requestCount.getTimestamp());
         requestCount.setTimestamp(requestCount.getTimestamp().minusSeconds(seconds));
+
+        final Instant callTimestamp = requestCount.getCallTimestamp();
+        if (callTimestamp != null) {
+            requestCount.setCallTimestamp(callTimestamp.minusSeconds(seconds));
+        }
+
         accountCreationRepository.save(requestCount);
     }
 

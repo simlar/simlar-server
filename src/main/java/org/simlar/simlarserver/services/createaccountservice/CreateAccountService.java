@@ -196,7 +196,8 @@ public final class CreateAccountService {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since request: " + secondsSinceRequest + 's');
             }
 
-            if (Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
+            final Instant callTimeStamp = dbEntry.getCallTimestamp();
+            if (callTimeStamp == null || Duration.between(callTimeStamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
                 dbEntry.setCalls(1);
             } else{
                 dbEntry.incrementCalls();
@@ -222,6 +223,9 @@ public final class CreateAccountService {
         if (!smsService.call(telephoneNumber, CallText.format(dbEntry.getRegistrationCode()))) {
             throw new XmlErrorFailedToTriggerCallException("failed to trigger call for simlarId: " + simlarId);
         }
+
+        dbEntry.setCallTimestamp(now);
+        accountCreationRepository.save(dbEntry);
 
         return simlarId;
     }
