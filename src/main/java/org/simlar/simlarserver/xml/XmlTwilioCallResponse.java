@@ -44,6 +44,6 @@ public final class XmlTwilioCallResponse {
     private XmlTwilioSay say;
 
     public XmlTwilioCallResponse(final String message) {
-        say = new XmlTwilioSay(message, 0);
+        say = new XmlTwilioSay(message, 5);
     }
 }
