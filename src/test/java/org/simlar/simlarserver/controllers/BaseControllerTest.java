@@ -29,10 +29,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -59,10 +58,8 @@ class BaseControllerTest {
             throw new AssertionError("JAXBException for: " + xml, e);
         } catch (final ClassCastException e) {
             throw new AssertionError("ClassCastException for: " + xml, e);
-        } catch (final SAXException e) {
-            throw new AssertionError("SAXException for: " + xml, e);
-        } catch (final ParserConfigurationException e) {
-            throw new AssertionError("ParserConfigurationException for: " + xml, e);
+        } catch (final XMLStreamException e) {
+            throw new AssertionError("XMLStreamException for: " + xml, e);
         }
     }
 
