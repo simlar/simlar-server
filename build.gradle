@@ -100,7 +100,7 @@ test {
 }
 
 pmd {
-    toolVersion = "6.5.0"
+    toolVersion = "6.6.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = [ ]
 }
