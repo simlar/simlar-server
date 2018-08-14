@@ -41,6 +41,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesExc
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -48,12 +49,14 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Slf4j
 @Component
 public final class CreateAccountService {
+    private static final long WARN_TIMEOUT = 180L;
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{" + Password.REGISTRATION_CODE_LENGTH + '}');
 
     private final SmsService smsService;
@@ -61,14 +64,17 @@ public final class CreateAccountService {
     private final AccountCreationRequestCountRepository accountCreationRepository;
     private final SubscriberService subscriberService;
     private final TransactionTemplate transactionTemplate;
+    private final TaskScheduler taskScheduler;
 
+    @SuppressWarnings("ConstructorWithTooManyParameters")
     @Autowired
-    public CreateAccountService(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager) {
+    public CreateAccountService(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
         this.smsService = smsService;
         this.settingsService = settingsService;
         this.accountCreationRepository = accountCreationRepository;
         this.subscriberService = subscriberService;
         transactionTemplate = new TransactionTemplate(transactionManager);
+        this.taskScheduler = taskScheduler;
     }
 
     public AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip) {
@@ -108,6 +114,12 @@ public final class CreateAccountService {
 
         dbEntry.setPassword(Password.generate());
         accountCreationRepository.save(dbEntry);
+
+        taskScheduler.schedule(() -> {
+            if (!subscriberService.checkCredentials(dbEntry.getSimlarId(), dbEntry.getPassword())) {
+                log.warn("no confirmation after '{}' seconds for number '{}'", WARN_TIMEOUT, telephoneNumber);
+            }
+        }, Date.from(Instant.now().plusSeconds(WARN_TIMEOUT)));
 
         log.info("created account request for simlarId: {}", simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
@@ -159,7 +171,7 @@ public final class CreateAccountService {
             throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);
         }
 
-        if (!checkRegistrationCode(registrationCode)) {
+        if (!checkRegistrationCodeFormat(registrationCode)) {
             throw new XmlErrorNoRegistrationCodeException("confirm account request with simlarId: " + simlarId + " and registrationCode: " + registrationCode);
         }
 
@@ -185,7 +197,7 @@ public final class CreateAccountService {
         subscriberService.save(simlarId, creationRequest.getPassword());
     }
 
-    private static boolean checkRegistrationCode(final CharSequence input) {
+    private static boolean checkRegistrationCodeFormat(final CharSequence input) {
         return input != null && REGEX_REGISTRATION_CODE.matcher(input).matches();
     }
 }

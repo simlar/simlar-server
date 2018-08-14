@@ -70,16 +70,16 @@ dependencies {
     compile("org.apache.commons:commons-lang3:3.7")
     compile("org.apache.commons:commons-text:1.2")
     compile("commons-codec:commons-codec:1.11")
-    compile("com.googlecode.libphonenumber:libphonenumber:8.8.9")
+    compile("com.googlecode.libphonenumber:libphonenumber:8.9.1")
     compileOnly("org.projectlombok:lombok:1.16.20")
     testCompile("org.springframework.boot:spring-boot-starter-test")
-    testCompile("org.mockito:mockito-core:2.13.0")
-    runtime("org.mariadb.jdbc:mariadb-java-client:2.2.1")
+    testCompile("org.mockito:mockito-core:2.15.0")
+    runtime("org.mariadb.jdbc:mariadb-java-client:2.2.2")
 
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
-    /// IntelliJ plugin use this version
+    /// IntelliJ plugin uses this version
     /// see: https://github.com/andrepdo/findbugs-idea/tree/master/src/src/impl/org/twodividedbyzero/idea/findbugs/plugins
     findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.8.2")
 }
@@ -92,7 +92,7 @@ test {
 }
 
 pmd {
-    /// IntelliJ plugin use this version
+    /// IntelliJ plugin uses this version
     /// see: https://github.com/amitdev/PMD-Intellij/blob/master/PMD-Intellij.iml
     toolVersion = '5.8.1'
 }
