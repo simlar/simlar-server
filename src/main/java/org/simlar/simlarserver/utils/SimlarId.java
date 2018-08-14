@@ -28,10 +28,6 @@ public final class SimlarId {
         this.simlarId = simlarId;
     }
 
-    public String get() {
-        return simlarId;
-    }
-
     public static SimlarId create(final String simlarId) {
         if (!check(simlarId)) {
             return null;
@@ -40,11 +36,11 @@ public final class SimlarId {
         return new SimlarId(simlarId);
     }
 
-    public static boolean check(final String str) {
-        if (str == null || str.isEmpty()) {
-            return false;
-        }
+    public String get() {
+        return simlarId;
+    }
 
-        return str.matches("\\*\\d+\\*");
+    public static boolean check(final String str) {
+        return str != null && !str.isEmpty() && str.matches("\\*\\d+\\*");
     }
 }

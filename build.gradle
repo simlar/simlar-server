@@ -26,9 +26,6 @@ apply plugin: 'spring-boot'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 buildscript {
     repositories {
         mavenCentral()
