@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Simlar Authors.
+ * Copyright (C) 2017 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,14 +19,27 @@
  *
  */
 
-package org.simlar.simlarserver.database.repositories;
+package org.simlar.simlarserver.utils;
 
-import org.simlar.simlarserver.database.models.SmsSentLog;
-import org.springframework.data.repository.CrudRepository;
+import org.junit.Test;
 
-@SuppressWarnings({"unused", "InterfaceNeverImplemented"})
-public interface SmsSentLogRepository extends CrudRepository<SmsSentLog, Integer> {
-    SmsSentLog findByTelephoneNumber(final String telephoneNumber);
+import static org.junit.Assert.assertEquals;
 
-    SmsSentLog findByDlrNumber(final String dlrNumber);
+public final class TwilioCallBackErrorCodeTest {
+    private static void assertNoChange(final String errorCode) {
+        assertEquals(errorCode, TwilioCallBackErrorCode.createString(errorCode));
+    }
+
+    @Test
+    public void testUnknownErrorCode() {
+        assertNoChange(null);
+        assertNoChange("xyz");
+        assertNoChange("12334");
+    }
+
+    @Test
+    public void testKnownErrorCode() {
+        assertEquals("30006 - Landline or unreachable carrier", TwilioCallBackErrorCode.createString("30006"));
+        assertEquals("30007 - Carrier violation", TwilioCallBackErrorCode.createString("30007"));
+    }
 }

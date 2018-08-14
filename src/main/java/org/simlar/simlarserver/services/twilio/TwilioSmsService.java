@@ -25,12 +25,14 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.json.twilio.MessageResponse;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.utils.TwilioCallBackErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
@@ -129,5 +131,23 @@ public final class TwilioSmsService {
             smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
+    }
+
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
+    public void handleDeliveryReport(@SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
+        final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(messageSid);
+        if (smsSentLog == null) {
+            LOGGER.severe("no db entry");
+            return;
+        }
+
+        if (!StringUtils.equals(smsSentLog.getTelephoneNumber(), telephoneNumber)) {
+            LOGGER.warning("delivery report with unequal telephone numbers: saved='" + smsSentLog.getTelephoneNumber() + "' received='" + telephoneNumber + '\'');
+        }
+
+        smsSentLog.setDlrTimestampToNow();
+        smsSentLog.setTwilioStatus(messageStatus);
+        smsSentLog.setTwilioError(TwilioCallBackErrorCode.createString(errorCode));
+        smsSentLogRepository.save(smsSentLog);
     }
 }
