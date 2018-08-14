@@ -7,4 +7,12 @@
         <cpe>/a:apple:java:1.4</cpe>
         <cve>CVE-2010-0538</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+        This inspection is meant for the npm module not the java one.
+        ]]></notes>
+        <filePath regex="true">.*/mariadb-java-client-2.2.5.jar</filePath>
+        <cpe>cpe:/a:mariadb:mariadb:2.2.5</cpe>
+        <cve>CVE-2017-16046</cve>
+    </suppress>
 </suppressions>
