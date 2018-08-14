@@ -73,8 +73,7 @@ final class StartUpService {
                 "', dataSource='" + datasourceUrl +
                 "' and version='" + settingsService.getVersion() + '\'');
 
-        if (event.getApplicationContext() instanceof WebApplicationContext && ("create-drop".equals(hibernateDdlAuto) || "org.h2.Driver".equals(datasourceDriver)))
-        {
+        if (event.getApplicationContext() instanceof WebApplicationContext && ("create-drop".equals(hibernateDdlAuto) || "org.h2.Driver".equals(datasourceDriver))) {
             createTestData();
         }
     }

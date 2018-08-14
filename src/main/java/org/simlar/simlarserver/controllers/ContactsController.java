@@ -39,8 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 final class ContactsController {
-    public static final String      REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
-    private static final Logger     LOGGER                      = Logger.getLogger(ContactsController.class.getName());
+    public static final String  REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
+    private static final Logger LOGGER                      = Logger.getLogger(ContactsController.class.getName());
 
     private final SubscriberService subscriberService;
 

@@ -37,8 +37,8 @@ public final class TestUser {
     private final String passwordHash;
 
     private TestUser(final String simlarId, final String password, final String passwordHash) {
-        this.simlarId = simlarId;
-        this.password = password;
+        this.simlarId     = simlarId;
+        this.password     = password;
         this.passwordHash = passwordHash;
     }
 

@@ -21,6 +21,8 @@
 
 package org.simlar.simlarserver.xml;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -43,8 +45,9 @@ public final class XmlError {
         return id;
     }
 
+    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
     @SuppressWarnings("unused")
-    public void setId(final int id) {
+    private void setId(final int id) {
         this.id = id;
     }
 
@@ -54,8 +57,9 @@ public final class XmlError {
         return message;
     }
 
+    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
     @SuppressWarnings("unused")
-    public void setMessage(final String message) {
+    private void setMessage(final String message) {
         this.message = message;
     }
 }

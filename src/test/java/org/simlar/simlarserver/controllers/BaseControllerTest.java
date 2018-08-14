@@ -31,34 +31,33 @@ import org.springframework.web.client.RestTemplate;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.StringReader;
-import java.util.logging.Logger;
+
+import static org.junit.Assert.assertNotNull;
 
 @SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest(randomPort = true)
 public class BaseControllerTest {
-    private static final Logger LOGGER = Logger.getLogger(BaseControllerTest.class.getName());
-
     @SuppressWarnings("CanBeFinal")
     @Value("${local.server.port}")
-    int port;
+    private int port;
 
     <T> T postRequest(final Class<T> responseClass, final String url, final MultiValueMap<String, String> parameter) {
-        final String result = new RestTemplate().postForObject("http://localhost:" + port + url, parameter,
+        final String result = new RestTemplate().postForObject(getBaseUrl() + url, parameter,
                 String.class);
 
-        if (result == null) {
-            return null;
-        }
+        assertNotNull(result);
 
         try {
             //noinspection unchecked
             return (T) JAXBContext.newInstance(responseClass).createUnmarshaller().unmarshal(new StringReader(result));
         } catch (final JAXBException e) {
-            LOGGER.severe("JAXBException: for postResult: " + result);
-            return null;
+            throw new AssertionError("JAXBException: for postResult: " + result, e);
         } catch (final ClassCastException e) {
-            LOGGER.severe("ClassCastException for postResult: " + result);
-            return null;
+            throw new AssertionError("ClassCastException: for postResult: " + result, e);
         }
+    }
+
+    String getBaseUrl() {
+        return "http://localhost:" + port;
     }
 }

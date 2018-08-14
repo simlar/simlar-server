@@ -21,6 +21,8 @@
 
 package org.simlar.simlarserver.xml;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -43,8 +45,9 @@ public final class XmlSuccessPushNotification {
         return deviceType;
     }
 
+    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
     @SuppressWarnings("unused")
-    public void setDeviceType(final int deviceType) {
+    private void setDeviceType(final int deviceType) {
         this.deviceType = deviceType;
     }
 
@@ -53,8 +56,9 @@ public final class XmlSuccessPushNotification {
         return pushId;
     }
 
+    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
     @SuppressWarnings("unused")
-    public void setPushId(final String pushId) {
+    private void setPushId(final String pushId) {
         this.pushId = pushId;
     }
 }

@@ -32,26 +32,25 @@ import org.springframework.web.client.RestTemplate;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.StringReader;
-import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class ErrorControllerTest extends BaseControllerTest {
-    private static final Logger LOGGER = Logger.getLogger(ErrorControllerTest.class.getName());
-
-    private boolean testHttpPost(final String requestUrl, final MultiValueMap<String, String> parameter) {
+    private void testHttpPost(final String requestUrl, final MultiValueMap<String, String> parameter) {
         final XmlError xmlError = postRequest(XmlError.class, requestUrl, parameter);
-        return xmlError != null && xmlError.getId() == 1;
+        assertNotNull(xmlError);
+        assertEquals(1, xmlError.getId());
     }
 
     @Test
     public void httpPostRequest() {
-        assertTrue(testHttpPost("", null));
-        assertTrue(testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS + 'x', null));
-        assertTrue(testHttpPost("index", null));
-        assertTrue(testHttpPost("index.html", null));
-        assertTrue(testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS, null));
+        testHttpPost("", null);
+        testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS + 'x', null);
+        testHttpPost("index", null);
+        testHttpPost("index.html", null);
+        testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS, null);
     }
 
     @Test
@@ -59,31 +58,31 @@ public final class ErrorControllerTest extends BaseControllerTest {
         final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
         parameter.add("login", "007");
         parameter.add("password", "007");
-        assertTrue(testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter));
+        testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter);
     }
 
-    private boolean testHttpGet(final String requestUrl) {
-        final String result = new RestTemplate().getForObject("http://localhost:" + port + '/' + requestUrl, String.class);
+    private void testHttpGet(final String requestUrl) {
+        final String result = new RestTemplate().getForObject(getBaseUrl() + requestUrl, String.class);
         assertNotNull(result);
 
         try {
             final XmlError xmlError = (XmlError)JAXBContext.newInstance(XmlError.class).createUnmarshaller().unmarshal(new StringReader(result));
-            return xmlError != null && xmlError.getId() == 1;
+            assertNotNull(xmlError);
+            assertEquals(1, xmlError.getId());
         } catch (final JAXBException e) {
-            LOGGER.severe("JAXBException: for postResult: " + result);
-            return false;
+            throw new AssertionError("JAXBException: for postResult: " + result, e);
         } catch (final ClassCastException e) {
-            LOGGER.severe("ClassCastException for postResult: " + result);
-            return false;
+            throw new AssertionError("ClassCastException: for postResult: " + result, e);
         }
     }
 
     @Test
     public void httpGetRequest() {
-        assertTrue(testHttpGet(""));
-        assertTrue(testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS + "x"));
-        assertTrue(testHttpGet("index"));
-        assertTrue(testHttpGet("index.html"));
-        assertTrue(testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS));
+        testHttpGet("");
+        testHttpGet("/");
+        testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS + "x");
+        testHttpGet("/index");
+        testHttpGet("/index.html");
+        testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS);
     }
 }
