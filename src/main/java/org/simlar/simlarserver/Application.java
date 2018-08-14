@@ -34,7 +34,7 @@ import org.springframework.context.annotation.PropertySource;
 public class Application extends SpringBootServletInitializer {
 
     @Override
-    protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
+    protected final SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
         return builder.sources(Application.class);
     }
 

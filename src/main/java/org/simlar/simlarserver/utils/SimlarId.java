@@ -21,18 +21,20 @@
 
 package org.simlar.simlarserver.utils;
 
-import org.springframework.util.StringUtils;
-
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ClassWithTooManyDependents")
 public final class SimlarId {
+    private static final Pattern REGEX_PATTERN_SIMLAR_ID = Pattern.compile("\\*\\d+\\*");
 
     private final String simlarId;
 
@@ -52,19 +54,22 @@ public final class SimlarId {
         return simlarId;
     }
 
-    public static boolean check(final String str) {
-        return StringUtils.hasText(str) && str.matches("\\*\\d+\\*");
+    public static boolean check(final CharSequence input) {
+        return input != null && REGEX_PATTERN_SIMLAR_ID.matcher(input).matches();
     }
 
     public static List<SimlarId> parsePipeSeparatedSimlarIds(final String str) {
-        final LinkedHashSet<SimlarId> simlarIds = new LinkedHashSet<>();
+        if (str == null) {
+            return Collections.emptyList();
+        }
 
-        if (str != null) {
-            for (final String entry : str.split("\\|")) {
-                final SimlarId simlarId = create(entry.trim());
-                if (simlarId != null) {
-                    simlarIds.add(simlarId);
-                }
+        final String[] entries = str.split("\\|");
+        final LinkedHashSet<SimlarId> simlarIds = new LinkedHashSet<>(entries.length);
+
+        for (final String entry : entries) {
+            final SimlarId simlarId = create(entry.trim());
+            if (simlarId != null) {
+                simlarIds.add(simlarId);
             }
         }
 
@@ -73,7 +78,7 @@ public final class SimlarId {
 
     public static List<SimlarId> sortAndUnifySimlarIds(final Collection<SimlarId> simlarIds) {
         if (simlarIds == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         final Collator collator = Collator.getInstance(new Locale("en","US"));

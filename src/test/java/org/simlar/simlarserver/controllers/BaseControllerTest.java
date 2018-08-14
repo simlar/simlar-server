@@ -41,7 +41,7 @@ public class BaseControllerTest {
     @Value("${local.server.port}")
     private int port;
 
-    <T> T postRequest(final Class<T> responseClass, final String url, final MultiValueMap<String, String> parameter) {
+    final <T> T postRequest(final Class<T> responseClass, final String url, final MultiValueMap<String, String> parameter) {
         final String result = new RestTemplate().postForObject(getBaseUrl() + url, parameter,
                 String.class);
 
@@ -57,7 +57,7 @@ public class BaseControllerTest {
         }
     }
 
-    String getBaseUrl() {
+    final String getBaseUrl() {
         return "http://localhost:" + port;
     }
 }

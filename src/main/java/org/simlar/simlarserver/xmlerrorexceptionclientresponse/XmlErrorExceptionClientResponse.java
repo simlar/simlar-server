@@ -43,7 +43,7 @@ public enum XmlErrorExceptionClientResponse {
     private final int id;
     private final String message;
 
-    private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP = new HashMap<>();
+    private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP = new HashMap<>(XmlErrorExceptionClientResponse.values().length);
     static {
         for (final XmlErrorExceptionClientResponse type : XmlErrorExceptionClientResponse.values()) {
             EXCEPTION_CLIENT_RESPONSE_MAP.put(type.exceptionClass, type);

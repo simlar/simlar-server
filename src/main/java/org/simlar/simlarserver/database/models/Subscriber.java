@@ -82,7 +82,7 @@ public class Subscriber {
         this.ha1b = ha1b;
     }
 
-    public void setId(final Long id) {
+    public final void setId(final Long id) {
         this.id = id;
     }
 }

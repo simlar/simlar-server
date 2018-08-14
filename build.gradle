@@ -70,6 +70,13 @@ dependencies {
     findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.6.1")
 }
 
+//noinspection GroovyMissingReturnStatement
+test {
+    testLogging {
+        events "PASSED", "FAILED", "SKIPPED"
+    }
+}
+
 findbugs {
     effort = "max"
     reportLevel = "low"

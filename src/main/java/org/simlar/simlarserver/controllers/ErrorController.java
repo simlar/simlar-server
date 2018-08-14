@@ -43,31 +43,23 @@ final class ErrorController {
     private static final Logger LOGGER = Logger.getLogger(ErrorController.class.getName());
 
     private static void log(final Level level, final String prefix, final HttpServletRequest request, final Exception exception) {
-        final StringBuilder message = new StringBuilder();
-        message.append(prefix);
+        final String message = prefix + (request == null ? " no request object" :
+                " URL='" + request.getRequestURL() + "' IP='" + request.getRemoteAddr() + "' User-Agent='" + request.getHeader("User-Agent") + '\'');
 
-        if (request == null) {
-            message.append(" no request object");
-        } else {
-            message.append(" URL='").append(request.getRequestURL()).append('\'');
-            message.append(" IP='").append(request.getRemoteAddr()).append('\'');
-            message.append(" User-Agent='").append(request.getHeader("User-Agent")).append('\'');
-        }
-
-        LOGGER.log(level, message.toString(), exception);
+        LOGGER.log(level, message, exception);
     }
 
     @RequestMapping(path = "*", produces = MediaType.APPLICATION_XML_VALUE)
-    public XmlError handle(final HttpServletRequest request) {
+    public static XmlError handle(final HttpServletRequest request) {
         log(Level.WARNING, "Request Error:", request, null);
         return createXmlError(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
-    private XmlError createXmlError(final XmlErrorExceptionClientResponse response) {
+    private static XmlError createXmlError(final XmlErrorExceptionClientResponse response) {
         return new XmlError(response.getId(), response.getMessage());
     }
 
-    private String createXmlErrorString(final XmlErrorExceptionClientResponse response) {
+    private static String createXmlErrorString(final XmlErrorExceptionClientResponse response) {
         final StringWriter writer = new StringWriter();
 
         try {
@@ -81,7 +73,7 @@ final class ErrorController {
 
     // in order to handle html request errors we have to return a String here
     @ExceptionHandler(XmlErrorException.class)
-    public String handleXmlErrorException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
+    public static String handleXmlErrorException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
         final XmlErrorExceptionClientResponse response = XmlErrorExceptionClientResponse.fromException(xmlErrorException);
         if (response == null) {
             log(Level.SEVERE, "XmlErrorException with no XmlErrorExceptionClientResponse found for: " + xmlErrorException.getClass().getSimpleName(), request, xmlErrorException);
@@ -94,7 +86,7 @@ final class ErrorController {
 
     // in order to handle html request errors we have to return a String here
     @ExceptionHandler(Exception.class)
-    public String handleException(final HttpServletRequest request, final Exception exception) {
+    public static String handleException(final HttpServletRequest request, final Exception exception) {
         log(Level.SEVERE, "unhandled exception:", request, exception);
 
         return createXmlErrorString(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);

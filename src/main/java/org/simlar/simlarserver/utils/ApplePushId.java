@@ -22,9 +22,11 @@
 package org.simlar.simlarserver.utils;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.springframework.util.StringUtils;
+
+import java.util.regex.Pattern;
 
 public final class ApplePushId {
+    private static final Pattern REGEX_PATTERN_PUSH_ID = Pattern.compile("^[0-9a-fA-F]{64}$");
 
     private final String pushId;
 
@@ -45,7 +47,7 @@ public final class ApplePushId {
     }
 
     @SuppressFBWarnings("OPM_OVERLY_PERMISSIVE_METHOD") // false positive
-    public static boolean check(final String str) {
-        return StringUtils.hasText(str) && str.matches("^[0-9a-fA-F]{64}$");
+    public static boolean check(final CharSequence input) {
+        return input != null && REGEX_PATTERN_PUSH_ID.matcher(input).matches();
     }
 }

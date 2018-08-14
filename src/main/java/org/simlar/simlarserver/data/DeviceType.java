@@ -38,7 +38,7 @@ public enum DeviceType {
     }
 
 
-    private static final Map<Integer, DeviceType> INTEGER_DEVICE_TYPE_MAP = new HashMap<>();
+    private static final Map<Integer, DeviceType> INTEGER_DEVICE_TYPE_MAP = new HashMap<>(DeviceType.values().length);
     static {
         for (final DeviceType type : DeviceType.values()) {
             INTEGER_DEVICE_TYPE_MAP.put(type.toInt(), type);
