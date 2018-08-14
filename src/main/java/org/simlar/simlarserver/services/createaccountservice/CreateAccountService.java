@@ -189,10 +189,10 @@ public final class CreateAccountService {
 
         final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), Instant.now()).getSeconds();
         if (secondsSinceRequest < settingsService.getAccountCreationCallDelaySecondsMin()) {
-            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since Request: " + secondsSinceRequest + 's');
+            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since request: " + secondsSinceRequest + 's');
         }
         if (secondsSinceRequest > settingsService.getAccountCreationCallDelaySecondsMax()) {
-            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since Request: " + secondsSinceRequest + 's');
+            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since request: " + secondsSinceRequest + 's');
         }
 
         if (!smsService.call(telephoneNumber, CallText.format(dbEntry.getRegistrationCode()))) {
