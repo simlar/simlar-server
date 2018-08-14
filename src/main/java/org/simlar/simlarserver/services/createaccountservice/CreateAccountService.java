@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.services.createaccountservice;
 
 import lombok.extern.java.Log;
+import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
@@ -33,6 +34,7 @@ import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.utils.SmsText;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
@@ -43,6 +45,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
@@ -78,10 +81,30 @@ public final class CreateAccountService {
             throw new XmlErrorInvalidTelephoneNumberException("libphonenumber invalidates telephone number: " + telephoneNumber);
         }
 
+        if (StringUtils.isEmpty(ip)) {
+            throw new XmlErrorNoIpException("request account creation with empty ip for telephone number:  " + telephoneNumber);
+        }
+
         final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip);
         final int requestTries = dbEntry.getRequestTries();
         if (requestTries > settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay()) {
             throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTries + " for number: " + telephoneNumber);
+        }
+
+        final Timestamp anHourAgo = Timestamp.from(Instant.now().minus(Duration.ofHours(1)));
+        final int requestTriesPerIp = accountCreationRepository.sumRequestTries(ip, anHourAgo);
+        if (requestTriesPerIp > settingsService.getAccountCreationMaxRequestsPerIpPerHour()) {
+            throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTriesPerIp + " for ip: " + ip);
+        }
+
+        final int requestTriesTotal = accountCreationRepository.sumRequestTries(anHourAgo);
+        if (requestTriesTotal > settingsService.getAccountCreationMaxRequestsTotalPerHour()) {
+            throw new XmlErrorTooManyRequestTriesException("too many total create account requests: " + requestTriesTotal + " within one hour");
+        }
+
+        final int requestTriesTotalDay = accountCreationRepository.sumRequestTries(Timestamp.from(Instant.now().minus(Duration.ofDays(1))));
+        if (requestTriesTotalDay > settingsService.getAccountCreationMaxRequestsTotalPerDay()) {
+            throw new XmlErrorTooManyRequestTriesException("too many total create account requests: " + requestTriesTotalDay + " within one day");
         }
 
         dbEntry.setRegistrationCode(Password.generateRegistrationCode());
