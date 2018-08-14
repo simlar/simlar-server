@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Simlar Authors.
+ * Copyright (C) 2017 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -21,11 +21,10 @@
 
 package org.simlar.simlarserver.xmlerrorexceptions;
 
-@SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithoutAbstractMethods", "ClassWithTooManyDependents"})
-public abstract class XmlErrorException extends RuntimeException {
+public final class XmlErrorNoSimlarIdException extends XmlErrorException {
     private static final long serialVersionUID = 1L;
 
-    protected XmlErrorException(final String message) {
+    public XmlErrorNoSimlarIdException(final String message) {
         super(message);
     }
 }

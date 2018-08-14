@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
+import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
@@ -34,12 +35,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
 @RunWith(SpringRunner.class)
 public final class CreateAccountControllerTest extends BaseControllerTest {
@@ -49,6 +52,9 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
     @Autowired
     private AccountCreationRequestCountRepository accountCreationRepository;
+
+    @Autowired
+    private SettingsService settingsService;
 
     @SuppressWarnings("MethodWithTooManyParameters")
     private <T> T postCreateAccount(final Class<T> responseClass, final boolean callSmsService, final boolean sendSmsResult, final String command, final String telephoneNumber, final String smsText) {
@@ -111,5 +117,81 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     public void testRequestWithInvalidTelephoneNumber() {
         assertPostCreateAccountError(22, false, CreateAccountController.COMMAND_REQUEST, "NO-NUMBER", "android-de");
         assertPostCreateAccountError(22, false, CreateAccountController.COMMAND_REQUEST, "+49163123456", "android-de");
+    }
+
+    private <T> T postConfirmAccount(final Class<T> responseClass, final String command, final String simlarId, final String registrationCode) {
+        return postRequest(responseClass, CreateAccountController.REQUEST_PATH, createParameters(new String[][] {
+                { "command", command },
+                { "simlarId", simlarId },
+                { "registrationCode", registrationCode }
+        }));
+    }
+
+    private void assertPostConfirmAccountError(final int expectedErrorId, final String command, final String simlarId, final String registrationCode) {
+        final XmlError response = postConfirmAccount(XmlError.class, command, simlarId, registrationCode);
+        assertNotNull(response);
+        assertEquals(expectedErrorId, response.getId());
+    }
+
+    @Test
+    public void testConfirmWithWrongCommand() {
+        assertPostConfirmAccountError(1, "xyz", "*15005550006*", "123456");
+        assertPostConfirmAccountError(1, "request", "*15005550006*", "234561");
+        assertPostConfirmAccountError(1, null, "*15005550006*", "345612");
+    }
+
+    @Test
+    public void testConfirmWithNoSimlarId() {
+        assertPostConfirmAccountError(27, "confirm", null, "123456");
+        assertPostConfirmAccountError(27, "confirm", "*as005550006*", "234561");
+        assertPostConfirmAccountError(27, "confirm", "*1500555000..", "345612");
+    }
+
+    @Test
+    public void testConfirmWithNoRegistrationCode() {
+        assertPostConfirmAccountError(28, "confirm", "*15005550006*", null);
+        assertPostConfirmAccountError(28, "confirm", "*15005550006*", "23456");
+        assertPostConfirmAccountError(28, "confirm", "*15005550006*", "2345618");
+        assertPostConfirmAccountError(28, "confirm", "*15005550006*", "345x12");
+    }
+
+    @Test
+    public void testConfirmWithNotRequestedSimlarId() {
+        final String simlarId = "*42002300001*";
+
+        assertNull(accountCreationRepository.findBySimlarId(simlarId));
+        assertPostConfirmAccountError(27, CreateAccountController.COMMAND_CONFIRM, simlarId, "234561");
+    }
+
+    @Test
+    public void testConfirmWithWrongRegistrationCode() {
+        final String simlarId = "*42002300002*";
+
+        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", "627130", 1, 0, "127.0.0.1");
+        accountCreationRepository.save(before);
+        assertPostConfirmAccountError(26, CreateAccountController.COMMAND_CONFIRM, simlarId, "234561");
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
+        assertEquals(before.getConfirmTries() + 1, after.getConfirmTries());
+        assertEquals(before.getRequestTries(), after.getRequestTries());
+        assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
+        assertEquals(before.getIp(), after.getIp());
+        assertEquals(before.getPassword(), after.getPassword());
+    }
+
+
+    @Test
+    public void testConfirmWithTooManyRetries() {
+        final String simlarId = "*42002300003*";
+        final String registrationCode = "432516";
+
+        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", registrationCode, 1, settingsService.getAccountCreationMaxConfirms() - 1, "127.0.0.1");
+        accountCreationRepository.save(before);
+        assertPostConfirmAccountError(25, CreateAccountController.COMMAND_CONFIRM, simlarId, registrationCode);
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
+        assertEquals(before.getConfirmTries() + 1, after.getConfirmTries());
+        assertEquals(before.getRequestTries(), after.getRequestTries());
+        assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
+        assertEquals(before.getIp(), after.getIp());
+        assertEquals(before.getPassword(), after.getPassword());
     }
 }

@@ -35,7 +35,7 @@ public final class LibPhoneNumber {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
-    public static boolean isValid(final String telephoneNumber) {
+    public static boolean isValid(final CharSequence telephoneNumber) {
         try {
             final PhoneNumberUtil util = PhoneNumberUtil.getInstance();
             final Phonenumber.PhoneNumber pn = util.parse(telephoneNumber, null);
