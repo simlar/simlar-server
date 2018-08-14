@@ -29,7 +29,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Timestamp;
 import java.time.Instant;
 
 @Data
@@ -43,7 +42,7 @@ public final class ContactsRequestCount {
     private String simlarId;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
-    private Timestamp timestamp;
+    private Instant timestamp;
 
     @Column(nullable = false, length = 64)
     private String hash;
@@ -53,18 +52,9 @@ public final class ContactsRequestCount {
 
     public ContactsRequestCount(final SimlarId simlarId, final Instant timestamp, final String hash, final int count) {
         this.simlarId = simlarId.get();
-        this.timestamp = Timestamp.from(timestamp);
+        this.timestamp = timestamp;
         this.hash = hash;
         this.count = count;
-    }
-
-    @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
-    public Instant getTimestamp() {
-        return timestamp.toInstant();
-    }
-
-    public void setTimestamp(final Instant timestamp) {
-        this.timestamp = Timestamp.from(timestamp);
     }
 
     public void incrementCount() {
