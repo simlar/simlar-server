@@ -102,5 +102,6 @@ processResources {
 idea {
     module {
         excludeDirs += file('ides')
+        excludeDirs += file('examples')
     }
 }
