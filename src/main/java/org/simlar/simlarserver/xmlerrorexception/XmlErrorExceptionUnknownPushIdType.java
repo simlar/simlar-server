@@ -19,18 +19,10 @@
  *
  */
 
-package org.simlar.simlarserver.xmlexception;
+package org.simlar.simlarserver.xmlerrorexception;
 
-public final class XmlException extends Exception {
-    private final XmlExceptionType type;
-
-    @SuppressWarnings("SameParameterValue") // TODO: remove this, once we implement more XmlExceptionTypes
-    public XmlException(final XmlExceptionType type, final String message) {
+public final class XmlErrorExceptionUnknownPushIdType extends XmlErrorException {
+    public XmlErrorExceptionUnknownPushIdType(final String message) {
         super(message);
-        this.type = type;
-    }
-
-    public XmlExceptionType getType() {
-        return type;
     }
 }

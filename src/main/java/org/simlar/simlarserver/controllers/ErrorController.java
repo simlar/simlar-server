@@ -22,8 +22,8 @@
 package org.simlar.simlarserver.controllers;
 
 import org.simlar.simlarserver.xml.XmlError;
-import org.simlar.simlarserver.xmlexception.XmlException;
-import org.simlar.simlarserver.xmlexception.XmlExceptionType;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
+import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorExceptionClientResponse;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -59,18 +59,18 @@ final class ErrorController {
     @ResponseBody
     public XmlError handle(final HttpServletRequest request) {
         log(Level.WARNING, "Request Error:", request, null);
-        return createXmlError(XmlExceptionType.UNKNOWN_STRUCTURE);
+        return createXmlError(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
-    private XmlError createXmlError(final XmlExceptionType type) {
-        return new XmlError(type.getId(), type.getMessage());
+    private XmlError createXmlError(final XmlErrorExceptionClientResponse response) {
+        return new XmlError(response.getId(), response.getMessage());
     }
 
-    private String createXmlErrorString(final XmlExceptionType type) {
+    private String createXmlErrorString(final XmlErrorExceptionClientResponse response) {
         final StringWriter writer = new StringWriter();
 
         try {
-            JAXBContext.newInstance(XmlError.class).createMarshaller().marshal(createXmlError(type), writer);
+            JAXBContext.newInstance(XmlError.class).createMarshaller().marshal(createXmlError(response), writer);
         } catch (final JAXBException e) {
             LOGGER.log(Level.SEVERE, "xmlParse error: ", e);
         }
@@ -79,17 +79,17 @@ final class ErrorController {
     }
 
     // in order to handle html request errors we have to return a String here
-    @ExceptionHandler(XmlException.class)
+    @ExceptionHandler(XmlErrorException.class)
     @ResponseBody
-    public String handleException(final HttpServletRequest request, final XmlException xmlException) {
-        final XmlExceptionType type = xmlException.getType();
-        if (type == null) {
-            log(Level.SEVERE, "XmlException with no type", request, xmlException);
+    public String handleException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
+        final XmlErrorExceptionClientResponse response = XmlErrorExceptionClientResponse.fromException(xmlErrorException);
+        if (response == null) {
+            log(Level.SEVERE, "XmlErrorException with no XmlErrorExceptionClientResponse found for: " + xmlErrorException.getClass().getSimpleName(), request, xmlErrorException);
         } else {
-            log(Level.WARNING, "XmlError(" + type.getId() + ") " + type.getMessage() + ": " + xmlException.getMessage(), request, null);
+            log(Level.WARNING, "XmlError(" + response.getId() + ") " + response.getMessage() + ": " + xmlErrorException.getMessage(), request, null);
         }
 
-        return createXmlErrorString(xmlException.getType());
+        return createXmlErrorString(response);
     }
 
     // in order to handle html request errors we have to return a String here
@@ -98,6 +98,6 @@ final class ErrorController {
     public String handleException(final HttpServletRequest request, final Exception exception) {
         log(Level.SEVERE, "unhandled exception:", request, exception);
 
-        return createXmlErrorString(XmlExceptionType.UNKNOWN_STRUCTURE);
+        return createXmlErrorString(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 }

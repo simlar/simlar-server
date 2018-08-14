@@ -35,7 +35,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "subscriber",
         uniqueConstraints = { @UniqueConstraint(name = "account_idx", columnNames = { "username", "domain" }) },
-        indexes = {@Index(name = "username_idx",  columnList="username", unique = false) })
+        indexes = {@Index(name = "username_idx",  columnList="username") })
 public class Subscriber {
 
     @Id
@@ -61,7 +61,7 @@ public class Subscriber {
     @Column(nullable = false, length = 64)
     private String ha1b;
 
-    @Column(nullable = true, length = 64)
+    @Column(length = 64)
     private String rpid;
 
     @SuppressWarnings("unused")

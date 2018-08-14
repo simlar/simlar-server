@@ -23,11 +23,7 @@ package org.simlar.simlarserver.controllers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simlar.simlarserver.Application;
 import org.simlar.simlarserver.xml.XmlError;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -41,29 +37,12 @@ import java.util.logging.Logger;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebIntegrationTest(randomPort = true)
-public final class ErrorControllerTest {
+public final class ErrorControllerTest extends BaseControllerTest {
     private static final Logger LOGGER = Logger.getLogger(ErrorControllerTest.class.getName());
 
-    @Value("${local.server.port}")
-    private int                 port;
-
-    private boolean testHttpPost(final String requestUrl, final MultiValueMap parameter) {
-        final String result = new RestTemplate().postForObject("http://localhost:" + port + '/' + requestUrl, parameter, String.class);
-        assertNotNull(result);
-
-
-        try {
-            final XmlError xmlError = (XmlError)JAXBContext.newInstance(XmlError.class).createUnmarshaller().unmarshal(new StringReader(result));
-            return xmlError != null && xmlError.getId() == 1;
-        } catch (final JAXBException e) {
-            LOGGER.severe("JAXBException: for postResult: " + result);
-            return false;
-        } catch (final ClassCastException e) {
-            LOGGER.severe("ClassCastException for postResult: " + result);
-            return false;
-        }
+    private boolean testHttpPost(final String requestUrl, final MultiValueMap<String, String> parameter) {
+        final XmlError xmlError = postRequest(XmlError.class, requestUrl, parameter);
+        return xmlError != null && xmlError.getId() == 1;
     }
 
     @Test

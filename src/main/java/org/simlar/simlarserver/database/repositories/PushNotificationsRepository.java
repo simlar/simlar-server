@@ -19,26 +19,12 @@
  *
  */
 
-package org.simlar.simlarserver.xmlexception;
+package org.simlar.simlarserver.database.repositories;
 
-public enum XmlExceptionType {
-        UNKNOWN_STRUCTURE(1,  "unknown structure"),
-        WRONG_CREDENTIALS(10, "wrong credentials")
-    ;
+import org.simlar.simlarserver.database.models.SimlarPushNotification;
+import org.springframework.data.repository.CrudRepository;
 
-    private final int id;
-    private final String message;
-
-    XmlExceptionType(final int id, final String message) {
-        this.id = id;
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public int getId() {
-        return id;
-    }
+@SuppressWarnings({"SameParameterValue", "unused"})
+public interface PushNotificationsRepository extends CrudRepository<SimlarPushNotification, String> {
+    SimlarPushNotification findBySimlarId(final String simlarId);
 }
