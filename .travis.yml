@@ -7,3 +7,8 @@ before_install:
 
 install:
   - ./gradlew clean bootWar
+
+script:
+  - ./gradlew build
+  - ./gradlew dependencyUpdates
+  - ./gradlew dependencyCheckAnalyze
