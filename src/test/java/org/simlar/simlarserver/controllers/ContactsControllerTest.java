@@ -47,7 +47,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest(randomPort = true)
 public final class ContactsControllerTest {
-    private static final Logger logger                   = Logger.getLogger(ContactsControllerTest.class.getName());
+    private static final Logger LOGGER                   = Logger.getLogger(ContactsControllerTest.class.getName());
 
     private static final String SIMLAR_ID1               = "*0001*";
     private static final String SIMLAR_ID1_PASSWORD      = "x1fg6hk78";
@@ -79,10 +79,10 @@ public final class ContactsControllerTest {
         try {
             return (T) JAXBContext.newInstance(responseClass).createUnmarshaller().unmarshal(new StringReader(result));
         } catch (final JAXBException e) {
-            logger.severe("JAXBException: for postResult: " + result);
+            LOGGER.severe("JAXBException: for postResult: " + result);
             return null;
         } catch (final ClassCastException e) {
-            logger.severe("ClassCastException for postResult: " + result);
+            LOGGER.severe("ClassCastException for postResult: " + result);
             return null;
         }
     }

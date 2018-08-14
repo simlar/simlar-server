@@ -21,11 +21,15 @@
 
 package org.simlar.simlarserver.utils;
 
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public final class SimlarId {
+
     private final String simlarId;
 
     private SimlarId(final String simlarId) {
@@ -45,11 +49,11 @@ public final class SimlarId {
     }
 
     public static boolean check(final String str) {
-        return str != null && !str.isEmpty() && str.matches("\\*\\d+\\*");
+        return StringUtils.hasText(str) && str.matches("\\*\\d+\\*");
     }
 
-    public static Set<SimlarId> parsePipeSeparatedSimlarIds(final String str) {
-        final Set<SimlarId> simlarIds = new LinkedHashSet<>();
+    public static List<SimlarId> parsePipeSeparatedSimlarIds(final String str) {
+        final LinkedHashSet<SimlarId> simlarIds = new LinkedHashSet<>();
 
         if (str != null) {
             for (final String entry : str.split("\\|")) {
@@ -60,7 +64,7 @@ public final class SimlarId {
             }
         }
 
-        return simlarIds;
+        return new ArrayList<>(simlarIds);
     }
 
     @Override
@@ -72,5 +76,11 @@ public final class SimlarId {
     @Override
     public int hashCode() {
         return Objects.hash(simlarId);
+    }
+
+
+    @Override
+    public String toString() {
+        return simlarId;
     }
 }

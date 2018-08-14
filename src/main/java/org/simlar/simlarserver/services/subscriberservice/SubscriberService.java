@@ -30,11 +30,13 @@ import org.simlar.simlarserver.utils.Hash;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 @Component
 public final class SubscriberService {
     private static final String        DOMAIN = "";
-    private static final Logger        logger = Logger.getLogger(SubscriberService.class.getName());
+    private static final Logger        LOGGER = Logger.getLogger(SubscriberService.class.getName());
 
     private final SubscriberRepository subscriberRepository;
 
@@ -44,7 +46,7 @@ public final class SubscriberService {
     }
 
     public boolean save(final SimlarId simlarId, final String password) {
-        if (simlarId == null || password == null || password.isEmpty()) {
+        if (simlarId == null || StringUtils.isEmpty(password)) {
             return false;
         }
 
@@ -65,12 +67,12 @@ public final class SubscriberService {
 
     private Long findSubscriberId(final SimlarId simlarId) {
         final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), DOMAIN);
-        if (ids == null || ids.isEmpty()) {
+        if (CollectionUtils.isEmpty(ids)) {
             return null;
         }
 
         if (ids.size() != 1) {
-            logger.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
         return ids.get(0);
@@ -81,17 +83,17 @@ public final class SubscriberService {
             return false;
         }
 
-        if (ha1 == null || ha1.isEmpty()) {
+        if (StringUtils.isEmpty(ha1)) {
             return false;
         }
 
         final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId, DOMAIN);
-        if (savedHa1s == null || savedHa1s.isEmpty()) {
+        if (CollectionUtils.isEmpty(savedHa1s)) {
             return false;
         }
 
         if (savedHa1s.size() != 1) {
-            logger.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
         return ha1.equals(savedHa1s.get(0));

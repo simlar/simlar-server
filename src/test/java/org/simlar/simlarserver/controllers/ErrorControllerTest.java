@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest(randomPort = true)
 public final class ErrorControllerTest {
-    private static final Logger logger = Logger.getLogger(ErrorControllerTest.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ErrorControllerTest.class.getName());
 
     @Value("${local.server.port}")
     private int                 port;
@@ -53,10 +53,10 @@ public final class ErrorControllerTest {
             final XmlError xmlError = (XmlError)JAXBContext.newInstance(XmlError.class).createUnmarshaller().unmarshal(new StringReader(result));
             return xmlError != null && xmlError.getId() == 1;
         } catch (final JAXBException e) {
-            logger.severe("JAXBException: for postResult: " + result);
+            LOGGER.severe("JAXBException: for postResult: " + result);
             return false;
         } catch (final ClassCastException e) {
-            logger.severe("ClassCastException for postResult: " + result);
+            LOGGER.severe("ClassCastException for postResult: " + result);
             return false;
         }
     }
@@ -82,15 +82,14 @@ public final class ErrorControllerTest {
         final String result = new RestTemplate().getForObject("http://localhost:" + port + "/" + requestUrl, String.class);
         assertNotNull(result);
 
-
         try {
             final XmlError xmlError = (XmlError)JAXBContext.newInstance(XmlError.class).createUnmarshaller().unmarshal(new StringReader(result));
             return xmlError != null && xmlError.getId() == 1;
         } catch (final JAXBException e) {
-            logger.severe("JAXBException: for postResult: " + result);
+            LOGGER.severe("JAXBException: for postResult: " + result);
             return false;
         } catch (final ClassCastException e) {
-            logger.severe("ClassCastException for postResult: " + result);
+            LOGGER.severe("ClassCastException for postResult: " + result);
             return false;
         }
     }
