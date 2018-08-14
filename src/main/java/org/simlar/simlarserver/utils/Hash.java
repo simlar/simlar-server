@@ -20,7 +20,7 @@
 
 package org.simlar.simlarserver.utils;
 
-import org.springframework.util.DigestUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 
@@ -32,6 +32,6 @@ public final class Hash {
     }
 
     public static String md5(final String input) {
-        return input == null ? "" : DigestUtils.md5DigestAsHex(input.getBytes(StandardCharsets.UTF_8));
+        return input == null ? "" : DigestUtils.md5Hex(input.getBytes(StandardCharsets.UTF_8));
     }
 }

@@ -44,7 +44,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE")
         classpath("com.github.ben-manes:gradle-versions-plugin:0.13.0")
     }
 }
@@ -64,6 +64,7 @@ dependencies {
     compile("com.h2database:h2")
     compile("com.google.code.findbugs:annotations:3.0.1")
     compile("org.apache.commons:commons-lang3:3.5")
+    compile("commons-codec:commons-codec:1.10")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("junit:junit:4.12")
     runtime("mysql:mysql-connector-java:5.1.38") // this version is currently needed by spring
