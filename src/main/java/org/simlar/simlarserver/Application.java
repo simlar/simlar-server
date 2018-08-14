@@ -25,8 +25,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.context.annotation.PropertySource;
 
 @SuppressWarnings("NonFinalUtilityClass")
+@PropertySource(value = { "file:/etc/simlar-server/config.properties"}, ignoreResourceNotFound = true)
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
