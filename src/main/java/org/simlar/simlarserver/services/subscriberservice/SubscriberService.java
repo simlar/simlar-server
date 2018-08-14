@@ -64,6 +64,7 @@ public final class SubscriberService {
 
         //noinspection AnonymousInnerClass
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @SuppressWarnings("PMD.AccessorMethodGeneration")
             @Override
             protected void doInTransactionWithoutResult(@NonNull final TransactionStatus status) {
                 subscriber.setId(findSubscriberId(simlarId));

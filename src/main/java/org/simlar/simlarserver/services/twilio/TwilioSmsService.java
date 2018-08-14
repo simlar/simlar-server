@@ -72,7 +72,7 @@ public final class TwilioSmsService implements SmsService {
         parameters.add("To", telephoneNumber);
         parameters.add("From", twilioSettingsService.getSmsSourceNumber());
         //noinspection SwitchStatement
-        switch (type) {
+        switch (type) { // NOPMD.SwitchStmtsShouldHaveDefault
             case SMS:
                 parameters.add("StatusCallback", createCallbackBaseUrl() + REQUEST_PATH_DELIVERY);
                 parameters.add("Body", text);
