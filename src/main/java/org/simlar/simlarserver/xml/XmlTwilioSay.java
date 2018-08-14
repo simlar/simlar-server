@@ -22,8 +22,11 @@
 package org.simlar.simlarserver.xml;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -32,7 +35,10 @@ import javax.xml.bind.annotation.XmlValue;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class XmlTwilioSay {
     @XmlValue

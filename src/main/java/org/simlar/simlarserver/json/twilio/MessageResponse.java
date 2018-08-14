@@ -22,13 +22,14 @@
 package org.simlar.simlarserver.json.twilio;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 @SuppressWarnings("unused")
-@Data
-@Setter(AccessLevel.NONE)
+@Getter
+@ToString
+@EqualsAndHashCode
 public final class MessageResponse {
     private String sid;
     private String to;

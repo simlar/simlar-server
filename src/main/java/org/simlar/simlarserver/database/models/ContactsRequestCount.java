@@ -21,8 +21,11 @@
 
 package org.simlar.simlarserver.database.models;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.simlar.simlarserver.utils.SimlarId;
 
 import javax.persistence.Column;
@@ -31,8 +34,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
 
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "simlar_contacts_request_count")
 public final class ContactsRequestCount {

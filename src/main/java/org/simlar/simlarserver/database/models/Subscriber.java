@@ -22,8 +22,10 @@
 package org.simlar.simlarserver.database.models;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,8 +38,10 @@ import javax.persistence.UniqueConstraint;
 
 @SuppressWarnings("FieldCanBeLocal")
 @SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "subscriber",
        uniqueConstraints = @UniqueConstraint(name = "account_idx", columnNames = {"username", "domain"}),
