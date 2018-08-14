@@ -32,13 +32,12 @@ import org.simlar.simlarserver.xml.XmlContacts;
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 final class ContactsController {
     public static final String      REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
     private static final Logger     LOGGER                      = Logger.getLogger(ContactsController.class.getName());
@@ -68,7 +67,6 @@ final class ContactsController {
      *            error message or contact list in xml
      */
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    @ResponseBody
     public XmlContacts getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlErrorException {
         LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + '\"');
 

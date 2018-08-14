@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@SuppressWarnings("unused")
 @Component
 public class SettingsService {
     private final String domain;

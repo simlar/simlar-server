@@ -32,15 +32,14 @@ import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionUnknownApplePu
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionUnknownPushIdType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.logging.Logger;
 
-@Controller
+@RestController
 final class PushNotificationsController {
     public  static final String     REQUEST_URL_STORE_PUSH_ID = "/store-push-id.xml";
     private static final Logger     LOGGER                    = Logger.getLogger(PushNotificationsController.class.getName());
@@ -75,7 +74,6 @@ final class PushNotificationsController {
      */
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = REQUEST_URL_STORE_PUSH_ID, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    @ResponseBody
     public XmlSuccessPushNotification getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final int deviceType, @RequestParam final String pushId) throws XmlErrorException {
         LOGGER.info(REQUEST_URL_STORE_PUSH_ID + " requested with login=\"" + login + '\"');
 

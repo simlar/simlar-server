@@ -25,8 +25,10 @@ import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorExceptionClientResponse;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
@@ -36,7 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ControllerAdvice
-@Controller
+@RestController
 final class ErrorController {
     private static final Logger LOGGER = Logger.getLogger(ErrorController.class.getName());
 
@@ -56,7 +58,6 @@ final class ErrorController {
     }
 
     @RequestMapping(path = "*", produces = MediaType.APPLICATION_XML_VALUE)
-    @ResponseBody
     public XmlError handle(final HttpServletRequest request) {
         log(Level.WARNING, "Request Error:", request, null);
         return createXmlError(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
@@ -80,7 +81,6 @@ final class ErrorController {
 
     // in order to handle html request errors we have to return a String here
     @ExceptionHandler(XmlErrorException.class)
-    @ResponseBody
     public String handleException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
         final XmlErrorExceptionClientResponse response = XmlErrorExceptionClientResponse.fromException(xmlErrorException);
         if (response == null) {
@@ -94,7 +94,6 @@ final class ErrorController {
 
     // in order to handle html request errors we have to return a String here
     @ExceptionHandler(Exception.class)
-    @ResponseBody
     public String handleException(final HttpServletRequest request, final Exception exception) {
         log(Level.SEVERE, "unhandled exception:", request, exception);
 

@@ -25,13 +25,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.logging.Logger;
 
-@Controller
+@RestController
 final class VersionController {
     public static final String REQUEST_URL_VERSION = "/version";
     private static final Logger LOGGER = Logger.getLogger(VersionController.class.getName());
@@ -54,7 +53,6 @@ final class VersionController {
      */
     @SuppressFBWarnings("URV_UNRELATED_RETURN_VALUES")
     @RequestMapping(value = REQUEST_URL_VERSION, produces = MediaType.TEXT_PLAIN_VALUE)
-    @ResponseBody
     public Object getVersion() {
         final String version = settingsService.getVersion();
         LOGGER.info(REQUEST_URL_VERSION + " requested with version=\"" + version + '\"');
