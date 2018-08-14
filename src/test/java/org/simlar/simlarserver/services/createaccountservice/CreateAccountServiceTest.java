@@ -26,7 +26,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
@@ -63,7 +63,7 @@ import static org.mockito.Mockito.when;
         "accountCreation.maxRequestsTotalPerDay = 30"})
 @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = SimlarServer.class)
 public final class CreateAccountServiceTest {
     @Autowired
     private CreateAccountService createAccountService;

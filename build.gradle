@@ -53,6 +53,9 @@ war {
     baseName = 'simlar-server'
     archiveName = "${baseName}##${version}.war"
     rootSpec.exclude('application-default.properties')
+    manifest {
+        attributes("Implementation-Version": version)
+    }
 }
 
 repositories {
@@ -113,7 +116,9 @@ task wrapper(type: Wrapper) {
 }
 
 processResources {
-    expand(project.properties)
+    filesMatching("**/application.properties") {
+        expand(project.properties)
+    }
 }
 
 idea {

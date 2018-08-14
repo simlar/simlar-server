@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.simlar.simlarserver.Application;
+import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.utils.MarshalUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +35,7 @@ import javax.xml.bind.JAXBException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = SimlarServer.class)
 class BaseControllerTest {
     @Value("${local.server.port}")
     private int port;
