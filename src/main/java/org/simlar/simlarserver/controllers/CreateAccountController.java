@@ -27,6 +27,7 @@ import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
+import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.LibPhoneNumber;
 import org.simlar.simlarserver.utils.Password;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -64,12 +65,14 @@ final class CreateAccountController {
     private final SmsService smsService;
     private final SettingsService settingsService;
     private final AccountCreationRequestCountRepository accountCreationRepository;
+    private final SubscriberService subscriberService;
 
     @Autowired
-    private CreateAccountController(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository) {
+    private CreateAccountController(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService) {
         this.smsService = smsService;
         this.settingsService = settingsService;
         this.accountCreationRepository = accountCreationRepository;
+        this.subscriberService = subscriberService;
     }
 
     /**
@@ -156,15 +159,20 @@ final class CreateAccountController {
             throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);
         }
 
-        if (!SimlarId.check(simlarId)) {
-            throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarId);
+        return confirmAccount(simlarId, registrationCode);
+    }
+
+    private XmlSuccessCreateAccountConfirm confirmAccount(final String simlarIdString, final String registrationCode) {
+        final SimlarId simlarId = SimlarId.create(simlarIdString);
+        if (simlarId == null) {
+            throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);
         }
 
         if (!checkRegistrationCode(registrationCode)) {
             throw new XmlErrorNoRegistrationCodeException("confirm account request with simlarId: " + simlarId + " and registrationCode: " + registrationCode);
         }
 
-        final AccountCreationRequestCount creationRequest = accountCreationRepository.findBySimlarId(simlarId);
+        final AccountCreationRequestCount creationRequest = accountCreationRepository.findBySimlarId(simlarId.get());
         if (creationRequest == null) {
             throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
         }
@@ -179,7 +187,9 @@ final class CreateAccountController {
             throw new XmlErrorWrongRegistrationCodeException("confirm account request with wrong registration code: " + registrationCode + " for simlarId: " + simlarId);
         }
 
-        return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
+        subscriberService.save(simlarId, creationRequest.getPassword());
+
+        return new XmlSuccessCreateAccountConfirm(simlarId.get(), registrationCode);
     }
 
     private static boolean checkRegistrationCode(final CharSequence input) {
