@@ -25,33 +25,19 @@ import org.junit.Test;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import java.io.StringReader;
 import java.io.StringWriter;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
-public final class XmlSuccessCreateAccountRequestTest {
+public final class XmlSuccessCreateAccountConfirmTest {
     @Test
     public void testMarshal() throws JAXBException {
-        final XmlSuccessCreateAccountRequest response = new XmlSuccessCreateAccountRequest("*12345*", "s1cur3Me");
+        final XmlSuccessCreateAccountConfirm response = new XmlSuccessCreateAccountConfirm("*12345*", "123456");
         final StringWriter writer = new StringWriter();
-        JAXBContext.newInstance(XmlSuccessCreateAccountRequest.class).createMarshaller().marshal(response, writer);
+        JAXBContext.newInstance(XmlSuccessCreateAccountConfirm.class).createMarshaller().marshal(response, writer);
         final String xml = writer.toString();
         assertEquals(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><success simlarId=\"*12345*\" password=\"s1cur3Me\"/>",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><success simlarId=\"*12345*\" registrationCode=\"123456\"/>",
                 xml);
-    }
-
-    @Test
-    public void testUnMarshal() throws JAXBException {
-        final String xml =
-                "<?xml version=\"1.0\"?>\n" +
-                "<success simlarId=\"*23456784*\" password=\"s1cur3Me2\"/>";
-
-        final XmlSuccessCreateAccountRequest response = (XmlSuccessCreateAccountRequest)JAXBContext.newInstance(XmlSuccessCreateAccountRequest.class).createUnmarshaller().unmarshal(new StringReader(xml));
-        assertNotNull(response);
-        assertEquals("*23456784*", response.getSimlarId());
-        assertEquals("s1cur3Me2", response.getPassword());
     }
 }
