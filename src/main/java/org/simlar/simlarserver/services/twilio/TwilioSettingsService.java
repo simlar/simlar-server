@@ -42,7 +42,7 @@ class TwilioSettingsService {
     @SuppressWarnings("ConstructorWithTooManyParameters")
     @Autowired
     TwilioSettingsService(
-            @Value("${twilio.url:https://api.twilio.com/2010-04-01/Accounts/%s/Messages.json}")
+            @Value("${twilio.url:https://api.twilio.com/2010-04-01/Accounts/%s/}")
                                                   final String url,
             @Value("${twilio.smsSourceNumber:}")  final String smsSourceNumber,
             @Value("${twilio.sid:}")              final String sid,

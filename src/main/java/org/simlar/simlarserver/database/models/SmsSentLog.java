@@ -25,10 +25,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.ColumnDefault;
+import org.simlar.simlarserver.data.TwilioRequestType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -47,6 +49,10 @@ public final class SmsSentLog {
     @GeneratedValue
     private int id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 64)
+    private TwilioRequestType type;
+
     @Column(nullable = false, length = 64)
     private String telephoneNumber;
 
@@ -56,16 +62,8 @@ public final class SmsSentLog {
     @Column(length = 64)
     private String dlrNumber;
 
-    @Column(nullable = false)
-    @ColumnDefault("-1")
-    private int dlrStatus;
-
     @Column(columnDefinition = "TIMESTAMP NULL DEFAULT NULL") /// hibernate does not support columnDefinition = "TIMESTAMP DEFAULT '0000-00-00 00:00:00'"
     private Timestamp dlrTimestamp;
-
-    @Column(nullable = false)
-    @ColumnDefault("-1")
-    private int smsTradeStatus;
 
     @Column(length = 64)
     private String twilioStatus;
@@ -76,27 +74,26 @@ public final class SmsSentLog {
     @Column(length = 170)
     private String message;
 
-    public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message) {
-        this(telephoneNumber, dlrNumber, twilioStatus, null, message);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message) {
+        this(type, telephoneNumber, dlrNumber, twilioStatus, null, message);
     }
 
-    public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message, final Instant dlrTimestamp) {
-        this(telephoneNumber, dlrNumber, twilioStatus, null, message, dlrTimestamp);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message, final Instant dlrTimestamp) {
+        this(type, telephoneNumber, dlrNumber, twilioStatus, null, message, dlrTimestamp);
     }
 
-    public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message) {
-        this(telephoneNumber, dlrNumber, twilioStatus, twilioError, message, null);
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message) {
+        this(type, telephoneNumber, dlrNumber, twilioStatus, twilioError, message, null);
     }
 
     @SuppressWarnings({"UnnecessaryThis", "ConstructorWithTooManyParameters"})
-    public SmsSentLog(final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message, final Instant dlrTimestamp) {
+    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message, final Instant dlrTimestamp) {
+        this.type            = type;
         this.telephoneNumber = telephoneNumber;
         this.timestamp       = Timestamp.from(Instant.now());
         this.dlrNumber       = dlrNumber;
-        this.dlrStatus       = -1;
         //noinspection AssignmentToNull
         this.dlrTimestamp    = dlrTimestamp == null ? null : Timestamp.from(dlrTimestamp);
-        this.smsTradeStatus  = -2;
         this.twilioStatus    = twilioStatus;
         this.twilioError     = StringUtils.left(twilioError, 64);
         this.message         = message;

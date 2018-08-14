@@ -30,6 +30,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.json.twilio.MessageResponse;
@@ -59,77 +60,99 @@ public final class TwilioSmsService implements SmsService {
     private final TwilioSettingsService twilioSettingsService;
     private final SmsSentLogRepository  smsSentLogRepository;
 
-    private String postRequest(final String telephoneNumber, final String text) {
+    private String createCallbackBaseUrl() {
+        return "https://" +
+                twilioSettingsService.getCallbackUser() + ':' + twilioSettingsService.getCallbackPassword() + '@' +
+                settingsService.getDomain() + ':' + settingsService.getPort() + '/';
+    }
+
+    private String postRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {
         final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("To", telephoneNumber);
         parameters.add("From", twilioSettingsService.getSmsSourceNumber());
-        parameters.add("StatusCallback", "https://" +
-                twilioSettingsService.getCallbackUser() + ':' + twilioSettingsService.getCallbackPassword() + '@' +
-                settingsService.getDomain() + ':' + settingsService.getPort() + '/' + REQUEST_PATH_DELIVERY);
-        parameters.add("Body", text);
+        switch (type) {
+            case SMS:
+                parameters.add("StatusCallback", createCallbackBaseUrl() + REQUEST_PATH_DELIVERY);
+                parameters.add("Body", text);
+                break;
+            case CALL:
+                parameters.add("Url", createCallbackBaseUrl() + REQUEST_PATH_CALL);
+                parameters.add("StatusCallback", createCallbackBaseUrl() + REQUEST_PATH_CALL_STATUS);
+                break;
+        }
 
         try {
             final String response = new RestTemplateBuilder().basicAuthorization(twilioSettingsService.getSid(), twilioSettingsService.getAuthToken()).build()
-                    .postForObject(twilioSettingsService.getUrl(), parameters, String.class);
+                    .postForObject(twilioSettingsService.getUrl() + type.getUrlPostfix(), parameters, String.class);
 
-            log.info("response: '{}'", response);
+            log.info("response to '{}' request: '{}'", type, response);
             return response;
         } catch (final HttpClientErrorException e) {
-            log.info("while sending sms to '{}' received error '{}' response '{}'", telephoneNumber, e.getMessage(), e.getResponseBodyAsString());
+            log.info("while sending '{}' request to '{}' received error '{}' response '{}'", type, telephoneNumber, e.getMessage(), e.getResponseBodyAsString());
             return e.getStatusCode() == HttpStatus.BAD_REQUEST ? e.getResponseBodyAsString() : null;
         } catch (final RestClientException e) {
             final String cause = ExceptionUtils.getRootCauseMessage(e);
-            log.error("while sending sms to '{}' failed to connect to twilio server '{}'", telephoneNumber, cause, e);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", cause, text));
+            log.error("while sending '{}' request to '{}' failed to connect to twilio server '{}'", type, telephoneNumber, cause, e);
+            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", cause, text));
             return null;
         }
     }
 
-    @Override
-    @SuppressWarnings({"BooleanMethodNameMustStartWithQuestion", "MethodWithMultipleReturnPoints"})
-    public boolean sendSms(final String telephoneNumber, final String text) {
-        if (!twilioSettingsService.isConfigured()) {
-            log.error("twilio not configured '{}'", twilioSettingsService);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
-            return false;
-        }
-
-        return handleResponse(telephoneNumber, text, postRequest(telephoneNumber, text));
-    }
-
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    boolean handleResponse(final String telephoneNumber, final String text, final String response) {
+    boolean handleResponse(final TwilioRequestType type, final String telephoneNumber, final String text, final String response) {
         if (StringUtils.isEmpty(response)) {
-            log.error("while sending sms to '{}' received empty response", telephoneNumber);
+            log.error("while sending '{}' request to '{}' received empty response", type, telephoneNumber);
             return false;
         }
 
         try {
             final MessageResponse messageResponse = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).readValue(response, MessageResponse.class);
             if (StringUtils.isEmpty(messageResponse.getSid())) {
-                log.error("while sending sms to '{}' received message response without MessageSid '{}'", telephoneNumber, response);
-                smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, messageResponse.getStatus(), messageResponse.getErrorCode() + " - " + messageResponse.getErrorMessage(), text));
+                log.error("while sending '{}' request to '{}' received message response without MessageSid '{}'", type, telephoneNumber, response);
+                smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, messageResponse.getStatus(), messageResponse.getErrorCode() + " - " + messageResponse.getErrorMessage(), text));
                 return false;
             }
 
             if (StringUtils.isEmpty(messageResponse.getStatus())) {
-                log.error("while sending sms to '{}' received message response without status '{}'", telephoneNumber, response);
-                smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
+                log.error("while sending '{}' request to '{}' received message response without status '{}'", type, telephoneNumber, response);
+                smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
                 return false;
             }
 
-            log.info("while sending sms to '{}' received message response: '{}' ", telephoneNumber , messageResponse);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
+            log.info("while sending '{}' request to '{}' received message response: '{}' ", type, telephoneNumber , messageResponse);
+            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
             return true;
         } catch (final JsonMappingException | JsonParseException e) {
-            log.error("while sending sms to '{}' unable to parse response: '{}'", telephoneNumber, response, e);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
+            log.error("while sending '{}' request to '{}' unable to parse response: '{}'", type, telephoneNumber, response, e);
+            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         } catch (final IOException e) {
-            log.error("while sending sms to '{}' IOException during response parsing: '{}'", telephoneNumber, response, e);
-            smsSentLogRepository.save(new SmsSentLog(telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
+            log.error("while sending '{}' request to '{}' IOException during response parsing: '{}'", type, telephoneNumber, response, e);
+            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
+    }
+
+    @SuppressWarnings({"BooleanMethodNameMustStartWithQuestion", "MethodWithMultipleReturnPoints"})
+    private boolean doPostRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {
+        if (!twilioSettingsService.isConfigured()) {
+            log.error("twilio not configured '{}'", twilioSettingsService);
+            smsSentLogRepository.save(new SmsSentLog(type, telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
+            return false;
+        }
+
+        return handleResponse(type, telephoneNumber, text, postRequest(type, telephoneNumber, text));
+    }
+
+    @Override
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+    public boolean sendSms(final String telephoneNumber, final String text) {
+        return doPostRequest(TwilioRequestType.SMS, telephoneNumber, text);
+    }
+
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+    public boolean call(final String telephoneNumber) {
+        return doPostRequest(TwilioRequestType.CALL, telephoneNumber, null);
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
