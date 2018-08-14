@@ -280,6 +280,32 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertNotNull(response);
     }
 
+    @Test
+    public void testTooManyCalls() {
+        final String telephoneNumber = "+15005023029";
+        final String simlarId = "*15005023029*";
+
+        final int max = settingsService.getAccountCreationMaxCalls();
+        for (int i = 0; i < max; ++i) {
+            final String password = assertPostCreateAccountSuccess(simlarId, telephoneNumber, "ios-en");
+            final AccountCreationRequestCount requestCount = accountCreationRepository.findBySimlarId(simlarId);
+            assertNotNull(requestCount.getTimestamp());
+            requestCount.setTimestamp(requestCount.getTimestamp().minusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
+            accountCreationRepository.save(requestCount);
+
+            final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, true, true, telephoneNumber, password);
+            assertNotNull(response);
+        }
+
+        final String password = assertPostCreateAccountSuccess(simlarId, telephoneNumber, "ios-en");
+        final AccountCreationRequestCount requestCount = accountCreationRepository.findBySimlarId(simlarId);
+        assertNotNull(requestCount.getTimestamp());
+        requestCount.setTimestamp(requestCount.getTimestamp().minusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
+        accountCreationRepository.save(requestCount);
+
+        assertPostCallError(68, telephoneNumber, password);
+    }
+
     private <T> T postConfirmAccount(final Class<T> responseClass, final String command, final String simlarId, final String registrationCode) {
         return postRequest(responseClass, CreateAccountController.REQUEST_PATH, createParameters(new String[][] {
                 { "command", command },
