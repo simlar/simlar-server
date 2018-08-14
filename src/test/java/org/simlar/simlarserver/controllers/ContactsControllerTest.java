@@ -37,27 +37,27 @@ import static org.junit.Assert.assertNull;
 @SuppressFBWarnings("UCPM_USE_CHARACTER_PARAMETERIZED_METHOD")
 @RunWith(SpringRunner.class)
 public final class ContactsControllerTest extends ContactsControllerBaseTest {
-    private void wrongCredentials(final String username, final String password) {
+    private void assertWrongCredentials(final String username, final String password) {
         assertEquals(10, requestError(username, password, "*0002*|*0003*"));
     }
 
     @Test
     public void testWrongCredentials() {
-        wrongCredentials(null, "xxxxxxx");
-        wrongCredentials("*", "xxxxxxx");
-        wrongCredentials(TestUser.U1.getSimlarId(), null);
-        wrongCredentials(TestUser.U1.getSimlarId(), "xxxxxxx");
+        assertWrongCredentials(null, "xxxxxxx");
+        assertWrongCredentials("*", "xxxxxxx");
+        assertWrongCredentials(TestUser.U1.getSimlarId(), null);
+        assertWrongCredentials(TestUser.U1.getSimlarId(), "xxxxxxx");
     }
 
-    private void emptyContactList(final String contactList) {
+    private void assertEmptyContactList(final String contactList) {
         assertNull(requestContactList(TestUser.U1, contactList));
     }
 
     @Test
     public void testEmptyContactList() {
-        emptyContactList(null);
-        emptyContactList("");
-        emptyContactList(TestUser.U2.getSimlarId() + ' ' + TestUser.SIMLAR_ID_NOT_REGISTERED);
+        assertEmptyContactList(null);
+        assertEmptyContactList("");
+        assertEmptyContactList(TestUser.U2.getSimlarId() + ' ' + TestUser.SIMLAR_ID_NOT_REGISTERED);
     }
 
     @Test

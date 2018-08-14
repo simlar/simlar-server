@@ -54,28 +54,28 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
         assertEquals("*1111*|*9999*", pipeJoin(Arrays.asList(SimlarId.create("*1111*"), SimlarId.create("*9999*"))));
     }
 
-    private void requestContactListSuccess(final TestUser user, final int amount) {
+    private void assertRequestContactListSuccess(final TestUser user, final int amount) {
         final List<XmlContact> response = requestContactList(user, pipeJoin(SimlarIds.createContacts(amount)));
         assertNotNull(response);
         assertEquals(amount, response.size());
     }
 
-    private void requestContactListSuccess(final int amount) {
-        requestContactListSuccess(TestUser.U1, amount);
+    private void assertRequestContactListSuccess(final int amount) {
+        assertRequestContactListSuccess(TestUser.U1, amount);
     }
 
-    private void requestedTooManyContacts(final int amount) {
+    private void assertRequestTooManyContacts(final int amount) {
         assertEquals(50, requestError(TestUser.U1.getSimlarId(), TestUser.U1.getPasswordHash(), pipeJoin(SimlarIds.createContacts(amount))));
     }
 
     @Test
     public void testRequestTooManyContacts() {
-        requestContactListSuccess(23);
-        requestContactListSuccess(5000);
-        requestContactListSuccess(5000);
-        requestedTooManyContacts(100000);
-        requestedTooManyContacts(5000);
-        requestedTooManyContacts(5000);
+        assertRequestContactListSuccess(23);
+        assertRequestContactListSuccess(5000);
+        assertRequestContactListSuccess(5000);
+        assertRequestTooManyContacts(100000);
+        assertRequestTooManyContacts(5000);
+        assertRequestTooManyContacts(5000);
     }
 
     private static void assertLessEquals(final long l1, final long l2) {
@@ -85,7 +85,7 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
     @Test
     public void testNoDelay() {
         final long begin = System.currentTimeMillis();
-        requestContactListSuccess(TestUser.U2, 1);
+        assertRequestContactListSuccess(TestUser.U2, 1);
         final long elapsed = System.currentTimeMillis() - begin;
         assertLessEquals(elapsed, 500);
     }
@@ -93,7 +93,7 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
     @Test
     public void testOneSecondDelay() {
         final long begin = System.currentTimeMillis();
-        requestContactListSuccess(TestUser.U3, 6000);
+        assertRequestContactListSuccess(TestUser.U3, 6000);
         final long elapsed = System.currentTimeMillis() - begin;
         assertLessEquals(1000, elapsed);
         assertLessEquals(elapsed, 6000); /// running this test alone takes longer as the server needs to start

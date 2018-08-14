@@ -65,7 +65,7 @@ public final class ErrorControllerTest extends BaseControllerTest {
         assertEquals(1, xmlError.getId());
     }
 
-    private void httpPost(final String requestPath, final MultiValueMap<String, String> parameters) {
+    private void assertHttpPost(final String requestPath, final MultiValueMap<String, String> parameters) {
         assertNotNull(requestPath);
         assertUnknownStructure(postRequest(XmlError.class, requestPath, parameters));
     }
@@ -78,19 +78,19 @@ public final class ErrorControllerTest extends BaseControllerTest {
         assertUnknownStructure(unmarshal(XmlError.class, response.getBody()));
     }
 
-    private void httpPost404(final String requestPath, final MultiValueMap<String, String> parameters) {
+    private void assertHttpPost404(final String requestPath, final MultiValueMap<String, String> parameters) {
         assertNotNull(requestPath);
         assertUnknownStructure404(createNoExceptionRestTemplate().postForEntity(getBaseUrl() + requestPath, parameters, String.class));
     }
 
     @Test
     public void testHttpPostRequest() {
-        httpPost404("", null);
-        httpPost404(ContactsController.REQUEST_PATH + 'x', null);
-        httpPost404("index", null);
-        httpPost404("index.html", null);
+        assertHttpPost404("", null);
+        assertHttpPost404(ContactsController.REQUEST_PATH + 'x', null);
+        assertHttpPost404("index", null);
+        assertHttpPost404("index.html", null);
 
-        httpPost404(ContactsController.REQUEST_PATH + 'x', createParameters(new String[][] {
+        assertHttpPost404(ContactsController.REQUEST_PATH + 'x', createParameters(new String[][] {
                 { "login", "*0007*" },
                 { "password", "007" }
         }));
@@ -98,20 +98,20 @@ public final class ErrorControllerTest extends BaseControllerTest {
 
     @Test
     public void testHttpPostRequestWrongParameter() {
-        httpPost(ContactsController.REQUEST_PATH, null);
+        assertHttpPost(ContactsController.REQUEST_PATH, null);
 
-        httpPost(ContactsController.REQUEST_PATH, createParameters(new String[][] {
+        assertHttpPost(ContactsController.REQUEST_PATH, createParameters(new String[][] {
                 { "login", "007" },
                 { "password", "007" }
         }));
 
-        httpPost(ContactsController.REQUEST_PATH, createParameters(new String[][] {
+        assertHttpPost(ContactsController.REQUEST_PATH, createParameters(new String[][] {
                 { "loin", "*0007*" },
                 { "password", "007" },
                 { "contacts", "*0001*|*0002*" }
         }));
 
-        httpPost(PushNotificationsController.REQUEST_PATH, createParameters(new String[][] {
+        assertHttpPost(PushNotificationsController.REQUEST_PATH, createParameters(new String[][] {
                 { "login", "*0007*" },
                 { "password", "007" },
                 { "contacts", "*0001*|*0002*" }
@@ -120,7 +120,7 @@ public final class ErrorControllerTest extends BaseControllerTest {
 
     @Test
     public void testHttpPostRequestWrongParameterTwilio() {
-        httpPost(TwilioSmsService.REQUEST_PATH_DELIVERY, createParameters(new String[][] {
+        assertHttpPost(TwilioSmsService.REQUEST_PATH_DELIVERY, createParameters(new String[][] {
                 { "ErrorCode", "404" },
                 { "SmsSid", "007" },
                 { "SmsStatus", "sent" }
@@ -128,18 +128,18 @@ public final class ErrorControllerTest extends BaseControllerTest {
     }
 
 
-    private void httpGet404(final String requestPath) {
+    private void assertHttpGet404(final String requestPath) {
         assertNotNull(requestPath);
         assertUnknownStructure404(createNoExceptionRestTemplate().getForEntity(getBaseUrl() + requestPath, String.class));
     }
 
     @Test
     public void testHttpGetRequest() {
-        httpGet404("");
-        httpGet404("/");
-        httpGet404(ContactsController.REQUEST_PATH + 'x');
-        httpGet404("/index");
-        httpGet404("/index.html");
-        httpGet404(ContactsController.REQUEST_PATH);
+        assertHttpGet404("");
+        assertHttpGet404("/");
+        assertHttpGet404(ContactsController.REQUEST_PATH + 'x');
+        assertHttpGet404("/index");
+        assertHttpGet404("/index.html");
+        assertHttpGet404(ContactsController.REQUEST_PATH);
     }
 }

@@ -60,7 +60,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
         return requestStorePushId(responseClass, user.getSimlarId(), user.getPasswordHash(), deviceType, pushId);
     }
 
-    private void loginWithWrongCredentials(final String username, final String password) {
+    private void assertLoginWithWrongCredentials(final String username, final String password) {
         final XmlError error = requestStorePushId(XmlError.class, username, password, 1, ANDROID_PUSH_ID_1);
         assertNotNull(error);
         assertEquals(10, error.getId());
@@ -68,13 +68,13 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
 
     @Test
     public void testLoginWithWrongCredentials() {
-        loginWithWrongCredentials(null, "xxxxxxx");
-        loginWithWrongCredentials("*", "xxxxxxx");
-        loginWithWrongCredentials(TestUser.U1.getSimlarId(), null);
-        loginWithWrongCredentials(TestUser.U1.getSimlarId(), "xxxxxxx");
+        assertLoginWithWrongCredentials(null, "xxxxxxx");
+        assertLoginWithWrongCredentials("*", "xxxxxxx");
+        assertLoginWithWrongCredentials(TestUser.U1.getSimlarId(), null);
+        assertLoginWithWrongCredentials(TestUser.U1.getSimlarId(), "xxxxxxx");
     }
 
-    private void storePushId(final TestUser testUser, final int deviceType, final String pushId) {
+    private void assertStorePushId(final TestUser testUser, final int deviceType, final String pushId) {
         final XmlSuccessPushNotification response = requestStorePushId(XmlSuccessPushNotification.class, testUser, deviceType, pushId);
         assertNotNull(response);
         assertEquals(deviceType, response.getDeviceType());
@@ -87,14 +87,14 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
 
     @Test
     public void testStorePushId() {
-        storePushId(TestUser.U1, 1, ANDROID_PUSH_ID_1);
-        storePushId(TestUser.U1, 1, ANDROID_PUSH_ID_2);
-        storePushId(TestUser.U2, 1, ANDROID_PUSH_ID_1);
-        storePushId(TestUser.U2, 1, ANDROID_PUSH_ID_2);
-        storePushId(TestUser.U2, 5, IOS_PUSH_ID);
+        assertStorePushId(TestUser.U1, 1, ANDROID_PUSH_ID_1);
+        assertStorePushId(TestUser.U1, 1, ANDROID_PUSH_ID_2);
+        assertStorePushId(TestUser.U2, 1, ANDROID_PUSH_ID_1);
+        assertStorePushId(TestUser.U2, 1, ANDROID_PUSH_ID_2);
+        assertStorePushId(TestUser.U2, 5, IOS_PUSH_ID);
     }
 
-    private void unknownDeviceType(final int deviceType) {
+    private void assertUnknownDeviceType(final int deviceType) {
         final XmlError error = requestStorePushId(XmlError.class, TestUser.U1, deviceType, ANDROID_PUSH_ID_1);
         assertNotNull(error);
         assertEquals(30, error.getId());
@@ -102,13 +102,13 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
 
     @Test
     public void testUnknownDeviceType() {
-        unknownDeviceType(-1);
-        unknownDeviceType(0);
-        unknownDeviceType(6);
-        unknownDeviceType(5400);
+        assertUnknownDeviceType(-1);
+        assertUnknownDeviceType(0);
+        assertUnknownDeviceType(6);
+        assertUnknownDeviceType(5400);
     }
 
-    private void unknownApplePushId(final int deviceType, final String pushId) {
+    private void assertUnknownApplePushId(final int deviceType, final String pushId) {
         final XmlError error = requestStorePushId(XmlError.class, TestUser.U1, deviceType, pushId);
         assertNotNull(error);
         assertEquals(31, error.getId());
@@ -116,9 +116,9 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
 
     @Test
     public void testUnknownApplePushId() {
-        unknownApplePushId(2, ANDROID_PUSH_ID_1);
-        unknownApplePushId(3, ANDROID_PUSH_ID_2);
-        unknownApplePushId(4, ANDROID_PUSH_ID_2);
-        unknownApplePushId(5, ANDROID_PUSH_ID_1);
+        assertUnknownApplePushId(2, ANDROID_PUSH_ID_1);
+        assertUnknownApplePushId(3, ANDROID_PUSH_ID_2);
+        assertUnknownApplePushId(4, ANDROID_PUSH_ID_2);
+        assertUnknownApplePushId(5, ANDROID_PUSH_ID_1);
     }
 }

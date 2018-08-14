@@ -32,17 +32,17 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 
 public final class SimlarIdsTest {
-    private static void createContacts(final List<String> expected, final int amount) {
+    private static void assertCreateContacts(final List<String> expected, final int amount) {
         assertEquals(expected, SimlarIds.createContacts(amount).stream().map(SimlarId::get).collect(Collectors.toList()));
     }
 
     @Test
     public void testCreateContacts() {
-        createContacts(Collections.emptyList(), -1);
-        createContacts(Collections.emptyList(), 0);
+        assertCreateContacts(Collections.emptyList(), -1);
+        assertCreateContacts(Collections.emptyList(), 0);
 
-        createContacts(Collections.singletonList("*1*"), 1);
-        createContacts(Arrays.asList("*1*", "*2*"), 2);
-        createContacts(Arrays.asList("*1*", "*2*", "*3*", "*4*", "*5*", "*6*", "*7*", "*8*", "*9*", "*10*"), 10);
+        assertCreateContacts(Collections.singletonList("*1*"), 1);
+        assertCreateContacts(Arrays.asList("*1*", "*2*"), 2);
+        assertCreateContacts(Arrays.asList("*1*", "*2*", "*3*", "*4*", "*5*", "*6*", "*7*", "*8*", "*9*", "*10*"), 10);
     }
 }

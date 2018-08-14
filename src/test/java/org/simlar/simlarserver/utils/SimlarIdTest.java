@@ -124,7 +124,7 @@ public final class SimlarIdTest {
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s2, s1), s2 + '|' + s1);
     }
 
-    private static void testSortAndUnifySimlarIds(final List<SimlarId> expected, final Collection<SimlarId> input) {
+    private static void assertSortAndUnifySimlarIds(final List<SimlarId> expected, final Collection<SimlarId> input) {
         assertEquals(new TreeSet<>(expected), SimlarId.sortAndUnifySimlarIds(input));
     }
 
@@ -139,14 +139,14 @@ public final class SimlarIdTest {
         final SimlarId e  = SimlarId.create("*0005*");
         final SimlarId f  = SimlarId.create("*0006*");
 
-        testSortAndUnifySimlarIds(Arrays.asList(a, b), Arrays.asList(a, b));
-        testSortAndUnifySimlarIds(Arrays.asList(a, b), Arrays.asList(b, a));
-        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, c, d, e, f));
-        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(f, e, d, c, b, a));
-        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(f, b, c, d, e, a));
-        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b, c, d, e, f));
-        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b2, c, d, e, f));
-        testSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b, b, b, c, c, c, c, c, d, e, f));
+        assertSortAndUnifySimlarIds(Arrays.asList(a, b), Arrays.asList(a, b));
+        assertSortAndUnifySimlarIds(Arrays.asList(a, b), Arrays.asList(b, a));
+        assertSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, c, d, e, f));
+        assertSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(f, e, d, c, b, a));
+        assertSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(f, b, c, d, e, a));
+        assertSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b, c, d, e, f));
+        assertSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b2, c, d, e, f));
+        assertSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b, b, b, c, c, c, c, c, d, e, f));
     }
 
     @SuppressWarnings("StandardVariableNames")
