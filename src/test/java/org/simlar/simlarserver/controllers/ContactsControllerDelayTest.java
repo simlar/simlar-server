@@ -50,7 +50,7 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
     }
 
     @Test
-    public void pipeJoinTest() {
+    public void testPipeJoin() {
         assertEquals("*1111*|*9999*", pipeJoin(Arrays.asList(SimlarId.create("*1111*"), SimlarId.create("*9999*"))));
     }
 
@@ -69,7 +69,7 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
     }
 
     @Test
-    public void requestTooManyContacts() {
+    public void testRequestTooManyContacts() {
         requestContactListSuccess(23);
         requestContactListSuccess(5000);
         requestContactListSuccess(5000);
@@ -83,13 +83,14 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
     }
 
     @Test
-    public void noDelay() {
+    public void testNoDelay() {
         final long begin = System.currentTimeMillis();
         requestContactListSuccess(TestUser.U2, 1);
         final long elapsed = System.currentTimeMillis() - begin;
         assertLessEquals(elapsed, 500);
     }
 
+    /// this test takes over 4 seconds if you rename it to testOneSecondDelay. WTF!
     @Test
     public void oneSecondDelay() {
         final long begin = System.currentTimeMillis();

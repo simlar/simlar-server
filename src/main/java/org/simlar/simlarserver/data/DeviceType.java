@@ -34,13 +34,12 @@ public enum DeviceType {
 
     private final int id;
 
+    private static final Map<Integer, DeviceType> INTEGER_DEVICE_TYPE_MAP =
+            Arrays.stream(DeviceType.values()).collect(Collectors.toMap(DeviceType::toInt, type -> type));
+
     DeviceType(final int id) {
         this.id = id;
     }
-
-
-    private static final Map<Integer, DeviceType> INTEGER_DEVICE_TYPE_MAP =
-            Arrays.stream(DeviceType.values()).collect(Collectors.toMap(DeviceType::toInt, type -> type));
 
     public static DeviceType fromInt(final int id) {
         return INTEGER_DEVICE_TYPE_MAP.get(id);

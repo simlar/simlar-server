@@ -44,7 +44,7 @@ public final class DelayCalculatorServiceTest {
     @Autowired
     private DelayCalculatorService delayCalculatorService;
 
-    private static void calculateDelayTest(final int minSeconds, final int count, final int maxSeconds) {
+    private static void calculateDelay(final int minSeconds, final int count, final int maxSeconds) {
         final int resultDelay = DelayCalculatorService.calculateDelay(count);
         final String result = "calculateDelay(" + count + ") = " + resultDelay;
         assertTrue(minSeconds + " <= " + result, minSeconds <= resultDelay);
@@ -52,25 +52,25 @@ public final class DelayCalculatorServiceTest {
     }
 
     @Test
-    public void calculateDelay() {
-        calculateDelayTest(0,                       0,                   0);
-        calculateDelayTest(0,                       100,                 0);
-        calculateDelayTest(0,                       1000,                0);
-        calculateDelayTest(0,                       2000,                1);
-        calculateDelayTest(0,                       5000,                1);
-        calculateDelayTest(1,                       6000,                2);
-        calculateDelayTest(3,                       8000,                6);
-        calculateDelayTest(5,                       10000,               8);
-        calculateDelayTest(24 * 60 * 60,            100000,              24 * 60 * 60 * 10);
-        calculateDelayTest(5 * 364 * 24 * 60 * 60,  100000000,           Integer.MAX_VALUE);
-        calculateDelayTest(Integer.MAX_VALUE,       Integer.MAX_VALUE,   Integer.MAX_VALUE);
-        calculateDelayTest(Integer.MAX_VALUE,       -1,                  Integer.MAX_VALUE);
-        calculateDelayTest(Integer.MAX_VALUE,       -1000,               Integer.MAX_VALUE);
-        calculateDelayTest(Integer.MAX_VALUE,       Integer.MIN_VALUE,   Integer.MAX_VALUE);
+    public void testCalculateDelay() {
+        calculateDelay(0,                       0,                   0);
+        calculateDelay(0,                       100,                 0);
+        calculateDelay(0,                       1000,                0);
+        calculateDelay(0,                       2000,                1);
+        calculateDelay(0,                       5000,                1);
+        calculateDelay(1,                       6000,                2);
+        calculateDelay(3,                       8000,                6);
+        calculateDelay(5,                       10000,               8);
+        calculateDelay(24 * 60 * 60,            100000,              24 * 60 * 60 * 10);
+        calculateDelay(5 * 364 * 24 * 60 * 60,  100000000,           Integer.MAX_VALUE);
+        calculateDelay(Integer.MAX_VALUE,       Integer.MAX_VALUE,   Integer.MAX_VALUE);
+        calculateDelay(Integer.MAX_VALUE,       -1,                  Integer.MAX_VALUE);
+        calculateDelay(Integer.MAX_VALUE,       -1000,               Integer.MAX_VALUE);
+        calculateDelay(Integer.MAX_VALUE,       Integer.MIN_VALUE,   Integer.MAX_VALUE);
     }
 
     @Test
-    public void calculateTotalRequestedContactsIncrement() {
+    public void testCalculateTotalRequestedContactsIncrement() {
         final SimlarId simlarId = SimlarId.create("*0001*");
         final Instant now = Instant.now();
 
@@ -83,7 +83,7 @@ public final class DelayCalculatorServiceTest {
     }
 
     @Test
-    public void calculateTotalRequestedContactsDecreaseAfterADay() {
+    public void testCalculateTotalRequestedContactsDecreaseAfterADay() {
         final SimlarId simlarId = SimlarId.create("*0002*");
         final Instant now = Instant.now();
         final Instant dayAfter = Instant.now().plus(Duration.ofDays(1)).plus(Duration.ofSeconds(2));
@@ -94,7 +94,7 @@ public final class DelayCalculatorServiceTest {
 
     @SuppressWarnings("StandardVariableNames")
     @Test
-    public void calculateTotalRequestedContactsSameContactsNoIncrement() {
+    public void testCalculateTotalRequestedContactsSameContactsNoIncrement() {
         final SimlarId simlarId = SimlarId.create("*0003*");
         final SimlarId a = SimlarId.create("*0002*");
         final SimlarId b = SimlarId.create("*0003*");
@@ -108,7 +108,7 @@ public final class DelayCalculatorServiceTest {
     }
 
     @Test
-    public void calculateRequestDelay() {
+    public void testCalculateRequestDelay() {
         final SimlarId simlarId = SimlarId.create("*0004*");
 
         assertEquals(0, delayCalculatorService.calculateRequestDelay(simlarId, SimlarIds.createContacts(2000)));

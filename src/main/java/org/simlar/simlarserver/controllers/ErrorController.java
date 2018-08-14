@@ -74,9 +74,10 @@ final class ErrorController {
     // in order to handle html request errors we have to return a String here
     @ExceptionHandler(XmlErrorException.class)
     public static String handleXmlErrorException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
-        final XmlErrorExceptionClientResponse response = XmlErrorExceptionClientResponse.fromException(xmlErrorException);
+        final Class<? extends XmlErrorException> exceptionClass = xmlErrorException.getClass();
+        final XmlErrorExceptionClientResponse response = XmlErrorExceptionClientResponse.fromException(exceptionClass);
         if (response == null) {
-            log(Level.SEVERE, "XmlErrorException with no XmlErrorExceptionClientResponse found for: " + xmlErrorException.getClass().getSimpleName(), request, xmlErrorException);
+            log(Level.SEVERE, "XmlErrorException with no XmlErrorExceptionClientResponse found for: " + exceptionClass.getSimpleName(), request, xmlErrorException);
         } else {
             log(Level.WARNING, "XmlError(" + response.getId() + ") " + response.getMessage() + ": " + xmlErrorException.getMessage(), request, null);
         }

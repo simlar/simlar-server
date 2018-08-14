@@ -42,7 +42,7 @@ public final class VersionControllerTest {
     private int port;
 
     @Test
-    public void requestVersion() {
+    public void testRequestVersion() {
         assertEquals("test-version\n", new RestTemplate().getForObject("http://localhost:" + port + VersionController.REQUEST_PATH, String.class));
     }
 }
