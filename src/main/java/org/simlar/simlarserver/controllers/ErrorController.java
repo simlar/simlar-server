@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.controllers;
 
+import lombok.extern.java.Log;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorExceptionClientResponse;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
@@ -38,19 +39,17 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.StringWriter;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+@Log
 @ControllerAdvice
 @RestController
 final class ErrorController {
-    private static final Logger LOGGER = Logger.getLogger(ErrorController.class.getName());
-
     private static void log(final Level level, final String prefix, final HttpServletRequest request, final Exception exception) {
         final String message = prefix + (request == null ? " no request object" :
                 " URL='" + request.getRequestURL() + "' IP='" + request.getRemoteAddr() + "' User-Agent='" + request.getHeader("User-Agent") + "' parameters='" + serializeParameters(request) + '\'');
 
-        LOGGER.log(level, message, exception);
+        log.log(level, message, exception);
     }
 
     private static String serializeParameters(final ServletRequest request) {
@@ -69,7 +68,7 @@ final class ErrorController {
         try {
             JAXBContext.newInstance(XmlError.class).createMarshaller().marshal(createXmlError(response), writer);
         } catch (final JAXBException e) {
-            LOGGER.log(Level.SEVERE, "xmlParse error: ", e);
+            log.log(Level.SEVERE, "xmlParse error: ", e);
         }
 
         return writer.toString();

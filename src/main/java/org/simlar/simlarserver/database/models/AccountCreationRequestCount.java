@@ -66,10 +66,12 @@ public final class AccountCreationRequestCount {
     private String ip;
 
     @SuppressWarnings("UnnecessaryThis")
-    public AccountCreationRequestCount(final String simlarId) {
-        this.simlarId     = simlarId;
-        this.requestTries = 0;
-        this.confirmTries = 0;
+    public AccountCreationRequestCount(final String simlarId, final String password, final String registrationCode) {
+        this.simlarId         = simlarId;
+        this.password         = password;
+        this.registrationCode = registrationCode;
+        this.requestTries     = 0;
+        this.confirmTries     = 0;
     }
 
     public AccountCreationRequestCount(final String simlarId, final String password, final String registrationCode, final int requestTries, final int confirmTries, final String ip) {
@@ -87,14 +89,13 @@ public final class AccountCreationRequestCount {
         requestTries++;
     }
 
-    public int incrementConfirmTries() {
-        //noinspection ValueOfIncrementOrDecrementUsed
-        return ++confirmTries;
+    public void incrementConfirmTries() {
+        confirmTries++;
     }
 
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
     public Instant getTimestamp() {
-        return timestamp.toInstant();
+        return timestamp == null ? null : timestamp.toInstant();
     }
 
     public void setTimestamp(final Instant instant) {

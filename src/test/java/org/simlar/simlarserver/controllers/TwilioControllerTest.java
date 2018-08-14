@@ -37,7 +37,6 @@ import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
 @SuppressWarnings("ALL")
 @RunWith(SpringRunner.class)
 public final class TwilioControllerTest extends BaseControllerTest {
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private SmsSentLogRepository smsSentLogRepository;
 

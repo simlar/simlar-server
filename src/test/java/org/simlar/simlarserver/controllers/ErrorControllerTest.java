@@ -36,6 +36,7 @@ import org.springframework.web.client.RestTemplate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@SuppressWarnings("ClassWithTooManyTransitiveDependencies")
 @RunWith(SpringRunner.class)
 public final class ErrorControllerTest extends BaseControllerTest {
     @SuppressWarnings("JUnitTestClassNamingConvention")

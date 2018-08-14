@@ -37,7 +37,6 @@ import static org.junit.Assert.assertNull;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public final class SmsSentLogTest {
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private SmsSentLogRepository smsSentLogRepository;
 

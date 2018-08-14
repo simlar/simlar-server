@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.services.delaycalculatorservice;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.extern.java.Log;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.ContactsRequestCount;
@@ -36,12 +37,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.SortedSet;
-import java.util.logging.Logger;
 
+@Log
 @Component
 public final class DelayCalculatorService {
-    private static final Logger LOGGER = Logger.getLogger(DelayCalculatorService.class.getName());
-
     public static final Duration MAXIMUM = Duration.ofSeconds(Long.MAX_VALUE);
 
     private static final Duration RESET_COUNTER = Duration.ofDays(1); // reset counter after one day
@@ -100,7 +99,7 @@ public final class DelayCalculatorService {
 
     static Duration calculateDelay(final int requestedContacts) {
         final Duration delay = calculateDelayWithoutLog(requestedContacts);
-        LOGGER.info("requestedContactsCount=" + requestedContacts + " -> delay=" + delay);
+        log.info("requestedContactsCount=" + requestedContacts + " -> delay=" + delay);
         return delay;
     }
 

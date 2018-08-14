@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.services.subscriberservice;
 
-import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
@@ -31,45 +31,47 @@ import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.logging.Logger;
 
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@Log
 @Component
 public final class SubscriberService {
-    private static final Logger LOGGER = Logger.getLogger(SubscriberService.class.getName());
-
     private final SettingsService settingsService;
     private final SubscriberRepository subscriberRepository;
+    private final TransactionTemplate transactionTemplate;
 
-    @SuppressWarnings("PackageVisibleInnerClass")
-    static final class SaveNoSimlarIdException extends RuntimeException { private static final long serialVersionUID = 1L; }
-    @SuppressWarnings("PackageVisibleInnerClass")
-    static final class SaveNoPasswordException extends RuntimeException { private static final long serialVersionUID = 1L; }
-    @SuppressWarnings("PackageVisibleInnerClass")
-    static final class SaveDbErrorException extends RuntimeException { private static final long serialVersionUID = 1L; }
+    @Autowired
+    public SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository, final PlatformTransactionManager transactionManager) {
+        this.settingsService = settingsService;
+        this.subscriberRepository = subscriberRepository;
+        transactionTemplate = new TransactionTemplate(transactionManager);
+    }
 
     public void save(final SimlarId simlarId, final String password) {
-        if (simlarId == null) {
-            throw new SaveNoSimlarIdException();
-        }
-
-        if (StringUtils.isEmpty(password)) {
-            throw new SaveNoPasswordException();
+        if (simlarId == null || StringUtils.isEmpty(password)) {
+            throw new IllegalArgumentException("simlarId=" + simlarId + " password=" + password);
         }
 
         final Subscriber subscriber = new Subscriber(simlarId.get(), settingsService.getDomain(), password, "", createHashHa1(simlarId, password),
                 createHashHa1b(simlarId, password));
 
-        subscriber.setId(findSubscriberId(simlarId));
-        if (subscriberRepository.save(subscriber) == null) {
-            throw new SaveDbErrorException();
-        }
+        //noinspection AnonymousInnerClass
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(final TransactionStatus status) {
+                subscriber.setId(findSubscriberId(simlarId));
+                subscriberRepository.save(subscriber);
+            }
+        });
     }
 
-    private String createHashHa1(final SimlarId simlarId, final String password) {
+    public String createHashHa1(final SimlarId simlarId, final String password) {
         return Hash.md5(simlarId.get() + ':' + settingsService.getDomain() + ':' + password);
     }
 
@@ -84,7 +86,7 @@ public final class SubscriberService {
         }
 
         if (ids.size() > 1) {
-            LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            log.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
         return ids.get(0);
@@ -105,7 +107,7 @@ public final class SubscriberService {
         }
 
         if (savedHa1s.size() > 1) {
-            LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            log.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
         return StringUtils.equals(ha1, savedHa1s.get(0));

@@ -39,7 +39,6 @@ public final class VersionControllerTest {
     @SuppressWarnings("WeakerAccess")
     static final String VERSION = "0.0.7-test";
 
-    @SuppressWarnings("CanBeFinal")
     @Value("${local.server.port}")
     private int port;
 

@@ -41,7 +41,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public final class SubscriberServiceTest {
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private SubscriberService subscriberService;
 
@@ -51,22 +50,22 @@ public final class SubscriberServiceTest {
     @Autowired
     private SettingsService settingsService;
 
-    @Test(expected = SubscriberService.SaveNoSimlarIdException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSaveNoSimlarIdNoPassword() {
         subscriberService.save(null, null);
     }
 
-    @Test(expected = SubscriberService.SaveNoSimlarIdException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSaveNoSimlarId() {
         subscriberService.save(null, "sdflkj34gd3F");
     }
 
-    @Test(expected = SubscriberService.SaveNoPasswordException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSaveNoPassword() {
         subscriberService.save(SimlarId.create("*2000*"), null);
     }
 
-    @Test(expected = SubscriberService.SaveNoPasswordException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSaveEmptyPassword() {
         subscriberService.save(SimlarId.create("*2000*"), "");
     }

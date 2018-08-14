@@ -21,36 +21,30 @@
 
 package org.simlar.simlarserver.services.settingsservice;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@SuppressWarnings({"InstanceVariableNamingConvention", "MethodParameterNamingConvention"})
+@Getter
 @Component
 public class SettingsService {
     private final String domain;
     private final String version;
+    private final int accountCreationMaxRequestsPerSimlarIdPerDay;
     private final int accountCreationMaxConfirms;
 
     @Autowired
     public SettingsService(
-            @Value("${domain:}")                        final String domain,
-            @Value("${info.app.version:}")              final String version,
-            @Value("${accountCreation.maxConfirms:10}") final int accountCreationMaxConfirms
+            @Value("${domain:}") final String                                       domain,
+            @Value("${info.app.version:}") final String                             version,
+            @Value("${accountCreation.maxRequestsPerSimlarIdPerDay:10}") final int  accountCreationMaxRequestsPerSimlarIdPerDay,
+            @Value("${accountCreation.maxConfirms:10}") final int                   accountCreationMaxConfirms
     ) {
-        this.domain                     = domain;
-        this.version                    = version;
-        this.accountCreationMaxConfirms = accountCreationMaxConfirms;
-    }
-
-    public final String getDomain() {
-        return domain;
-    }
-
-    public final String getVersion() {
-        return version;
-    }
-
-    public final int getAccountCreationMaxConfirms() {
-        return accountCreationMaxConfirms;
+        this.domain                                      = domain;
+        this.version                                     = version;
+        this.accountCreationMaxRequestsPerSimlarIdPerDay = accountCreationMaxRequestsPerSimlarIdPerDay;
+        this.accountCreationMaxConfirms                  = accountCreationMaxConfirms;
     }
 }

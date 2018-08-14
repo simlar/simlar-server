@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
 import org.simlar.simlarserver.data.DeviceType;
 import org.simlar.simlarserver.database.models.PushNotification;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
@@ -37,13 +38,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.logging.Logger;
-
 @AllArgsConstructor(onConstructor = @__(@Autowired))
+@Log
 @RestController
 final class PushNotificationsController {
     public  static final String REQUEST_PATH = "/store-push-id.xml";
-    private static final Logger LOGGER       = Logger.getLogger(PushNotificationsController.class.getName());
 
     private final SubscriberService           subscriberService;
     private final PushNotificationsRepository pushNotificationsRepository;
@@ -70,7 +69,7 @@ final class PushNotificationsController {
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessPushNotification getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final int deviceType, @RequestParam final String pushId) {
-        LOGGER.info(REQUEST_PATH + " requested with login=\"" + login + '\"');
+        log.info(REQUEST_PATH + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
 

@@ -40,7 +40,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public final class DelayCalculatorServiceTest {
-    @SuppressWarnings("CanBeFinal")
     @Autowired
     private DelayCalculatorService delayCalculatorService;
 

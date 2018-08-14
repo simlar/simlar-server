@@ -17,6 +17,7 @@ kamailio
 klipp
 kozocsa
 landline
+libphonenumber
 lombok
 nopmd
 parameterized
@@ -36,6 +37,7 @@ subresource
 twilio
 twodividedbyzero
 ucpm
+utao
 uniq
 unmarshal
 voip
