@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -108,7 +109,7 @@ public final class SimlarIdTest {
     }
 
     private static void testSortAndUnifySimlarIds(final List<SimlarId> expected, final Collection<SimlarId> input) {
-        assertEquals(expected, SimlarId.sortAndUnifySimlarIds(input));
+        assertEquals(new TreeSet<>(expected), SimlarId.sortAndUnifySimlarIds(input));
     }
 
     @SuppressWarnings("StandardVariableNames")
@@ -142,6 +143,9 @@ public final class SimlarIdTest {
         final SimlarId e = SimlarId.create("*0005*");
         final SimlarId f = SimlarId.create("*0006*");
 
-        assertEquals("265026f135c0046f94d5a8e89b2bbf1c",SimlarId.hashSimlarIds(Arrays.asList(a, b, c, d, e, f)));
+        assertEquals("265026f135c0046f94d5a8e89b2bbf1c", SimlarId.hashSimlarIds(new TreeSet<>(Arrays.asList(a, b, c, d, e, f))));
+        assertEquals("a8799604f418c26873223fe142c78e99", SimlarId.hashSimlarIds(new TreeSet<>(Arrays.asList(a, b, c, d, e))));
+        assertEquals("a1e3b9977e3e548e166e335818209fe9", SimlarId.hashSimlarIds(new TreeSet<>(Arrays.asList(a, c, d, e))));
+        assertEquals("d41d8cd98f00b204e9800998ecf8427e", SimlarId.hashSimlarIds(Collections.emptySortedSet()));
     }
 }

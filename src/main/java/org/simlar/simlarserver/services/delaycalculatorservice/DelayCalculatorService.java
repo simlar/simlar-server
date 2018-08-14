@@ -33,7 +33,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.Collection;
-import java.util.List;
+import java.util.SortedSet;
 import java.util.logging.Logger;
 
 @Component
@@ -56,7 +56,7 @@ public final class DelayCalculatorService {
     }
 
     int calculateTotalRequestedContacts(final SimlarId simlarId, final Collection<SimlarId> contacts, final LocalDateTime now) {
-        final List<SimlarId> sortedContacts = SimlarId.sortAndUnifySimlarIds(contacts);
+        final SortedSet<SimlarId> sortedContacts = SimlarId.sortAndUnifySimlarIds(contacts);
         final Integer count = calculateTotalRequestedContacts(simlarId, now, SimlarId.hashSimlarIds(sortedContacts), sortedContacts.size());
         return count == null ? Integer.MAX_VALUE : count;
     }
