@@ -23,9 +23,10 @@ package org.simlar.simlarserver.helper;
 
 import org.simlar.simlarserver.utils.SimlarId;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @SuppressWarnings("UtilityClass")
 public final class SimlarIds {
@@ -38,11 +39,6 @@ public final class SimlarIds {
             return Collections.emptyList();
         }
 
-        final Collection<SimlarId> simlarIds = new ArrayList<>(amount);
-        for (int i = 0; i < amount; ++i) {
-            simlarIds.add(SimlarId.create(String.format("*%d*", i + 1)));
-        }
-
-        return simlarIds;
+        return IntStream.range(1, amount + 1).mapToObj(i -> SimlarId.create(String.format("*%d*", i))).collect(Collectors.toList());
     }
 }

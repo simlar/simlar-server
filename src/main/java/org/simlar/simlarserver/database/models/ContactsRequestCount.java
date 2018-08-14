@@ -29,7 +29,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.temporal.Temporal;
 
 @Entity
 @Table(name = "simlar_contacts_request_count")
@@ -61,7 +60,8 @@ public final class ContactsRequestCount {
         this.count = count;
     }
 
-    public Temporal getTimestamp() {
+    @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
+    public Instant getTimestamp() {
         return timestamp.toInstant();
     }
 

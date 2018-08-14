@@ -38,8 +38,8 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class ErrorControllerTest extends BaseControllerTest {
-    private void testHttpPost(final String requestUrl, final MultiValueMap<String, String> parameter) {
-        final XmlError xmlError = postRequest(XmlError.class, requestUrl, parameter);
+    private void testHttpPost(final String requestUrl, final MultiValueMap<String, String> parameters) {
+        final XmlError xmlError = postRequest(XmlError.class, requestUrl, parameters);
         assertNotNull(xmlError);
         assertEquals(1, xmlError.getId());
     }

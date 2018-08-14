@@ -19,30 +19,19 @@
  *
  */
 
-package org.simlar.simlarserver.controllers;
+package org.simlar.simlarserver.data;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.simlar.simlarserver.Application;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebIntegrationTest(randomPort = true)
-public final class VersionControllerTest {
-
-    @SuppressWarnings("CanBeFinal")
-    @Value("${local.server.port}")
-    private int port;
-
+public final class DeviceTypeTest {
     @Test
-    public void requestVersion() {
-        assertEquals("test-version\n", new RestTemplate().getForObject("http://localhost:" + port + VersionController.REQUEST_PATH, String.class));
+    public void fromIntTest() {
+        assertEquals(DeviceType.ANDROID, DeviceType.fromInt(1));
+        assertEquals(DeviceType.IOS, DeviceType.fromInt(2));
+        assertEquals(DeviceType.IOS_DEVELOPMENT, DeviceType.fromInt(3));
+        assertEquals(DeviceType.IOS_VOIP, DeviceType.fromInt(4));
+        assertEquals(DeviceType.IOS_VOIP_DEVELOPMENT, DeviceType.fromInt(5));
     }
 }

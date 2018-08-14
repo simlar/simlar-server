@@ -31,6 +31,7 @@ import org.simlar.simlarserver.xml.XmlContact;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +46,12 @@ import static org.junit.Assert.assertTrue;
 public final class ContactsControllerDelayTest extends ContactsControllerBaseTest {
     private static String pipeJoin(final Collection<SimlarId> simlarIds) {
         assertNotNull(simlarIds);
-        return String.join("|", simlarIds.stream().map(SimlarId::get).collect(Collectors.toList()));
+        return simlarIds.stream().map(SimlarId::get).collect(Collectors.joining("|"));
+    }
+
+    @Test
+    public void pipeJoinTest() {
+        assertEquals("*1111*|*9999*", pipeJoin(Arrays.asList(SimlarId.create("*1111*"), SimlarId.create("*9999*"))));
     }
 
     private void requestContactListSuccess(final TestUser user, final int amount) {

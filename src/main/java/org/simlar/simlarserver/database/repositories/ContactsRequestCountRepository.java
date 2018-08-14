@@ -1,4 +1,4 @@
-package org.simlar.simlarserver.database.repositories;/*
+/*
  * Copyright (C) 2016 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
@@ -18,6 +18,8 @@ package org.simlar.simlarserver.database.repositories;/*
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
+
+package org.simlar.simlarserver.database.repositories;
 
 import org.simlar.simlarserver.database.models.ContactsRequestCount;
 import org.springframework.data.repository.CrudRepository;

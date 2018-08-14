@@ -21,6 +21,8 @@
 
 package org.simlar.simlarserver.utils;
 
+import org.springframework.util.StringUtils;
+
 import javax.annotation.Nonnull;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -62,7 +64,7 @@ public final class SimlarId implements Comparable<SimlarId> {
     }
 
     public static List<SimlarId> parsePipeSeparatedSimlarIds(final String str) {
-        if (str == null) {
+        if (StringUtils.isEmpty(str)) {
             return Collections.emptyList();
         }
 
