@@ -46,8 +46,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.2.RELEASE")
-        classpath("com.github.ben-manes:gradle-versions-plugin:0.17.0")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.3.RELEASE")
+        classpath("com.github.ben-manes:gradle-versions-plugin:0.20.0")
         classpath("org.owasp:dependency-check-gradle:3.2.1")
     }
 }
@@ -76,12 +76,12 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.7")
     implementation("org.apache.commons:commons-text:1.4")
     implementation("commons-codec:commons-codec:1.11")
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.9.7")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.9.9")
     implementation("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.h2database:h2:1.4.197")
-    testImplementation("org.mockito:mockito-core:2.18.3")
+    testImplementation("org.mockito:mockito-core:2.19.0")
     runtime("org.mariadb.jdbc:mariadb-java-client:2.2.5")
 
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
@@ -100,9 +100,7 @@ test {
 }
 
 pmd {
-    /// IntelliJ plugin uses this version
-    /// see: https://github.com/amitdev/PMD-Intellij/blob/master/PMD-Intellij.iml
-    toolVersion = "6.0.1"
+    toolVersion = "6.5.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = [ ]
 }
@@ -132,7 +130,7 @@ dependencyChecks.dependsOn dependencyCheckAnalyze
 dependencyChecks.dependsOn dependencyUpdates
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "4.7"
+    gradleVersion = "4.8.1"
 }
 
 processResources {
