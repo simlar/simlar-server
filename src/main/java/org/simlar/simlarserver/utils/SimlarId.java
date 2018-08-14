@@ -98,7 +98,7 @@ public final class SimlarId implements Comparable<SimlarId> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(simlarId);
+        return Objects.hashCode(simlarId);
     }
 
     @Override
