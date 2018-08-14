@@ -25,6 +25,7 @@ import java.security.SecureRandom;
 
 @SuppressWarnings("UtilityClass")
 public final class Password {
+    public static final int REGISTRATION_CODE_LENGTH = 6;
     private static final int DEFAULT_LENGTH = 14;
     @SuppressWarnings("SpellCheckingInspection")
     private static final String ALPHABET = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKMLNPQRTUVWXY346789";
@@ -45,7 +46,7 @@ public final class Password {
     }
 
     public static String generateRegistrationCode() {
-        return new SecureRandom().ints(6, 0, 10)
+        return new SecureRandom().ints(REGISTRATION_CODE_LENGTH, 0, 10)
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
     }
