@@ -23,10 +23,9 @@ package org.simlar.simlarserver.xml;
 
 import org.junit.Test;
 import org.simlar.simlarserver.utils.MarshalUtil;
-import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -40,7 +39,7 @@ public final class XmlSuccessCreateAccountRequestTest {
     }
 
     @Test
-    public void testUnMarshal() throws JAXBException, ParserConfigurationException, SAXException {
+    public void testUnMarshal() throws JAXBException, XMLStreamException {
         final String xml =
                 "<?xml version=\"1.0\"?>\n" +
                 "<success simlarId=\"*23456784*\" password=\"s1cur3Me2\"/>";

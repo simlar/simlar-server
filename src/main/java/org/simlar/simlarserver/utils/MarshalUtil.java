@@ -20,15 +20,11 @@
 
 package org.simlar.simlarserver.utils;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.sax.SAXSource;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -38,18 +34,16 @@ public final class MarshalUtil {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
-    @SuppressWarnings("OverlyBroadThrowsClause")
-    private static SAXParser createSAXParser() throws SAXException, ParserConfigurationException {
-        final SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-        factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-        return factory.newSAXParser();
+    private static XMLStreamReader createXMLStreamReader(final String xml) throws XMLStreamException {
+        final XMLInputFactory factory = XMLInputFactory.newInstance();
+        factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+        factory.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+        return factory.createXMLStreamReader(new StringReader(xml));
     }
 
-    public static <T> T unmarshal(final Class<T> resultClass, final String xml) throws JAXBException, ParserConfigurationException, SAXException {
+    public static <T> T unmarshal(final Class<T> resultClass, final String xml) throws JAXBException, XMLStreamException {
         return JAXBContext.newInstance(resultClass).createUnmarshaller().unmarshal(
-                new SAXSource(createSAXParser().getXMLReader(), new InputSource(new StringReader(xml))),
+                createXMLStreamReader(xml),
                 resultClass).getValue();
     }
 
