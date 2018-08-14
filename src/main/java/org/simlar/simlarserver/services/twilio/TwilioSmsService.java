@@ -165,12 +165,14 @@ public final class TwilioSmsService implements SmsService {
             return;
         }
 
-        if (!StringUtils.equals(smsProviderLog.getTelephoneNumber(), telephoneNumber)) {
-            log.warn("status report with unequal telephone numbers: saved='{}' received '{}'", smsProviderLog.getTelephoneNumber(), telephoneNumber);
+        final String savedTelephoneNumber = smsProviderLog.getTelephoneNumber();
+        if (!StringUtils.equals(savedTelephoneNumber, telephoneNumber)) {
+            log.warn("status report with unequal telephone numbers: saved='{}' received='{}'", savedTelephoneNumber, telephoneNumber);
         }
 
-        if (smsProviderLog.getType() != type) {
-            log.warn("status report with unequal type: saved='{}' received '{}'", smsProviderLog.getType(), type);
+        final TwilioRequestType savedType = smsProviderLog.getType();
+        if (savedType != type) {
+            log.warn("status report with unequal type: saved='{}' received='{}'", savedType, type);
         }
 
         smsProviderLog.setCallbackTimestampToNow();
@@ -191,8 +193,9 @@ public final class TwilioSmsService implements SmsService {
             throw new XmlErrorNoCallSessionException("callSid='" + callSid + "' matches SMS");
         }
 
-        if (!StringUtils.equals(smsProviderLog.getTelephoneNumber(), telephoneNumber)) {
-            log.warn("call with unequal telephone numbers: saved='{}' received '{}'", smsProviderLog.getTelephoneNumber(), telephoneNumber);
+        final String savedTelephoneNumber = smsProviderLog.getTelephoneNumber();
+        if (!StringUtils.equals(savedTelephoneNumber, telephoneNumber)) {
+            log.warn("call with unequal telephone numbers: saved='{}' received '{}'", savedTelephoneNumber, telephoneNumber);
         }
 
         smsProviderLog.setCallbackTimestampToNow();

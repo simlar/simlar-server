@@ -139,7 +139,7 @@ public final class CreateAccountService {
         return transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
             if (dbEntry == null) {
-                return accountCreationRepository.save(new AccountCreationRequestCount(simlarId.get(), Password.generate(), Password.generateRegistrationCode(), ip));
+                return accountCreationRepository.save(new AccountCreationRequestCount(simlarId, Password.generate(), Password.generateRegistrationCode(), ip));
             }
 
             final Instant now = Instant.now();
@@ -183,7 +183,8 @@ public final class CreateAccountService {
                 throw new XmlErrorWrongCredentialsException("call request with wrong password for simlarId: " + simlarId);
             }
 
-            final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), Instant.now()).getSeconds();
+            final Instant now = Instant.now();
+            final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), now).getSeconds();
             if (secondsSinceRequest < settingsService.getAccountCreationCallDelaySecondsMin()) {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since request: " + secondsSinceRequest + 's');
             }
@@ -191,7 +192,6 @@ public final class CreateAccountService {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since request: " + secondsSinceRequest + 's');
             }
 
-            final Instant now = Instant.now();
             final Instant savedTimestamp = dbEntry.getTimestamp();
             if (savedTimestamp != null && Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
                 dbEntry.setCalls(1);
