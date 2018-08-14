@@ -150,6 +150,7 @@ public final class CreateAccountService {
             }
             dbEntry.setTimestamp(now);
             dbEntry.setIp(ip);
+            dbEntry.setConfirmTries(0);
             return accountCreationRepository.save(dbEntry);
         });
     }
