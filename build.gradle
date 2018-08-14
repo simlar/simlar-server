@@ -51,6 +51,7 @@ buildscript {
 
 war {
     baseName = 'simlar-server'
+    archiveName = "${baseName}##${version}.war"
     rootSpec.exclude('local.properties')
 }
 
@@ -69,7 +70,6 @@ dependencies {
     compile("com.googlecode.libphonenumber:libphonenumber:8.8.5")
     compileOnly("org.projectlombok:lombok:1.16.18")
     testCompile("org.springframework.boot:spring-boot-starter-test")
-    testCompile("junit:junit:4.12")
     testCompile("org.mockito:mockito-core:2.11.0")
     runtime("mysql:mysql-connector-java")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
@@ -105,7 +105,7 @@ tasks.withType(FindBugs) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.9'
+    gradleVersion = '4.3'
 }
 
 processResources {
