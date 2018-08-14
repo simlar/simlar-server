@@ -21,9 +21,9 @@
 
 package org.simlar.simlarserver.controllers;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.simlar.simlarserver.services.delaycalculatorservice.DelayCalculatorService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
-import org.simlar.simlarserver.utils.Comparables;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
@@ -93,7 +93,7 @@ final class ContactsController {
         subscriberService.checkCredentialsWithException(login, password);
 
         final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(contacts);
-        final Duration delay = Comparables.max(DELAY_MINIMUM, delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds));
+        final Duration delay = ObjectUtils.max(DELAY_MINIMUM, delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds));
         if (DELAY_MAXIMUM.compareTo(delay) < 0) {
             throw new XmlErrorRequestedTooManyContactsException("request delay=" + delay + " blocking simlarId=" + login);
         }

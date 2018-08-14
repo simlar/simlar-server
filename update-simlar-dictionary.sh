@@ -7,7 +7,7 @@ declare -r GSED=$(which gsed)
 declare -r SED=${GSED:-"$(which sed)"}
 
 declare -r GREADLINK=$(which greadlink)
-declare -r READLINK=${GREADLINK:-"$(which greadlink)"}
+declare -r READLINK=${GREADLINK:-"$(which readlink)"}
 
 
 declare -r PROJECT_DIR="$(dirname $("${READLINK}" -f $0))"
