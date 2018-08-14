@@ -30,7 +30,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 
-public class ContactsControllerBaseTest extends BaseControllerTest {
+class ContactsControllerBaseTest extends BaseControllerTest {
     @SuppressWarnings("unchecked")
     private <T> T requestContactStatus(final Class<T> responseClass, final String login, final String password, final String contacts) {
         return postRequest(responseClass, ContactsController.REQUEST_PATH, createParameters(new String[][] {

@@ -24,6 +24,8 @@ package org.simlar.simlarserver.controllers;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
+import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
@@ -44,6 +46,9 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     @SuppressWarnings("CanBeFinal")
     @Autowired
     private SmsService smsService;
+
+    @Autowired
+    private AccountCreationRequestCountRepository accountCreationRepository;
 
     @SuppressWarnings("MethodWithTooManyParameters")
     private <T> T postCreateAccount(final Class<T> responseClass, final boolean callSmsService, final boolean sendSmsResult, final String command, final String telephoneNumber, final String smsText) {
@@ -78,7 +83,16 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertNotNull(success);
         assertEquals("*15005550006*", success.getSimlarId());
         assertNotNull(success.getPassword());
-        assertEquals("password '" + success.getPassword() + "' does not match expected size",12, success.getPassword().length());
+        assertEquals("password '" + success.getPassword() + "' does not match expected size",14, success.getPassword().length());
+
+        final AccountCreationRequestCount count = accountCreationRepository.findBySimlarId(success.getSimlarId());
+        assertNotNull(count);
+        assertEquals(success.getPassword(), count.getPassword());
+        assertNotNull(count.getRegistrationCode());
+        assertEquals("password '" + count.getRegistrationCode() + "' does not match expected size",6, count.getRegistrationCode().length());
+        assertEquals(1, count.getRequestTries());
+        assertEquals(0, count.getConfirmTries());
+        assertEquals("127.0.0.1", count.getIp());//NOPMD.AvoidUsingHardCodedIP
     }
 
     @Test

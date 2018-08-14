@@ -37,7 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
-public class BaseControllerTest {
+class BaseControllerTest {
     @SuppressWarnings("CanBeFinal")
     @Value("${local.server.port}")
     private int port;

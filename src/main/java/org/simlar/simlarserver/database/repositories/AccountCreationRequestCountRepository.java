@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Simlar Authors.
+ * Copyright (C) 2017 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -21,10 +21,10 @@
 
 package org.simlar.simlarserver.database.repositories;
 
-import org.simlar.simlarserver.database.models.PushNotification;
+import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.springframework.data.repository.CrudRepository;
 
-@SuppressWarnings({"SameParameterValue", "unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
-public interface PushNotificationsRepository extends CrudRepository<PushNotification, String> {
-    PushNotification findBySimlarId(final String simlarId);
+@SuppressWarnings({"unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
+public interface AccountCreationRequestCountRepository extends CrudRepository<AccountCreationRequestCount, Integer> {
+    AccountCreationRequestCount findBySimlarId(final String simlarId);
 }

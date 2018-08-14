@@ -49,12 +49,11 @@ The simlar-server uses the [gradle versions plugin](https://github.com/ben-manes
 
 ## IntelliJ IDEA CE ##
 We use the [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/) for development.
-
-### Inspection ###
-Initially importing simlar-server removes the inspection settings. That's why we recommend to run the following command once after importing:
+To generate some files for this ide run:
 ```
-git checkout .idea/
+./gradlew idea
 ```
+Then simply open the directory in IntelliJ.
 
 ### Dictionary ###
 In Settings/Editor/Spelling choose the tab Dictionaries and add ```ides/intellij/dictionaries/``` to list of Custom Dictionary Folders.

@@ -24,7 +24,7 @@ package org.simlar.simlarserver.database.repositories;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.springframework.data.repository.CrudRepository;
 
-@SuppressWarnings({"unused", "InterfaceNeverImplemented"})
+@SuppressWarnings({"unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
 public interface SmsSentLogRepository extends CrudRepository<SmsSentLog, Integer> {
     SmsSentLog findByTelephoneNumber(final String telephoneNumber);
 

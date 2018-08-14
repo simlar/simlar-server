@@ -25,10 +25,9 @@ import java.security.SecureRandom;
 
 @SuppressWarnings("UtilityClass")
 public final class Password {
-    private static final int DEFAULT_LENGTH = 12;
+    private static final int DEFAULT_LENGTH = 14;
     @SuppressWarnings("SpellCheckingInspection")
-    private static final String ALPHABET = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXY23456789 _-+#*?$()[]<>/%";
-    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final String ALPHABET = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKMLNPQRTUVWXY346789";
 
     private Password() {
         throw new AssertionError("This class was not meant to be instantiated");
@@ -39,14 +38,14 @@ public final class Password {
     }
 
     static String generate(final int length) {
-        return RANDOM.ints(length, 0, ALPHABET.length())
+        return new SecureRandom().ints(length, 0, ALPHABET.length())
                 .mapToObj(ALPHABET::charAt)
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
     }
 
     public static String generateRegistrationCode() {
-        return RANDOM.ints(6, 0, 10)
+        return new SecureRandom().ints(6, 0, 10)
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
     }
