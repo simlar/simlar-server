@@ -24,6 +24,7 @@ package org.simlar.simlarserver.controllers;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
@@ -67,13 +68,14 @@ final class ContactsController {
      * @return XmlError or xmlContactList
      *            error message or contact list in xml
      */
+    @SuppressFBWarnings("URV_UNRELATED_RETURN_VALUES")
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
     public Object getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
-        LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + "\"");
+        LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + '\"');
 
         if (!subscriberService.checkCredentials(login, password)) {
-            LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with wrong credentials: login=\"" + login + "\"");
+            LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with wrong credentials: login=\"" + login + '\"');
             return XmlError.wrongCredentials();
         }
 

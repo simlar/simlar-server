@@ -44,10 +44,19 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-ws")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("com.h2database:h2")
+    compile("com.google.code.findbugs:annotations:3.0.1")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("junit:junit:4.12")
     runtime("mysql:mysql-connector-java:5.1.38")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+
+    findbugs("com.google.code.findbugs:findbugs:3.0.1")
+    findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.2.3") // 6.4.x - 6.6.0 have a bug detecting false positive in SimlarId:create
+}
+
+findbugs {
+    effort = "max"
+    reportLevel = "low"
 }
 
 tasks.withType(FindBugs) {

@@ -45,7 +45,7 @@ public final class ErrorControllerTest {
     private int                 port;
 
     private boolean testHttpPost(final String requestUrl, final MultiValueMap parameter) {
-        final String result = new RestTemplate().postForObject("http://localhost:" + port + "/" + requestUrl, parameter, String.class);
+        final String result = new RestTemplate().postForObject("http://localhost:" + port + '/' + requestUrl, parameter, String.class);
         assertNotNull(result);
 
 
@@ -64,7 +64,7 @@ public final class ErrorControllerTest {
     @Test
     public void httpPostRequest() {
         assertTrue(testHttpPost("", null));
-        assertTrue(testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS + "x", null));
+        assertTrue(testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS + 'x', null));
         assertTrue(testHttpPost("index", null));
         assertTrue(testHttpPost("index.html", null));
         assertTrue(testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS, null));
@@ -79,7 +79,7 @@ public final class ErrorControllerTest {
     }
 
     private boolean testHttpGet(final String requestUrl) {
-        final String result = new RestTemplate().getForObject("http://localhost:" + port + "/" + requestUrl, String.class);
+        final String result = new RestTemplate().getForObject("http://localhost:" + port + '/' + requestUrl, String.class);
         assertNotNull(result);
 
         try {

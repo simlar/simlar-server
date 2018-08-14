@@ -22,7 +22,7 @@ package org.simlar.simlarserver.utils;
 
 import org.springframework.util.DigestUtils;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 public final class Hash {
 
@@ -31,10 +31,6 @@ public final class Hash {
     }
 
     public static String md5(final String string) {
-        try {
-            return string == null ? "" : DigestUtils.md5DigestAsHex(string.getBytes("UTF-8"));
-        } catch (final UnsupportedEncodingException e) {
-            return "";
-        }
+        return string == null ? "" : DigestUtils.md5DigestAsHex(string.getBytes(StandardCharsets.UTF_8));
     }
 }
