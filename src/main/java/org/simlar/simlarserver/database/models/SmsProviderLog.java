@@ -42,8 +42,8 @@ import java.time.Instant;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "simlar_sms_sent_log_java")
-public final class SmsSentLog {
+@Table(name = "simlar_sms_provider_log")
+public final class SmsProviderLog {
     @SuppressWarnings("unused")
     @Id
     @GeneratedValue
@@ -60,45 +60,44 @@ public final class SmsSentLog {
     private Timestamp timestamp;
 
     @Column(length = 64)
-    private String dlrNumber;
+    private String sessionId;
 
-    @Column(columnDefinition = "TIMESTAMP NULL DEFAULT NULL") /// hibernate does not support columnDefinition = "TIMESTAMP DEFAULT '0000-00-00 00:00:00'"
-    private Timestamp dlrTimestamp;
-
-    @Column(length = 64)
-    private String twilioStatus;
+    private Timestamp callbackTimestamp;
 
     @Column(length = 64)
-    private String twilioError;
+    private String status;
+
+    @Column(length = 64)
+    private String error;
 
     @Column(length = 170)
     private String message;
 
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message) {
-        this(type, telephoneNumber, dlrNumber, twilioStatus, null, message);
+    public SmsProviderLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String message) {
+        this(type, telephoneNumber, sessionId, status, null, message);
     }
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message, final Instant dlrTimestamp) {
-        this(type, telephoneNumber, dlrNumber, twilioStatus, null, message, dlrTimestamp);
+    public SmsProviderLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String message, final Instant callbackTimestamp) {
+        this(type, telephoneNumber, sessionId, status, null, message, callbackTimestamp);
     }
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message) {
-        this(type, telephoneNumber, dlrNumber, twilioStatus, twilioError, message, null);
+    public SmsProviderLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String error, final String message) {
+        this(type, telephoneNumber, sessionId, status, error, message, null);
     }
 
     @SuppressWarnings({"UnnecessaryThis", "ConstructorWithTooManyParameters"})
-    public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message, final Instant dlrTimestamp) {
-        this.type            = type;
-        this.telephoneNumber = telephoneNumber;
-        this.timestamp       = Timestamp.from(Instant.now());
-        this.dlrNumber       = dlrNumber;
+    public SmsProviderLog(final TwilioRequestType type, final String telephoneNumber, final String sessionId, final String status, final String error, final String message, final Instant callbackTimestamp) {
+        this.type              = type;
+        this.telephoneNumber   = telephoneNumber;
+        this.timestamp         = Timestamp.from(Instant.now());
+        this.sessionId         = sessionId;
         //noinspection AssignmentToNull
-        this.dlrTimestamp    = dlrTimestamp == null ? null : Timestamp.from(dlrTimestamp);
-        this.twilioStatus    = twilioStatus;
-        this.twilioError     = StringUtils.left(twilioError, 64);
-        this.message         = message;
+        this.callbackTimestamp = callbackTimestamp == null ? null : Timestamp.from(callbackTimestamp);
+        this.status            = status;
+        this.error             = StringUtils.left(error, 64);
+        this.message           = message;
     }
 
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
@@ -107,11 +106,11 @@ public final class SmsSentLog {
     }
 
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
-    public Instant getDlrTimestamp() {
-        return dlrTimestamp == null ? null : dlrTimestamp.toInstant();
+    public Instant getCallbackTimestamp() {
+        return callbackTimestamp == null ? null : callbackTimestamp.toInstant();
     }
 
-    public void setDlrTimestampToNow() {
-        dlrTimestamp = Timestamp.from(Instant.now());
+    public void setCallbackTimestampToNow() {
+        callbackTimestamp = Timestamp.from(Instant.now());
     }
 }

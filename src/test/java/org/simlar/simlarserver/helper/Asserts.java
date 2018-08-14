@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.helper;
 
-import org.simlar.simlarserver.database.models.SmsSentLog;
+import org.simlar.simlarserver.database.models.SmsProviderLog;
 
 import java.time.Duration;
 import java.time.temporal.Temporal;
@@ -50,7 +50,7 @@ public final class Asserts {
         assertTrue(message, abs(Duration.between(expected, actual).getSeconds()) <= 1);
     }
 
-    public static void assertAlmostEquals(final String message, final SmsSentLog expected, final SmsSentLog actual) {
+    public static void assertAlmostEquals(final String message, final SmsProviderLog expected, final SmsProviderLog actual) {
         if (expected == null || actual == null) {
             assertSame(message, expected, actual);
             return;
@@ -58,16 +58,16 @@ public final class Asserts {
 
         assertEquals(message, expected.getTelephoneNumber(), actual.getTelephoneNumber());
         assertAlmostEquals(message, expected.getTimestamp(), actual.getTimestamp());
-        final String dlrNumber = actual.getDlrNumber();
-        if (expected.getDlrNumber() == null) {
-            assertNull(message, dlrNumber);
+        final String sessionId = actual.getSessionId();
+        if (expected.getSessionId() == null) {
+            assertNull(message, sessionId);
         } else {
-            assertNotNull(message, dlrNumber);
-            assertNotEquals(message, "", dlrNumber);
+            assertNotNull(message, sessionId);
+            assertNotEquals(message, "", sessionId);
         }
-        assertAlmostEquals(message, expected.getDlrTimestamp(), actual.getDlrTimestamp());
-        assertEquals(message, expected.getTwilioStatus(), actual.getTwilioStatus());
-        assertEquals(message, expected.getTwilioError(), actual.getTwilioError());
+        assertAlmostEquals(message, expected.getCallbackTimestamp(), actual.getCallbackTimestamp());
+        assertEquals(message, expected.getStatus(), actual.getStatus());
+        assertEquals(message, expected.getError(), actual.getError());
         assertEquals(message, expected.getMessage(), actual.getMessage());
     }
 }

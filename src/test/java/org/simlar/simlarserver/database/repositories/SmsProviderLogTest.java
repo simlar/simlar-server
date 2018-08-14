@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.data.TwilioRequestType;
-import org.simlar.simlarserver.database.models.SmsSentLog;
+import org.simlar.simlarserver.database.models.SmsProviderLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -37,27 +37,27 @@ import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
-public final class SmsSentLogTest {
+public final class SmsProviderLogTest {
     @Autowired
-    private SmsSentLogRepository smsSentLogRepository;
+    private SmsProviderLogRepository smsProviderLogRepository;
 
     @Test
     public void testSendSmsInvalidNumber() {
         final String telephoneNumber = "+123456789";
         final String message         = "Test invalid number";
-        final String dlrNumber       = "error127";
-        final String twilioStatus    = "42";
-        final String twilioError     = "1234567890123456789012345678901234567890123456789012345678901234567890123456789";
+        final String sessionId       = "error127";
+        final String status          = "42";
+        final String error           = "1234567890123456789012345678901234567890123456789012345678901234567890123456789";
 
-        smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.SMS, telephoneNumber, dlrNumber, twilioStatus, twilioError, message));
-        final SmsSentLog logEntry = smsSentLogRepository.findByTelephoneNumber(telephoneNumber);
+        smsProviderLogRepository.save(new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, sessionId, status, error, message));
+        final SmsProviderLog logEntry = smsProviderLogRepository.findByTelephoneNumber(telephoneNumber);
         assertNotNull(logEntry);
         assertNotNull(logEntry.getTimestamp());
         assertEquals(telephoneNumber, logEntry.getTelephoneNumber());
         assertEquals(message, logEntry.getMessage());
-        assertEquals(dlrNumber, logEntry.getDlrNumber());
-        assertEquals(twilioStatus, logEntry.getTwilioStatus());
-        assertEquals(StringUtils.left(twilioError, 64), logEntry.getTwilioError());
-        assertNull(logEntry.getDlrTimestamp());
+        assertEquals(sessionId, logEntry.getSessionId());
+        assertEquals(status, logEntry.getStatus());
+        assertEquals(StringUtils.left(error, 64), logEntry.getError());
+        assertNull(logEntry.getCallbackTimestamp());
     }
 }
