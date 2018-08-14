@@ -24,65 +24,108 @@ package org.simlar.simlarserver.controllers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.xml.XmlError;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import java.io.StringReader;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class ErrorControllerTest extends BaseControllerTest {
-    private void httpPost(final String requestUrl, final MultiValueMap<String, String> parameters) {
-        final XmlError xmlError = postRequest(XmlError.class, requestUrl, parameters);
+    private static final class NoExceptionResponseErrorHandler implements ResponseErrorHandler {
+        @SuppressWarnings("MethodReturnAlwaysConstant")
+        @Override
+        public boolean hasError(final ClientHttpResponse response) {
+            return false;
+        }
+
+        @Override
+        public void handleError(final ClientHttpResponse response) {
+        }
+    }
+
+    private static RestOperations createNoExceptionRestTemplate() {
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new NoExceptionResponseErrorHandler());
+        return restTemplate;
+    }
+
+    private static void assertUnknownStructure(final XmlError xmlError) {
         assertNotNull(xmlError);
         assertEquals(1, xmlError.getId());
     }
 
+    private void httpPost(final String requestPath, final MultiValueMap<String, String> parameters) {
+        assertNotNull(requestPath);
+        assertUnknownStructure(postRequest(XmlError.class, requestPath, parameters));
+    }
+
+    private static void assertUnknownStructure404(final ResponseEntity<String> response) {
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+
+        assertUnknownStructure(unmarshal(XmlError.class, response.getBody()));
+    }
+
+    private void httpPost404(final String requestPath, final MultiValueMap<String, String> parameters) {
+        assertNotNull(requestPath);
+        assertUnknownStructure404(createNoExceptionRestTemplate().postForEntity(getBaseUrl() + requestPath, parameters, String.class));
+    }
+
     @Test
     public void testHttpPostRequest() {
-        httpPost("", null);
-        httpPost(ContactsController.REQUEST_PATH + 'x', null);
-        httpPost("index", null);
-        httpPost("index.html", null);
-        httpPost(ContactsController.REQUEST_PATH, null);
+        httpPost404("", null);
+        httpPost404(ContactsController.REQUEST_PATH + 'x', null);
+        httpPost404("index", null);
+        httpPost404("index.html", null);
+
+        httpPost404(ContactsController.REQUEST_PATH + 'x', createParameters(new String[][] {
+                { "login", "*0007*" },
+                { "password", "007" }
+        }));
     }
 
     @Test
     public void testHttpPostRequestWrongParameter() {
-        final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
-        parameter.add("login", "007");
-        parameter.add("password", "007");
-        httpPost(ContactsController.REQUEST_PATH, parameter);
+        httpPost(ContactsController.REQUEST_PATH, null);
+
+        httpPost(ContactsController.REQUEST_PATH, createParameters(new String[][] {
+                { "login", "007" },
+                { "password", "007" }
+        }));
+
+        httpPost(ContactsController.REQUEST_PATH, createParameters(new String[][] {
+                { "loin", "*0007*" },
+                { "password", "007" },
+                { "contacts", "*0001*|*0002*" }
+        }));
+
+        httpPost(PushNotificationsController.REQUEST_PATH, createParameters(new String[][] {
+                { "login", "*0007*" },
+                { "password", "007" },
+                { "contacts", "*0001*|*0002*" }
+        }));
     }
 
-    private void httpGet(final String requestUrl) {
-        final String result = new RestTemplate().getForObject(getBaseUrl() + requestUrl, String.class);
-        assertNotNull(result);
-
-        try {
-            final XmlError xmlError = (XmlError)JAXBContext.newInstance(XmlError.class).createUnmarshaller().unmarshal(new StringReader(result));
-            assertNotNull(xmlError);
-            assertEquals(1, xmlError.getId());
-        } catch (final JAXBException e) {
-            throw new AssertionError("JAXBException: for postResult: " + result, e);
-        } catch (final ClassCastException e) {
-            throw new AssertionError("ClassCastException: for postResult: " + result, e);
-        }
+    private void httpGet404(final String requestPath) {
+        assertNotNull(requestPath);
+        assertUnknownStructure404(createNoExceptionRestTemplate().getForEntity(getBaseUrl() + requestPath, String.class));
     }
 
     @Test
     public void testHttpGetRequest() {
-        httpGet("");
-        httpGet("/");
-        httpGet(ContactsController.REQUEST_PATH + 'x');
-        httpGet("/index");
-        httpGet("/index.html");
-        httpGet(ContactsController.REQUEST_PATH);
+        httpGet404("");
+        httpGet404("/");
+        httpGet404(ContactsController.REQUEST_PATH + 'x');
+        httpGet404("/index");
+        httpGet404("/index.html");
+        httpGet404(ContactsController.REQUEST_PATH);
     }
 }

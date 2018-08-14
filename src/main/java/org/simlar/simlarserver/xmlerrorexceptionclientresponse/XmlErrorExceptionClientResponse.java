@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum XmlErrorExceptionClientResponse {
+        UNKNOWN_ERROR              (null,                                             0, "unknown error"),
         UNKNOWN_STRUCTURE          (null,                                             1, "unknown structure"),
         WRONG_CREDENTIALS          (XmlErrorWrongCredentialsException.class,         10, "wrong credentials"),
         UNKNOWN_PUSH_ID_TYPE       (XmlErrorUnknownPushIdTypeException.class,        30, "unknown push id type"),
@@ -45,7 +46,7 @@ public enum XmlErrorExceptionClientResponse {
     private final String message;
 
     private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP
-            = Arrays.stream(XmlErrorExceptionClientResponse.values()).collect(Collectors.toMap(response -> response.exceptionClass, response -> response));
+            = Arrays.stream(XmlErrorExceptionClientResponse.values()).collect(Collectors.toMap(response -> response.exceptionClass, response -> response, (class1, class2) -> class1));
 
     XmlErrorExceptionClientResponse(final Class<? extends XmlErrorException> exceptionClass, final int id, final String message) {
         this.exceptionClass = exceptionClass;

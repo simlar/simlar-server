@@ -31,8 +31,6 @@ import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessPushNotification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -53,13 +51,12 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
 
     @SuppressWarnings("unchecked")
     private <T> T requestStorePushId(final Class<T> responseClass, final String login, final String password, final int deviceType, final String pushId) {
-        final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
-        parameter.add("login", login);
-        parameter.add("password", password);
-        parameter.add("deviceType", String.valueOf(deviceType));
-        parameter.add("pushId", pushId);
-
-        return postRequest(responseClass, PushNotificationsController.REQUEST_PATH, parameter);
+        return postRequest(responseClass, PushNotificationsController.REQUEST_PATH, createParameters(new String[][] {
+                { "login", login },
+                { "password", password },
+                { "deviceType", String.valueOf(deviceType) },
+                { "pushId", pushId }
+        }));
     }
 
     private <T> T requestStorePushId(final Class<T> responseClass, final TestUser user, final int deviceType, final String pushId) {

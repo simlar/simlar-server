@@ -44,7 +44,7 @@ public final class XmlErrorExceptionClientResponseTest {
     @Test
     public void testFromException() {
         assertNull(XmlErrorExceptionClientResponse.fromException(XmlErrorNoResponseRegisteredException.class));
-        assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE, XmlErrorExceptionClientResponse.fromException(null));
+        assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_ERROR, XmlErrorExceptionClientResponse.fromException(null));
         assertEquals(XmlErrorExceptionClientResponse.WRONG_CREDENTIALS, XmlErrorExceptionClientResponse.fromException(XmlErrorWrongCredentialsException.class));
         assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_PUSH_ID_TYPE, XmlErrorExceptionClientResponse.fromException(XmlErrorUnknownPushIdTypeException.class));
         assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_APPLE_PUSH_ID, XmlErrorExceptionClientResponse.fromException(XmlErrorUnknownApplePushIdException.class));
