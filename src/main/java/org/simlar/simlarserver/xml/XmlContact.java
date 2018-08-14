@@ -28,11 +28,13 @@ import lombok.NoArgsConstructor;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = { "simlarId", "status" })
 public final class XmlContact {
     @XmlAttribute(name = "id")
     private String simlarId;

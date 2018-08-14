@@ -29,12 +29,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "error")
+@XmlType(propOrder = { "id", "message" })
 public final class XmlError {
     @XmlAttribute
     private int id;

@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "success")
-@XmlType(propOrder={"simlarId","password"})
+@XmlType(propOrder = { "simlarId", "password" })
 public final class XmlSuccessCreateAccountRequest {
     @XmlAttribute
     private String simlarId;
