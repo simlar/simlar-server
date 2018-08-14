@@ -71,7 +71,8 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.16.20")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.mockito:mockito-core:2.13.0")
-    runtime("mysql:mysql-connector-java")
+    runtime("org.mariadb.jdbc:mariadb-java-client:2.2.1")
+
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
@@ -88,6 +89,8 @@ test {
 }
 
 pmd {
+    /// IntelliJ plugin use this version
+    /// see: https://github.com/amitdev/PMD-Intellij/blob/master/PMD-Intellij.iml
     toolVersion = '5.8.1'
 }
 

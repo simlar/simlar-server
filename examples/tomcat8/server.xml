@@ -51,8 +51,8 @@
         global="jdbc/Simlar"
         auth="Container"
         type="javax.sql.DataSource"
-        driverClassName="com.mysql.jdbc.Driver"
-        url="jdbc:mysql://localhost/kamailio"
+        driverClassName="org.mariadb.jdbc.Driver"
+        url="jdbc:mariadb://localhost/kamailio"
         username="simlar"
         password="changeMe123" />
   </GlobalNamingResources>
