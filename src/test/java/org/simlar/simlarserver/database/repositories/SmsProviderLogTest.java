@@ -42,7 +42,7 @@ public final class SmsProviderLogTest {
     private SmsProviderLogRepository smsProviderLogRepository;
 
     @Test
-    public void testSendSmsInvalidNumber() {
+    public void testCallBackTimestampNull() {
         final String telephoneNumber = "+123456789";
         final String message         = "Test invalid number";
         final String sessionId       = "error127";

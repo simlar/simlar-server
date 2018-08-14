@@ -48,7 +48,7 @@ public final class SmsProviderLog {
     @SuppressWarnings("unused")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 64)
@@ -63,6 +63,7 @@ public final class SmsProviderLog {
     @Column(length = 64)
     private String sessionId;
 
+    @Column(columnDefinition = "TIMESTAMP NULL DEFAULT NULL")
     private Timestamp callbackTimestamp;
 
     @Column(length = 64)
