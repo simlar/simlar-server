@@ -67,12 +67,13 @@ dependencies {
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
-    findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.2.3") // 6.4.x - 6.6.0 have a bug detecting false positive in SimlarId:create
+    findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.6.1")
 }
 
 findbugs {
     effort = "max"
     reportLevel = "low"
+    excludeFilter = file("$rootProject.projectDir/ides/findbugs/excludeFilter.xml")
 }
 
 tasks.withType(FindBugs) {
