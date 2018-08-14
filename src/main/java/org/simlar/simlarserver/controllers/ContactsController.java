@@ -89,6 +89,7 @@ final class ContactsController {
         final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(contacts);
         final Duration delay = ObjectUtils.max(DELAY_MINIMUM, delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds));
         if (DELAY_MAXIMUM.compareTo(delay) < 0) {
+            log.debug("request delay '{}' blocking simlarId '{}' when requesting '{}' contacts unified list '{}'", delay, login, simlarIds.size(), SimlarId.sortAndUnifySimlarIds(simlarIds));
             throw new XmlErrorRequestedTooManyContactsException("request delay=" + delay + " blocking simlarId=" + login);
         }
 

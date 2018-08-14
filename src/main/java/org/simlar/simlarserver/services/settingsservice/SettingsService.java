@@ -35,6 +35,7 @@ import java.util.List;
 @Component
 public class SettingsService {
     private final String domain;
+    private final short port;
     private final String version;
     private final List<String> accountCreationAlertSmsNumbers;
     private final int accountCreationMaxRequestsPerSimlarIdPerDay;
@@ -47,6 +48,7 @@ public class SettingsService {
     @Autowired
     public SettingsService(
             @Value("${domain:}") final String                                      domain,
+            @Value("${port:6161}") final short                                     port,
             @Value("${info.app.version:}") final String                            version,
             @Value("${accountCreation.alertSmsNumbers:}") final String[]           accountCreationAlertSmsNumbers,
             @Value("${accountCreation.maxRequestsPerSimlarIdPerDay:10}") final int accountCreationMaxRequestsPerSimlarIdPerDay,
@@ -56,6 +58,7 @@ public class SettingsService {
             @Value("${accountCreation.maxConfirms:10}") final int                  accountCreationMaxConfirms
             ) {
         this.domain                                      = domain;
+        this.port                                        = port;
         this.version                                     = version;
         this.accountCreationAlertSmsNumbers              = Collections.unmodifiableList(Arrays.asList(accountCreationAlertSmsNumbers));
         this.accountCreationMaxRequestsPerSimlarIdPerDay = accountCreationMaxRequestsPerSimlarIdPerDay;
