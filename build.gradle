@@ -46,7 +46,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.3.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.4.RELEASE")
         classpath("com.github.ben-manes:gradle-versions-plugin:0.20.0")
         classpath("org.owasp:dependency-check-gradle:3.3.0")
     }
@@ -66,7 +66,7 @@ repositories {
 }
 
 ext {
-    lombokVersion = "1.18.0"
+    lombokVersion = "1.18.2"
 }
 
 dependencies {
@@ -81,7 +81,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.h2database:h2:1.4.197")
-    testImplementation("org.mockito:mockito-core:2.20.0")
+    testImplementation("org.mockito:mockito-core:2.21.0")
     runtime("org.mariadb.jdbc:mariadb-java-client:2.2.6")
 
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
@@ -100,7 +100,7 @@ test {
 }
 
 pmd {
-    toolVersion = "6.5.0"
+    toolVersion = "6.6.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = [ ]
 }
@@ -130,7 +130,7 @@ dependencyChecks.dependsOn dependencyCheckAnalyze
 dependencyChecks.dependsOn dependencyUpdates
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "4.8.1"
+    gradleVersion = "4.9"
 }
 
 processResources {
