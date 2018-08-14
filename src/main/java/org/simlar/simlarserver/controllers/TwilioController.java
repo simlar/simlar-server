@@ -24,11 +24,14 @@ package org.simlar.simlarserver.controllers;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
+import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
@@ -54,12 +57,13 @@ final class TwilioController {
      */
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = TwilioSmsService.REQUEST_PATH_DELIVERY, method = RequestMethod.POST)
-    public void postDeliveryReport(
+    public void deliveryReport(final HttpServletRequest request,
             @RequestParam(name = "MessageSid")                  final String messageSid,
             @RequestParam(name = "To")                          final String to,
             @RequestParam(name = "MessageStatus")               final String messageStatus,
             @RequestParam(name = "ErrorCode", required = false) final String errorCode
     ) {
+        log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_DELIVERY, new RequestLogMessage(request, false));
         log.info("'{}' requested with messageSid MessageSid='{}' To='{}' MessageStatus='{}' ErrorCode='{}'", TwilioSmsService.REQUEST_PATH_DELIVERY, messageSid, to, messageStatus, errorCode);
 
         twilioSmsService.handleDeliveryReport(to, messageSid, messageStatus, errorCode);

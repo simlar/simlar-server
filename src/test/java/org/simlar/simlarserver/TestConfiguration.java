@@ -25,10 +25,12 @@ import org.mockito.Mockito;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 @SuppressWarnings({"DesignForExtension", "unused", "MethodMayBeStatic"})
+@PropertySource("classpath:test.properties")
 @Configuration
-class MockConfiguration {
+class TestConfiguration {
     @Bean
     public SmsService smsService() {
         return Mockito.mock(SmsService.class);
