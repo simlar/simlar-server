@@ -5,7 +5,7 @@ declare -r SERVER=${1:?"USAGE: $0 your.server.org"}
 
 declare -r REMOTE="root@${SERVER}"
 
-declare -r REMOTE_DIR=$(ssh root@"${SERVER}" "mktemp -d -t simlar-server-XXXXXXX")
+declare -r REMOTE_DIR=$(ssh root@"${SERVER}" "mktemp --directory --tmpdir simlar-server-XXXXXXXXXX")
 echo "created temporary directory: ${REMOTE}:${REMOTE_DIR}"
 
 function cleanup {
@@ -33,7 +33,7 @@ ssh ${REMOTE} "rm /var/lib/tomcat8/webapps/simlar-server*.war ; mv "${REMOTE_DIR
 
 
 echo "waiting"
-for (( i = 0; i < 15; ++i )) ; do
+for I in $(seq 1 15) ; do
     echo -n "."
     sleep 1s
 done
