@@ -37,6 +37,7 @@ import static org.junit.Assert.*;
 @WebIntegrationTest(randomPort = true)
 public final class VersionControllerTest {
 
+    @SuppressWarnings("CanBeFinal")
     @Value("${local.server.port}")
     private int                 port;
 
