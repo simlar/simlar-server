@@ -40,6 +40,8 @@ import java.util.logging.Logger;
 public final class DelayCalculatorService {
     private static final Logger LOGGER = Logger.getLogger(DelayCalculatorService.class.getName());
 
+    public static final Duration MAXIMUM = Duration.ofSeconds(Long.MAX_VALUE);
+
     private static final Duration RESET_COUNTER = Duration.ofDays(1); // reset counter after one day
 
     private final ContactsRequestCountRepository contactsRequestCountRepository;
@@ -51,7 +53,7 @@ public final class DelayCalculatorService {
         transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
-    public int calculateRequestDelay(final SimlarId simlarId, final Collection<SimlarId> contacts) {
+    public Duration calculateRequestDelay(final SimlarId simlarId, final Collection<SimlarId> contacts) {
         return calculateDelay(calculateTotalRequestedContacts(simlarId, contacts, Instant.now()));
     }
 
@@ -94,12 +96,18 @@ public final class DelayCalculatorService {
         return savedCount + count;
     }
 
-    static int calculateDelay(final int requestedContacts) {
+    static Duration calculateDelay(final int requestedContacts) {
+        final Duration delay = calculateDelayWithoutLog(requestedContacts);
+        LOGGER.info("requestedContactsCount=" + requestedContacts + " -> delay=" + delay);
+        return delay;
+    }
+
+    private static Duration calculateDelayWithoutLog(final int requestedContacts) {
         if (requestedContacts < 0) {
-            return Integer.MAX_VALUE;
+            return MAXIMUM;
         }
 
         //noinspection NumericCastThatLosesPrecision
-        return (int)(StrictMath.pow(requestedContacts / 4096.0d, 4) / 4);
+        return Duration.ofSeconds((long)(StrictMath.pow(requestedContacts / 4096.0d, 4) / 4));
     }
 }

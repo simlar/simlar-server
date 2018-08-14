@@ -23,6 +23,7 @@ package org.simlar.simlarserver.controllers;
 
 import org.simlar.simlarserver.services.delaycalculatorservice.DelayCalculatorService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.utils.Comparables;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
@@ -36,8 +37,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -45,10 +49,10 @@ import java.util.stream.Collectors;
 
 @RestController
 final class ContactsController {
-    public  static final String REQUEST_PATH  = "/get-contacts-status.xml";
-    private static final Logger LOGGER        = Logger.getLogger(ContactsController.class.getName());
-    private static final int    DELAY_MAXIMUM = 8; // seconds
-    private static final long   DELAY_MINIMUM = 10; // milliseconds
+    public  static final String   REQUEST_PATH  = "/get-contacts-status.xml";
+    private static final Logger   LOGGER        = Logger.getLogger(ContactsController.class.getName());
+    private static final Duration DELAY_MINIMUM = Duration.ofMillis(10);
+    private static final Duration DELAY_MAXIMUM = Duration.ofSeconds(8);
 
     private final SubscriberService subscriberService;
     private final DelayCalculatorService delayCalculatorService;
@@ -60,6 +64,10 @@ final class ContactsController {
         this.subscriberService      = subscriberService;
         this.delayCalculatorService = delayCalculatorService;
         this.taskScheduler          = taskScheduler;
+    }
+
+    private static String formatInstant(final Instant instant) {
+        return DateTimeFormatter.ISO_ZONED_DATE_TIME.format(ZonedDateTime.ofInstant(instant, ZoneId.systemDefault()));
     }
 
     /**
@@ -85,28 +93,27 @@ final class ContactsController {
         subscriberService.checkCredentialsWithException(login, password);
 
         final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(contacts);
-        final int delay = delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds);
-        if (delay > DELAY_MAXIMUM) {
+        final Duration delay = Comparables.max(DELAY_MINIMUM, delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds));
+        if (DELAY_MAXIMUM.compareTo(delay) < 0) {
             throw new XmlErrorRequestedTooManyContactsException("request delay=" + delay + " blocking simlarId=" + login);
         }
 
-        final long delayMillis = Math.max(DELAY_MINIMUM, delay * 1000L);
-        final Instant instant = Instant.now().plus(delayMillis, ChronoUnit.MILLIS);
-        LOGGER.info("scheduling getContactStatus to: " + instant);
+        final Instant scheduledTime = Instant.now().plus(delay);
+        LOGGER.info("scheduling getContactStatus to: " + formatInstant(scheduledTime));
 
         final DeferredResult<XmlContacts> deferredResult = new DeferredResult<>();
         taskScheduler.schedule(() -> {
             if (deferredResult.isSetOrExpired()) {
-                LOGGER.severe("deferred result already set or expired simlarId=" + login + " delay=" + delay + " seconds");
+                LOGGER.severe("deferred result already set or expired simlarId=" + login + " delay=" + delay);
             } else {
-                LOGGER.info("executing getContactStatus scheduled to: " + instant);
+                LOGGER.info("executing getContactStatus scheduled to: " + formatInstant(scheduledTime));
                 deferredResult.setResult(
                         new XmlContacts(simlarIds.stream()
                                 .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
                                 .collect(Collectors.toList()))
                 );
             }
-        }, Date.from(instant));
+        }, Date.from(scheduledTime));
 
         return deferredResult;
     }
