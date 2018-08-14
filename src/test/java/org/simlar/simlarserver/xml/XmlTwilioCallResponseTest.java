@@ -31,9 +31,9 @@ import static org.junit.Assert.assertEquals;
 public final class XmlTwilioCallResponseTest {
     @Test
     public void testMarshal() throws JAXBException {
-        final String message = "Welcome to Simlar! Your registration code is: 111111";
+        final String message = "Welcome to Simlar! Your registration code is 111111";
         assertEquals(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Response><Say>" + message + "</Say></Response>",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Response><Say loop=\"0\">" + message + "</Say></Response>",
                 MarshalUtil.marshal(new XmlTwilioCallResponse(message)));
     }
 }

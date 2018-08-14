@@ -19,26 +19,12 @@
  *
  */
 
-package org.simlar.simlarserver.xml;
+package org.simlar.simlarserver.xmlerrorexceptions;
 
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+public final class XmlErrorNoCallSessionException extends XmlErrorException {
+    private static final long serialVersionUID = 1L;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@NoArgsConstructor
-@Setter
-@XmlRootElement(name = "Response")
-public final class XmlTwilioCallResponse {
-    private XmlTwilioSay say;
-
-    public XmlTwilioCallResponse(final String message) {
-        say = new XmlTwilioSay(message, 0);
-    }
-
-    @XmlElement(name = "Say")
-    public XmlTwilioSay getSay() {
-        return say;
+    public XmlErrorNoCallSessionException(final String message) {
+        super(message);
     }
 }

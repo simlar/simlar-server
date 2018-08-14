@@ -23,6 +23,7 @@ package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
@@ -67,7 +68,7 @@ final class TwilioController {
         log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_DELIVERY, new RequestLogMessage(request, false));
         log.info("'{}' requested with messageSid MessageSid='{}' To='{}' MessageStatus='{}' ErrorCode='{}'", TwilioSmsService.REQUEST_PATH_DELIVERY, messageSid, to, messageStatus, errorCode);
 
-        twilioSmsService.handleDeliveryReport(to, messageSid, messageStatus, errorCode);
+        twilioSmsService.handleStatusReport(TwilioRequestType.SMS, to, messageSid, messageStatus, errorCode);
     }
 
     /**
@@ -92,6 +93,8 @@ final class TwilioController {
     ) {
         log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_CALL_STATUS, new RequestLogMessage(request, false));
         log.info("'{}' requested with callSid='{}' To='{}' MessageStatus='{}'", TwilioSmsService.REQUEST_PATH_CALL_STATUS, callSid, to, callStatus);
+
+        twilioSmsService.handleStatusReport(TwilioRequestType.CALL, to, callSid, callStatus, null);
     }
 
     /**
@@ -117,6 +120,6 @@ final class TwilioController {
         log.debug("'{}' request='{}'", TwilioSmsService.REQUEST_PATH_CALL, new RequestLogMessage(request, false));
         log.info("'{}' requested with callSid='{}' To='{}' MessageStatus='{}'", TwilioSmsService.REQUEST_PATH_CALL, callSid, to, callStatus);
 
-        return new XmlTwilioCallResponse("Welcome to simlar! Your registration number is: 123456");
+        return twilioSmsService.handleCall(callSid, to, callStatus);
     }
 }

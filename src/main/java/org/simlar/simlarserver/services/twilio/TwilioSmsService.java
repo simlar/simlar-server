@@ -37,6 +37,8 @@ import org.simlar.simlarserver.json.twilio.MessageResponse;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.TwilioCallBackErrorCode;
+import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoCallSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
@@ -151,12 +153,12 @@ public final class TwilioSmsService implements SmsService {
     }
 
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    public boolean call(final String telephoneNumber) {
-        return doPostRequest(TwilioRequestType.CALL, telephoneNumber, null);
+    public boolean call(final String telephoneNumber, final String text) {
+        return doPostRequest(TwilioRequestType.CALL, telephoneNumber, text);
     }
 
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
-    public void handleDeliveryReport(@SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
+    public void handleStatusReport(final TwilioRequestType type, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
         final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(messageSid);
         if (smsSentLog == null) {
             log.error("no db entry");
@@ -164,12 +166,40 @@ public final class TwilioSmsService implements SmsService {
         }
 
         if (!StringUtils.equals(smsSentLog.getTelephoneNumber(), telephoneNumber)) {
-            log.warn("delivery report with unequal telephone numbers: saved='{}' received '{}'", smsSentLog.getTelephoneNumber(), telephoneNumber);
+            log.warn("status report with unequal telephone numbers: saved='{}' received '{}'", smsSentLog.getTelephoneNumber(), telephoneNumber);
+        }
+
+        if (smsSentLog.getType() != type) {
+            log.warn("status report with unequal type: saved='{}' received '{}'", smsSentLog.getType(), type);
         }
 
         smsSentLog.setDlrTimestampToNow();
         smsSentLog.setTwilioStatus(messageStatus);
         smsSentLog.setTwilioError(TwilioCallBackErrorCode.createString(errorCode));
         smsSentLogRepository.save(smsSentLog);
+    }
+
+    @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
+    public XmlTwilioCallResponse handleCall(final String callSid, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String callStatus) {
+        final SmsSentLog smsSentLog = smsSentLogRepository.findByDlrNumber(callSid);
+        if (smsSentLog == null) {
+            log.error("no db entry");
+            throw new XmlErrorNoCallSessionException("callSid='" + callSid + "' not found in DB");
+        }
+
+        if (smsSentLog.getType() != TwilioRequestType.CALL) {
+            log.error("call matches db entry for sms: '{}'", smsSentLog);
+            throw new XmlErrorNoCallSessionException("callSid='" + callSid + "' matches SMS");
+        }
+
+        if (!StringUtils.equals(smsSentLog.getTelephoneNumber(), telephoneNumber)) {
+            log.warn("call with unequal telephone numbers: saved='{}' received '{}'", smsSentLog.getTelephoneNumber(), telephoneNumber);
+        }
+
+        smsSentLog.setDlrTimestampToNow();
+        smsSentLog.setTwilioStatus(callStatus);
+        smsSentLogRepository.save(smsSentLog);
+
+        return new XmlTwilioCallResponse(smsSentLog.getMessage());
     }
 }

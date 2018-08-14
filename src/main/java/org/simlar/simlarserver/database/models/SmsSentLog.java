@@ -78,10 +78,12 @@ public final class SmsSentLog {
         this(type, telephoneNumber, dlrNumber, twilioStatus, null, message);
     }
 
+    @SuppressWarnings("ConstructorWithTooManyParameters")
     public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String message, final Instant dlrTimestamp) {
         this(type, telephoneNumber, dlrNumber, twilioStatus, null, message, dlrTimestamp);
     }
 
+    @SuppressWarnings("ConstructorWithTooManyParameters")
     public SmsSentLog(final TwilioRequestType type, final String telephoneNumber, final String dlrNumber, final String twilioStatus, final String twilioError, final String message) {
         this(type, telephoneNumber, dlrNumber, twilioStatus, twilioError, message, null);
     }

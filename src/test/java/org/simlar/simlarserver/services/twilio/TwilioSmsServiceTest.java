@@ -147,6 +147,8 @@ public final class TwilioSmsServiceTest {
     @Test
     public void testCallSuccess() {
         final String telephoneNumber = "+15005550006";
-        assertTrue(twilioSmsService.call(telephoneNumber));
+        final String message         = "Welcome to simlar! Your registration code is 123456";
+
+        assertTrue(twilioSmsService.call(telephoneNumber, message));
     }
 }

@@ -27,16 +27,22 @@ import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
+import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
+import org.simlar.simlarserver.xml.XmlTwilioSay;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.MultiValueMap;
 
 import java.time.Instant;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
 
+@TestPropertySource(properties = "domain = sip.simlar.org") // domain is an essential part of the callback url
 @SuppressWarnings("ALL")
 @RunWith(SpringRunner.class)
 public final class TwilioControllerTest extends BaseControllerTest {
@@ -349,8 +355,14 @@ public final class TwilioControllerTest extends BaseControllerTest {
 
     @Test
     public void testPostCallStatus() {
+        final String telephoneNumber = "+49163123456";
+        final String sid             = "CA852dcbc6945b13213dfaa7f808724e74";
+        final String status          = "ringing";
+
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.CALL, telephoneNumber, sid, "queued", null)));
+
         postCallStatusSuccess(
-                "+49163123456",
+                telephoneNumber,
                 null,
                 "US",
                 "outbound-api",
@@ -359,13 +371,13 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 "MD",
                 "0",
                 null,
-                "+49163123456",
-                "CA852dcbc6945b13213dfaa7f808724e74",
+                telephoneNumber,
+                sid,
                 "DE",
                 "21229",
                 null,
                 "2010-04-01",
-                "completed",
+                status,
                 null,
                 "1",
                 "+14102042044",
@@ -380,34 +392,38 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 null,
                 "21229",
                 "MD");
+
+        assertAlmostEquals("callStatus",
+                new SmsSentLog(TwilioRequestType.CALL, telephoneNumber, sid, status, null, null, Instant.now()),
+                smsSentLogRepository.findByDlrNumber(sid));
     }
 
-    private void postCallSuccess(final String called,
-                                 final String toState,
-                                 final String callerCountry,
-                                 final String direction,
-                                 final String callerState,
-                                 final String toZip,
-                                 final String callSid,
-                                 final String to,
-                                 final String callerZip,
-                                 final String toCountry,
-                                 final String apiVersion,
-                                 final String calledZip,
-                                 final String calledCity,
-                                 final String callStatus,
-                                 final String from,
-                                 final String accountSid,
-                                 final String calledCountry,
-                                 final String callerCity,
-                                 final String caller,
-                                 final String fromCountry,
-                                 final String toCity,
-                                 final String fromCity,
-                                 final String calledState,
-                                 final String fromZip,
-                                 final String fromState) {
-        final XmlTwilioCallResponse response = postRequest(XmlTwilioCallResponse.class, TwilioSmsService.REQUEST_PATH_CALL, createParameters(new String[][] {
+    private static MultiValueMap<String, String> createPostCallParameters(final String called,
+                                                                          final String toState,
+                                                                          final String callerCountry,
+                                                                          final String direction,
+                                                                          final String callerState,
+                                                                          final String toZip,
+                                                                          final String callSid,
+                                                                          final String to,
+                                                                          final String callerZip,
+                                                                          final String toCountry,
+                                                                          final String apiVersion,
+                                                                          final String calledZip,
+                                                                          final String calledCity,
+                                                                          final String callStatus,
+                                                                          final String from,
+                                                                          final String accountSid,
+                                                                          final String calledCountry,
+                                                                          final String callerCity,
+                                                                          final String caller,
+                                                                          final String fromCountry,
+                                                                          final String toCity,
+                                                                          final String fromCity,
+                                                                          final String calledState,
+                                                                          final String fromZip,
+                                                                          final String fromState) {
+        return createParameters(new String[][] {
                 { "Called", called },
                 { "ToState", toState },
                 { "CallerCountry", callerCountry },
@@ -433,23 +449,19 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 { "CalledState", calledState },
                 { "FromZip", fromZip },
                 { "FromState", fromState }
-        }));
-
-        assertNotNull(response);
-        assertNotNull(response.getSay());
+        });
     }
 
-    @Test
-    public void testPostCall() {
-        postCallSuccess(
-                "+49163123456",
+    private static MultiValueMap<String, String> createPostCallParameters(final String callSid, final String to) {
+        return createPostCallParameters(
+                to,
                 null,
                 "US",
                 "outbound-api",
                 "MD",
                 null,
-                "CA852dcbc6945b13213dfaa7f808724e74",
-                "+49163123456",
+                callSid,
+                to,
                 "21229",
                 "DE",
                 "2010-04-01",
@@ -467,5 +479,33 @@ public final class TwilioControllerTest extends BaseControllerTest {
                 null,
                 "21229",
                 "MD");
+    }
+
+    private XmlTwilioCallResponse postCallSuccess(final String callSid, final String to) {
+        return postRequest(XmlTwilioCallResponse.class, TwilioSmsService.REQUEST_PATH_CALL, createPostCallParameters(callSid, to));
+    }
+
+    private void postCallError(final String callSid, final String to) {
+        final XmlError response = postRequest(XmlError.class, TwilioSmsService.REQUEST_PATH_CALL, createPostCallParameters(callSid, to));
+        assertNotNull(response);
+        assertEquals(64, response.getId());
+    }
+
+    @Test
+    public void testPostCall() {
+        final String telephoneNumber = "+49163123457";
+        final String callSid         = "XYZ123457999AAECRTGT";
+        final String message         = "Welcome to simlar! Your registration code is 654321";
+
+        postCallError(callSid, telephoneNumber);
+
+        assertNotNull(smsSentLogRepository.save(new SmsSentLog(TwilioRequestType.CALL, telephoneNumber, callSid, "ringing", message)));
+
+        final XmlTwilioCallResponse response = postCallSuccess(callSid, telephoneNumber);
+
+        assertNotNull(response);
+        final XmlTwilioSay say = response.getSay();
+        assertNotNull(say);
+        assertEquals(message, say.getMessage());
     }
 }

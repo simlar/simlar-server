@@ -21,24 +21,28 @@
 
 package org.simlar.simlarserver.xml;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlValue;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
-@XmlRootElement(name = "Response")
-public final class XmlTwilioCallResponse {
-    private XmlTwilioSay say;
+public final class XmlTwilioSay {
+    private String message;
+    private int loop;
 
-    public XmlTwilioCallResponse(final String message) {
-        say = new XmlTwilioSay(message, 0);
+    @XmlValue
+    public String getMessage() {
+        return message;
     }
 
-    @XmlElement(name = "Say")
-    public XmlTwilioSay getSay() {
-        return say;
+    @SuppressWarnings("unused")
+    @XmlAttribute
+    public int getLoop() {
+        return loop;
     }
 }
