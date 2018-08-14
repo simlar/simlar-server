@@ -118,7 +118,7 @@ public final class CreateAccountService {
             }
         }, Date.from(Instant.now().plus(WARN_TIMEOUT)));
 
-        log.info("created account request for simlarId: {}", simlarId);
+        log.info("created account request for simlarId '{}'", simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
     }
 
@@ -136,15 +136,13 @@ public final class CreateAccountService {
         return simlarId;
     }
 
-    private AccountCreationRequestCount readAccountCreationRequest(final SimlarId simlarId) {
-        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
-        return dbEntry != null ? dbEntry :
-                new AccountCreationRequestCount(simlarId.get(), Password.generate(), Password.generateRegistrationCode());
-    }
-
     private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip) {
         return transactionTemplate.execute(status -> {
-            final AccountCreationRequestCount dbEntry = readAccountCreationRequest(simlarId);
+            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
+            if (dbEntry == null) {
+                return accountCreationRepository.save(new AccountCreationRequestCount(simlarId.get(), Password.generate(), Password.generateRegistrationCode(), ip));
+            }
+
             final Instant now = Instant.now();
             final Instant savedTimestamp = dbEntry.getTimestamp();
             if (savedTimestamp != null && Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
@@ -236,6 +234,8 @@ public final class CreateAccountService {
         }
 
         subscriberService.save(simlarId, creationRequest.getPassword());
+
+        log.info("confirmed account with simlarId '{}'", simlarId);
     }
 
     private static boolean checkRegistrationCodeFormat(final CharSequence input) {

@@ -41,7 +41,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @DirtiesContext
-@SuppressFBWarnings({"PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS", "UCPM_USE_CHARACTER_PARAMETERIZED_METHOD"})
+@SuppressFBWarnings("UCPM_USE_CHARACTER_PARAMETERIZED_METHOD")
 @RunWith(SpringRunner.class)
 public final class ContactsControllerDelayTest extends ContactsControllerBaseTest {
     private static String pipeJoin(final Collection<SimlarId> simlarIds) {
