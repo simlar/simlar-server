@@ -86,26 +86,19 @@ public final class CreateAccountService {
         }
 
         final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip);
-        final int requestTries = dbEntry.getRequestTries();
-        if (requestTries > settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay()) {
-            throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTries + " for number: " + telephoneNumber);
-        }
+        checkRequestTriesLimit(dbEntry.getRequestTries(), settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay(),
+                "too many create account requests %d >= %d for number: " + telephoneNumber);
 
         final Timestamp anHourAgo = Timestamp.from(Instant.now().minus(Duration.ofHours(1)));
-        final int requestTriesPerIp = accountCreationRepository.sumRequestTries(ip, anHourAgo);
-        if (requestTriesPerIp > settingsService.getAccountCreationMaxRequestsPerIpPerHour()) {
-            throw new XmlErrorTooManyRequestTriesException("too many create account requests: " + requestTriesPerIp + " for ip: " + ip);
-        }
+        checkRequestTriesLimit(accountCreationRepository.sumRequestTries(ip, anHourAgo), settingsService.getAccountCreationMaxRequestsPerIpPerHour(),
+                "too many create account requests %d >= %d for ip: " + ip);
 
-        final int requestTriesTotal = accountCreationRepository.sumRequestTries(anHourAgo);
-        if (requestTriesTotal > settingsService.getAccountCreationMaxRequestsTotalPerHour()) {
-            throw new XmlErrorTooManyRequestTriesException("too many total create account requests: " + requestTriesTotal + " within one hour");
-        }
+        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(anHourAgo), settingsService.getAccountCreationMaxRequestsTotalPerHour(),
+                "too many total create account requests %d >= %d within one hour");
 
-        final int requestTriesTotalDay = accountCreationRepository.sumRequestTries(Timestamp.from(Instant.now().minus(Duration.ofDays(1))));
-        if (requestTriesTotalDay > settingsService.getAccountCreationMaxRequestsTotalPerDay()) {
-            throw new XmlErrorTooManyRequestTriesException("too many total create account requests: " + requestTriesTotalDay + " within one day");
-        }
+        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(Timestamp.from(Instant.now().minus(Duration.ofDays(1)))),
+                settingsService.getAccountCreationMaxRequestsTotalPerDay(),
+                "too many total create account requests %d >= %d within one day");
 
         dbEntry.setRegistrationCode(Password.generateRegistrationCode());
         final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
@@ -140,6 +133,24 @@ public final class CreateAccountService {
             dbEntry.setIp(ip);
             return accountCreationRepository.save(dbEntry);
         });
+    }
+
+    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
+    private static void checkRequestTriesLimit(final int requestTries, final int limit, final String message) {
+        if (requestTries > limit) {
+            throw new XmlErrorTooManyRequestTriesException(String.format(message, requestTries, limit));
+        }
+    }
+
+    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
+    private void checkRequestTriesLimitWithAlert(final int requestTries, final int limit, final String message) {
+        if (requestTries == limit / 2) {
+            for (final String alertNumber: settingsService.getAccountCreationAlertSmsNumbers()) {
+                smsService.sendSms(alertNumber, "50% Alert for: " + message);
+            }
+        } else {
+            checkRequestTriesLimit(requestTries, limit, message);
+        }
     }
 
     public void confirmAccount(final String simlarIdString, final CharSequence registrationCode) {

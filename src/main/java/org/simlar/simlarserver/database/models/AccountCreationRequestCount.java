@@ -74,6 +74,7 @@ public final class AccountCreationRequestCount {
         this.confirmTries     = 0;
     }
 
+    @SuppressWarnings("ConstructorWithTooManyParameters")
     public AccountCreationRequestCount(final String simlarId, final String password, final String registrationCode, final int requestTries, final int confirmTries, final String ip) {
         this.simlarId = simlarId;
         this.password = password;
