@@ -31,7 +31,7 @@ import javax.persistence.Table;
 @SuppressWarnings("FieldCanBeLocal")
 @Entity
 @Table(name = "simlar_push_notifications")
-public class SimlarPushNotification {
+public class PushNotification {
 
     @Id
     @Column(nullable = false, length = 64)
@@ -44,12 +44,12 @@ public class SimlarPushNotification {
     private String pushId;
 
     @SuppressWarnings("unused")
-    protected SimlarPushNotification() {
+    protected PushNotification() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
 
-    public SimlarPushNotification(final String simlarId, final DeviceType deviceType, final String pushId) {
+    public PushNotification(final String simlarId, final DeviceType deviceType, final String pushId) {
         this.simlarId = simlarId;
         this.deviceType = deviceType.toInt();
         this.pushId = pushId;

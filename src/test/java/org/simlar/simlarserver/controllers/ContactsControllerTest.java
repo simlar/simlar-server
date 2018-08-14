@@ -23,7 +23,7 @@ package org.simlar.simlarserver.controllers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
@@ -52,41 +52,45 @@ public final class ContactsControllerTest extends BaseControllerTest {
         return postRequest(responseClass, ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter);
     }
 
+    private void wrongCredentials(final String username, final String password) {
+        final XmlError error = requestContactStatus(XmlError.class, username, password, "*0002*|*0003*");
+        assertNotNull(error);
+        assertEquals(10, error.getId());
+    }
+
+    @Test
+    public void wrongCredentials() {
+        wrongCredentials(null, "xxxxxxx");
+        wrongCredentials("*", "xxxxxxx");
+        wrongCredentials(TestUser.get(0).getSimlarId(), null);
+        wrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx");
+    }
+
+    private List<XmlContact> requestContactList(final String contactList) {
+        final XmlContacts response = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), contactList);
+        assertNotNull(response);
+        return response.getContacts();
+    }
+
+    private void emptyContactList(final String contactList) {
+        assertNull(requestContactList(contactList));
+    }
+
+    @Test
+    public void emptyContactList() {
+        emptyContactList(null);
+        emptyContactList("");
+        emptyContactList(TestUser.get(1).getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED);
+    }
+
     @Test
     public void receiveContactsStatus() {
-        final XmlContacts xmlContacts = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), TestUser.get(1).getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
-        assertNotNull(xmlContacts);
-        final List<XmlContact> contacts = xmlContacts.getContacts();
+        final List<XmlContact> contacts = requestContactList(TestUser.get(1).getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
         assertNotNull(contacts);
         assertEquals(2, contacts.size());
         assertEquals(TestUser.get(1).getSimlarId(), contacts.get(0).getSimlarId());
         assertEquals(1, contacts.get(0).getStatus());
         assertEquals(TestUser.SIMLAR_ID_NOT_REGISTERED, contacts.get(1).getSimlarId());
         assertEquals(0, contacts.get(1).getStatus());
-    }
-
-    private boolean loginWithWrongCredentials(final String username, final String password) {
-        final XmlError error = requestContactStatus(XmlError.class, username, password, "*0002*|*0003*");
-        return error != null && error.getId() == 10;
-    }
-
-    @Test
-    public void loginWithWrongCredentials() {
-        assertTrue(loginWithWrongCredentials(null, "xxxxxxx"));
-        assertTrue(loginWithWrongCredentials("*", "xxxxxxx"));
-        assertTrue(loginWithWrongCredentials(TestUser.get(0).getSimlarId(), null));
-        assertTrue(loginWithWrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx"));
-    }
-
-    private boolean loginWithEmptyContactList(final String contactList) {
-        final XmlContacts response = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), contactList);
-        return response != null && response.getContacts() == null;
-    }
-
-    @Test
-    public void loginWithEmptyContactList() {
-        assertTrue(loginWithEmptyContactList(null));
-        assertTrue(loginWithEmptyContactList(""));
-        assertTrue(loginWithEmptyContactList(TestUser.get(1).getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED));
     }
 }

@@ -24,7 +24,7 @@ package org.simlar.simlarserver.controllers;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simlar.simlarserver.database.models.SimlarPushNotification;
+import org.simlar.simlarserver.database.models.PushNotification;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.xml.XmlError;
@@ -84,7 +84,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
         assertNotNull(response);
         assertEquals(deviceType, response.getDeviceType());
         assertEquals(pushId, response.getPushId());
-        final SimlarPushNotification notification = pushNotificationsRepository.findBySimlarId(TestUser.get(testUser).getSimlarId());
+        final PushNotification notification = pushNotificationsRepository.findBySimlarId(TestUser.get(testUser).getSimlarId());
         assertNotNull(notification);
         assertEquals(deviceType, notification.getDeviceType().toInt());
         assertEquals(pushId, notification.getPushId());

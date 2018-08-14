@@ -21,10 +21,10 @@
 
 package org.simlar.simlarserver.database.repositories;
 
-import org.simlar.simlarserver.database.models.SimlarPushNotification;
+import org.simlar.simlarserver.database.models.PushNotification;
 import org.springframework.data.repository.CrudRepository;
 
 @SuppressWarnings({"SameParameterValue", "unused"})
-public interface PushNotificationsRepository extends CrudRepository<SimlarPushNotification, String> {
-    SimlarPushNotification findBySimlarId(final String simlarId);
+public interface PushNotificationsRepository extends CrudRepository<PushNotification, String> {
+    PushNotification findBySimlarId(final String simlarId);
 }

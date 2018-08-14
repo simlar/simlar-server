@@ -60,8 +60,8 @@ final class ContactsController {
      * @param login
      *            the requesting user's simlarId
      * @param password
-     *            the hash of the requesting user's password md5(simlarId + ":"
-     *            + domain + ":" + password);
+     *            the hash of the requesting user's password
+     *            md5(simlarId + ":" + domain + ":" + password);
      * @param contacts
      *            pipe separated list of simlarIds
      * @return XmlError or xmlContactList

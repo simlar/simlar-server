@@ -21,20 +21,24 @@
 
 package org.simlar.simlarserver.services.settingsservice;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @SuppressWarnings("unused")
 @Component
 public class SettingsService {
+    private final String domain;
+    private final String version;
 
-    @SuppressWarnings("CanBeFinal")
-    @Value("${domain:}")
-    private String domain;
-
-    @SuppressWarnings("CanBeFinal")
-    @Value("${info.app.version:}")
-    private String version;
+    @Autowired
+    public SettingsService(
+            @Value("${domain:}")           final String domain,
+            @Value("${info.app.version:}") final String version
+    ) {
+        this.domain  = domain;
+        this.version = version;
+    }
 
     public String getDomain() {
         return domain;

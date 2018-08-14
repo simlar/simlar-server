@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import org.simlar.simlarserver.data.DeviceType;
-import org.simlar.simlarserver.database.models.SimlarPushNotification;
+import org.simlar.simlarserver.database.models.PushNotification;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.ApplePushId;
@@ -90,7 +90,7 @@ final class PushNotificationsController {
             throw new XmlErrorExceptionUnknownApplePushId("pushId='" + pushId + '\'');
         }
 
-        pushNotificationsRepository.save(new SimlarPushNotification(login, checkedType, pushId));
+        pushNotificationsRepository.save(new PushNotification(login, checkedType, pushId));
 
         return new XmlSuccessPushNotification(deviceType, pushId);
     }
