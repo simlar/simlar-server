@@ -65,6 +65,7 @@ public final class ContactsRequestCount {
         return timestamp.toInstant();
     }
 
+    @SuppressWarnings("TypeMayBeWeakened")
     public String getHash() {
         return hash;
     }

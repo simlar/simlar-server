@@ -82,7 +82,7 @@ public final class SubscriberService {
         return ids.get(0);
     }
 
-    public boolean checkCredentials(final String simlarId, final String ha1) {
+    public boolean checkCredentials(final String simlarId, @SuppressWarnings("TypeMayBeWeakened") final String ha1) {
         if (!SimlarId.check(simlarId)) {
             return false;
         }
@@ -100,7 +100,7 @@ public final class SubscriberService {
             LOGGER.severe("found more than 1 subscriber for simlarID=" + simlarId);
         }
 
-        return ha1.equals(savedHa1s.get(0));
+        return StringUtils.equals(ha1, savedHa1s.get(0));
     }
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
