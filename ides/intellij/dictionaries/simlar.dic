@@ -21,6 +21,7 @@ libphonenumber
 lombok
 mktemp
 nopmd
+owasp
 parameterized
 pipefail
 prmc
@@ -34,15 +35,17 @@ sdflkj
 sdfvbd
 simlar
 simlarserver
+spotbugs
 springframework
+stmts
 subresource
 systemctl
 twilio
 twodividedbyzero
 ucpm
-utao
 uniq
 unmarshal
+utao
 voip
 webapps
 whoami

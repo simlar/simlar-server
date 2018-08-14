@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.utils;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ public final class TwilioCallBackErrorCode {
     private static final Map<String, String> KNOWN_ERROR_CODES = initKnownErrorCodes();
 
     private static Map<String, String> initKnownErrorCodes() {
+        @SuppressWarnings("PMD.UseConcurrentHashMap")
         final Map<String, String> knownErrorCodes = new HashMap<>(10);
         knownErrorCodes.put("30001", "Queue overflow");
         knownErrorCodes.put("30002", "Account suspended");
@@ -48,6 +50,7 @@ public final class TwilioCallBackErrorCode {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
+    @Nullable
     public static String createString(final String errorCode) {
         if (errorCode == null) {
             return null;

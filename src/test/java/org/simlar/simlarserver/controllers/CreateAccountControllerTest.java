@@ -29,6 +29,7 @@ import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
+import org.simlar.simlarserver.utils.SimlarIdHelper;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
@@ -49,7 +50,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods"})
+@SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods", "ClassWithTooManyTransitiveDependencies"})
 @RunWith(SpringRunner.class)
 public final class CreateAccountControllerTest extends BaseControllerTest {
     @Autowired
@@ -148,7 +149,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
             }
         }
 
-        final String simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber).get();
+        final String simlarId = SimlarIdHelper.createSimlarId(telephoneNumber);
         final AccountCreationRequestCount before = accountCreationRepository.findBySimlarId(simlarId);
 
         assertPostCreateAccountError(23, false, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-de");

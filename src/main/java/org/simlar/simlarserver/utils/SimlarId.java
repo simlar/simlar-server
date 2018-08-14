@@ -24,6 +24,7 @@ package org.simlar.simlarserver.utils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,7 +57,7 @@ public final class SimlarId implements Comparable<SimlarId> {
         return new SimlarId(simlarId);
     }
 
-    @SuppressWarnings("ReturnOfNull")
+    @Nullable
     public static SimlarId createWithTelephoneNumber(final String telephoneNumber) {
         if (telephoneNumber == null || !REGEX_PATTERN_TELEPHONE_NUMBER.matcher(telephoneNumber).matches()) {
             return null;
