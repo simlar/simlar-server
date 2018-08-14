@@ -21,14 +21,15 @@
 
 package org.simlar.simlarserver.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 import org.simlar.simlarserver.xml.XmlError;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -76,12 +77,8 @@ final class ContactsController {
             return XmlError.wrongCredentials();
         }
 
-        final List<XmlContact> xmlContactList = new ArrayList<>();
-        for (final String contact : contacts.split("\\|")) {
-            final String contactSimlarId = contact.trim();
-            xmlContactList.add(new XmlContact(contactSimlarId, subscriberService.getStatus(contactSimlarId)));
-        }
-
-        return new XmlContacts(xmlContactList);
+        return new XmlContacts(SimlarId.parsePipeSeparatedSimlarIds(contacts).stream()
+                .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
+                .collect(Collectors.toList()));
     }
 }

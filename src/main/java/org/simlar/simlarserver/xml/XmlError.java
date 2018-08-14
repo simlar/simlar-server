@@ -40,7 +40,11 @@ public final class XmlError {
 
 
     public static XmlError wrongCredentials() {
-        return new XmlError(20, "wrong credentials");
+        return new XmlError(10, "wrong credentials");
+    }
+
+    public static XmlError unknownStructure() {
+        return new XmlError(1, "unknown structure");
     }
 
     @XmlAttribute

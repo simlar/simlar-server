@@ -21,6 +21,10 @@
 
 package org.simlar.simlarserver.utils;
 
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
+
 public final class SimlarId {
     private final String simlarId;
 
@@ -42,5 +46,31 @@ public final class SimlarId {
 
     public static boolean check(final String str) {
         return str != null && !str.isEmpty() && str.matches("\\*\\d+\\*");
+    }
+
+    public static Set<SimlarId> parsePipeSeparatedSimlarIds(final String str) {
+        final Set<SimlarId> simlarIds = new LinkedHashSet<>();
+
+        if (str != null) {
+            for (final String entry : str.split("\\|")) {
+                final SimlarId simlarId = SimlarId.create(entry.trim());
+                if (simlarId != null) {
+                    simlarIds.add(simlarId);
+                }
+            }
+        }
+
+        return simlarIds;
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        return this == other || other != null && getClass() == other.getClass()
+                && Objects.equals(simlarId, ((SimlarId) other).simlarId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(simlarId);
     }
 }

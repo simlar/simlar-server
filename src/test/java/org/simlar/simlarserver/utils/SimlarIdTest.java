@@ -21,13 +21,14 @@
 
 package org.simlar.simlarserver.utils;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
-import org.simlar.simlarserver.utils.SimlarId;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
 
 public final class SimlarIdTest {
     @Test
@@ -61,5 +62,40 @@ public final class SimlarIdTest {
     public void testSimlarIdCreate() {
         assertNull(SimlarId.create("*"));
         assertNotNull(SimlarId.create("*0007*"));
+    }
+
+    private Set<SimlarId> parsePipeSeparatedSimlarIdsNotNull(final String str) {
+        final Set<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(str);
+        assertNotNull(simlarIds);
+        return simlarIds;
+    }
+
+    @Test
+    public void testParsePipeSeparatedSimlarIdsEmpty() {
+        assertEquals(0, parsePipeSeparatedSimlarIdsNotNull(null).size());
+        assertEquals(0, parsePipeSeparatedSimlarIdsNotNull("").size());
+        assertEquals(0, parsePipeSeparatedSimlarIdsNotNull("*").size());
+        assertEquals(0, parsePipeSeparatedSimlarIdsNotNull("|||").size());
+        assertEquals(0, parsePipeSeparatedSimlarIdsNotNull("*  *|pp|*").size());
+    }
+
+    private void compareSimlarIds(final List<String> expected, final String str) {
+        final List<String> simlarIds = parsePipeSeparatedSimlarIdsNotNull(str).stream().map(SimlarId::get).collect(Collectors.toList());
+        assertEquals("failed to parse: " + str, expected, simlarIds);
+    }
+
+    @Test
+    public void testParsePipeSeparatedSimlarIds() {
+        final String s1 = "*0001*";
+        final String s2 = "*0002*";
+        compareSimlarIds(Arrays.asList(s1), s1);
+        compareSimlarIds(Arrays.asList(s1), s1 + "|" + s1);
+        compareSimlarIds(Arrays.asList(s1, s2), s1 + "|" + s2);
+        compareSimlarIds(Arrays.asList(s1, s2), "sdfvbd|"  + s1 + " |" + s2);
+        compareSimlarIds(Arrays.asList(s1, s2), "  "  + s1 + " |" + s2);
+        compareSimlarIds(Arrays.asList(s1, s2), s1 + " | " + s2 + " ");
+        compareSimlarIds(Arrays.asList(s1, s2), s1 + " | " + s2 + " | sdfas");
+        compareSimlarIds(Arrays.asList(s1, s2), s1 + "| |" + s2 + " | sdfas");
+        compareSimlarIds(Arrays.asList(s2, s1), s2 + "|" + s1);
     }
 }

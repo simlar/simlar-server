@@ -97,11 +97,11 @@ public final class SubscriberService {
         return ha1.equals(savedHa1s.get(0));
     }
 
-    public int getStatus(final String simlarId) {
-        if (!SimlarId.check(simlarId)) {
+    public int getStatus(final SimlarId simlarId) {
+        if (simlarId == null) {
             return 0;
         }
 
-        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId, DOMAIN).isEmpty() ? 0 : 1;
+        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), DOMAIN).isEmpty() ? 0 : 1;
     }
 }
