@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Simlar Authors.
+ * Copyright (C) 2016 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,43 +19,26 @@
  *
  */
 
-package org.simlar.simlarserver.xml;
+package org.simlar.simlarserver.xmlexception;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+public enum XmlExceptionType {
+        UNKNOWN_STRUCTURE(1,  "unknown structure"),
+        WRONG_CREDENTIALS(10, "wrong credentials")
+    ;
 
-@XmlRootElement(name = "error")
-public final class XmlError {
-    private int    id;
-    private String message;
+    private final int id;
+    private final String message;
 
-    public XmlError() {
-        // needed for JAXBContext
-    }
-
-    public XmlError(final int id, final String message) {
+    XmlExceptionType(final int id, final String message) {
         this.id = id;
         this.message = message;
     }
 
-    @XmlAttribute
-    public int getId() {
-        return id;
-    }
-
-    @SuppressWarnings("unused")
-    public void setId(final int id) {
-        this.id = id;
-    }
-
-    @SuppressWarnings("unused")
-    @XmlAttribute
     public String getMessage() {
         return message;
     }
 
-    @SuppressWarnings("unused")
-    public void setMessage(final String message) {
-        this.message = message;
+    public int getId() {
+        return id;
     }
 }
