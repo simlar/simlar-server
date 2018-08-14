@@ -32,8 +32,8 @@ import java.util.logging.Logger;
 
 @RestController
 final class VersionController {
-    public static final String REQUEST_URL_VERSION = "/version";
-    private static final Logger LOGGER = Logger.getLogger(VersionController.class.getName());
+    public  static final String REQUEST_PATH = "/version";
+    private static final Logger LOGGER       = Logger.getLogger(VersionController.class.getName());
 
     private final SettingsService settingsService;
 
@@ -52,10 +52,10 @@ final class VersionController {
      * @return plain version string
      */
     @SuppressFBWarnings("URV_UNRELATED_RETURN_VALUES")
-    @RequestMapping(value = REQUEST_URL_VERSION, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = REQUEST_PATH, produces = MediaType.TEXT_PLAIN_VALUE)
     public Object getVersion() {
         final String version = settingsService.getVersion();
-        LOGGER.info(REQUEST_URL_VERSION + " requested with version=\"" + version + '\"');
+        LOGGER.info(REQUEST_PATH + " requested with version=\"" + version + '\"');
         return version + '\n';
     }
 }

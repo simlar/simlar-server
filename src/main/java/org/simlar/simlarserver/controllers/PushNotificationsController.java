@@ -40,8 +40,8 @@ import java.util.logging.Logger;
 
 @RestController
 final class PushNotificationsController {
-    public  static final String     REQUEST_URL_STORE_PUSH_ID = "/store-push-id.xml";
-    private static final Logger     LOGGER                    = Logger.getLogger(PushNotificationsController.class.getName());
+    public  static final String REQUEST_PATH = "/store-push-id.xml";
+    private static final Logger LOGGER       = Logger.getLogger(PushNotificationsController.class.getName());
 
     private final SubscriberService           subscriberService;
     private final PushNotificationsRepository pushNotificationsRepository;
@@ -72,9 +72,9 @@ final class PushNotificationsController {
      *            error message or success message containing deviceType and pushId
      */
     @SuppressWarnings("SpellCheckingInspection")
-    @RequestMapping(value = REQUEST_URL_STORE_PUSH_ID, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
+    @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessPushNotification getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final int deviceType, @RequestParam final String pushId) {
-        LOGGER.info(REQUEST_URL_STORE_PUSH_ID + " requested with login=\"" + login + '\"');
+        LOGGER.info(REQUEST_PATH + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
 

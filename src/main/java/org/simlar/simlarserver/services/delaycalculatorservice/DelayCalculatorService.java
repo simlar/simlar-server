@@ -29,8 +29,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.temporal.Temporal;
 import java.util.Collection;
 import java.util.SortedSet;
@@ -40,7 +40,7 @@ import java.util.logging.Logger;
 public final class DelayCalculatorService {
     private static final Logger LOGGER = Logger.getLogger(DelayCalculatorService.class.getName());
 
-    private static final long RESET_COUNTER_SECONDS = 60 * 60 * 24; // reset counter after one day
+    private static final Duration RESET_COUNTER = Duration.ofDays(1); // reset counter after one day
 
     private final ContactsRequestCountRepository contactsRequestCountRepository;
     private final TransactionTemplate transactionTemplate;
@@ -52,16 +52,16 @@ public final class DelayCalculatorService {
     }
 
     public int calculateRequestDelay(final SimlarId simlarId, final Collection<SimlarId> contacts) {
-        return calculateDelay(calculateTotalRequestedContacts(simlarId, contacts, LocalDateTime.now()));
+        return calculateDelay(calculateTotalRequestedContacts(simlarId, contacts, Instant.now()));
     }
 
-    int calculateTotalRequestedContacts(final SimlarId simlarId, final Collection<SimlarId> contacts, final LocalDateTime now) {
+    int calculateTotalRequestedContacts(final SimlarId simlarId, final Collection<SimlarId> contacts, final Instant now) {
         final SortedSet<SimlarId> sortedContacts = SimlarId.sortAndUnifySimlarIds(contacts);
         final Integer count = calculateTotalRequestedContacts(simlarId, now, SimlarId.hashSimlarIds(sortedContacts), sortedContacts.size());
         return count == null ? Integer.MAX_VALUE : count;
     }
 
-    private Integer calculateTotalRequestedContacts(final SimlarId simlarId, final LocalDateTime now, final String hash, final int count) {
+    private Integer calculateTotalRequestedContacts(final SimlarId simlarId, final Instant now, final String hash, final int count) {
         return transactionTemplate.execute(status -> {
             final ContactsRequestCount saved = contactsRequestCountRepository.findBySimlarId(simlarId.get());
             final int totalCount = calculateTotalRequestedContactsStatic(saved, now, hash, count);
@@ -75,7 +75,7 @@ public final class DelayCalculatorService {
             return count;
         }
 
-        final boolean enoughTimeElapsed = ChronoUnit.SECONDS.between(saved.getTimestamp(), now) > RESET_COUNTER_SECONDS;
+        final boolean enoughTimeElapsed = Duration.between(saved.getTimestamp().plus(RESET_COUNTER), now).compareTo(Duration.ZERO) > 0;
 
         return calculateTotalRequestedContactsStatic(enoughTimeElapsed, hash.equals(saved.getHash()), saved.getCount(), count);
     }

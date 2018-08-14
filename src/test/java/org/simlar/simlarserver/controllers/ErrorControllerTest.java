@@ -47,10 +47,10 @@ public final class ErrorControllerTest extends BaseControllerTest {
     @Test
     public void httpPostRequest() {
         testHttpPost("", null);
-        testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS + 'x', null);
+        testHttpPost(ContactsController.REQUEST_PATH + 'x', null);
         testHttpPost("index", null);
         testHttpPost("index.html", null);
-        testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS, null);
+        testHttpPost(ContactsController.REQUEST_PATH, null);
     }
 
     @Test
@@ -58,7 +58,7 @@ public final class ErrorControllerTest extends BaseControllerTest {
         final MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
         parameter.add("login", "007");
         parameter.add("password", "007");
-        testHttpPost(ContactsController.REQUEST_URL_CONTACTS_STATUS, parameter);
+        testHttpPost(ContactsController.REQUEST_PATH, parameter);
     }
 
     private void testHttpGet(final String requestUrl) {
@@ -80,9 +80,9 @@ public final class ErrorControllerTest extends BaseControllerTest {
     public void httpGetRequest() {
         testHttpGet("");
         testHttpGet("/");
-        testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS + 'x');
+        testHttpGet(ContactsController.REQUEST_PATH + 'x');
         testHttpGet("/index");
         testHttpGet("/index.html");
-        testHttpGet(ContactsController.REQUEST_URL_CONTACTS_STATUS);
+        testHttpGet(ContactsController.REQUEST_PATH);
     }
 }

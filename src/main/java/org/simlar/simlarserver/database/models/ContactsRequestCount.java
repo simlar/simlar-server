@@ -28,7 +28,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.temporal.Temporal;
 
 @Entity
@@ -54,15 +54,15 @@ public final class ContactsRequestCount {
         // this one is protected since it shouldn't be used directly
     }
 
-    public ContactsRequestCount(final SimlarId simlarId, final LocalDateTime timestamp, final String hash, final int count) {
+    public ContactsRequestCount(final SimlarId simlarId, final Instant timestamp, final String hash, final int count) {
         this.simlarId = simlarId.get();
-        this.timestamp = Timestamp.valueOf(timestamp);
+        this.timestamp = Timestamp.from(timestamp);
         this.hash = hash;
         this.count = count;
     }
 
     public Temporal getTimestamp() {
-        return timestamp.toLocalDateTime();
+        return timestamp.toInstant();
     }
 
     public String getHash() {

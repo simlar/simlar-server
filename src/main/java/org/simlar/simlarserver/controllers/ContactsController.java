@@ -46,10 +46,10 @@ import java.util.stream.Collectors;
 
 @RestController
 final class ContactsController {
-    public static final String  REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
-    private static final Logger LOGGER                      = Logger.getLogger(ContactsController.class.getName());
-    private static final int    DELAY_MAXIMUM               = 8; // seconds
-    private static final long   DELAY_MINIMUM               = 10; // milliseconds
+    public  static final String REQUEST_PATH  = "/get-contacts-status.xml";
+    private static final Logger LOGGER        = Logger.getLogger(ContactsController.class.getName());
+    private static final int    DELAY_MAXIMUM = 8; // seconds
+    private static final long   DELAY_MINIMUM = 10; // milliseconds
 
     private final SubscriberService subscriberService;
     private final DelayCalculatorService delayCalculatorService;
@@ -79,9 +79,9 @@ final class ContactsController {
      * @return XmlError or xmlContactList
      *            error message or contact list in xml
      */
-    @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
+    @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public DeferredResult<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
-        LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + '\"');
+        LOGGER.info(REQUEST_PATH + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
 
