@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.controllers;
 
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.simlar.simlarserver.services.delaycalculatorservice.DelayCalculatorService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
@@ -47,6 +48,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
 final class ContactsController {
     public  static final String   REQUEST_PATH  = "/get-contacts-status.xml";
@@ -57,14 +59,6 @@ final class ContactsController {
     private final SubscriberService subscriberService;
     private final DelayCalculatorService delayCalculatorService;
     private final TaskScheduler taskScheduler;
-
-
-    @Autowired
-    private ContactsController(final SubscriberService subscriberService, final DelayCalculatorService delayCalculatorService, final TaskScheduler taskScheduler) {
-        this.subscriberService      = subscriberService;
-        this.delayCalculatorService = delayCalculatorService;
-        this.taskScheduler          = taskScheduler;
-    }
 
     private static String formatInstant(final Instant instant) {
         return DateTimeFormatter.ISO_ZONED_DATE_TIME.format(ZonedDateTime.ofInstant(instant, ZoneId.systemDefault()));

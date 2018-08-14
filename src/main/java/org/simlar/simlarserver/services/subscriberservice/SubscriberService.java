@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.services.subscriberservice;
 
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
@@ -35,6 +36,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 import java.util.logging.Logger;
 
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 @Component
 public final class SubscriberService {
     private static final Logger LOGGER = Logger.getLogger(SubscriberService.class.getName());
@@ -48,12 +50,6 @@ public final class SubscriberService {
     static final class SaveNoPasswordException extends RuntimeException { private static final long serialVersionUID = 1L; }
     @SuppressWarnings("PackageVisibleInnerClass")
     static final class SaveDbErrorException extends RuntimeException { private static final long serialVersionUID = 1L; }
-
-    @Autowired
-    private SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository) {
-        this.settingsService = settingsService;
-        this.subscriberRepository = subscriberRepository;
-    }
 
     public void save(final SimlarId simlarId, final String password) {
         if (simlarId == null) {

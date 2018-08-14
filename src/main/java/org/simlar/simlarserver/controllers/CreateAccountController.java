@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
@@ -54,6 +55,7 @@ import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 @RestController
 final class CreateAccountController {
     public  static final String REQUEST_PATH    = "/create-account.xml";
@@ -66,14 +68,6 @@ final class CreateAccountController {
     private final SettingsService settingsService;
     private final AccountCreationRequestCountRepository accountCreationRepository;
     private final SubscriberService subscriberService;
-
-    @Autowired
-    private CreateAccountController(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService) {
-        this.smsService = smsService;
-        this.settingsService = settingsService;
-        this.accountCreationRepository = accountCreationRepository;
-        this.subscriberService = subscriberService;
-    }
 
     /**
      * This method handles http post requests. You may test it with:
