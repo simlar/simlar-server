@@ -28,6 +28,7 @@ import org.simlar.simlarserver.Application;
 import org.simlar.simlarserver.database.models.SmsSentLog;
 import org.simlar.simlarserver.database.repositories.SmsSentLogRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -82,7 +83,7 @@ public final class TwilioSmsServiceTest {
         final String message         = "Test not configured";
 
         final TwilioSettingsService twilioSettings = new TwilioSettingsService("", "", "", "", "", "");
-        final TwilioSmsService service = new TwilioSmsService(settingsService, twilioSettings, smsSentLogRepository);
+        final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsSentLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,
@@ -96,7 +97,7 @@ public final class TwilioSmsServiceTest {
         final String message         = "Test no network";
 
         final TwilioSettingsService twilioSettings = new TwilioSettingsService("https://no.example.com", "+1", "007", "secret", "user", "password");
-        final TwilioSmsService service = new TwilioSmsService(settingsService, twilioSettings, smsSentLogRepository);
+        final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsSentLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,

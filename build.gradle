@@ -65,8 +65,10 @@ dependencies {
     compile("com.google.code.findbugs:annotations:3.0.1")
     compile("org.apache.commons:commons-lang3:3.6")
     compile("commons-codec:commons-codec:1.10")
+    compile("com.googlecode.libphonenumber:libphonenumber:8.6.0")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("junit:junit:4.12")
+    testCompile("org.mockito:mockito-core:2.8.47")
     runtime("mysql:mysql-connector-java")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
 
