@@ -28,10 +28,10 @@ import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
-import org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.logging.Logger;
 
@@ -73,8 +73,7 @@ final class StartUpService {
                 "', dataSource='" + datasourceUrl +
                 "' and version='" + settingsService.getVersion() + '\'');
 
-        if (event.getApplicationContext().getClass() == AnnotationConfigEmbeddedWebApplicationContext.class &&
-                ("create-drop".equals(hibernateDdlAuto) || "org.h2.Driver".equals(datasourceDriver)))
+        if (event.getApplicationContext() instanceof WebApplicationContext && ("create-drop".equals(hibernateDdlAuto) || "org.h2.Driver".equals(datasourceDriver)))
         {
             createTestData();
         }
