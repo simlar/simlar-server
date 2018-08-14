@@ -242,8 +242,8 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         requestCount.setTimestamp(requestCount.getTimestamp().minusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
         accountCreationRepository.save(requestCount);
 
-        final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, true, true, telephoneNumber, password);
-        assertNotNull(response);
+        assertNotNull(postCall(XmlSuccessCreateAccountRequest.class, true, true, telephoneNumber, password));
+        assertNotNull(postCall(XmlSuccessCreateAccountRequest.class, true, true, telephoneNumber, password));
     }
 
     @Test

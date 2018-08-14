@@ -28,6 +28,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
@@ -45,7 +46,7 @@ public class Subscriber {
 
     @SuppressWarnings("FieldHasSetterButNoGetter")
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, columnDefinition = "int(10) unsigned")
     private Long   id;
 

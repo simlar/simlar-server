@@ -31,8 +31,8 @@ public final class MarshalUtil {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T unmarshal(final Class<T> resultClass, final String xml) throws JAXBException {
-        //noinspection unchecked
         return (T) JAXBContext.newInstance(resultClass).createUnmarshaller().unmarshal(new StringReader(xml));
     }
 

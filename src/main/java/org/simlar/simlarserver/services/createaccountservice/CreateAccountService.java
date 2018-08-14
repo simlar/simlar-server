@@ -184,7 +184,8 @@ public final class CreateAccountService {
             }
 
             final Instant now = Instant.now();
-            final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), now).getSeconds();
+            final Instant savedTimestamp = dbEntry.getTimestamp();
+            final long secondsSinceRequest = Duration.between(savedTimestamp, now).getSeconds();
             if (secondsSinceRequest < settingsService.getAccountCreationCallDelaySecondsMin()) {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since request: " + secondsSinceRequest + 's');
             }
@@ -192,13 +193,12 @@ public final class CreateAccountService {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since request: " + secondsSinceRequest + 's');
             }
 
-            final Instant savedTimestamp = dbEntry.getTimestamp();
-            if (savedTimestamp != null && Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
+            if (Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
                 dbEntry.setCalls(1);
             } else{
                 dbEntry.incrementCalls();
             }
-            dbEntry.setTimestamp(now);
+
             return accountCreationRepository.save(dbEntry);
         });
     }
