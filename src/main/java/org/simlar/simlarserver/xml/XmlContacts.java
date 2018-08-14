@@ -42,6 +42,7 @@ public final class XmlContacts {
         return contacts;
     }
 
+    @SuppressWarnings("unused")
     public void setContacts(final List<XmlContact> contacts) {
         this.contacts = contacts;
     }

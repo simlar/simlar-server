@@ -84,6 +84,7 @@ public final class SimlarIdTest {
         assertEquals("failed to parse: " + str, expected, simlarIds);
     }
 
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     @Test
     public void testParsePipeSeparatedSimlarIds() {
         final String s1 = "*0001*";

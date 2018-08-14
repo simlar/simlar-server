@@ -61,6 +61,7 @@ public class Subscriber {
         // this one is protected since it shouldn't be used directly
     }
 
+    @SuppressWarnings("SameParameterValue")
     public Subscriber(final String username, final String domain, final String password, final String email_address, final String ha1, final String ha1b) {
         this.username = username;
         this.domain = domain;
