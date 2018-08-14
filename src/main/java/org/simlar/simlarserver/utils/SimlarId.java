@@ -19,17 +19,32 @@
  *
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.utils;
 
-import java.util.List;
+public final class SimlarId {
+    private final String simlarId;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;;
+    private SimlarId(final String simlarId) {
+        this.simlarId = simlarId;
+    }
 
-public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
-    @Query("SELECT ha1 FROM Subscriber WHERE username = ?1 AND domain = ?2")
-    List<String> findHa1ByUsernameAndDomain(final String username, final String domain);
+    public String get() {
+        return simlarId;
+    }
 
-    @Query("SELECT id FROM Subscriber WHERE username = ?1 AND domain = ?2")
-    List<Long> findIdByUsernameAndDomain(final String username, final String domain);
+    public static SimlarId create(final String simlarId) {
+        if (!check(simlarId)) {
+            return null;
+        }
+
+        return new SimlarId(simlarId);
+    }
+
+    public static boolean check(final String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+
+        return str.matches("\\*\\d+\\*");
+    }
 }

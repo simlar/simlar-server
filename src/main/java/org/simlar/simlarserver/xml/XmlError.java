@@ -19,32 +19,45 @@
  *
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.xml;
 
-public final class SimlarId {
-    private final String simlarId;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
-    private SimlarId(final String simlarId) {
-        this.simlarId = simlarId;
+@XmlRootElement(name = "error")
+public final class XmlError {
+    private int    id;
+    private String message;
+
+    public XmlError() {
+        // needed for JAXBContext
     }
 
-    public String get() {
-        return simlarId;
+    private XmlError(final int id, final String message) {
+        this.id = id;
+        this.message = message;
     }
 
-    public static SimlarId create(final String simlarId) {
-        if (!check(simlarId)) {
-            return null;
-        }
 
-        return new SimlarId(simlarId);
+    public static XmlError wrongCredentials() {
+        return new XmlError(20, "wrong credentials");
     }
 
-    public static boolean check(final String str) {
-        if (str == null || str.isEmpty()) {
-            return false;
-        }
+    @XmlAttribute
+    public int getId() {
+        return id;
+    }
 
-        return str.matches("\\*\\d+\\*");
+    public void setId(final int id) {
+        this.id = id;
+    }
+
+    @XmlAttribute
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(final String message) {
+        this.message = message;
     }
 }

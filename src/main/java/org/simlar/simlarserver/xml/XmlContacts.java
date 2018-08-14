@@ -19,21 +19,30 @@
  *
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.xml;
 
-import static org.junit.Assert.assertEquals;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
-import org.junit.Test;
+@XmlRootElement(name = "contacts")
+public final class XmlContacts {
+    private List<XmlContact> contacts;
 
-public final class HashTest {
-    @Test
-    public void testMd5() {
-        assertEquals("", Hash.md5(null));
-        assertEquals("d41d8cd98f00b204e9800998ecf8427e", Hash.md5(""));
-        assertEquals("111483f4a3a6166cc4a1cc4fac633f72", Hash.md5("*0001*:sip.simlar.org:xldfdsf3er4ferf"));
-        assertEquals("f5dde2f01afd1bde593063832c84e5e1", Hash.md5("*0002*:sip.simlar.org:fgklgor4223"));
-        assertEquals("9d58ebf2d3c31b4c0b3d3411e5a7e237", Hash.md5("*0001*@sip.simlar.org:sip.simlar.org:dfk4kgo34k"));
-        assertEquals("9f7917d320a27ac068b56019aa11ba6a", Hash.md5("*0002*@sip.simlar.org:sip.simlar.org:sdp45p6hpplk"));
-        assertEquals("1ee89de73dccb07194b19a25fdfad653", Hash.md5("*0001*::sp4mv02fvu"));
+    public XmlContacts() {
+        // needed for JAXBContext
+    }
+
+    public XmlContacts(final List<XmlContact> contacts) {
+        this.contacts = contacts;
+    }
+
+    @XmlElement(name = "contact")
+    public List<XmlContact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(final List<XmlContact> contacts) {
+        this.contacts = contacts;
     }
 }

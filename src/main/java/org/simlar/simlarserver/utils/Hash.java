@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

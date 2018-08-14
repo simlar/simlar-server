@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver;
+package org.simlar.simlarserver.database.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
