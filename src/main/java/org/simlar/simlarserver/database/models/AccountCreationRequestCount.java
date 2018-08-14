@@ -21,6 +21,8 @@
 
 package org.simlar.simlarserver.database.models;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
@@ -31,6 +33,8 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "simlar_account_creation_request", indexes = {
         @Index(name = "request_timestamp", columnList = "timestamp"),
@@ -61,12 +65,6 @@ public final class AccountCreationRequestCount {
     @Column(nullable = false, length = 64)
     private String ip;
 
-    @SuppressWarnings({"unused", "ProtectedMemberInFinalClass"})
-    protected AccountCreationRequestCount() {
-        // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
-    }
-
     @SuppressWarnings("UnnecessaryThis")
     public AccountCreationRequestCount(final String simlarId) {
         this.simlarId     = simlarId;
@@ -85,32 +83,8 @@ public final class AccountCreationRequestCount {
         this.ip = ip;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(final String password) {
-        this.password = password;
-    }
-
-    public String getRegistrationCode() {
-        return registrationCode;
-    }
-
-    public void setRegistrationCode(final String registrationCode) {
-        this.registrationCode = registrationCode;
-    }
-
-    public int getRequestTries() {
-        return requestTries;
-    }
-
     public void incrementRequestTries() {
         requestTries++;
-    }
-
-    public int getConfirmTries() {
-        return confirmTries;
     }
 
     public int incrementConfirmTries() {
@@ -125,13 +99,5 @@ public final class AccountCreationRequestCount {
 
     public void setTimestamp(final Instant instant) {
         timestamp = Timestamp.from(instant);
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(final String ip) {
-        this.ip = ip;
     }
 }

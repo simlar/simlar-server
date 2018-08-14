@@ -21,6 +21,8 @@
 
 package org.simlar.simlarserver.database.models;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.simlar.simlarserver.utils.SimlarId;
 
 import javax.persistence.Column;
@@ -30,6 +32,8 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "simlar_contacts_request_count")
 public final class ContactsRequestCount {
@@ -47,12 +51,6 @@ public final class ContactsRequestCount {
     @Column(nullable = false, columnDefinition = "int(10) unsigned")
     private int count;
 
-    @SuppressWarnings({"unused", "ProtectedMemberInFinalClass"})
-    protected ContactsRequestCount() {
-        // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
-    }
-
     public ContactsRequestCount(final SimlarId simlarId, final Instant timestamp, final String hash, final int count) {
         this.simlarId = simlarId.get();
         this.timestamp = Timestamp.from(timestamp);
@@ -63,14 +61,5 @@ public final class ContactsRequestCount {
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
     public Instant getTimestamp() {
         return timestamp.toInstant();
-    }
-
-    @SuppressWarnings("TypeMayBeWeakened")
-    public String getHash() {
-        return hash;
-    }
-
-    public int getCount() {
-        return count;
     }
 }

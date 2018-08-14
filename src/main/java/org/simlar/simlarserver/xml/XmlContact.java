@@ -21,43 +21,26 @@
 
 package org.simlar.simlarserver.xml;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public final class XmlContact {
     private String simlarId;
     private int    status;
-
-    @SuppressWarnings("unused")
-    public XmlContact() {
-        // needed for JAXBContext
-    }
-
-    public XmlContact(final String simlarId, final int status) {
-        this.simlarId = simlarId;
-        this.status = status;
-    }
 
     @XmlAttribute(name = "id")
     public String getSimlarId() {
         return simlarId;
     }
 
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setSimlarId(final String simlarId) {
-        this.simlarId = simlarId;
-    }
-
     @XmlAttribute
     public int getStatus() {
         return status;
-    }
-
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setStatus(final int status) {
-        this.status = status;
     }
 }

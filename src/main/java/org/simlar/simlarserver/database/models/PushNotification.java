@@ -21,6 +21,8 @@
 
 package org.simlar.simlarserver.database.models;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.simlar.simlarserver.data.DeviceType;
 
 import javax.persistence.Column;
@@ -29,6 +31,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @SuppressWarnings("FieldCanBeLocal")
+@Data
+@NoArgsConstructor
 @Entity
 @Table(name = "simlar_push_notifications")
 public class PushNotification {
@@ -43,12 +47,6 @@ public class PushNotification {
     @Column(nullable = false, columnDefinition = "text")
     private String pushId;
 
-    @SuppressWarnings("unused")
-    protected PushNotification() {
-        // no-args constructor required by JPA spec
-        // this one is protected since it shouldn't be used directly
-    }
-
     public PushNotification(final String simlarId, final DeviceType deviceType, final String pushId) {
         this.simlarId = simlarId;
         this.deviceType = deviceType.toInt();
@@ -57,9 +55,5 @@ public class PushNotification {
 
     public final DeviceType getDeviceType() {
         return DeviceType.fromInt(deviceType);
-    }
-
-    public final String getPushId() {
-        return pushId;
     }
 }

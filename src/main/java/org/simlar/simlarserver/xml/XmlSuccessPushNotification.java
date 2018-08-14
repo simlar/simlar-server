@@ -21,44 +21,28 @@
 
 package org.simlar.simlarserver.xml;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @XmlRootElement(name = "success")
 public final class XmlSuccessPushNotification {
     private int deviceType;
     private String pushId;
-
-    public XmlSuccessPushNotification() {
-        // needed for JAXBContext
-    }
-
-    public XmlSuccessPushNotification(final int deviceType, final String pushId) {
-        this.deviceType = deviceType;
-        this.pushId = pushId;
-    }
 
     @XmlAttribute
     public int getDeviceType() {
         return deviceType;
     }
 
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setDeviceType(final int deviceType) {
-        this.deviceType = deviceType;
-    }
-
     @XmlAttribute
     public String getPushId() {
         return pushId;
-    }
-
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setPushId(final String pushId) {
-        this.pushId = pushId;
     }
 }

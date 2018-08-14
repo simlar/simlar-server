@@ -21,46 +21,29 @@
 
 package org.simlar.simlarserver.xml;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @XmlRootElement(name = "success")
 public final class XmlSuccessCreateAccountRequest {
     private String simlarId;
     private String password;
-
-    public XmlSuccessCreateAccountRequest() {
-        // needed for JAXBContext
-    }
-
-    public XmlSuccessCreateAccountRequest(final String simlarId, final String password) {
-        this.simlarId = simlarId;
-        this.password = password;
-    }
-
 
     @XmlAttribute
     public String getSimlarId() {
         return simlarId;
     }
 
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setSimlarId(final String simlarId) {
-        this.simlarId = simlarId;
-    }
-
     @SuppressWarnings("TypeMayBeWeakened")
     @XmlAttribute
     public String getPassword() {
         return password;
-    }
-
-    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-    @SuppressWarnings("unused")
-    private void setPassword(final String password) {
-        this.password = password;
     }
 }
