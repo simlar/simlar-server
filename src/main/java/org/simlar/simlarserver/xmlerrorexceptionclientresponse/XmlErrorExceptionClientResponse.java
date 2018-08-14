@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("SerializableDeserializableClassInSecureContext")
 @AllArgsConstructor
 @Getter
 public enum XmlErrorExceptionClientResponse {
