@@ -19,6 +19,7 @@ kozocsa
 landline
 libphonenumber
 lombok
+mktemp
 nopmd
 parameterized
 pipefail
@@ -42,6 +43,7 @@ utao
 uniq
 unmarshal
 voip
+webapps
 whoami
 xldfdsf
 xxxxxx
