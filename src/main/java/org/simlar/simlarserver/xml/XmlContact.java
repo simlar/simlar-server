@@ -25,22 +25,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
+@XmlAccessorType(XmlAccessType.FIELD)
 public final class XmlContact {
-    private String simlarId;
-    private int    status;
-
     @XmlAttribute(name = "id")
-    public String getSimlarId() {
-        return simlarId;
-    }
+    private String simlarId;
 
     @XmlAttribute
-    public int getStatus() {
-        return status;
-    }
+    private int status;
 }

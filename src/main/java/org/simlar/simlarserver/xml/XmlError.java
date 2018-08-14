@@ -25,25 +25,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "error")
 public final class XmlError {
-    private int    id;
+    @XmlAttribute
+    private int id;
+
+    @XmlAttribute
     private String message;
-
-    @XmlAttribute
-    public int getId() {
-        return id;
-    }
-
-    @SuppressWarnings("unused")
-    @XmlAttribute
-    public String getMessage() {
-        return message;
-    }
 }

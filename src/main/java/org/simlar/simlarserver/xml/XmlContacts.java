@@ -25,20 +25,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "contacts")
 public final class XmlContacts {
-    private List<XmlContact> contacts;
-
     @XmlElement(name = "contact")
-    public List<XmlContact> getContacts() {
-        //noinspection ReturnOfCollectionOrArrayField // JAXB crashes with Collections.unmodifiableList
-        return contacts;
-    }
+    private List<XmlContact> contacts;
 }

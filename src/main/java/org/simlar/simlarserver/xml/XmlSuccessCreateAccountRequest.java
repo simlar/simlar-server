@@ -25,27 +25,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "success")
 @XmlType(propOrder={"simlarId","password"})
 public final class XmlSuccessCreateAccountRequest {
+    @XmlAttribute
     private String simlarId;
+
+    @XmlAttribute
     private String password;
-
-    @XmlAttribute
-    public String getSimlarId() {
-        return simlarId;
-    }
-
-    @SuppressWarnings("TypeMayBeWeakened")
-    @XmlAttribute
-    public String getPassword() {
-        return password;
-    }
 }
