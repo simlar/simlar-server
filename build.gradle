@@ -48,7 +48,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.3.RELEASE")
         classpath("com.github.ben-manes:gradle-versions-plugin:0.20.0")
-        classpath("org.owasp:dependency-check-gradle:3.2.1")
+        classpath("org.owasp:dependency-check-gradle:3.3.0")
     }
 }
 
@@ -81,7 +81,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.h2database:h2:1.4.197")
-    testImplementation("org.mockito:mockito-core:2.19.1")
+    testImplementation("org.mockito:mockito-core:2.20.0")
     runtime("org.mariadb.jdbc:mariadb-java-client:2.2.6")
 
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
