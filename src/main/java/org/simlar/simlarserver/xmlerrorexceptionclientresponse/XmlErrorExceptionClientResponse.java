@@ -62,7 +62,7 @@ public enum XmlErrorExceptionClientResponse {
         NO_REGISTRATION_CODE       (XmlErrorNoRegistrationCodeException.class,       28, "no registration code"),
         UNKNOWN_PUSH_ID_TYPE       (XmlErrorUnknownPushIdTypeException.class,        30, "unknown push id type"),
         UNKNOWN_APPLE_PUSH_ID      (XmlErrorUnknownApplePushIdException.class,       31, "unknown apple pushId"),
-        REQUESTED_TOO_MANY_CONTACTS(XmlErrorRequestedTooManyContactsException.class, 50, "requested too many contacts"),
+        REQUESTED_TOO_MANY_CONTACTS(XmlErrorRequestedTooManyContactsException.class, 50, "You have requested too many contacts. Try again in 24 hours."),
         NO_CALL_SESSION            (XmlErrorNoCallSessionException.class,            64, "unknown call session")
     ;
 
