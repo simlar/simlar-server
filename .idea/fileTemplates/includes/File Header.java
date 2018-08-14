@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Simlar Authors.
+ * Copyright (C) 2017 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
