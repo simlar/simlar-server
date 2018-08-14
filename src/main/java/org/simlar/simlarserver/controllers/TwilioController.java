@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@Log
+@Slf4j
 @RestController
 final class TwilioController {
     public  static final String REQUEST_PATH = "twilio/delivery-report.json";
@@ -61,7 +61,7 @@ final class TwilioController {
             @RequestParam(name = "MessageStatus")               final String messageStatus,
             @RequestParam(name = "ErrorCode", required = false) final String errorCode
     ) {
-        log.info(REQUEST_PATH + " requested with messageSid=" + messageSid + " to=" + to + " messageStatus=" + messageStatus + " errorCode=" + errorCode);
+        log.info("'{}' requested with messageSid MessageSid='{}' To='{}' MessageStatus='{}' ErrorCode='{}'", REQUEST_PATH, messageSid, to, messageStatus, errorCode);
 
         twilioSmsService.handleDeliveryReport(to, messageSid, messageStatus, errorCode);
     }

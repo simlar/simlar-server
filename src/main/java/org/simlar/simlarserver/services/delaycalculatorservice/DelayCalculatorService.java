@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.services.delaycalculatorservice;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.ContactsRequestCount;
@@ -38,7 +38,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.SortedSet;
 
-@Log
+@Slf4j
 @Component
 public final class DelayCalculatorService {
     public static final Duration MAXIMUM = Duration.ofSeconds(Long.MAX_VALUE);
@@ -99,7 +99,7 @@ public final class DelayCalculatorService {
 
     static Duration calculateDelay(final int requestedContacts) {
         final Duration delay = calculateDelayWithoutLog(requestedContacts);
-        log.info("requestedContactsCount=" + requestedContacts + " -> delay=" + delay);
+        log.info("requestedContactsCount={} -> delay={}", requestedContacts, delay);
         return delay;
     }
 

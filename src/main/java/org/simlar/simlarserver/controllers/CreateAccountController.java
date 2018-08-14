@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.createaccountservice.AccountRequest;
 import org.simlar.simlarserver.services.createaccountservice.CreateAccountService;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@Log
+@Slf4j
 @RestController
 final class CreateAccountController {
     public  static final String REQUEST_PATH    = "/create-account.xml";
@@ -70,7 +70,7 @@ final class CreateAccountController {
     @SuppressWarnings("SpellCheckingInspection")
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessCreateAccountRequest createAccountRequest(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String telephoneNumber, @RequestParam final String smsText) {
-        log.info(REQUEST_PATH + " requested with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
+        log.info("'{}' requested with command= '{}' and User-Agent '{}'", REQUEST_PATH, command, request.getHeader("User-Agent"));
 
         if (!Objects.equals(command, COMMAND_REQUEST)) {
             throw new XmlErrorUnknownStructureException("create account request with command: " + command);
@@ -100,7 +100,7 @@ final class CreateAccountController {
      */
     @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE, params = { "command", "simlarId", "registrationCode"  })
     public XmlSuccessCreateAccountConfirm confirmAccount(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String simlarId, @RequestParam final String registrationCode) {
-        log.info(REQUEST_PATH + " confirm with command=\'" + command + "\' and User-Agent: " + request.getHeader("User-Agent"));
+        log.info("'{}' confirm with command='{}' and User-Agent '{}'", REQUEST_PATH, command, request.getHeader("User-Agent"));
 
         if (!Objects.equals(command, COMMAND_CONFIRM)) {
             throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);

@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.controllers;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorExceptionClientResponse;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
@@ -38,18 +38,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.StringWriter;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-@Log
+@Slf4j
 @ControllerAdvice
 @RestController
 final class ErrorController {
-    private static void log(final Level level, final String prefix, final HttpServletRequest request, final Exception exception) {
-        final String message = prefix + (request == null ? " no request object" :
+    private static String createLog(final String prefix, final HttpServletRequest request) {
+        return prefix + (request == null ? " no request object" :
                 " URL='" + request.getRequestURL() + "' IP='" + request.getRemoteAddr() + "' User-Agent='" + request.getHeader("User-Agent") + "' parameters='" + serializeParameters(request) + '\'');
-
-        log.log(level, message, exception);
     }
 
     private static String serializeParameters(final ServletRequest request) {
@@ -68,7 +65,7 @@ final class ErrorController {
         try {
             JAXBContext.newInstance(XmlError.class).createMarshaller().marshal(createXmlError(response), writer);
         } catch (final JAXBException e) {
-            log.log(Level.SEVERE, "xmlParse error: ", e);
+            log.error("xmlParse error: ", e);
         }
 
         return writer.toString();
@@ -78,7 +75,7 @@ final class ErrorController {
     @RequestMapping(path = "*")
     // in order to handle html request errors we have to return a String here
     public static String handle(final HttpServletRequest request) {
-        log(Level.WARNING, "Request Error:", request, null);
+        log.warn(createLog("Request Error:", request));
         return createXmlErrorString(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
@@ -87,17 +84,17 @@ final class ErrorController {
         final Class<? extends XmlErrorException> exceptionClass = xmlErrorException.getClass();
         final XmlErrorExceptionClientResponse response = XmlErrorExceptionClientResponse.fromException(exceptionClass);
         if (response == null) {
-            log(Level.SEVERE, "XmlErrorException with no XmlErrorExceptionClientResponse found for: " + exceptionClass.getSimpleName(), request, xmlErrorException);
-        } else {
-            log(Level.WARNING, xmlErrorException.getClass().getSimpleName() + " => XmlError(" + response.getId() + ") " + response.getMessage() + ": " + xmlErrorException.getMessage(), request, null);
+            log.error(createLog("XmlErrorException with no XmlErrorExceptionClientResponse found for: " + exceptionClass.getSimpleName(), request), xmlErrorException);
+            return createXmlError(XmlErrorExceptionClientResponse.UNKNOWN_ERROR);
         }
 
+        log.warn(createLog(xmlErrorException.getClass().getSimpleName() + " => XmlError(" + response.getId() + ") " + response.getMessage() + ": " + xmlErrorException.getMessage(), request));
         return createXmlError(response);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public static String handleMissingParameterException(final HttpServletRequest request, final MissingServletRequestParameterException exception) {
-        log(Level.SEVERE, exception.toString(), request, exception);
+        log.error(createLog(exception.toString(), request), exception);
 
         return createXmlErrorString(XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
@@ -105,7 +102,7 @@ final class ErrorController {
     // in order to handle html request errors we have to return a String here
     @ExceptionHandler(Exception.class)
     public static String handleException(final HttpServletRequest request, final Exception exception) {
-        log(Level.SEVERE, "unhandled '" + exception.getClass().getSimpleName() + "':", request, exception);
+        log.error(createLog("unhandled '" + exception.getClass().getSimpleName() + "':", request), exception);
 
         return createXmlErrorString(XmlErrorExceptionClientResponse.UNKNOWN_ERROR);
     }

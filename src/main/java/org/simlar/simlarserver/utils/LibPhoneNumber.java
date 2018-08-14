@@ -24,9 +24,9 @@ package org.simlar.simlarserver.utils;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
-@Log
+@Slf4j
 @SuppressWarnings("UtilityClass")
 public final class LibPhoneNumber {
     private LibPhoneNumber() {
@@ -39,7 +39,7 @@ public final class LibPhoneNumber {
             final Phonenumber.PhoneNumber pn = util.parse(telephoneNumber, null);
             return pn != null && util.isValidNumber(pn);
         } catch (final NumberParseException e) {
-            log.warning("telephoneNumber '" + telephoneNumber + "' caused exception: " + e.getMessage());
+            log.warn("telephoneNumber '{}' caused exception '{}'", telephoneNumber, e.getMessage());
             return false;
         }
     }

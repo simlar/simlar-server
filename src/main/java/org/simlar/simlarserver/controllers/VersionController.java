@@ -23,7 +23,7 @@ package org.simlar.simlarserver.controllers;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-@Log
+@Slf4j
 @RestController
 final class VersionController {
     public  static final String REQUEST_PATH = "/version";
@@ -50,7 +50,7 @@ final class VersionController {
     @RequestMapping(value = REQUEST_PATH, produces = MediaType.TEXT_PLAIN_VALUE)
     public Object getVersion() {
         final String version = settingsService.getVersion();
-        log.info(REQUEST_PATH + " requested with version=\"" + version + '\"');
+        log.info("'{}' requested with version '{}'", REQUEST_PATH, version);
         return version + '\n';
     }
 }

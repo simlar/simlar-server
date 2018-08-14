@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.services.startupservice;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;
@@ -34,7 +34,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-@Log
+@Slf4j
 @Component
 final class StartUpService {
     private final SettingsService   settingsService;
@@ -57,7 +57,7 @@ final class StartUpService {
             final SimlarId simlarId = SimlarId.create(user.getSimlarId());
             if (simlarId != null) {
                 subscriberService.save(simlarId, user.getPassword());
-                log.info("added test user: " + user.getSimlarId());
+                log.info("added test user: {}", user.getSimlarId());
             }
         }
     }
@@ -65,11 +65,7 @@ final class StartUpService {
     @SuppressWarnings("unused")
     @EventListener
     public void handleApplicationReadyEvent(final ApplicationReadyEvent event) {
-        log.info(
-                "started on domain='" + settingsService.getDomain() +
-                "', hibernateDdlAuto='" + hibernateDdlAuto +
-                "', dataSource='" + datasourceUrl +
-                "' and version='" + settingsService.getVersion() + '\'');
+        log.info("started on domain='{}', hibernateDdlAuto='{}', dataSource='{}' and version='{}" + '\'', settingsService.getDomain(), hibernateDdlAuto, datasourceUrl, settingsService.getVersion());
 
         if (event.getApplicationContext() instanceof WebApplicationContext && ("create-drop".equals(hibernateDdlAuto) || "org.h2.Driver".equals(datasourceDriver))) {
             createTestData();

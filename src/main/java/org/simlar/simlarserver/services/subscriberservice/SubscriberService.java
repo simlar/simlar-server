@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.services.subscriberservice;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
@@ -39,7 +39,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
-@Log
+@Slf4j
 @Component
 public final class SubscriberService {
     private final SettingsService settingsService;
@@ -86,7 +86,7 @@ public final class SubscriberService {
         }
 
         if (ids.size() > 1) {
-            log.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            log.error("found more than 1 subscriber for simlarID={}", simlarId);
         }
 
         return ids.get(0);
@@ -107,7 +107,7 @@ public final class SubscriberService {
         }
 
         if (savedHa1s.size() > 1) {
-            log.severe("found more than 1 subscriber for simlarID=" + simlarId);
+            log.error("found more than 1 subscriber for simlarID={}", simlarId);
         }
 
         return StringUtils.equals(ha1, savedHa1s.get(0));
