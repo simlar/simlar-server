@@ -358,6 +358,15 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testConfirmWithoutRequest() {
+        final String simlarId = "*42002300005*";
+
+        assertNull(accountCreationRepository.findBySimlarId(simlarId));
+        assertPostConfirmAccountError(27, CreateAccountController.COMMAND_CONFIRM, simlarId, "654321");
+        assertNull(accountCreationRepository.findBySimlarId(simlarId));
+    }
+
+    @Test
     public void testConfirmSuccess() {
         final String simlarId = "*42002300004*";
         final String registrationCode = "432517";

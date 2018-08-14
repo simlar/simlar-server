@@ -215,12 +215,16 @@ public final class CreateAccountService {
         final AccountCreationRequestCount creationRequest = transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
             if (dbEntry == null) {
-                throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
+                return null;
             }
 
             dbEntry.incrementConfirmTries();
             return accountCreationRepository.save(dbEntry);
         });
+
+        if (creationRequest == null) {
+            throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
+        }
 
         final int confirmTries = creationRequest.getConfirmTries();
         if (confirmTries > settingsService.getAccountCreationMaxConfirms()) {
