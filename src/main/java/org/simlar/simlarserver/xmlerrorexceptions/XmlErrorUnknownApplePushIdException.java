@@ -19,11 +19,10 @@
  *
  */
 
-package org.simlar.simlarserver.xmlerrorexception;
+package org.simlar.simlarserver.xmlerrorexceptions;
 
-@SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithoutAbstractMethods"})
-public abstract class XmlErrorException extends RuntimeException {
-    XmlErrorException(final String message) {
+public final class XmlErrorUnknownApplePushIdException extends XmlErrorException {
+    public XmlErrorUnknownApplePushIdException(final String message) {
         super(message);
     }
 }

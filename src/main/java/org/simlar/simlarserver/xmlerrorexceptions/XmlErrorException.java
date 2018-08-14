@@ -19,10 +19,11 @@
  *
  */
 
-package org.simlar.simlarserver.xmlerrorexception;
+package org.simlar.simlarserver.xmlerrorexceptions;
 
-public final class XmlErrorExceptionRequestedTooManyContacts extends XmlErrorException {
-    public XmlErrorExceptionRequestedTooManyContacts(final String message) {
+@SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithoutAbstractMethods"})
+public abstract class XmlErrorException extends RuntimeException {
+    XmlErrorException(final String message) {
         super(message);
     }
 }

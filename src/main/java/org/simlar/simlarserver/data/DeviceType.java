@@ -38,15 +38,15 @@ public enum DeviceType {
     }
 
 
-    private static final Map<Integer, DeviceType> intToTypeMap = new HashMap<>();
+    private static final Map<Integer, DeviceType> INTEGER_DEVICE_TYPE_MAP = new HashMap<>();
     static {
         for (final DeviceType type : DeviceType.values()) {
-            intToTypeMap.put(type.toInt(), type);
+            INTEGER_DEVICE_TYPE_MAP.put(type.toInt(), type);
         }
     }
 
     public static DeviceType fromInt(final int id) {
-        return intToTypeMap.get(id);
+        return INTEGER_DEVICE_TYPE_MAP.get(id);
     }
 
     public int toInt() {

@@ -91,6 +91,7 @@ public final class DelayCalculatorServiceTest {
         assertEquals(4, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(4), dayAfter));
     }
 
+    @SuppressWarnings("StandardVariableNames")
     @Test
     public void calculateTotalRequestedContactsSameContactsNoIncrement() {
         final SimlarId simlarId = SimlarId.create("*0003*");

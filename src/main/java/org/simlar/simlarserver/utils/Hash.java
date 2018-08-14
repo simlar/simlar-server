@@ -31,7 +31,7 @@ public final class Hash {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
-    public static String md5(final String string) {
-        return string == null ? "" : DigestUtils.md5DigestAsHex(string.getBytes(StandardCharsets.UTF_8));
+    public static String md5(final String input) {
+        return input == null ? "" : DigestUtils.md5DigestAsHex(input.getBytes(StandardCharsets.UTF_8));
     }
 }

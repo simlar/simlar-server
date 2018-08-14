@@ -22,8 +22,8 @@
 package org.simlar.simlarserver.controllers;
 
 import org.simlar.simlarserver.xml.XmlError;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorExceptionClientResponse;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -81,7 +81,7 @@ final class ErrorController {
 
     // in order to handle html request errors we have to return a String here
     @ExceptionHandler(XmlErrorException.class)
-    public String handleException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
+    public String handleXmlErrorException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
         final XmlErrorExceptionClientResponse response = XmlErrorExceptionClientResponse.fromException(xmlErrorException);
         if (response == null) {
             log(Level.SEVERE, "XmlErrorException with no XmlErrorExceptionClientResponse found for: " + xmlErrorException.getClass().getSimpleName(), request, xmlErrorException);

@@ -60,7 +60,7 @@ public final class SubscriberServiceTest {
     @SuppressWarnings("TooBroadScope")
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
-    public void checkCredentials() {
+    public void testCheckCredentials() {
         final String simlarId = "*0001*";
         final String password = "sp4mv02fvu";
         final String ha1 = "1ee89de73dccb07194b19a25fdfad653";

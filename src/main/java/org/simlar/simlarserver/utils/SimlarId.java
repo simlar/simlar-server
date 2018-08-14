@@ -85,9 +85,9 @@ public final class SimlarId {
     }
 
     @Override
-    public boolean equals(final Object other) {
-        return this == other ||
-                other != null && getClass() == other.getClass() && Objects.equals(simlarId, ((SimlarId) other).simlarId);
+    public boolean equals(final Object obj) {
+        return this == obj ||
+                obj != null && getClass() == obj.getClass() && Objects.equals(simlarId, ((SimlarId) obj).simlarId);
     }
 
     @Override

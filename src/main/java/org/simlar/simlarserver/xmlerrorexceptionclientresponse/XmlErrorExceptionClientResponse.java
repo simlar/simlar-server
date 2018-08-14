@@ -21,21 +21,21 @@
 
 package org.simlar.simlarserver.xmlerrorexceptionclientresponse;
 
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionRequestedTooManyContacts;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionUnknownApplePushId;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionUnknownPushIdType;
-import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionWrongCredentials;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public enum XmlErrorExceptionClientResponse {
         UNKNOWN_STRUCTURE          (null,                                             1, "unknown structure"),
-        WRONG_CREDENTIALS          (XmlErrorExceptionWrongCredentials.class,         10, "wrong credentials"),
-        UNKNOWN_PUSH_ID_TYPE       (XmlErrorExceptionUnknownPushIdType.class,        30, "unknown push id type"),
-        UNKNOWN_APPLE_PUSH_ID      (XmlErrorExceptionUnknownApplePushId.class,       31, "unknown apple pushId"),
-        REQUESTED_TOO_MANY_CONTACTS(XmlErrorExceptionRequestedTooManyContacts.class, 50, "requested too many contacts")
+        WRONG_CREDENTIALS          (XmlErrorWrongCredentialsException.class,         10, "wrong credentials"),
+        UNKNOWN_PUSH_ID_TYPE       (XmlErrorUnknownPushIdTypeException.class,        30, "unknown push id type"),
+        UNKNOWN_APPLE_PUSH_ID      (XmlErrorUnknownApplePushIdException.class,       31, "unknown apple pushId"),
+        REQUESTED_TOO_MANY_CONTACTS(XmlErrorRequestedTooManyContactsException.class, 50, "requested too many contacts")
     ;
 
 
@@ -43,15 +43,15 @@ public enum XmlErrorExceptionClientResponse {
     private final int id;
     private final String message;
 
-    private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> classEnumMap = new HashMap<>();
+    private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP = new HashMap<>();
     static {
         for (final XmlErrorExceptionClientResponse type : XmlErrorExceptionClientResponse.values()) {
-            classEnumMap.put(type.exceptionClass, type);
+            EXCEPTION_CLIENT_RESPONSE_MAP.put(type.exceptionClass, type);
         }
     }
 
     public static XmlErrorExceptionClientResponse fromException(final XmlErrorException exception) {
-        return classEnumMap.get(exception.getClass());
+        return EXCEPTION_CLIENT_RESPONSE_MAP.get(exception.getClass());
     }
 
     XmlErrorExceptionClientResponse(final Class<? extends XmlErrorException> exceptionClass, final int id, final String message) {

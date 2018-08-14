@@ -19,10 +19,10 @@
  *
  */
 
-package org.simlar.simlarserver.xmlerrorexception;
+package org.simlar.simlarserver.xmlerrorexceptions;
 
-public final class XmlErrorExceptionWrongCredentials extends XmlErrorException {
-    public XmlErrorExceptionWrongCredentials(final String message) {
+public final class XmlErrorRequestedTooManyContactsException extends XmlErrorException {
+    public XmlErrorRequestedTooManyContactsException(final String message) {
         super(message);
     }
 }

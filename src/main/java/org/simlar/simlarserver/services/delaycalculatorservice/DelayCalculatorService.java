@@ -97,6 +97,7 @@ public final class DelayCalculatorService {
             return Integer.MAX_VALUE;
         }
 
-        return (int)(Math.pow(requestedContacts / 4096d, 4) / 4);
+        //noinspection NumericCastThatLosesPrecision
+        return (int)(StrictMath.pow(requestedContacts / 4096.0d, 4) / 4);
     }
 }
