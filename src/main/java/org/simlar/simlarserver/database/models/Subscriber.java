@@ -39,6 +39,7 @@ import javax.persistence.UniqueConstraint;
        indexes = @Index(name = "username_idx", columnList = "username"))
 public class Subscriber {
 
+    @SuppressWarnings("FieldHasSetterButNoGetter")
     @Id
     @GeneratedValue
     @Column(nullable = false, columnDefinition = "int(10)")
@@ -71,7 +72,7 @@ public class Subscriber {
         // this one is protected since it shouldn't be used directly
     }
 
-    @SuppressWarnings("SameParameterValue")
+    @SuppressWarnings({"SameParameterValue", "ConstructorWithTooManyParameters"})
     public Subscriber(final String username, final String domain, final String password, final String email_address, final String ha1, final String ha1b) {
         this.username = username;
         this.domain = domain;

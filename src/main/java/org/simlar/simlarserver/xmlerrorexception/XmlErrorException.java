@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.xmlerrorexception;
 
+@SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithoutAbstractMethods"})
 public abstract class XmlErrorException extends RuntimeException {
     XmlErrorException(final String message) {
         super(message);
