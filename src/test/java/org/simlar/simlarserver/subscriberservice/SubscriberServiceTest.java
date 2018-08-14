@@ -30,9 +30,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -85,5 +87,14 @@ public final class SubscriberServiceTest {
         assertEquals(0, subscriberService.getStatus(simlarIdNotSaved));
         assertTrue(subscriberService.save(simlarIdSaved, "as234f2dsd"));
         assertEquals(1, subscriberService.getStatus(simlarIdSaved));
+    }
+
+    @DirtiesContext
+    @Test
+    public void testUsers() {
+        for (final TestUser user: TestUser.USERS) {
+            assertTrue(subscriberService.save(SimlarId.create(user.getSimlarId()), user.getPassword()));
+            assertTrue(subscriberService.checkCredentials(user.getSimlarId(), user.getPasswordHash()));
+        }
     }
 }

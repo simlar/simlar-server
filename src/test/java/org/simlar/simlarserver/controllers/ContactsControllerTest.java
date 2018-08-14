@@ -50,7 +50,7 @@ public final class ContactsControllerTest extends ContactsControllerBaseTest {
     }
 
     private void emptyContactList(final String contactList) {
-        assertNull(requestContactList(contactList));
+        assertNull(requestContactList(TestUser.get(0), contactList));
     }
 
     @Test
@@ -62,7 +62,7 @@ public final class ContactsControllerTest extends ContactsControllerBaseTest {
 
     @Test
     public void receiveContactsStatus() {
-        final List<XmlContact> contacts = requestContactList(TestUser.get(1).getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
+        final List<XmlContact> contacts = requestContactList(TestUser.get(0), TestUser.get(1).getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
         assertNotNull(contacts);
         assertEquals(2, contacts.size());
         assertEquals(TestUser.get(1).getSimlarId(), contacts.get(0).getSimlarId());

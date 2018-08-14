@@ -21,6 +21,10 @@
 
 package org.simlar.simlarserver.controllers;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -32,26 +36,33 @@ import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 
 import org.simlar.simlarserver.xmlerrorexception.XmlErrorException;
+import org.simlar.simlarserver.xmlerrorexception.XmlErrorExceptionRequestedTooManyContacts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
 @RestController
 final class ContactsController {
     public static final String  REQUEST_URL_CONTACTS_STATUS = "/get-contacts-status.xml";
     private static final Logger LOGGER                      = Logger.getLogger(ContactsController.class.getName());
+    private static final int    DELAY_MAXIMUM               = 8; // seconds
+    private static final long   DELAY_MINIMUM               = 10; // milliseconds
 
     private final SubscriberService subscriberService;
     private final DelayCalculatorService delayCalculatorService;
+    private final TaskScheduler taskScheduler;
 
 
     @Autowired
-    private ContactsController(final SubscriberService subscriberService, final DelayCalculatorService delayCalculatorService) {
+    private ContactsController(final SubscriberService subscriberService, final DelayCalculatorService delayCalculatorService, final TaskScheduler taskScheduler) {
         this.subscriberService      = subscriberService;
         this.delayCalculatorService = delayCalculatorService;
+        this.taskScheduler          = taskScheduler;
     }
 
     /**
@@ -71,16 +82,35 @@ final class ContactsController {
      *            error message or contact list in xml
      */
     @RequestMapping(value = REQUEST_URL_CONTACTS_STATUS, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    public XmlContacts getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlErrorException {
+    public DeferredResult<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) throws XmlErrorException {
         LOGGER.info(REQUEST_URL_CONTACTS_STATUS + " requested with login=\"" + login + '\"');
 
         subscriberService.checkCredentialsWithException(login, password);
 
         final List<SimlarId> simlarIds = SimlarId.parsePipeSeparatedSimlarIds(contacts);
-        delayCalculatorService.delayRequest(SimlarId.create(login), simlarIds);
+        final int delay = delayCalculatorService.calculateRequestDelay(SimlarId.create(login), simlarIds);
+        if (delay > DELAY_MAXIMUM) {
+            throw new XmlErrorExceptionRequestedTooManyContacts("request delay=" + delay + " blocking simlarId=" + login);
+        }
 
-        return new XmlContacts(simlarIds.stream()
-                .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
-                .collect(Collectors.toList()));
+        final long delayMillis = delay <= 0 ? DELAY_MINIMUM : delay * 1000L;
+        final LocalDateTime date = LocalDateTime.now().plus(delayMillis, ChronoUnit.MILLIS);
+        LOGGER.info("scheduling getContactStatus to: " + date);
+
+        final DeferredResult<XmlContacts> deferredResult = new DeferredResult<>();
+        taskScheduler.schedule(() -> {
+            if (deferredResult.isSetOrExpired()) {
+                LOGGER.severe("deferred result already set or expired simlarId=" + login + " delay=" + delay + " seconds");
+            } else {
+                LOGGER.info("executing getContactStatus scheduled to: " + date);
+                deferredResult.setResult(
+                        new XmlContacts(simlarIds.stream()
+                                .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
+                                .collect(Collectors.toList()))
+                );
+            }
+        }, Date.from(date.atZone(ZoneId.systemDefault()).toInstant()));
+
+        return deferredResult;
     }
 }

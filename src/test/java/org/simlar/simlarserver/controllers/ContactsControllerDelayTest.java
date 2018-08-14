@@ -39,6 +39,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@DirtiesContext
 @SuppressFBWarnings({"PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS", "UCPM_USE_CHARACTER_PARAMETERIZED_METHOD"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public final class ContactsControllerDelayTest extends ContactsControllerBaseTest {
@@ -47,17 +48,20 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
         return String.join("|", simlarIds.stream().map(SimlarId::get).collect(Collectors.toList()));
     }
 
-    private void requestContactListSuccess(final int amount) {
-        final List<XmlContact> response = requestContactList(pipeJoin(SimlarIds.createContacts(amount)));
+    private void requestContactListSuccess(final TestUser user, final int amount) {
+        final List<XmlContact> response = requestContactList(user, pipeJoin(SimlarIds.createContacts(amount)));
         assertNotNull(response);
         assertEquals(amount, response.size());
+    }
+
+    private void requestContactListSuccess(final int amount) {
+        requestContactListSuccess(TestUser.get(0), amount);
     }
 
     private void requestedTooManyContacts(final int amount) {
         assertEquals(50, requestError(TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), pipeJoin(SimlarIds.createContacts(amount))));
     }
 
-    @DirtiesContext
     @Test
     public void requestTooManyContacts() {
         requestContactListSuccess(23);
@@ -66,5 +70,26 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
         requestedTooManyContacts(100000);
         requestedTooManyContacts(5000);
         requestedTooManyContacts(5000);
+    }
+
+    private static void assertLessEquals(final long l1, final long l2) {
+        assertTrue(l1 + " <= " + l2, l1 <= l2);
+    }
+
+    @Test
+    public void noDelay() {
+        final long begin = System.currentTimeMillis();
+        requestContactListSuccess(TestUser.get(1), 1);
+        final long elapsed = System.currentTimeMillis() - begin;
+        assertLessEquals(elapsed, 500);
+    }
+
+    @Test
+    public void oneSecondDelay() {
+        final long begin = System.currentTimeMillis();
+        requestContactListSuccess(TestUser.get(2), 6000);
+        final long elapsed = System.currentTimeMillis() - begin;
+        assertLessEquals(1000, elapsed);
+        assertLessEquals(elapsed, 4000);
     }
 }
