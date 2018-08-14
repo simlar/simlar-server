@@ -54,7 +54,7 @@ import java.util.regex.Pattern;
 @Slf4j
 @Component
 public final class CreateAccountService {
-    private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{" + Password.REGISTRATION_CODE_LENGTH + "}");
+    private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{" + Password.REGISTRATION_CODE_LENGTH + '}');
 
     private final SmsService smsService;
     private final SettingsService settingsService;
@@ -153,7 +153,7 @@ public final class CreateAccountService {
         }
     }
 
-    public void confirmAccount(final String simlarIdString, final CharSequence registrationCode) {
+    public void confirmAccount(final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
         final SimlarId simlarId = SimlarId.create(simlarIdString);
         if (simlarId == null) {
             throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);

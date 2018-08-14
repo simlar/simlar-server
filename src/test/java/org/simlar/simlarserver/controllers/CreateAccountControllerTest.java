@@ -280,6 +280,8 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals(dbEntry.getRegistrationCode(), response.getRegistrationCode());
 
         // check
-        assertTrue(subscriberService.checkCredentials(request.getSimlarId(), subscriberService.createHashHa1(SimlarId.create(request.getSimlarId()), request.getPassword())));
+        final SimlarId simlarId = SimlarId.create(request.getSimlarId());
+        assertNotNull(simlarId);
+        assertTrue(subscriberService.checkCredentials(request.getSimlarId(), subscriberService.createHashHa1(simlarId, request.getPassword())));
     }
 }
