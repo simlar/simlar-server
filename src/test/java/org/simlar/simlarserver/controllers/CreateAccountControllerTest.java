@@ -222,6 +222,12 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final AccountCreationRequestCount requestCount = accountCreationRepository.findBySimlarId(simlarId);
         assertNotNull(requestCount.getTimestamp());
         requestCount.setTimestamp(requestCount.getTimestamp().minusSeconds(seconds));
+
+        final Instant callTimestamp = requestCount.getCallTimestamp();
+        if (callTimestamp != null) {
+            requestCount.setCallTimestamp(callTimestamp.minusSeconds(seconds));
+        }
+
         accountCreationRepository.save(requestCount);
     }
 
@@ -358,7 +364,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     public void testConfirmWithWrongRegistrationCode() {
         final String simlarId = "*42002300002*";
 
-        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", "627130", "127.0.0.1");
+        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", "627130", Instant.now(), "127.0.0.1");
         accountCreationRepository.save(before);
         assertPostConfirmAccountError(26, CreateAccountController.COMMAND_CONFIRM, simlarId, "234561");
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
@@ -374,7 +380,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final String simlarId = "*42002300003*";
         final String registrationCode = "432516";
 
-        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", registrationCode, "127.0.0.1");
+        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", registrationCode, Instant.now(), "127.0.0.1");
         before.setConfirmTries(settingsService.getAccountCreationMaxConfirms());
         accountCreationRepository.save(before);
         assertPostConfirmAccountError(25, CreateAccountController.COMMAND_CONFIRM, simlarId, registrationCode);
@@ -400,7 +406,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final String simlarId = "*42002300004*";
         final String registrationCode = "432517";
 
-        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", registrationCode, "127.0.0.1");
+        final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", registrationCode, Instant.now(), "127.0.0.1");
         accountCreationRepository.save(before);
 
         final XmlSuccessCreateAccountConfirm response = postConfirmAccount(XmlSuccessCreateAccountConfirm.class, CreateAccountController.COMMAND_CONFIRM, simlarId, registrationCode);

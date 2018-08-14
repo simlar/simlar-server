@@ -81,24 +81,28 @@ public final class CreateAccountService {
     }
 
     public AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip) {
+        return createAccountRequest(telephoneNumber, smsText, ip, Instant.now());
+    }
+
+    AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip, final Instant now) {
         final SimlarId simlarId = createValidatedSimlarId(telephoneNumber);
 
         if (StringUtils.isEmpty(ip)) {
             throw new XmlErrorNoIpException("request account creation with empty ip for telephone number:  " + telephoneNumber);
         }
 
-        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip);
+        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip, now);
         checkRequestTriesLimit(dbEntry.getRequestTries(), settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay(),
                 "too many create account requests %d >= %d for number: " + telephoneNumber);
 
-        final Instant anHourAgo = Instant.now().minus(Duration.ofHours(1));
+        final Instant anHourAgo = now.minus(Duration.ofHours(1));
         checkRequestTriesLimit(accountCreationRepository.sumRequestTries(ip, anHourAgo), settingsService.getAccountCreationMaxRequestsPerIpPerHour(),
                 "too many create account requests %d >= %d for ip: " + ip);
 
         checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(anHourAgo), settingsService.getAccountCreationMaxRequestsTotalPerHour(),
                 "too many total create account requests %d >= %d within one hour");
 
-        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(Instant.now().minus(Duration.ofDays(1))),
+        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(now.minus(Duration.ofDays(1))),
                 settingsService.getAccountCreationMaxRequestsTotalPerDay(),
                 "too many total create account requests %d >= %d within one day");
 
@@ -115,7 +119,7 @@ public final class CreateAccountService {
             if (!subscriberService.checkCredentials(dbEntry.getSimlarId(), dbEntry.getPassword())) {
                 log.warn("no confirmation after '{}' for number '{}'", WARN_TIMEOUT, telephoneNumber);
             }
-        }, Date.from(Instant.now().plus(WARN_TIMEOUT)));
+        }, Date.from(now.plus(WARN_TIMEOUT)));
 
         log.info("created account request for simlarId '{}'", simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
@@ -134,18 +138,16 @@ public final class CreateAccountService {
         return simlarId;
     }
 
-    private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip) {
+    private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip, final Instant now) {
         return transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
             if (dbEntry == null) {
-                return accountCreationRepository.save(new AccountCreationRequestCount(simlarId, Password.generate(), Password.generateRegistrationCode(), ip));
+                return accountCreationRepository.save(new AccountCreationRequestCount(simlarId, Password.generate(), Password.generateRegistrationCode(), now, ip));
             }
 
-            final Instant now = Instant.now();
             final Instant savedTimestamp = dbEntry.getTimestamp();
             if (savedTimestamp != null && Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
                 dbEntry.setRequestTries(1);
-                dbEntry.setCalls(0);
             } else{
                 dbEntry.incrementRequestTries();
             }
@@ -174,7 +176,9 @@ public final class CreateAccountService {
         }
     }
 
-    private AccountCreationRequestCount updateCalls(final SimlarId simlarId, @SuppressWarnings("TypeMayBeWeakened") final String password) {
+    private AccountCreationRequestCount updateCalls(final SimlarId simlarId,
+                                                    @SuppressWarnings("TypeMayBeWeakened") final String password,
+                                                    @SuppressWarnings("TypeMayBeWeakened") final Instant now) {
         return transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
             if (dbEntry == null || dbEntry.getTimestamp() == null) {
@@ -184,9 +188,7 @@ public final class CreateAccountService {
                 throw new XmlErrorWrongCredentialsException("call request with wrong password for simlarId: " + simlarId);
             }
 
-            final Instant now = Instant.now();
-            final Instant savedTimestamp = dbEntry.getTimestamp();
-            final long secondsSinceRequest = Duration.between(savedTimestamp, now).getSeconds();
+            final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), now).getSeconds();
             if (secondsSinceRequest < settingsService.getAccountCreationCallDelaySecondsMin()) {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since request: " + secondsSinceRequest + 's');
             }
@@ -194,15 +196,25 @@ public final class CreateAccountService {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since request: " + secondsSinceRequest + 's');
             }
 
-            dbEntry.incrementCalls();
+            final Instant callTimeStamp = dbEntry.getCallTimestamp();
+            if (callTimeStamp == null || Duration.between(callTimeStamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
+                dbEntry.setCalls(1);
+            } else{
+                dbEntry.incrementCalls();
+            }
+
             return accountCreationRepository.save(dbEntry);
         });
     }
 
     public SimlarId call(final String telephoneNumber, @SuppressWarnings("TypeMayBeWeakened") final String password) {
+        return call(telephoneNumber, password, Instant.now());
+    }
+
+    SimlarId call(final String telephoneNumber, @SuppressWarnings("TypeMayBeWeakened") final String password, final Instant now) {
         final SimlarId simlarId = createValidatedSimlarId(telephoneNumber);
 
-        final AccountCreationRequestCount dbEntry = updateCalls(simlarId, password);
+        final AccountCreationRequestCount dbEntry = updateCalls(simlarId, password, now);
 
         if (dbEntry.getCalls() > settingsService.getAccountCreationMaxCalls()) {
             throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too many calls within the last 24 hours");
@@ -211,6 +223,9 @@ public final class CreateAccountService {
         if (!smsService.call(telephoneNumber, CallText.format(dbEntry.getRegistrationCode()))) {
             throw new XmlErrorFailedToTriggerCallException("failed to trigger call for simlarId: " + simlarId);
         }
+
+        dbEntry.setCallTimestamp(now);
+        accountCreationRepository.save(dbEntry);
 
         return simlarId;
     }
