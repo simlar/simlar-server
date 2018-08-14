@@ -23,6 +23,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
@@ -44,12 +45,12 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.0.RELEASE")
         classpath("com.github.ben-manes:gradle-versions-plugin:0.17.0")
     }
 }
 
-war {
+bootWar {
     baseName = 'simlar-server'
     archiveName = "${baseName}##${version}.war"
     rootSpec.exclude('application-default.properties')

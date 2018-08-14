@@ -37,9 +37,8 @@ As the simlar-server is a spring-boot application you may start it with an embed
 ```
 
 ### Build war ###
-It is recommended to run clean before building the war file. This may lead to smaller wars.
 ```
-./gradlew clean war
+./gradlew bootWar
 ```
 ### Check dependencies ###
 The simlar-server uses the [gradle versions plugin](https://github.com/ben-manes/gradle-versions-plugin). You may check for dependency updates like:

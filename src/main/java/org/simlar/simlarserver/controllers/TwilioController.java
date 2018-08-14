@@ -28,6 +28,7 @@ import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -111,7 +112,7 @@ final class TwilioController {
      *            e.g. queued, ringing, in-progress, completed, busy, failed, no-answer, canceled
      */
     @SuppressWarnings("SpellCheckingInspection")
-    @RequestMapping(value = TwilioSmsService.REQUEST_PATH_CALL, method = RequestMethod.POST)
+    @RequestMapping(value = TwilioSmsService.REQUEST_PATH_CALL, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlTwilioCallResponse call(final HttpServletRequest request,
                                       @RequestParam(name = "CallSid")    final String callSid,
                                       @RequestParam(name = "To")         final String to,
