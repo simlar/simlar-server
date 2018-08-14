@@ -22,8 +22,6 @@ package org.simlar.simlarserver.utils;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.nio.charset.StandardCharsets;
-
 @SuppressWarnings("UtilityClass")
 public final class Hash {
 
@@ -32,6 +30,6 @@ public final class Hash {
     }
 
     public static String md5(final String input) {
-        return input == null ? "" : DigestUtils.md5Hex(input.getBytes(StandardCharsets.UTF_8));
+        return input == null ? "" : DigestUtils.md5Hex(input);
     }
 }

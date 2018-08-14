@@ -30,6 +30,7 @@ import org.springframework.context.annotation.PropertySource;
 @SuppressWarnings("NonFinalUtilityClass")
 @PropertySource(value = "file:/etc/simlar-server/config.properties", ignoreResourceNotFound = true)
 @PropertySource(value = "classpath:local.properties", ignoreResourceNotFound = true)
+@PropertySource(value = "classpath:common.properties", ignoreResourceNotFound = true)
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
