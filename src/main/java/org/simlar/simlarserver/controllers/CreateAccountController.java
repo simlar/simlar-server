@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.createaccountservice.AccountRequest;
 import org.simlar.simlarserver.services.createaccountservice.CreateAccountService;
+import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
@@ -42,9 +43,10 @@ import java.util.Objects;
 @Slf4j
 @RestController
 final class CreateAccountController {
-    public  static final String REQUEST_PATH    = "/create-account.xml";
-    public  static final String COMMAND_REQUEST = "request";
-    public  static final String COMMAND_CONFIRM = "confirm";
+    public static final String REQUEST_PATH      = "/create-account.xml";
+    public static final String REQUEST_PATH_CALL = "/create-account-call.xml";
+    public static final String COMMAND_REQUEST   = "request";
+    public static final String COMMAND_CONFIRM   = "confirm";
 
     private final CreateAccountService createAccountService;
 
@@ -81,6 +83,29 @@ final class CreateAccountController {
         return new XmlSuccessCreateAccountRequest(accountRequest.getSimlarId().get(), accountRequest.getPassword());
     }
 
+    /**
+     * This method handles http post requests. You may test it with:
+     * <blockquote>
+     * curl --data "command=request&telephoneNumber=%2b1111&smsText=ios-en" http://localhost:8080/create-account-call.xml
+     * </blockquote>
+     *
+     * @param telephoneNumber
+     *            the telephone number identifying the account
+     * @param password
+     *            the password you received withe create account request
+     *
+     * @return XmlError or XmlSuccessCreateAccountRequest
+     *            error message or success message containing simlarId and password
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    @RequestMapping(value = REQUEST_PATH_CALL, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
+    public XmlSuccessCreateAccountRequest createAccountCall(final HttpServletRequest request, @RequestParam final String telephoneNumber, @RequestParam final String password) {
+        log.info("'{}' requested with telephoneNumber= '{}' and User-Agent '{}'", REQUEST_PATH_CALL, telephoneNumber, request.getHeader("User-Agent"));
+
+        final SimlarId simlarId = createAccountService.call(telephoneNumber, password);
+
+        return new XmlSuccessCreateAccountRequest(simlarId.get(), password);
+    }
 
     /**
      * This method handles http post requests. You may test it with:

@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings({"InstanceVariableNamingConvention", "MethodParameterNamingConvention"})
+@SuppressWarnings({"InstanceVariableNamingConvention", "MethodParameterNamingConvention", "ClassWithTooManyFields"})
 @Getter
 @Component
 public class SettingsService {
@@ -43,6 +43,8 @@ public class SettingsService {
     private final int accountCreationMaxRequestsTotalPerHour;
     private final int accountCreationMaxRequestsTotalPerDay;
     private final int accountCreationMaxConfirms;
+    private final int accountCreationCallDelaySecondsMin;
+    private final int accountCreationCallDelaySecondsMax;
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
     @Autowired
@@ -55,7 +57,9 @@ public class SettingsService {
             @Value("${accountCreation.maxRequestsPerIpPerHour:60}") final int      accountCreationMaxRequestsPerIpPerHour,
             @Value("${accountCreation.maxRequestsTotalPerHour:220}") final int     accountCreationMaxRequestsTotalPerHour,
             @Value("${accountCreation.maxRequestsTotalPerDay:1440}") final int     accountCreationMaxRequestsTotalPerDay,
-            @Value("${accountCreation.maxConfirms:10}") final int                  accountCreationMaxConfirms
+            @Value("${accountCreation.maxConfirms:10}") final int                  accountCreationMaxConfirms,
+            @Value("${accountCreation.CallDelaySecondsMin:90}") final int          accountCreationCallDelaySecondsMin,
+            @Value("${accountCreation.CallDelaySecondsMax:600}") final int         accountCreationCallDelaySecondsMax
             ) {
         this.domain                                      = domain;
         this.port                                        = port;
@@ -66,5 +70,7 @@ public class SettingsService {
         this.accountCreationMaxRequestsTotalPerHour      = accountCreationMaxRequestsTotalPerHour;
         this.accountCreationMaxRequestsTotalPerDay       = accountCreationMaxRequestsTotalPerDay;
         this.accountCreationMaxConfirms                  = accountCreationMaxConfirms;
+        this.accountCreationCallDelaySecondsMin          = accountCreationCallDelaySecondsMin;
+        this.accountCreationCallDelaySecondsMax          = accountCreationCallDelaySecondsMax;
     }
 }

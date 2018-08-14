@@ -28,17 +28,21 @@ import org.simlar.simlarserver.database.repositories.AccountCreationRequestCount
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.utils.CallText;
 import org.simlar.simlarserver.utils.LibPhoneNumber;
 import org.simlar.simlarserver.utils.Password;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.utils.SmsText;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorCallNotAllowedAtTheMomentException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToTriggerCallException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoRegistrationCodeException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
@@ -78,14 +82,7 @@ public final class CreateAccountService {
     }
 
     public AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip) {
-        final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
-        if (simlarId == null) {
-            throw new XmlErrorInvalidTelephoneNumberException("invalid telephone number: " + telephoneNumber);
-        }
-
-        if (!LibPhoneNumber.isValid(telephoneNumber)) {
-            throw new XmlErrorInvalidTelephoneNumberException("libphonenumber invalidates telephone number: " + telephoneNumber);
-        }
+        final SimlarId simlarId = checkTelephoneNumber(telephoneNumber);
 
         if (StringUtils.isEmpty(ip)) {
             throw new XmlErrorNoIpException("request account creation with empty ip for telephone number:  " + telephoneNumber);
@@ -123,6 +120,20 @@ public final class CreateAccountService {
 
         log.info("created account request for simlarId: {}", simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
+    }
+
+    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
+    private static SimlarId checkTelephoneNumber(final String telephoneNumber) {
+        final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
+        if (simlarId == null) {
+            throw new XmlErrorInvalidTelephoneNumberException("invalid telephone number: " + telephoneNumber);
+        }
+
+        if (!LibPhoneNumber.isValid(telephoneNumber)) {
+            throw new XmlErrorInvalidTelephoneNumberException("libphonenumber invalidates telephone number: " + telephoneNumber);
+        }
+
+        return simlarId;
     }
 
     private AccountCreationRequestCount readAccountCreationRequest(final SimlarId simlarId) {
@@ -163,6 +174,32 @@ public final class CreateAccountService {
         } else {
             checkRequestTriesLimit(requestTries, limit, message);
         }
+    }
+
+    public SimlarId call(final String telephoneNumber, @SuppressWarnings("TypeMayBeWeakened") final String password) {
+        final SimlarId simlarId = checkTelephoneNumber(telephoneNumber);
+
+        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
+        if (dbEntry == null || dbEntry.getTimestamp() == null) {
+            throw new XmlErrorWrongCredentialsException("no sms request found for simlarId: " + simlarId);
+        }
+        if (StringUtils.isEmpty(password) || !Objects.equals(dbEntry.getPassword(), password)) {
+            throw new XmlErrorWrongCredentialsException("call request with wrong password for simlarId: " + simlarId);
+        }
+
+        final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), Instant.now()).getSeconds();
+        if (secondsSinceRequest < settingsService.getAccountCreationCallDelaySecondsMin()) {
+            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since Request: " + secondsSinceRequest + 's');
+        }
+        if (secondsSinceRequest > settingsService.getAccountCreationCallDelaySecondsMax()) {
+            throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since Request: " + secondsSinceRequest + 's');
+        }
+
+        if (!smsService.call(telephoneNumber, CallText.format(dbEntry.getRegistrationCode()))) {
+            throw new XmlErrorFailedToTriggerCallException("failed to trigger call for simlarId: " + simlarId);
+        }
+
+        return simlarId;
     }
 
     public void confirmAccount(final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {

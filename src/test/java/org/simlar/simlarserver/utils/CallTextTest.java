@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Simlar Authors.
+ * Copyright (C) 2015 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,12 +19,15 @@
  *
  */
 
-package org.simlar.simlarserver.services.smsservice;
+package org.simlar.simlarserver.utils;
 
-public interface SmsService {
-    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    boolean sendSms(final String telephoneNumber, final String text);
+import org.junit.Test;
 
-    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    boolean call(final String telephoneNumber, final String text);
+import static org.junit.Assert.assertEquals;
+
+public final class CallTextTest {
+    @Test
+    public void testFormatRegistrationCodeForCall() {
+        assertEquals("1 2 3 .. 4 5 6", CallText.formatRegistrationCodeForCall("123456"));
+    }
 }

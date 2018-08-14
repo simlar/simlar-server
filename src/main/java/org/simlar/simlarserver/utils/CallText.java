@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Simlar Authors.
+ * Copyright (C) 2015 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -16,15 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-package org.simlar.simlarserver.services.smsservice;
+package org.simlar.simlarserver.utils;
 
-public interface SmsService {
-    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    boolean sendSms(final String telephoneNumber, final String text);
+@SuppressWarnings("UtilityClass")
+public final class CallText {
 
-    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    boolean call(final String telephoneNumber, final String text);
+    private CallText() {
+        throw new AssertionError("This class was not meant to be instantiated");
+    }
+
+    public static String format(final String registrationCode) {
+        return "Welcome to Simlar! Your registration code is: " + formatRegistrationCodeForCall(registrationCode);
+    }
+
+    static String formatRegistrationCodeForCall(final String code) {
+        return String.format("%s %s %s .. %s %s %s", code.charAt(0), code.charAt(1), code.charAt(2), code.charAt(3), code.charAt(4), code.charAt(5));
+    }
 }

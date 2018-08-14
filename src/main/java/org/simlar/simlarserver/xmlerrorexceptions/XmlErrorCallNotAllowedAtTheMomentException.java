@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Simlar Authors.
+ * Copyright (C) 2018 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,12 +19,12 @@
  *
  */
 
-package org.simlar.simlarserver.services.smsservice;
+package org.simlar.simlarserver.xmlerrorexceptions;
 
-public interface SmsService {
-    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    boolean sendSms(final String telephoneNumber, final String text);
+public final class XmlErrorCallNotAllowedAtTheMomentException extends XmlErrorException {
+    private static final long serialVersionUID = 1L;
 
-    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-    boolean call(final String telephoneNumber, final String text);
+    public XmlErrorCallNotAllowedAtTheMomentException(final String message) {
+        super(message);
+    }
 }
