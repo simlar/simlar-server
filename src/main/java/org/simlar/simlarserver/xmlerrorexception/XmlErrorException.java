@@ -21,7 +21,7 @@
 
 package org.simlar.simlarserver.xmlerrorexception;
 
-public abstract class XmlErrorException extends Exception {
+public abstract class XmlErrorException extends RuntimeException {
     XmlErrorException(final String message) {
         super(message);
     }

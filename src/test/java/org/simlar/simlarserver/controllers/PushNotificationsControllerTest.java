@@ -76,16 +76,16 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
     public void loginWithWrongCredentials() {
         loginWithWrongCredentials(null, "xxxxxxx");
         loginWithWrongCredentials("*", "xxxxxxx");
-        loginWithWrongCredentials(TestUser.get(0).getSimlarId(), null);
-        loginWithWrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx");
+        loginWithWrongCredentials(TestUser.U1.getSimlarId(), null);
+        loginWithWrongCredentials(TestUser.U1.getSimlarId(), "xxxxxxx");
     }
 
-    private void storePushId(final int testUser, final int deviceType, final String pushId) {
-        final XmlSuccessPushNotification response = requestStorePushId(XmlSuccessPushNotification.class, TestUser.get(testUser), deviceType, pushId);
+    private void storePushId(final TestUser testUser, final int deviceType, final String pushId) {
+        final XmlSuccessPushNotification response = requestStorePushId(XmlSuccessPushNotification.class, testUser, deviceType, pushId);
         assertNotNull(response);
         assertEquals(deviceType, response.getDeviceType());
         assertEquals(pushId, response.getPushId());
-        final PushNotification notification = pushNotificationsRepository.findBySimlarId(TestUser.get(testUser).getSimlarId());
+        final PushNotification notification = pushNotificationsRepository.findBySimlarId(testUser.getSimlarId());
         assertNotNull(notification);
         assertEquals(deviceType, notification.getDeviceType().toInt());
         assertEquals(pushId, notification.getPushId());
@@ -93,15 +93,15 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
 
     @Test
     public void storePushId() {
-        storePushId(0, 1, ANDROID_PUSH_ID_1);
-        storePushId(0, 1, ANDROID_PUSH_ID_2);
-        storePushId(1, 1, ANDROID_PUSH_ID_1);
-        storePushId(1, 1, ANDROID_PUSH_ID_2);
-        storePushId(1, 5, IOS_PUSH_ID);
+        storePushId(TestUser.U1, 1, ANDROID_PUSH_ID_1);
+        storePushId(TestUser.U1, 1, ANDROID_PUSH_ID_2);
+        storePushId(TestUser.U2, 1, ANDROID_PUSH_ID_1);
+        storePushId(TestUser.U2, 1, ANDROID_PUSH_ID_2);
+        storePushId(TestUser.U2, 5, IOS_PUSH_ID);
     }
 
     private void unknownDeviceType(final int deviceType) {
-        final XmlError error = requestStorePushId(XmlError.class, TestUser.get(0), deviceType, ANDROID_PUSH_ID_1);
+        final XmlError error = requestStorePushId(XmlError.class, TestUser.U1, deviceType, ANDROID_PUSH_ID_1);
         assertNotNull(error);
         assertEquals(30, error.getId());
     }
@@ -115,7 +115,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
     }
 
     private void unknownApplePushId(final int deviceType, final String pushId) {
-        final XmlError error = requestStorePushId(XmlError.class, TestUser.get(0), deviceType, pushId);
+        final XmlError error = requestStorePushId(XmlError.class, TestUser.U1, deviceType, pushId);
         assertNotNull(error);
         assertEquals(31, error.getId());
     }

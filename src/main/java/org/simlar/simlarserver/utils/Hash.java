@@ -24,6 +24,7 @@ import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 
+@SuppressWarnings("UtilityClass")
 public final class Hash {
 
     private Hash() {

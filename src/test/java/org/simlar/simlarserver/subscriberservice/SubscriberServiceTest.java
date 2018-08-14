@@ -21,10 +21,6 @@
 
 package org.simlar.simlarserver.subscriberservice;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +33,10 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public final class SubscriberServiceTest {
@@ -46,6 +46,7 @@ public final class SubscriberServiceTest {
 
     @Test
     public void save() {
+        @SuppressWarnings("TooBroadScope")
         final String simlarId = "*0000*";
 
         assertFalse(subscriberService.save(null, null));
@@ -56,6 +57,7 @@ public final class SubscriberServiceTest {
         assertTrue(subscriberService.save(SimlarId.create(simlarId), "FdUfFjH34gd3"));
     }
 
+    @SuppressWarnings("TooBroadScope")
     @SuppressFBWarnings("PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS")
     @Test
     public void checkCredentials() {
@@ -92,7 +94,7 @@ public final class SubscriberServiceTest {
     @DirtiesContext
     @Test
     public void testUsers() {
-        for (final TestUser user: TestUser.USERS) {
+        for (final TestUser user: TestUser.values()) {
             assertTrue(subscriberService.save(SimlarId.create(user.getSimlarId()), user.getPassword()));
             assertTrue(subscriberService.checkCredentials(user.getSimlarId(), user.getPasswordHash()));
         }

@@ -55,11 +55,11 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
     }
 
     private void requestContactListSuccess(final int amount) {
-        requestContactListSuccess(TestUser.get(0), amount);
+        requestContactListSuccess(TestUser.U1, amount);
     }
 
     private void requestedTooManyContacts(final int amount) {
-        assertEquals(50, requestError(TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), pipeJoin(SimlarIds.createContacts(amount))));
+        assertEquals(50, requestError(TestUser.U1.getSimlarId(), TestUser.U1.getPasswordHash(), pipeJoin(SimlarIds.createContacts(amount))));
     }
 
     @Test
@@ -79,7 +79,7 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
     @Test
     public void noDelay() {
         final long begin = System.currentTimeMillis();
-        requestContactListSuccess(TestUser.get(1), 1);
+        requestContactListSuccess(TestUser.U2, 1);
         final long elapsed = System.currentTimeMillis() - begin;
         assertLessEquals(elapsed, 500);
     }
@@ -87,7 +87,7 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
     @Test
     public void oneSecondDelay() {
         final long begin = System.currentTimeMillis();
-        requestContactListSuccess(TestUser.get(2), 6000);
+        requestContactListSuccess(TestUser.U3, 6000);
         final long elapsed = System.currentTimeMillis() - begin;
         assertLessEquals(1000, elapsed);
         assertLessEquals(elapsed, 4000);

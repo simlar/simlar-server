@@ -36,11 +36,13 @@ public final class XmlContacts {
     }
 
     public XmlContacts(final List<XmlContact> contacts) {
+        //noinspection AssignmentToCollectionOrArrayFieldFromParameter
         this.contacts = contacts;
     }
 
     @XmlElement(name = "contact")
     public List<XmlContact> getContacts() {
+        //noinspection ReturnOfCollectionOrArrayField // JAXB crashes with Collections.unmodifiableList
         return contacts;
     }
 

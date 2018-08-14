@@ -48,7 +48,7 @@ public final class DelayCalculatorService {
     @Autowired
     public DelayCalculatorService(final ContactsRequestCountRepository contactsRequestCountRepository, final PlatformTransactionManager transactionManager) {
         this.contactsRequestCountRepository = contactsRequestCountRepository;
-        this.transactionTemplate = new TransactionTemplate(transactionManager);
+        transactionTemplate = new TransactionTemplate(transactionManager);
     }
 
     public int calculateRequestDelay(final SimlarId simlarId, final Collection<SimlarId> contacts) {

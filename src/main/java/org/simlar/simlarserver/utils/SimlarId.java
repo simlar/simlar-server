@@ -59,7 +59,7 @@ public final class SimlarId {
 
         if (str != null) {
             for (final String entry : str.split("\\|")) {
-                final SimlarId simlarId = SimlarId.create(entry.trim());
+                final SimlarId simlarId = create(entry.trim());
                 if (simlarId != null) {
                     simlarIds.add(simlarId);
                 }
@@ -83,8 +83,8 @@ public final class SimlarId {
 
     @Override
     public boolean equals(final Object other) {
-        return this == other || other != null && getClass() == other.getClass()
-                && Objects.equals(simlarId, ((SimlarId) other).simlarId);
+        return this == other ||
+                other != null && getClass() == other.getClass() && Objects.equals(simlarId, ((SimlarId) other).simlarId);
     }
 
     @Override

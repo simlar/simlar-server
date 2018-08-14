@@ -48,7 +48,7 @@ public final class ContactsRequestCount {
     @Column(nullable = false, columnDefinition = "int(10) unsigned")
     private int count;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "ProtectedMemberInFinalClass"})
     protected ContactsRequestCount() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
