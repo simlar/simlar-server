@@ -55,7 +55,7 @@ final class PushNotificationsController {
     /**
      * This method handles http post requests. You may test it with:
      * <blockquote>
-     * curl --data "login=*0001*&password=5c3d66f5a3928cca2821d711a2c016bb&deviceType=1&pushId=APAB1bE6JDTGtpHlM4b8K4Z4qst214PdaiZs5rhfk03iFhnwz6wVgMJN01l2homL7gBeE7EuC8ohfxqrDYgkknPY1VurG-5zzuiWQmgrhjhaptOC2LlQi2g9o7aG5gPP7ZmVWyLEL6DrZwN52OvB0egGu5fN3PDKAw" http://localhost:8080/store-push-id.xml ; echo ""
+     * curl --data "login=*0001*&password=5c3d66f5a3928cca2821d711a2c016bb&deviceType=1&pushId=APAB1bE6JDTGtpHlM4b8K4Z4qst214PdaiZs5rhfk03iFhnwz6wVgMJN01l2homL7gBeE7EuC8ohfxqrDYgkknPY1VurG-5zzuiWQmgrhjhaptOC2LlQi2g9o7aG5gPP7ZmVWyLEL6DrZwN52OvB0egGu5fN3PDKAw" http://localhost:8080/store-push-id.xml
      * </blockquote>
      *
      * @param login
@@ -68,7 +68,7 @@ final class PushNotificationsController {
      *            2..5 iOS
      * @param pushId
      *            The Id to send push notifications to.
-     * @return XmlError or xmlContactList
+     * @return XmlError or XmlSuccessPushNotification
      *            error message or success message containing deviceType and pushId
      */
     @SuppressWarnings("SpellCheckingInspection")
