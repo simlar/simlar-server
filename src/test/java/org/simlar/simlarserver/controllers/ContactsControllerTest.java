@@ -32,12 +32,11 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.Application;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
-import org.simlar.simlarserver.utils.SimlarId;
+import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 import org.simlar.simlarserver.xml.XmlError;
@@ -55,13 +54,6 @@ import org.springframework.web.client.RestTemplate;
 @WebIntegrationTest(randomPort = true)
 public final class ContactsControllerTest {
     private static final Logger LOGGER                   = Logger.getLogger(ContactsControllerTest.class.getName());
-
-    private static final String SIMLAR_ID1               = "*0001*";
-    private static final String SIMLAR_ID1_PASSWORD      = "x1fg6hk78";
-    private static final String SIMLAR_ID1_PASSWORD_HASH = "5c3d66f5a3928cca2821d711a2c016bb";
-    private static final String SIMLAR_ID2               = "*0002*";
-    private static final String SIMLAR_ID2_PASSWORD      = "fdfho21j3";
-    private static final String SIMLAR_ID_NOT_REGISTERED = "*0003*";
 
     @Value("${local.server.port}")
     private int                 port;
@@ -94,22 +86,16 @@ public final class ContactsControllerTest {
         }
     }
 
-    @Before
-    public void init() {
-        subscriberService.save(SimlarId.create(SIMLAR_ID1), SIMLAR_ID1_PASSWORD);
-        subscriberService.save(SimlarId.create(SIMLAR_ID2), SIMLAR_ID2_PASSWORD);
-    }
-
     @Test
     public void receiveContactsStatus() {
-        final XmlContacts xmlContacts = requestContactStatus(XmlContacts.class, SIMLAR_ID1, SIMLAR_ID1_PASSWORD_HASH, SIMLAR_ID2 + "|" + SIMLAR_ID_NOT_REGISTERED);
+        final XmlContacts xmlContacts = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), TestUser.get(1).getSimlarId() + "|" + TestUser.SIMLAR_ID_NOT_REGISTERED);
         assertNotNull(xmlContacts);
         final List<XmlContact> contacts = xmlContacts.getContacts();
         assertNotNull(contacts);
         assertEquals(2, contacts.size());
-        assertEquals(SIMLAR_ID2, contacts.get(0).getSimlarId());
+        assertEquals(TestUser.get(1).getSimlarId(), contacts.get(0).getSimlarId());
         assertEquals(1, contacts.get(0).getStatus());
-        assertEquals(SIMLAR_ID_NOT_REGISTERED, contacts.get(1).getSimlarId());
+        assertEquals(TestUser.SIMLAR_ID_NOT_REGISTERED, contacts.get(1).getSimlarId());
         assertEquals(0, contacts.get(1).getStatus());
     }
 
@@ -122,12 +108,12 @@ public final class ContactsControllerTest {
     public void loginWithWrongCredentials() {
         assertTrue(loginWithWrongCredentials(null, "xxxxxxx"));
         assertTrue(loginWithWrongCredentials("*", "xxxxxxx"));
-        assertTrue(loginWithWrongCredentials(SIMLAR_ID1, null));
-        assertTrue(loginWithWrongCredentials(SIMLAR_ID1, "xxxxxxx"));
+        assertTrue(loginWithWrongCredentials(TestUser.get(0).getSimlarId(), null));
+        assertTrue(loginWithWrongCredentials(TestUser.get(0).getSimlarId(), "xxxxxxx"));
     }
 
     private boolean loginWithEmptyContactList(final String contactList) {
-        final XmlContacts response = requestContactStatus(XmlContacts.class, SIMLAR_ID1, SIMLAR_ID1_PASSWORD_HASH, contactList);
+        final XmlContacts response = requestContactStatus(XmlContacts.class, TestUser.get(0).getSimlarId(), TestUser.get(0).getPasswordHash(), contactList);
         return response != null && response.getContacts() == null;
     }
 
@@ -135,6 +121,6 @@ public final class ContactsControllerTest {
     public void loginWithEmptyContactList() {
         assertTrue(loginWithEmptyContactList(null));
         assertTrue(loginWithEmptyContactList(""));
-        assertTrue(loginWithEmptyContactList(SIMLAR_ID2 + " " + SIMLAR_ID_NOT_REGISTERED));
+        assertTrue(loginWithEmptyContactList(TestUser.get(1).getSimlarId() + " " + TestUser.SIMLAR_ID_NOT_REGISTERED));
     }
 }

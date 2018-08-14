@@ -22,3 +22,6 @@ bin/
 *.ipr
 *.iws
 *.idea
+
+# local properties are not meant to be checked in
+src/main/resources/local.properties
