@@ -1,0 +1,14 @@
+language: java
+jdk: openjdk8
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y mono-runtime
+
+install:
+  - ./gradlew clean bootWar
+
+script:
+  - ./gradlew build
+  - ./gradlew dependencyUpdates
+  - ./gradlew dependencyCheckAnalyze
