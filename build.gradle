@@ -129,7 +129,7 @@ task dependencyChecks {
 dependencyChecks.dependsOn dependencyCheckAnalyze
 dependencyChecks.dependsOn dependencyUpdates
 
-task wrapper(type: Wrapper) {
+wrapper {
     gradleVersion = "4.10"
 }
 
