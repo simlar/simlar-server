@@ -44,7 +44,7 @@ final class VersionController {
      * curl http://localhost:8080/version
      * </blockquote>
      *
-     * @return plain version string
+     * @return plain version string e.g. 0.0.7
      */
     @SuppressFBWarnings("URV_UNRELATED_RETURN_VALUES")
     @RequestMapping(value = REQUEST_PATH, produces = MediaType.TEXT_PLAIN_VALUE)
