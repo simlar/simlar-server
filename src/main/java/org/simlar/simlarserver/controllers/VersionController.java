@@ -39,7 +39,7 @@ final class VersionController {
     private final SettingsService settingsService;
 
     /**
-     * This method handles http post requests. You may test it with:
+     * This method handles http get requests. You may test it with:
      * <blockquote>
      * curl http://localhost:8080/version
      * </blockquote>
