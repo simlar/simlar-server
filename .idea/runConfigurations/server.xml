@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="server" type="Application" factoryName="Application" singleton="true">
+    <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
     <option name="MAIN_CLASS_NAME" value="org.simlar.simlarserver.SimlarServer" />
     <module name="simlar-server_main" />
     <method v="2">
