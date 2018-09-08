@@ -71,3 +71,10 @@ After installing the plugin it is required to enable annotation processing in Se
 ### Dictionary ###
 In order to quiet IntelliJ's inspection warnings import the dictionary.
 In Settings/Editor/Spelling choose the tab Dictionaries and add ```ides/intellij/dictionaries/simlar.dic``` to the list of Custom Dictionaries.
+
+## Configuration
+In a production environment a configuration is needed to configure e.g. the domain and the database: ```/etc/simlar-server/config.properties```
+Have a look at the [example](examples/config.properties).
+
+For development the server may run with an in memory database and does not need any configuration file. However you may place one in ```src/main/resources/application-default.properties```.
+The [example](examples/application-default.properties) e.g. sets a log pattern with filename and linenumber.
