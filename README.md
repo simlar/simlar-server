@@ -4,7 +4,8 @@ simlar-server
 [![Build Status](https://travis-ci.org/simlar/simlar-server.svg?branch=master)](https://travis-ci.org/simlar/simlar-server)
 
 
-**This project is work in progress, incomplete and not ready for production, yet.**
+**This project is work in progress and not complete, yet.**
+But after all this code runs in the simlar production environment.
 
 
 [Simlar](https://www.simlar.org) is a cross platform VoIP App aiming to make ZRTP encrypted calls easy.
