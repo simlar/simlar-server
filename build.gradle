@@ -52,15 +52,6 @@ buildscript {
     }
 }
 
-bootWar {
-    baseName = "simlar-server"
-    archiveName = "${baseName}##${version}.war"
-    rootSpec.exclude("application-default.properties")
-    manifest {
-        attributes("Implementation-Version": version)
-    }
-}
-
 repositories {
     jcenter()
 }
@@ -136,6 +127,15 @@ dependencyChecks.dependsOn dependencyUpdates
 processResources {
     filesMatching("**/application.properties") {
         expand(project.properties)
+    }
+}
+
+bootWar {
+    baseName = "simlar-server"
+    archiveName = "${baseName}##${version}.war"
+    rootSpec.exclude("application-default.properties")
+    manifest {
+        attributes("Implementation-Version": version)
     }
 }
 
