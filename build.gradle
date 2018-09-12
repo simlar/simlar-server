@@ -82,12 +82,13 @@ dependencies {
     implementation("org.apache.commons:commons-text:1.4")
     implementation("commons-codec:commons-codec:1.11")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.9.13")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito:mockito-core:2.22.0")
-    runtime("org.mariadb.jdbc:mariadb-java-client:2.3.0")
 
+    runtime("org.mariadb.jdbc:mariadb-java-client:2.3.0")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     providedRuntime("com.h2database:h2:1.4.197")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.mockito:mockito-core:2.22.0")
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
     /// IntelliJ plugin uses this version
