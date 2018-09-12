@@ -87,13 +87,6 @@ dependencies {
     findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:6.8.2")
 }
 
-//noinspection GroovyMissingReturnStatement
-test {
-    testLogging {
-        events "PASSED", "FAILED", "SKIPPED"
-    }
-}
-
 pmd {
     toolVersion = "6.7.0"
     ruleSetFiles = files("pmd-ruleset.xml")
@@ -127,6 +120,13 @@ dependencyChecks.dependsOn dependencyUpdates
 processResources {
     filesMatching("**/application.properties") {
         expand(project.properties)
+    }
+}
+
+//noinspection GroovyMissingReturnStatement
+test {
+    testLogging {
+        events "PASSED", "FAILED", "SKIPPED"
     }
 }
 
