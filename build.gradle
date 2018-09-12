@@ -132,10 +132,6 @@ task dependencyChecks {
 dependencyChecks.dependsOn dependencyCheckAnalyze
 dependencyChecks.dependsOn dependencyUpdates
 
-wrapper {
-    gradleVersion = "4.10"
-}
-
 processResources {
     filesMatching("**/application.properties") {
         expand(project.properties)
