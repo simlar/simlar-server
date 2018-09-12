@@ -84,7 +84,7 @@ dependencies {
     implementation("com.googlecode.libphonenumber:libphonenumber:8.9.13")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.h2database:h2:1.4.197")
-    testImplementation("org.mockito:mockito-core:2.21.0")
+    testImplementation("org.mockito:mockito-core:2.22.0")
     runtime("org.mariadb.jdbc:mariadb-java-client:2.3.0")
 
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat") // disable this to run in IntelliJ CE
