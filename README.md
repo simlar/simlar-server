@@ -76,5 +76,6 @@ In Settings/Editor/Spelling choose the tab Dictionaries and add ```ides/intellij
 In a production environment a configuration is needed to configure e.g. the domain and the database: ```/etc/simlar-server/config.properties```
 Have a look at the [example](examples/config.properties).
 
-For development the server may run with an in memory database and does not need any configuration file. However you may place one in ```src/main/resources/application-default.properties```.
-The [example](examples/application-default.properties) e.g. sets a log pattern with filename and linenumber.
+For development you may place your configurations in ```src/main/resources/application-default.properties```.
+The [example](examples/application-default.properties) configures the database and sets a log pattern with filename and linenumber.
+If you do not want to set up a database for development you may change the dependency type of the h2 database to ```providedRuntime```.
