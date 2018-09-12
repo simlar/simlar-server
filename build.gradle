@@ -30,17 +30,6 @@ apply plugin: "pmd"
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "org.owasp.dependencycheck"
 
-def getGitVersion = { ->
-    try {
-        return "git -C ${rootDir} describe --tags --always --dirty".execute().text.trim()
-    }
-    catch (ignored) {
-        return "git-not-found"
-    }
-}
-
-version = getGitVersion()
-
 buildscript {
     repositories {
         jcenter()
@@ -129,6 +118,17 @@ test {
         events "PASSED", "FAILED", "SKIPPED"
     }
 }
+
+def getGitVersion = { ->
+    try {
+        return "git -C ${rootDir} describe --tags --always --dirty".execute().text.trim()
+    }
+    catch (ignored) {
+        return "git-not-found"
+    }
+}
+
+version = getGitVersion()
 
 bootWar {
     baseName = "simlar-server"
