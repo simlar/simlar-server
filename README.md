@@ -68,13 +68,3 @@ Because the simlar-server uses the [Project Lombok](https://projectlombok.org/),
 
 ### Dictionary ###
 In Settings/Editor/Spelling choose the tab Dictionaries and add ```ides/intellij/dictionaries/``` to list of Custom Dictionary Folders.
-
-### Workaround server start ###
-Unfortunately IntelliJ has a bug, if you start the server within it.
-To workaround it, you may comment out a line your ```build.gradle``` like this:
-```
-runtime("mysql:mysql-connector-java:5.1.38")
-//providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-```
-Now update IntelliJ by opening the gradle tool window and clicking the refresh button.
-After that, you may revert your change.
