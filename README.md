@@ -4,7 +4,8 @@ simlar-server
 [![Build Status](https://travis-ci.org/simlar/simlar-server.svg?branch=master)](https://travis-ci.org/simlar/simlar-server)
 
 
-**This project is work in progress, incomplete and not ready for production, yet.**
+**This project is work in progress and not complete, yet.**
+But after all this code runs in the simlar production environment.
 
 
 [Simlar](https://www.simlar.org) is a cross platform VoIP App aiming to make ZRTP encrypted calls easy.
@@ -61,10 +62,20 @@ To generate some files for this ide run:
 ```
 ./gradlew idea
 ```
-Then simply open the directory in IntelliJ.
+Then simply open (not import) the directory in IntelliJ.
 
-## Lombok
+### Lombok
 Because the simlar-server uses the [Project Lombok](https://projectlombok.org/), IntelliJ requires the [Lombok Plugin](https://plugins.jetbrains.com/plugin/6317-lombok-plugin) to compile it.
+After installing the plugin it is required to enable annotation processing in Settings/Build, Execution,Deployment/Compiler/Annotation Processors.
 
 ### Dictionary ###
-In Settings/Editor/Spelling choose the tab Dictionaries and add ```ides/intellij/dictionaries/``` to list of Custom Dictionary Folders.
+In order to quiet IntelliJ's inspection warnings import the dictionary.
+In Settings/Editor/Spelling choose the tab Dictionaries and add ```ides/intellij/dictionaries/simlar.dic``` to the list of Custom Dictionaries.
+
+## Configuration
+In a production environment a configuration is needed to configure e.g. the domain and the database: ```/etc/simlar-server/config.properties```
+Have a look at the [example](examples/config.properties).
+
+For development you may place your configurations in ```src/main/resources/application-default.properties```.
+The [example](examples/application-default.properties) configures the database and sets a log pattern with filename and linenumber.
+If you do not want to set up a database for development you may change the dependency type of the h2 database to ```providedRuntime```.

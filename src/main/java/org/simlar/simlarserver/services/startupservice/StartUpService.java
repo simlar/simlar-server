@@ -22,34 +22,54 @@
 package org.simlar.simlarserver.services.startupservice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.jdbc.support.DatabaseMetaDataCallback;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.MetaDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
+
+import javax.sql.DataSource;
+import java.sql.DatabaseMetaData;
 
 @Slf4j
 @Component
 final class StartUpService {
     private final SettingsService   settingsService;
     private final SubscriberService subscriberService;
-    private final String            datasourceUrl;
-    private final String            datasourceDriver;
     private final String            hibernateDdlAuto;
+    private final String            datasourceUrl;
+    private final String            databaseProduct;
 
     @Autowired
-    private StartUpService(final SettingsService settingsService, final SubscriberService subscriberService, final DataSourceProperties dataSourceProperties, final JpaProperties jpaProperties) {
+    private StartUpService(final SettingsService settingsService, final SubscriberService subscriberService, final JpaProperties jpaProperties, final DataSource dataSource) {
         this.settingsService   = settingsService;
         this.subscriberService = subscriberService;
-        datasourceUrl          = dataSourceProperties.getUrl();
-        datasourceDriver       = dataSourceProperties.getDriverClassName();
         hibernateDdlAuto       = jpaProperties.getHibernate().getDdlAuto();
+
+        //noinspection NullableProblems
+        datasourceUrl          = (String) extractDatabaseMetaData(dataSource, DatabaseMetaData::getURL);
+        //noinspection NullableProblems
+        databaseProduct = String.format("%s %s",
+                extractDatabaseMetaData(dataSource, DatabaseMetaData::getDatabaseProductName),
+                extractDatabaseMetaData(dataSource, DatabaseMetaData::getDatabaseProductVersion));
+    }
+
+    private static Object extractDatabaseMetaData(final DataSource dataSource, final DatabaseMetaDataCallback action) {
+        try {
+            return JdbcUtils.extractDatabaseMetaData(dataSource, action);
+        } catch (final MetaDataAccessException e) {
+            log.error("failed to extract database metadata", e);
+            return null;
+        }
     }
 
     private void createTestData() {
@@ -65,9 +85,9 @@ final class StartUpService {
     @SuppressWarnings("unused")
     @EventListener
     public void handleApplicationReadyEvent(final ApplicationReadyEvent event) {
-        log.info("started on domain='{}', hibernateDdlAuto='{}', dataSource='{}' and version='{}" + '\'', settingsService.getDomain(), hibernateDdlAuto, datasourceUrl, settingsService.getVersion());
+        log.info("started on domain='{}', hibernateDdlAuto='{}', dataSource='{}', databaseProduct='{}' and version='{}'", settingsService.getDomain(), hibernateDdlAuto, datasourceUrl, databaseProduct, settingsService.getVersion());
 
-        if (event.getApplicationContext() instanceof WebApplicationContext && ("create-drop".equals(hibernateDdlAuto) || "org.h2.Driver".equals(datasourceDriver))) {
+        if (event.getApplicationContext() instanceof WebApplicationContext && ("create-drop".equals(hibernateDdlAuto) || StringUtils.contains(datasourceUrl, "h2:mem"))) {
             createTestData();
         }
     }
