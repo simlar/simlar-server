@@ -35,7 +35,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.6.RELEASE")
         classpath("com.github.ben-manes:gradle-versions-plugin:0.20.0")
         classpath("org.owasp:dependency-check-gradle:3.3.2")
     }
@@ -59,9 +59,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.google.code.findbugs:annotations:3.0.1")
     implementation("org.apache.commons:commons-lang3:3.8.1")
-    implementation("org.apache.commons:commons-text:1.5")
+    implementation("org.apache.commons:commons-text:1.6")
     implementation("commons-codec:commons-codec:1.11")
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.9.15")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.9.16")
 
     runtime("org.mariadb.jdbc:mariadb-java-client:2.3.0")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
