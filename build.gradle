@@ -59,7 +59,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.google.code.findbugs:annotations:3.0.1")
     implementation("org.apache.commons:commons-lang3:3.8.1")
-    implementation("org.apache.commons:commons-text:1.5")
+    implementation("org.apache.commons:commons-text:1.6")
     implementation("commons-codec:commons-codec:1.11")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.9.16")
 
