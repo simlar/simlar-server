@@ -64,17 +64,17 @@ final class ErrorController {
     }
 
     @ExceptionHandler(XmlErrorException.class)
-    public static String handleXmlErrorException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
+    public static XmlError handleXmlErrorException(final HttpServletRequest request, final XmlErrorException xmlErrorException) {
         final Class<? extends XmlErrorException> exceptionClass = xmlErrorException.getClass();
         final XmlErrorExceptionClientResponse response = XmlErrorExceptionClientResponse.fromException(exceptionClass);
         if (response == null) {
             log.error("XmlErrorException with no XmlErrorExceptionClientResponse found for '{}' with request='{}'", exceptionClass.getSimpleName(), new RequestLogMessage(request), xmlErrorException);
-            return createXmlErrorString(XmlErrorExceptionClientResponse.UNKNOWN_ERROR);
+            return createXmlError(XmlErrorExceptionClientResponse.UNKNOWN_ERROR);
         }
 
         log.warn("'{}' => XmlError('{}', '{}') {} with request='{}'", xmlErrorException.getClass().getSimpleName(), response.getId(), response.getMessage(), xmlErrorException.getMessage(), new RequestLogMessage(request));
 
-        return createXmlErrorString(response);
+        return createXmlError(response);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
