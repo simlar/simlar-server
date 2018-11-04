@@ -37,7 +37,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.6.RELEASE")
         classpath("com.github.ben-manes:gradle-versions-plugin:0.20.0")
-        classpath("org.owasp:dependency-check-gradle:3.3.2")
+        classpath("org.owasp:dependency-check-gradle:3.3.4")
     }
 }
 
