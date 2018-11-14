@@ -24,8 +24,8 @@ plugins {
     id "eclipse"
     id "idea"
     id "war"
-    id "findbugs"
     id "pmd"
+    id "com.github.spotbugs" version "1.6.5"
     id "org.springframework.boot" version "2.0.6.RELEASE"
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "com.github.ben-manes.versions" version "0.20.0"
@@ -42,9 +42,13 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
     testCompileOnly("org.projectlombok:lombok:$lombokVersion")
 
+    compileOnly("com.github.spotbugs:spotbugs-annotations:3.1.8")
+    testCompileOnly("com.github.spotbugs:spotbugs-annotations:3.1.8")
+    spotbugs("com.github.spotbugs:spotbugs:3.1.8")
+    spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3")
+
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("com.google.code.findbugs:annotations:3.0.1")
     implementation("org.apache.commons:commons-lang3:3.8.1")
     implementation("org.apache.commons:commons-text:1.6")
     implementation("commons-codec:commons-codec:1.11")
@@ -56,9 +60,6 @@ dependencies {
     testImplementation("com.h2database:h2:1.4.197")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito:mockito-core:2.23.0")
-
-    findbugs("com.google.code.findbugs:findbugs:3.0.1")
-    findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3")
 }
 
 repositories {
@@ -71,14 +72,14 @@ pmd {
     ruleSets = [ ]
 }
 
-findbugs {
+spotbugs {
     effort = "max"
     reportLevel = "low"
     excludeFilter = file("$rootProject.projectDir/ides/findbugs/excludeFilter.xml")
 }
 
-//noinspection GroovyAssignabilityCheck
-tasks.withType(FindBugs) {
+//noinspection GroovyAssignabilityCheck,UnnecessaryQualifiedReference
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
     reports {
         xml.enabled = false
         html.enabled = true
