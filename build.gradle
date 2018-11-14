@@ -32,10 +32,6 @@ plugins {
     id "org.owasp.dependencycheck" version "3.3.4"
 }
 
-repositories {
-    jcenter()
-}
-
 ext {
     lombokVersion = "1.18.4"
 }
@@ -63,6 +59,10 @@ dependencies {
 
     findbugs("com.google.code.findbugs:findbugs:3.0.1")
     findbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3")
+}
+
+repositories {
+    jcenter()
 }
 
 pmd {
