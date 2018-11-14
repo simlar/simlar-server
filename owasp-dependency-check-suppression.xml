@@ -2,13 +2,6 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
     <suppress>
         <notes><![CDATA[
-        findbugs pulls in AppleJavaExtensions-1.4.jar. Remove this suppression once we move to spotbugs.
-        ]]></notes>
-        <cpe>/a:apple:java:1.4</cpe>
-        <cve>CVE-2010-0538</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
         This inspection is meant for the npm module not the java one.
         ]]></notes>
         <filePath regex="true">.*/mariadb-java-client-2.2.6.jar</filePath>
