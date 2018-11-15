@@ -75,7 +75,7 @@ pmd {
 spotbugs {
     effort = "max"
     reportLevel = "low"
-    excludeFilter = file("$rootProject.projectDir/ides/findbugs/excludeFilter.xml")
+    excludeFilter = file("$rootProject.projectDir/ides/spotbugs/excludeFilter.xml")
 }
 
 //noinspection GroovyAssignabilityCheck,UnnecessaryQualifiedReference
