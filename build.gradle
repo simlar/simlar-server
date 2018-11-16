@@ -45,7 +45,7 @@ dependencies {
     compileOnly("com.github.spotbugs:spotbugs-annotations:3.1.8")
     testCompileOnly("com.github.spotbugs:spotbugs-annotations:3.1.8")
     spotbugs("com.github.spotbugs:spotbugs:3.1.8")
-    spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3")
+    spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb")
 
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
