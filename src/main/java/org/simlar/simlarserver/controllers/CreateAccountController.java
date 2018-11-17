@@ -31,8 +31,7 @@ import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -70,7 +69,7 @@ final class CreateAccountController {
      *            error message or success message containing simlarId and password
      */
     @SuppressWarnings("SpellCheckingInspection")
-    @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
+    @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessCreateAccountRequest createAccountRequest(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String telephoneNumber, @RequestParam final String smsText) {
         log.info("'{}' requested with command= '{}' and User-Agent '{}'", REQUEST_PATH, command, request.getHeader("User-Agent"));
 
@@ -98,7 +97,7 @@ final class CreateAccountController {
      *            error message or success message containing simlarId and password
      */
     @SuppressWarnings("SpellCheckingInspection")
-    @RequestMapping(value = REQUEST_PATH_CALL, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
+    @PostMapping(value = REQUEST_PATH_CALL, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessCreateAccountRequest createAccountCall(final HttpServletRequest request, @RequestParam final String telephoneNumber, @RequestParam final String password) {
         log.info("'{}' requested with telephoneNumber= '{}' and User-Agent '{}'", REQUEST_PATH_CALL, telephoneNumber, request.getHeader("User-Agent"));
 
@@ -123,7 +122,7 @@ final class CreateAccountController {
      * @return XmlError or XmlSuccessCreateAccountConfirm
      *            error message or success message containing simlarId and registrationCode
      */
-    @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE, params = { "command", "simlarId", "registrationCode"  })
+    @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE, params = { "command", "simlarId", "registrationCode"  })
     public XmlSuccessCreateAccountConfirm confirmAccount(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String simlarId, @RequestParam final String registrationCode) {
         log.info("'{}' confirm with command='{}' and User-Agent '{}'", REQUEST_PATH, command, request.getHeader("User-Agent"));
 
