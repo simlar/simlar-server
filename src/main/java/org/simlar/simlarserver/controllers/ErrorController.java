@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.controllers;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.simlar.simlarserver.xml.XmlError;
@@ -45,6 +46,7 @@ final class ErrorController {
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_XML).body(new XmlError(response.getId(), response.getMessage()));
     }
 
+    @SuppressFBWarnings("SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING")
     @RequestMapping(path = "*")
     public static ResponseEntity<XmlError> handle(final HttpServletRequest request) {
         log.warn("Request Error with request='{}'", new RequestLogMessage(request));
