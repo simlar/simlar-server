@@ -72,9 +72,9 @@ final class ErrorController {
         return createXmlError(HttpStatus.OK, XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
-    @ExceptionHandler(Exception.class)
-    public static ResponseEntity<XmlError> handleException(final HttpServletRequest request, final Exception exception) {
-        log.error("unhandled '{}' with request='{}'", exception.getClass().getSimpleName(), new RequestLogMessage(request), exception);
+    @ExceptionHandler(Throwable.class)
+    public static ResponseEntity<XmlError> handleException(final HttpServletRequest request, final Throwable throwable) {
+        log.error("unhandled '{}' with request='{}'", throwable.getClass().getSimpleName(), new RequestLogMessage(request), throwable);
         return createXmlError(HttpStatus.INTERNAL_SERVER_ERROR, XmlErrorExceptionClientResponse.UNKNOWN_ERROR);
     }
 }
