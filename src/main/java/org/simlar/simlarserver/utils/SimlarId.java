@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.utils;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -98,7 +99,7 @@ public final class SimlarId implements Comparable<SimlarId> {
 
     @SuppressWarnings("TypeMayBeWeakened") // we definitely want a sorted set here
     public static String hashSimlarIds(final SortedSet<SimlarId> simlarIds) {
-        return Hash.md5(simlarIds.stream().map(SimlarId::get).collect(Collectors.joining()));
+        return DigestUtils.sha256Hex(simlarIds.stream().map(SimlarId::get).collect(Collectors.joining()));
     }
 
     @Override

@@ -159,9 +159,9 @@ public final class SimlarIdTest {
         final SimlarId e = SimlarId.create("*0005*");
         final SimlarId f = SimlarId.create("*0006*");
 
-        assertEquals("265026f135c0046f94d5a8e89b2bbf1c", SimlarId.hashSimlarIds(new TreeSet<>(Arrays.asList(a, b, c, d, e, f))));
-        assertEquals("a8799604f418c26873223fe142c78e99", SimlarId.hashSimlarIds(new TreeSet<>(Arrays.asList(a, b, c, d, e))));
-        assertEquals("a1e3b9977e3e548e166e335818209fe9", SimlarId.hashSimlarIds(new TreeSet<>(Arrays.asList(a, c, d, e))));
-        assertEquals("d41d8cd98f00b204e9800998ecf8427e", SimlarId.hashSimlarIds(Collections.emptySortedSet()));
+        assertEquals("2d9f98aeba31139b7ea8efda9e83ec5a5e7e757e0548a98b92588c664343d30b", SimlarId.hashSimlarIds(new TreeSet<>(Arrays.asList(a, b, c, d, e, f))));
+        assertEquals("846bf6deae539996486ca444d5517451a4ccea9cbbb339be9b6b1072227c822e", SimlarId.hashSimlarIds(new TreeSet<>(Arrays.asList(a, b, c, d, e))));
+        assertEquals("b7f38684102bc67a793ae5cc8013392c61d40c893d8ddce23d78c68266db2c65", SimlarId.hashSimlarIds(new TreeSet<>(Arrays.asList(a, c, d, e))));
+        assertEquals("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", SimlarId.hashSimlarIds(Collections.emptySortedSet()));
     }
 }
