@@ -84,7 +84,7 @@ public final class TwilioSmsService implements SmsService {
         }
 
         try {
-            final String response = new RestTemplateBuilder().basicAuthorization(twilioSettingsService.getSid(), twilioSettingsService.getAuthToken()).build()
+            final String response = new RestTemplateBuilder().basicAuthentication(twilioSettingsService.getSid(), twilioSettingsService.getAuthToken()).build()
                     .postForObject(twilioSettingsService.getUrl() + type.getUrlPostfix(), parameters, String.class);
 
             log.info("response to '{}' request: '{}'", type, response);

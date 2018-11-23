@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.simlar.simlarserver.xml.XmlError;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.lang.NonNull;
@@ -73,6 +74,7 @@ public final class ErrorControllerTest extends BaseControllerTest {
     private static void assertUnknownStructure404(final ResponseEntity<String> response) {
         assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(MediaType.APPLICATION_XML, response.getHeaders().getContentType());
         assertNotNull(response.getBody());
 
         assertUnknownStructure(unmarshal(XmlError.class, response.getBody()));

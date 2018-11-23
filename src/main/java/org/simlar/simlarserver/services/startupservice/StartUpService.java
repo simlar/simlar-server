@@ -28,7 +28,7 @@ import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.jdbc.support.DatabaseMetaDataCallback;
@@ -50,10 +50,10 @@ final class StartUpService {
     private final String            databaseProduct;
 
     @Autowired
-    private StartUpService(final SettingsService settingsService, final SubscriberService subscriberService, final JpaProperties jpaProperties, final DataSource dataSource) {
+    private StartUpService(final SettingsService settingsService, final SubscriberService subscriberService, final HibernateProperties hibernateProperties, final DataSource dataSource) {
         this.settingsService   = settingsService;
         this.subscriberService = subscriberService;
-        hibernateDdlAuto       = jpaProperties.getHibernate().getDdlAuto();
+        hibernateDdlAuto       = hibernateProperties.getDdlAuto();
 
         //noinspection NullableProblems
         datasourceUrl          = (String) extractDatabaseMetaData(dataSource, DatabaseMetaData::getURL);
