@@ -77,7 +77,7 @@ public final class SubscriberService {
         return Hash.md5(simlarId.get() + ':' + settingsService.getDomain() + ':' + password);
     }
 
-    private String createHashHa1b(final SimlarId simlarId, final String password) {
+    String createHashHa1b(final SimlarId simlarId, final String password) {
         return Hash.md5(simlarId.get() + '@' + settingsService.getDomain() + ':' + settingsService.getDomain() + ':' + password);
     }
 
