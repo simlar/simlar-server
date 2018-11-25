@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequest;
 import java.util.Objects;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -70,8 +70,8 @@ final class CreateAccountController {
      */
     @SuppressWarnings("SpellCheckingInspection")
     @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE)
-    public XmlSuccessCreateAccountRequest createAccountRequest(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String telephoneNumber, @RequestParam final String smsText) {
-        log.info("'{}' requested with command= '{}' and User-Agent '{}'", REQUEST_PATH, command, request.getHeader("User-Agent"));
+    public XmlSuccessCreateAccountRequest createAccountRequest(final ServletRequest request, @RequestParam final String command, @RequestParam final String telephoneNumber, @RequestParam final String smsText) {
+        log.info("'{}' requested with command= '{}'", REQUEST_PATH, command);
 
         if (!Objects.equals(command, COMMAND_REQUEST)) {
             throw new XmlErrorUnknownStructureException("create account request with command: " + command);
@@ -98,8 +98,8 @@ final class CreateAccountController {
      */
     @SuppressWarnings("SpellCheckingInspection")
     @PostMapping(value = REQUEST_PATH_CALL, produces = MediaType.APPLICATION_XML_VALUE)
-    public XmlSuccessCreateAccountRequest createAccountCall(final HttpServletRequest request, @RequestParam final String telephoneNumber, @RequestParam final String password) {
-        log.info("'{}' requested with telephoneNumber= '{}' and User-Agent '{}'", REQUEST_PATH_CALL, telephoneNumber, request.getHeader("User-Agent"));
+    public XmlSuccessCreateAccountRequest createAccountCall(@RequestParam final String telephoneNumber, @RequestParam final String password) {
+        log.info("'{}' requested with telephoneNumber= '{}'", REQUEST_PATH_CALL, telephoneNumber);
 
         final SimlarId simlarId = createAccountService.call(telephoneNumber, password);
 
@@ -123,8 +123,8 @@ final class CreateAccountController {
      *            error message or success message containing simlarId and registrationCode
      */
     @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE, params = { "command", "simlarId", "registrationCode"  })
-    public XmlSuccessCreateAccountConfirm confirmAccount(final HttpServletRequest request, @RequestParam final String command, @RequestParam final String simlarId, @RequestParam final String registrationCode) {
-        log.info("'{}' confirm with command='{}' and User-Agent '{}'", REQUEST_PATH, command, request.getHeader("User-Agent"));
+    public XmlSuccessCreateAccountConfirm confirmAccount(@RequestParam final String command, @RequestParam final String simlarId, @RequestParam final String registrationCode) {
+        log.info("'{}' confirm with command='{}'", REQUEST_PATH, command);
 
         if (!Objects.equals(command, COMMAND_CONFIRM)) {
             throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);
