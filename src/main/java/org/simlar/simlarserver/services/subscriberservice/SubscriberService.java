@@ -22,11 +22,11 @@
 package org.simlar.simlarserver.services.subscriberservice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
-import org.simlar.simlarserver.utils.Hash;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,11 +74,11 @@ public final class SubscriberService {
     }
 
     public String createHashHa1(final SimlarId simlarId, final String password) {
-        return Hash.md5(simlarId.get() + ':' + settingsService.getDomain() + ':' + password);
+        return DigestUtils.md5Hex(simlarId.get() + ':' + settingsService.getDomain() + ':' + password);
     }
 
     String createHashHa1b(final SimlarId simlarId, final String password) {
-        return Hash.md5(simlarId.get() + '@' + settingsService.getDomain() + ':' + settingsService.getDomain() + ':' + password);
+        return DigestUtils.md5Hex(simlarId.get() + '@' + settingsService.getDomain() + ':' + settingsService.getDomain() + ':' + password);
     }
 
     private Long findSubscriberId(final SimlarId simlarId) {
