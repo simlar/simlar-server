@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.utils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
 
 import javax.servlet.ServletRequest;
@@ -36,6 +37,7 @@ public final class RequestLogMessage {
         this(request, true);
     }
 
+    @SuppressFBWarnings("SERVLET_HEADER_USER_AGENT")
     @Override
     public String toString() {
         if (request == null) {
