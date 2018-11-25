@@ -3,6 +3,10 @@
         <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING, FII_USE_FUNCTION_IDENTITY, AI_ANNOTATION_ISSUES_NEEDS_NULLABLE, CRLF_INJECTION_LOGS"/>
     </Match>
     <Match>
+        <Bug pattern="SPRING_ENDPOINT"/>
+        <Class name="~org\.simlar\.simlarserver\.controllers\.[^\.]*Controller$"/>
+    </Match>
+    <Match>
         <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING, PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS, CE_CLASS_ENVY"/>
         <Class name="~.*Test$"/>
     </Match>
