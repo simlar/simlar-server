@@ -34,6 +34,7 @@ plugins {
 
 ext {
     lombokVersion = "1.18.4"
+    spotbugsVersion = "3.1.8"
 }
 
 dependencies {
@@ -42,9 +43,9 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
     testCompileOnly("org.projectlombok:lombok:$lombokVersion")
 
-    compileOnly("com.github.spotbugs:spotbugs-annotations:3.1.8")
-    testCompileOnly("com.github.spotbugs:spotbugs-annotations:3.1.8")
-    spotbugs("com.github.spotbugs:spotbugs:3.1.8")
+    compileOnly("com.github.spotbugs:spotbugs-annotations:$spotbugsVersion")
+    testCompileOnly("com.github.spotbugs:spotbugs-annotations:$spotbugsVersion")
+    spotbugs("com.github.spotbugs:spotbugs:$spotbugsVersion")
     spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb")
 
     implementation("org.springframework.boot:spring-boot-starter-web-services")
