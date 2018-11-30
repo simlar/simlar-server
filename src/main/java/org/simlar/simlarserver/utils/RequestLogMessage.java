@@ -50,6 +50,7 @@ public final class RequestLogMessage {
                 + "IP='" + request.getRemoteAddr() + "' User-Agent='" + request.getHeader("User-Agent") + "' parameters='" + serializeParameters(request) + '\'';
     }
 
+    @SuppressFBWarnings("SERVLET_PARAMETER")
     private static String serializeParameters(final ServletRequest request) {
         return request.getParameterMap().entrySet().stream()
                 .map(e -> e.getKey() + "=\"" + String.join(" ", e.getValue()) + '"')
