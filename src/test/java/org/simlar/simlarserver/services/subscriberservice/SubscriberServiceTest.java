@@ -125,6 +125,7 @@ public final class SubscriberServiceTest {
         }
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testCreateHashHa1() {
         assertEquals("3d2c2bbe810e8510bd7f051d80f5a85e", subscriberService.createHashHa1(SimlarId.create("*2342*"), "53cur3"));
@@ -132,6 +133,7 @@ public final class SubscriberServiceTest {
         assertEquals("5abdc6343ca3b039fc5ae1c1c68b22ab", subscriberService.createHashHa1(SimlarId.create("*2343*"), "53cur4"));
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testCreateHashHa1b() {
         assertEquals("c832b701c3840182da6bf33b3c588aa4", subscriberService.createHashHa1b(SimlarId.create("*2342*"), "53cur3"));
