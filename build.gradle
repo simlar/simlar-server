@@ -26,7 +26,7 @@ plugins {
     id "war"
     id "pmd"
     id "com.github.spotbugs" version "1.6.5"
-    id "org.springframework.boot" version "2.1.0.RELEASE"
+    id "org.springframework.boot" version "2.1.1.RELEASE"
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "com.github.ben-manes.versions" version "0.20.0"
     id "org.owasp.dependencycheck" version "4.0.0.1"
