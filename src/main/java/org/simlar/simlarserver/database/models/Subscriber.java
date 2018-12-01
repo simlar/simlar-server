@@ -45,8 +45,10 @@ import javax.persistence.UniqueConstraint;
 @ToString
 @Entity
 @Table(name = "subscriber",
-       uniqueConstraints = @UniqueConstraint(name = "account_idx", columnNames = {"username", "domain"}),
-       indexes = @Index(name = "username_idx", columnList = "username"))
+       uniqueConstraints = @UniqueConstraint(name = "account_idx",
+       columnNames = {"username", "domain"}),
+       indexes = @Index(name = "username_idx",
+       columnList = "username"))
 public class Subscriber {
 
     @SuppressWarnings("FieldHasSetterButNoGetter")
@@ -78,12 +80,12 @@ public class Subscriber {
 
     @SuppressWarnings("UnnecessaryThis")
     public Subscriber(final String username, final String domain, final String password) {
-        this.username = username;
-        this.domain = domain;
-        this.password = password;
+        this.username     = username;
+        this.domain       = domain;
+        this.password     = password;
         this.emailAddress = "";
-        this.ha1 = createHashHa1(username, domain, password);
-        this.ha1b = createHashHa1b(username, domain, password);
+        this.ha1          = createHashHa1(username, domain, password);
+        this.ha1b         = createHashHa1b(username, domain, password);
     }
 
     static String createHashHa1(final String username, final String domain, final String password) {
