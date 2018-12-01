@@ -22,7 +22,6 @@
 package org.simlar.simlarserver.services.subscriberservice;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
@@ -59,8 +58,7 @@ public final class SubscriberService {
             throw new IllegalArgumentException("simlarId=" + simlarId + " password=" + password);
         }
 
-        final Subscriber subscriber = new Subscriber(simlarId.get(), settingsService.getDomain(), password, "", createHashHa1(simlarId, password),
-                createHashHa1b(simlarId, password));
+        final Subscriber subscriber = new Subscriber(simlarId.get(), settingsService.getDomain(), password);
 
         //noinspection AnonymousInnerClass
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -71,14 +69,6 @@ public final class SubscriberService {
                 subscriberRepository.save(subscriber);
             }
         });
-    }
-
-    public String createHashHa1(final SimlarId simlarId, final String password) {
-        return DigestUtils.md5Hex(simlarId.get() + ':' + settingsService.getDomain() + ':' + password);
-    }
-
-    String createHashHa1b(final SimlarId simlarId, final String password) {
-        return DigestUtils.md5Hex(simlarId.get() + '@' + settingsService.getDomain() + ':' + settingsService.getDomain() + ':' + password);
     }
 
     private Long findSubscriberId(final SimlarId simlarId) {
