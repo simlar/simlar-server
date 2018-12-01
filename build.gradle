@@ -26,14 +26,15 @@ plugins {
     id "war"
     id "pmd"
     id "com.github.spotbugs" version "1.6.5"
-    id "org.springframework.boot" version "2.1.0.RELEASE"
+    id "org.springframework.boot" version "2.1.1.RELEASE"
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "com.github.ben-manes.versions" version "0.20.0"
-    id "org.owasp.dependencycheck" version "3.3.4"
+    id "org.owasp.dependencycheck" version "4.0.0.1"
 }
 
 ext {
     lombokVersion = "1.18.4"
+    spotbugsVersion = "3.1.9"
 }
 
 dependencies {
@@ -42,9 +43,9 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
     testCompileOnly("org.projectlombok:lombok:$lombokVersion")
 
-    compileOnly("com.github.spotbugs:spotbugs-annotations:3.1.8")
-    testCompileOnly("com.github.spotbugs:spotbugs-annotations:3.1.8")
-    spotbugs("com.github.spotbugs:spotbugs:3.1.8")
+    compileOnly("com.github.spotbugs:spotbugs-annotations:$spotbugsVersion")
+    testCompileOnly("com.github.spotbugs:spotbugs-annotations:$spotbugsVersion")
+    spotbugs("com.github.spotbugs:spotbugs:$spotbugsVersion")
     spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb")
 
     implementation("org.springframework.boot:spring-boot-starter-web-services")
@@ -52,14 +53,14 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.8.1")
     implementation("org.apache.commons:commons-text:1.6")
     implementation("commons-codec:commons-codec:1.11")
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.10.0")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.10.1")
 
     runtime("org.mariadb.jdbc:mariadb-java-client:2.3.0")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testImplementation("com.h2database:h2:1.4.197")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito:mockito-core:2.23.0")
+    testImplementation("org.mockito:mockito-core:2.23.4")
 }
 
 repositories {
