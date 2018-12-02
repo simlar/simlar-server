@@ -149,7 +149,7 @@ public final class SimlarIdTest {
         assertSortAndUnifySimlarIds(Arrays.asList(a, b, c, d, e, f), Arrays.asList(a, b, b, b, b, c, c, c, c, c, d, e, f));
     }
 
-    @SuppressWarnings("StandardVariableNames")
+    @SuppressWarnings({"StandardVariableNames", "SpellCheckingInspection"})
     @Test
     public void testHashSimlarIds() {
         final SimlarId a = SimlarId.create("*0001*");

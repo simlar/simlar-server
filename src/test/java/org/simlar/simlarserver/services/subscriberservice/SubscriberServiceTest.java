@@ -124,18 +124,4 @@ public final class SubscriberServiceTest {
             assertTrue(subscriberService.checkCredentials(user.getSimlarId(), user.getPasswordHash()));
         }
     }
-
-    @Test
-    public void testcreateHashHa1() {
-        assertEquals("3d2c2bbe810e8510bd7f051d80f5a85e", subscriberService.createHashHa1(SimlarId.create("*2342*"), "53cur3"));
-        assertEquals("c7e7a2b130cb4398a3682559a498c025", subscriberService.createHashHa1(SimlarId.create("*2342*"), "53cur4"));
-        assertEquals("5abdc6343ca3b039fc5ae1c1c68b22ab", subscriberService.createHashHa1(SimlarId.create("*2343*"), "53cur4"));
-    }
-
-    @Test
-    public void testcreateHashHa1b() {
-        assertEquals("c832b701c3840182da6bf33b3c588aa4", subscriberService.createHashHa1b(SimlarId.create("*2342*"), "53cur3"));
-        assertEquals("b66abb6dc2a30f94380e0be4d87dcd38", subscriberService.createHashHa1b(SimlarId.create("*2342*"), "53cur4"));
-        assertEquals("facc6b39f73e54ea33d8141804c1f951", subscriberService.createHashHa1b(SimlarId.create("*2343*"), "53cur4"));
-    }
 }

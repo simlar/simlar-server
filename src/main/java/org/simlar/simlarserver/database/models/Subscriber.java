@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -75,13 +76,21 @@ public class Subscriber {
     @Column(length = 64)
     private String rpid;
 
-    @SuppressWarnings({"SameParameterValue", "ConstructorWithTooManyParameters"})
-    public Subscriber(final String username, final String domain, final String password, final String emailAddress, final String ha1, final String ha1b) {
-        this.username = username;
-        this.domain = domain;
-        this.password = password;
-        this.emailAddress = emailAddress;
-        this.ha1 = ha1;
-        this.ha1b = ha1b;
+    @SuppressWarnings("UnnecessaryThis")
+    public Subscriber(final String username, final String domain, final String password) {
+        this.username     = username;
+        this.domain       = domain;
+        this.password     = password;
+        this.emailAddress = "";
+        this.ha1          = createHashHa1(username, domain, password);
+        this.ha1b         = createHashHa1b(username, domain, password);
+    }
+
+    static String createHashHa1(final String username, final String domain, final String password) {
+        return DigestUtils.md5Hex(username + ':' + domain + ':' + password);
+    }
+
+    static String createHashHa1b(final String username, final String domain, final String password) {
+        return DigestUtils.md5Hex(username + '@' + domain + ':' + domain + ':' + password);
     }
 }

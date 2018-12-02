@@ -24,6 +24,7 @@ package org.simlar.simlarserver.controllers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
+import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
@@ -465,7 +466,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertEquals(dbEntry.getRegistrationCode(), response.getRegistrationCode());
 
         // check
-        assertTrue(subscriberService.checkCredentials(simlarId.get(), subscriberService.createHashHa1(simlarId, password)));
+        assertTrue(subscriberService.checkCredentials(simlarId.get(), new Subscriber(simlarId.get(), "", password).getHa1()));
     }
 
     @Test
