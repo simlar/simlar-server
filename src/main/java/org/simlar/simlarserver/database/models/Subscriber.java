@@ -45,10 +45,8 @@ import javax.persistence.UniqueConstraint;
 @ToString
 @Entity
 @Table(name = "subscriber",
-       uniqueConstraints = @UniqueConstraint(name = "account_idx",
-       columnNames = {"username", "domain"}),
-       indexes = @Index(name = "username_idx",
-       columnList = "username"))
+       uniqueConstraints = @UniqueConstraint(name = "account_idx", columnNames = {"username", "domain"}),
+       indexes = @Index(name = "username_idx", columnList = "username"))
 public class Subscriber {
 
     @SuppressWarnings("FieldHasSetterButNoGetter")
