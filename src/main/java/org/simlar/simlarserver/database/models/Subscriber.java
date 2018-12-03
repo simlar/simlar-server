@@ -86,10 +86,12 @@ public class Subscriber {
         this.ha1b         = createHashHa1b(username, domain, password);
     }
 
+    @SuppressFBWarnings("WEAK_MESSAGE_DIGEST_MD5") /// we share the subscriber table with kamailio and it defines md5
     static String createHashHa1(final String username, final String domain, final String password) {
         return DigestUtils.md5Hex(username + ':' + domain + ':' + password);
     }
 
+    @SuppressFBWarnings("WEAK_MESSAGE_DIGEST_MD5") /// we share the subscriber table with kamailio and it defines md5
     static String createHashHa1b(final String username, final String domain, final String password) {
         return DigestUtils.md5Hex(username + '@' + domain + ':' + domain + ':' + password);
     }

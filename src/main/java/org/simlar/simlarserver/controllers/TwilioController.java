@@ -29,8 +29,7 @@ import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,7 +58,7 @@ final class TwilioController {
      *            Twilio error code
      */
     @SuppressWarnings("SpellCheckingInspection")
-    @RequestMapping(value = TwilioSmsService.REQUEST_PATH_DELIVERY, method = RequestMethod.POST)
+    @PostMapping(TwilioSmsService.REQUEST_PATH_DELIVERY)
     public void deliveryReport(final HttpServletRequest request,
             @RequestParam(name = "MessageSid")                  final String messageSid,
             @RequestParam(name = "To")                          final String to,
@@ -86,7 +85,7 @@ final class TwilioController {
      *            e.g. queued, ringing, in-progress, completed, busy, failed, no-answer, canceled
      */
     @SuppressWarnings("SpellCheckingInspection")
-    @RequestMapping(value = TwilioSmsService.REQUEST_PATH_CALL_STATUS, method = RequestMethod.POST)
+    @PostMapping(TwilioSmsService.REQUEST_PATH_CALL_STATUS)
     public void callStatus(final HttpServletRequest request,
                            @RequestParam(name = "CallSid")    final String callSid,
                            @RequestParam(name = "To")         final String to,
@@ -112,7 +111,7 @@ final class TwilioController {
      *            e.g. queued, ringing, in-progress, completed, busy, failed, no-answer, canceled
      */
     @SuppressWarnings("SpellCheckingInspection")
-    @RequestMapping(value = TwilioSmsService.REQUEST_PATH_CALL, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
+    @PostMapping(value = TwilioSmsService.REQUEST_PATH_CALL, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlTwilioCallResponse call(final HttpServletRequest request,
                                       @RequestParam(name = "CallSid")    final String callSid,
                                       @RequestParam(name = "To")         final String to,

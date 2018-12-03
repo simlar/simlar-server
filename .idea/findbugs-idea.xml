@@ -4,6 +4,7 @@
     <analysisEffort>max</analysisEffort>
     <minPriority>Low</minPriority>
     <plugins>
+      <plugin id="com.h3xstream.findsecbugs" enabled="true" bundled="true" />
       <plugin id="com.mebigfatguy.fbcontrib" enabled="true" bundled="true" />
     </plugins>
     <excludeFilterFiles>

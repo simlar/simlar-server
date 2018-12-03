@@ -93,18 +93,18 @@ public final class CreateAccountService {
 
         final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip, now);
         checkRequestTriesLimit(dbEntry.getRequestTries(), settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay(),
-                "too many create account requests %d >= %d for number: " + telephoneNumber);
+                String.format("too many create account requests with number '%s'", telephoneNumber));
 
         final Instant anHourAgo = now.minus(Duration.ofHours(1));
         checkRequestTriesLimit(accountCreationRepository.sumRequestTries(ip, anHourAgo), settingsService.getAccountCreationMaxRequestsPerIpPerHour(),
-                "too many create account requests %d >= %d for ip: " + ip);
+                String.format("too many create account requests for ip '%s' ", ip));
 
         checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(anHourAgo), settingsService.getAccountCreationMaxRequestsTotalPerHour(),
-                "too many total create account requests %d >= %d within one hour");
+                "too many total create account requests within one hour");
 
         checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(now.minus(Duration.ofDays(1))),
                 settingsService.getAccountCreationMaxRequestsTotalPerDay(),
-                "too many total create account requests %d >= %d within one day");
+                "too many total create account requests within one day");
 
         dbEntry.setRegistrationCode(Password.generateRegistrationCode());
         final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
@@ -161,7 +161,7 @@ public final class CreateAccountService {
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
     private static void checkRequestTriesLimit(final int requestTries, final int limit, final String message) {
         if (requestTries > limit) {
-            throw new XmlErrorTooManyRequestTriesException(String.format(message, requestTries, limit));
+            throw new XmlErrorTooManyRequestTriesException(String.format("%s %d <= %d", message, requestTries, limit));
         }
     }
 

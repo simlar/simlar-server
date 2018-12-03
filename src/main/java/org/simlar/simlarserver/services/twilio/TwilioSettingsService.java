@@ -42,7 +42,7 @@ class TwilioSettingsService {
     @SuppressWarnings("ConstructorWithTooManyParameters")
     @Autowired
     TwilioSettingsService(
-            @Value("${twilio.url:https://api.twilio.com/2010-04-01/Accounts/%s/}")
+            @Value("${twilio.url:api.twilio.com/2010-04-01/Accounts}")
                                                   final String url,
             @Value("${twilio.smsSourceNumber:}")  final String smsSourceNumber,
             @Value("${twilio.sid:}")              final String sid,
@@ -50,7 +50,7 @@ class TwilioSettingsService {
             @Value("${twilio.callbackUser:}")     final String callbackUser,
             @Value("${twilio.callbackPassword:}") final String callbackPassword
     ) {
-        this.url              = String.format(url, sid);
+        this.url              = String.format("https://%s/%s/", url, sid);
         this.smsSourceNumber  = smsSourceNumber;
         this.sid              = sid;
         this.authToken        = authToken;

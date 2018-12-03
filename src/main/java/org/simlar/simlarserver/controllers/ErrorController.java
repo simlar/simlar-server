@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.controllers;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.simlar.simlarserver.xml.XmlError;
@@ -45,6 +46,7 @@ final class ErrorController {
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_XML).body(new XmlError(response.getId(), response.getMessage()));
     }
 
+    @SuppressFBWarnings("SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING")
     @RequestMapping(path = "*")
     public static ResponseEntity<XmlError> handle(final HttpServletRequest request) {
         log.warn("Request Error with request='{}'", new RequestLogMessage(request));
@@ -70,9 +72,9 @@ final class ErrorController {
         return createXmlError(HttpStatus.OK, XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
-    @ExceptionHandler(Exception.class)
-    public static ResponseEntity<XmlError> handleException(final HttpServletRequest request, final Exception exception) {
-        log.error("unhandled '{}' with request='{}'", exception.getClass().getSimpleName(), new RequestLogMessage(request), exception);
+    @ExceptionHandler(Throwable.class)
+    public static ResponseEntity<XmlError> handleException(final HttpServletRequest request, final Throwable throwable) {
+        log.error("unhandled '{}' with request='{}'", throwable.getClass().getSimpleName(), new RequestLogMessage(request), throwable);
         return createXmlError(HttpStatus.INTERNAL_SERVER_ERROR, XmlErrorExceptionClientResponse.UNKNOWN_ERROR);
     }
 }

@@ -93,7 +93,7 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+0000000002";
         final String message         = "Test no network";
 
-        final TwilioSettingsService twilioSettings = new TwilioSettingsService("https://no.example.com/", "+1", "007", "secret", "user", "password");
+        final TwilioSettingsService twilioSettings = new TwilioSettingsService("no.example.com", "+1", "007", "secret", "user", "password");
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));

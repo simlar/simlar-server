@@ -33,8 +33,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContac
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -80,7 +79,7 @@ final class ContactsController {
      * @return XmlError or XmlContacts
      *            error message or contact list in xml
      */
-    @RequestMapping(value = REQUEST_PATH, method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
+    @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE)
     public DeferredResult<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
         log.info("'{}' requested with login '{}'", REQUEST_PATH, login);
 
