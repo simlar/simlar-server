@@ -4,7 +4,7 @@
         <notes><![CDATA[
    file name: fb-contrib-7.4.3.jar
    ]]></notes>
-        <gav regex="true">^com\.mebigfatguy\.fb-contrib:fb-contrib:.*$</gav>
+        <cpe>cpe:/a:git_project:git:7.4.3</cpe>
         <cve>CVE-2010-2542</cve>
     </suppress>
 </suppressions>
