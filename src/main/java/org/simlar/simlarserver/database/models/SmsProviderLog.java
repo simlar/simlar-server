@@ -100,7 +100,6 @@ public final class SmsProviderLog {
         this.telephoneNumber   = telephoneNumber;
         this.timestamp         = Instant.now();
         this.sessionId         = sessionId;
-        //noinspection AssignmentToNull
         this.callbackTimestamp = callbackTimestamp;
         this.status            = status;
         this.error             = StringUtils.left(error, 64);

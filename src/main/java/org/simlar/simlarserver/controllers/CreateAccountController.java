@@ -68,7 +68,6 @@ final class CreateAccountController {
      * @return XmlError or XmlSuccessCreateAccountRequest
      *            error message or success message containing simlarId and password
      */
-    @SuppressWarnings("SpellCheckingInspection")
     @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessCreateAccountRequest createAccountRequest(final ServletRequest request, @RequestParam final String command, @RequestParam final String telephoneNumber, @RequestParam final String smsText) {
         log.info("'{}' requested with command= '{}'", REQUEST_PATH, command);
@@ -96,7 +95,6 @@ final class CreateAccountController {
      * @return XmlError or XmlSuccessCreateAccountRequest
      *            error message or success message containing simlarId and password
      */
-    @SuppressWarnings("SpellCheckingInspection")
     @PostMapping(value = REQUEST_PATH_CALL, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessCreateAccountRequest createAccountCall(@RequestParam final String telephoneNumber, @RequestParam final String password) {
         log.info("'{}' requested with telephoneNumber= '{}'", REQUEST_PATH_CALL, telephoneNumber);

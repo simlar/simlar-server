@@ -71,7 +71,6 @@ public final class SubscriberServiceTest {
 
     @Test
     public void testSaveSuccess() {
-        @SuppressWarnings("TooBroadScope")
         final String simlarId = "*2000*";
 
         assertTrue(subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).isEmpty());

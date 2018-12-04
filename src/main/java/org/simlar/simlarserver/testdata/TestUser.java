@@ -24,7 +24,6 @@ package org.simlar.simlarserver.testdata;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@SuppressWarnings("SerializableDeserializableClassInSecureContext")
 @AllArgsConstructor
 @Getter
 public enum TestUser {

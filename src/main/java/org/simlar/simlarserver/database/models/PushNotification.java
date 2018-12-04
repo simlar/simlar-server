@@ -33,7 +33,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@SuppressWarnings("FieldCanBeLocal")
 @NoArgsConstructor
 @Getter
 @Setter

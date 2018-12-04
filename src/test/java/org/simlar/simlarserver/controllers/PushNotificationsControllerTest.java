@@ -46,7 +46,6 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
     @Autowired
     private PushNotificationsRepository pushNotificationsRepository;
 
-    @SuppressWarnings("unchecked")
     private <T> T requestStorePushId(final Class<T> responseClass, final String login, final String password, final int deviceType, final String pushId) {
         return postRequest(responseClass, PushNotificationsController.REQUEST_PATH, createParameters(new String[][] {
                 { "login", login },

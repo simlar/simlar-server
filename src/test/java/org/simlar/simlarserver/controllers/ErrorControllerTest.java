@@ -42,7 +42,6 @@ import static org.junit.Assert.assertNotNull;
 @SuppressWarnings("ClassWithTooManyTransitiveDependencies")
 @RunWith(SpringRunner.class)
 public final class ErrorControllerTest extends BaseControllerTest {
-    @SuppressWarnings("JUnitTestClassNamingConvention")
     private static final class NoExceptionResponseErrorHandler implements ResponseErrorHandler {
         @SuppressWarnings("MethodReturnAlwaysConstant")
         @Override

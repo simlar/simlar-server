@@ -42,7 +42,6 @@ import java.time.Instant;
 @Entity
 @Table(name = "simlar_contacts_request_count")
 public final class ContactsRequestCount {
-    @SuppressWarnings("FieldCanBeLocal")
     @Id
     @Column(nullable = false, length = 64)
     private String simlarId;
