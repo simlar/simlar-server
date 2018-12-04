@@ -207,11 +207,11 @@ public final class CreateAccountService {
         });
     }
 
-    public SimlarId call(final String telephoneNumber, @SuppressWarnings("TypeMayBeWeakened") final String password) {
+    public SimlarId call(final String telephoneNumber, final String password) {
         return call(telephoneNumber, password, Instant.now());
     }
 
-    SimlarId call(final String telephoneNumber, @SuppressWarnings("TypeMayBeWeakened") final String password, final Instant now) {
+    SimlarId call(final String telephoneNumber, final String password, final Instant now) {
         final SimlarId simlarId = createValidatedSimlarId(telephoneNumber);
 
         final AccountCreationRequestCount dbEntry = updateCalls(simlarId, password, now);

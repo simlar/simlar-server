@@ -147,13 +147,11 @@ public final class TwilioSmsService implements SmsService {
     }
 
     @Override
-    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
     public boolean sendSms(final String telephoneNumber, final String text) {
         return doPostRequest(TwilioRequestType.SMS, telephoneNumber, text);
     }
 
     @Override
-    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
     public boolean call(final String telephoneNumber, final String text) {
         return doPostRequest(TwilioRequestType.CALL, telephoneNumber, text);
     }

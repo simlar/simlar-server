@@ -47,7 +47,6 @@ import java.time.Instant;
         @Index(name = "request_timestamp", columnList = "timestamp"),
         @Index(name = "request_ip", columnList = "ip") })
 public final class AccountCreationRequestCount {
-    @SuppressWarnings("FieldCanBeLocal")
     @Id
     @Column(nullable = false, length = 64)
     private String simlarId;

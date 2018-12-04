@@ -37,7 +37,6 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-@SuppressWarnings("FieldCanBeLocal")
 @SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
 @NoArgsConstructor
 @Getter
@@ -49,7 +48,6 @@ import javax.persistence.UniqueConstraint;
        indexes = @Index(name = "username_idx", columnList = "username"))
 public class Subscriber {
 
-    @SuppressWarnings("FieldHasSetterButNoGetter")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, columnDefinition = "int(10) unsigned")
