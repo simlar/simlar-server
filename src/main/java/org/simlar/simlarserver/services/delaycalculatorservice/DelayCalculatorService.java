@@ -47,7 +47,7 @@ public final class DelayCalculatorService {
     private final ContactsRequestCountRepository contactsRequestCountRepository;
     private final TransactionTemplate transactionTemplate;
 
-    public DelayCalculatorService(final ContactsRequestCountRepository contactsRequestCountRepository, final PlatformTransactionManager transactionManager) {
+    private DelayCalculatorService(final ContactsRequestCountRepository contactsRequestCountRepository, final PlatformTransactionManager transactionManager) {
         this.contactsRequestCountRepository = contactsRequestCountRepository;
         transactionTemplate = new TransactionTemplate(transactionManager);
     }

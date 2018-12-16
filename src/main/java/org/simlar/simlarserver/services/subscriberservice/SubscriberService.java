@@ -45,7 +45,7 @@ public final class SubscriberService {
     private final SubscriberRepository subscriberRepository;
     private final TransactionTemplate transactionTemplate;
 
-    public SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository, final PlatformTransactionManager transactionManager) {
+    private SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository, final PlatformTransactionManager transactionManager) {
         this.settingsService = settingsService;
         this.subscriberRepository = subscriberRepository;
         transactionTemplate = new TransactionTemplate(transactionManager);
