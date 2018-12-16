@@ -31,13 +31,12 @@ import org.simlar.simlarserver.utils.ApplePushId;
 import org.simlar.simlarserver.xml.XmlSuccessPushNotification;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownApplePushIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownPushIdTypeException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 @Slf4j
 @RestController
 final class PushNotificationsController {

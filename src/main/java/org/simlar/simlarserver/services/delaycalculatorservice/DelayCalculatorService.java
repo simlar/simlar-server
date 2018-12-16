@@ -28,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.ContactsRequestCount;
 import org.simlar.simlarserver.database.repositories.ContactsRequestCountRepository;
 import org.simlar.simlarserver.utils.SimlarId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -48,7 +47,6 @@ public final class DelayCalculatorService {
     private final ContactsRequestCountRepository contactsRequestCountRepository;
     private final TransactionTemplate transactionTemplate;
 
-    @Autowired
     public DelayCalculatorService(final ContactsRequestCountRepository contactsRequestCountRepository, final PlatformTransactionManager transactionManager) {
         this.contactsRequestCountRepository = contactsRequestCountRepository;
         transactionTemplate = new TransactionTemplate(transactionManager);

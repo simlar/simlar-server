@@ -27,7 +27,6 @@ import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -49,7 +48,6 @@ final class StartUpService {
     private final String            datasourceUrl;
     private final String            databaseProduct;
 
-    @Autowired
     private StartUpService(final SettingsService settingsService, final SubscriberService subscriberService, final HibernateProperties hibernateProperties, final DataSource dataSource) {
         this.settingsService   = settingsService;
         this.subscriberService = subscriberService;

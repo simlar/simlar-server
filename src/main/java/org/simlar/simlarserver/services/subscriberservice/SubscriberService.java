@@ -28,7 +28,6 @@ import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -46,7 +45,6 @@ public final class SubscriberService {
     private final SubscriberRepository subscriberRepository;
     private final TransactionTemplate transactionTemplate;
 
-    @Autowired
     public SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository, final PlatformTransactionManager transactionManager) {
         this.settingsService = settingsService;
         this.subscriberRepository = subscriberRepository;

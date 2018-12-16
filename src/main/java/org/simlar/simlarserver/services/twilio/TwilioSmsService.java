@@ -38,7 +38,6 @@ import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.TwilioCallBackErrorCode;
 import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoCallSessionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -49,7 +48,7 @@ import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 @Slf4j
 @Component
 public final class TwilioSmsService implements SmsService {

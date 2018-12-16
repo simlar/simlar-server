@@ -25,12 +25,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.settingsservice.SettingsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 @Slf4j
 @RestController
 final class VersionController {
