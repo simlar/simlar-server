@@ -47,7 +47,7 @@ public final class SettingsService {
     private final int accountCreationCallDelaySecondsMax;
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public SettingsService(
+    private SettingsService(
             @Value("${domain:}") final String                                      domain,
             @Value("${port:6161}") final short                                     port,
             @Value("${info.app.version:}") final String                            version,
