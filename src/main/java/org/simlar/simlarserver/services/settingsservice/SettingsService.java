@@ -32,7 +32,7 @@ import java.util.List;
 @SuppressWarnings({"InstanceVariableNamingConvention", "MethodParameterNamingConvention", "ClassWithTooManyFields", "PMD.AvoidUsingShortType"})
 @Getter
 @Component
-public class SettingsService {
+public final class SettingsService {
     private final String domain;
     private final short port;
     private final String version;
