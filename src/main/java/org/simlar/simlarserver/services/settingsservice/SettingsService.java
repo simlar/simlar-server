@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.services.settingsservice;
 
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +48,7 @@ public final class SettingsService {
     private final int accountCreationCallDelaySecondsMax;
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
+    @Autowired // fix IntelliJ inspection warning unused
     private SettingsService(
             @Value("${domain:}") final String                                      domain,
             @Value("${port:6161}") final short                                     port,

@@ -44,6 +44,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesExc
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -69,6 +70,7 @@ public final class CreateAccountService {
     private final TaskScheduler taskScheduler;
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
+    @Autowired // fix IntelliJ inspection warning unused
     private CreateAccountService(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
         this.smsService = smsService;
         this.settingsService = settingsService;
