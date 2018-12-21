@@ -27,7 +27,6 @@ import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.services.twilio.TwilioSmsService;
 import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 @Slf4j
 @RestController
 final class TwilioController {

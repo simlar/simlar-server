@@ -30,7 +30,6 @@ import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlContact;
 import org.simlar.simlarserver.xml.XmlContacts;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorRequestedTooManyContactsException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,7 +46,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 @Slf4j
 @RestController
 final class ContactsController {

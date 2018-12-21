@@ -33,7 +33,7 @@ import java.util.List;
 @SuppressWarnings({"InstanceVariableNamingConvention", "MethodParameterNamingConvention", "ClassWithTooManyFields", "PMD.AvoidUsingShortType"})
 @Getter
 @Component
-public class SettingsService {
+public final class SettingsService {
     private final String domain;
     private final short port;
     private final String version;
@@ -48,8 +48,8 @@ public class SettingsService {
     private final int accountCreationCallDelaySecondsMax;
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    @Autowired
-    public SettingsService(
+    @Autowired // fix IntelliJ inspection warning unused
+    private SettingsService(
             @Value("${domain:}") final String                                      domain,
             @Value("${port:6161}") final short                                     port,
             @Value("${info.app.version:}") final String                            version,

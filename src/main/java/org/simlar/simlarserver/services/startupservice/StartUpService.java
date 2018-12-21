@@ -49,7 +49,7 @@ final class StartUpService {
     private final String            datasourceUrl;
     private final String            databaseProduct;
 
-    @Autowired
+    @Autowired // fix IntelliJ inspection warning unused
     private StartUpService(final SettingsService settingsService, final SubscriberService subscriberService, final HibernateProperties hibernateProperties, final DataSource dataSource) {
         this.settingsService   = settingsService;
         this.subscriberService = subscriberService;

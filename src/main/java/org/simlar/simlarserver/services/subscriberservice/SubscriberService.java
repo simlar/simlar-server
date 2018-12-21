@@ -46,8 +46,8 @@ public final class SubscriberService {
     private final SubscriberRepository subscriberRepository;
     private final TransactionTemplate transactionTemplate;
 
-    @Autowired
-    public SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository, final PlatformTransactionManager transactionManager) {
+    @Autowired // fix IntelliJ inspection warning unused
+    private SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository, final PlatformTransactionManager transactionManager) {
         this.settingsService = settingsService;
         this.subscriberRepository = subscriberRepository;
         transactionTemplate = new TransactionTemplate(transactionManager);

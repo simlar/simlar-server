@@ -24,7 +24,6 @@ package org.simlar.simlarserver.services.twilio;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +39,6 @@ class TwilioSettingsService {
     private final String callbackPassword;
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    @Autowired
     TwilioSettingsService(
             @Value("${twilio.url:api.twilio.com/2010-04-01/Accounts}")
                                                   final String url,

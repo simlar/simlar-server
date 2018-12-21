@@ -70,8 +70,8 @@ public final class CreateAccountService {
     private final TaskScheduler taskScheduler;
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    @Autowired
-    public CreateAccountService(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
+    @Autowired // fix IntelliJ inspection warning unused
+    private CreateAccountService(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
         this.smsService = smsService;
         this.settingsService = settingsService;
         this.accountCreationRepository = accountCreationRepository;

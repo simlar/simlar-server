@@ -29,7 +29,6 @@ import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.ServletRequest;
 import java.util.Objects;
 
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 @Slf4j
 @RestController
 final class CreateAccountController {
