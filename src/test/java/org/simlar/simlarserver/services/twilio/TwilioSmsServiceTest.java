@@ -32,6 +32,7 @@ import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -42,6 +43,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
 
+@DirtiesContext // setting the domain properties dirties context
 @TestPropertySource(properties = "domain = sip.simlar.org") // domain is an essential part of the callback url
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
