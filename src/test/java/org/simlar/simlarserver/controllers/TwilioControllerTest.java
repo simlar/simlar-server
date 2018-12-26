@@ -31,7 +31,6 @@ import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
 import org.simlar.simlarserver.xml.XmlTwilioSay;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.MultiValueMap;
 
@@ -42,7 +41,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
 
-@TestPropertySource(properties = "domain = sip.simlar.org") // domain is an essential part of the callback url
 @SuppressWarnings("ALL")
 @RunWith(SpringRunner.class)
 public final class TwilioControllerTest extends BaseControllerTest {
