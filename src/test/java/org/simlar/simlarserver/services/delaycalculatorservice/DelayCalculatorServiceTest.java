@@ -70,7 +70,7 @@ public final class DelayCalculatorServiceTest {
 
     @Test
     public void testCalculateTotalRequestedContactsIncrement() {
-        final SimlarId simlarId = SimlarId.create("*0001*");
+        final SimlarId simlarId = SimlarId.create("*0007*");
         final Instant now = Instant.now();
 
         assertEquals(0, delayCalculatorService.calculateTotalRequestedContacts(simlarId, SimlarIds.createContacts(0), now));
@@ -83,7 +83,7 @@ public final class DelayCalculatorServiceTest {
 
     @Test
     public void testCalculateTotalRequestedContactsDecreaseAfterADay() {
-        final SimlarId simlarId = SimlarId.create("*0002*");
+        final SimlarId simlarId = SimlarId.create("*0008*");
         final Instant now = Instant.now();
         final Instant dayAfter = Instant.now().plus(Duration.ofDays(1)).plus(Duration.ofSeconds(2));
 
@@ -94,7 +94,7 @@ public final class DelayCalculatorServiceTest {
     @SuppressWarnings("StandardVariableNames")
     @Test
     public void testCalculateTotalRequestedContactsSameContactsNoIncrement() {
-        final SimlarId simlarId = SimlarId.create("*0003*");
+        final SimlarId simlarId = SimlarId.create("*0009*");
         final SimlarId a = SimlarId.create("*0002*");
         final SimlarId b = SimlarId.create("*0003*");
         final SimlarId c = SimlarId.create("*0004*");
