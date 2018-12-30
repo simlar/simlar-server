@@ -31,9 +31,9 @@ public final class SmsTextTest {
         for (int i = 0; i < 10; ++i) {
             final String code = Password.generateRegistrationCode();
 
-            assertEquals("Welcome to Simlar! If the app asks for a registration code, use: " + code + ". Otherwise you do not need this SMS.", SmsText.ANDROID_EN.format(code));
+            assertEquals("Welcome to Simlar! When the app asks for a registration code, use: " + code + '.', SmsText.ANDROID_EN.format(code));
             //noinspection SpellCheckingInspection
-            assertEquals("Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: " + code + ". Sonst brauchst du diese SMS nicht.", SmsText.ANDROID_DE.format(code));
+            assertEquals("Willkommen bei Simlar! Wenn die App bei der Anmeldung nach einem Code fragt, benutze: " + code + '.', SmsText.ANDROID_DE.format(code));
             assertEquals("Welcome to Simlar! When the app asks for a registration code, use: " + code + '.', SmsText.IOS_EN.format(code));
         }
     }

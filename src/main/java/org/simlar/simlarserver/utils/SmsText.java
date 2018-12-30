@@ -34,11 +34,13 @@ import java.util.regex.Pattern;
 @SuppressWarnings("EnumeratedClassNamingConvention")
 public enum SmsText {
     ANDROID_EN(
+            "Welcome to Simlar! When the app asks for a registration code, use: *CODE*.",
             "Welcome to Simlar! If the app asks for a registration code, use: *CODE*. Otherwise you do not need this SMS.",
             "Welcome to Simlar! If the app asks for a registration code, use: *CODE*. Otherwise you don't need this SMS.",
             "Simlar Registration Code:"),
     @SuppressWarnings("SpellCheckingInspection")
     ANDROID_DE(
+            "Willkommen bei Simlar! Wenn die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*.",
             "Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst brauchst du diese SMS nicht.",
             "Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst benötigst du diese SMS nicht."),
     IOS_EN("Welcome to Simlar! When the app asks for a registration code, use: *CODE*.");
