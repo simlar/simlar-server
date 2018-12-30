@@ -35,12 +35,15 @@ import java.util.regex.Pattern;
 public enum SmsText {
     EN(
             "Welcome to Simlar! When the app asks for a registration code, use: *CODE*.",
+            "ANDROID_EN",
+            "IOS_EN",
             "Welcome to Simlar! If the app asks for a registration code, use: *CODE*. Otherwise you do not need this SMS.",
             "Welcome to Simlar! If the app asks for a registration code, use: *CODE*. Otherwise you don't need this SMS.",
             "Simlar Registration Code:"),
     @SuppressWarnings("SpellCheckingInspection")
     DE(
             "Willkommen bei Simlar! Wenn die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*.",
+            "ANDROID_DE",
             "Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst brauchst du diese SMS nicht.",
             "Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst benötigst du diese SMS nicht.");
 
@@ -61,10 +64,7 @@ public enum SmsText {
     }
 
     private int calculateLowestDistance(final String text) {
-        int distance = calculateDistance(toString(), text);
-        if (distance == 0 || texts == null) {
-            return distance;
-        }
+        int distance = Integer.MAX_VALUE;
 
         for (final String alternatives : texts) {
             distance = Math.min(distance, calculateDistance(alternatives, text));
