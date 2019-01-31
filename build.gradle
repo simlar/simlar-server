@@ -34,7 +34,7 @@ plugins {
 
 ext {
     lombokVersion = "1.18.4"
-    spotbugsVersion = "3.1.10"
+    spotbugsVersion = "3.1.11"
 }
 
 dependencies {
@@ -54,9 +54,9 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.8.1")
     implementation("org.apache.commons:commons-text:1.6")
     implementation("commons-codec:commons-codec:1.11")
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.10.3")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.10.4")
 
-    runtime("org.mariadb.jdbc:mariadb-java-client:2.3.0")
+    runtime("org.mariadb.jdbc:mariadb-java-client:2.4.0")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testImplementation("com.h2database:h2:1.4.197")
@@ -69,7 +69,7 @@ repositories {
 }
 
 pmd {
-    toolVersion = "6.10.0"
+    toolVersion = "6.11.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = [ ]
 }
