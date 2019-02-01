@@ -134,6 +134,7 @@ war {
 }
 
 bootWar {
+    classifier = 'boot'
     rootSpec.exclude("application-default.properties")
     manifest {
         attributes("Implementation-Version": version)
