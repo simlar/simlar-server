@@ -123,6 +123,10 @@ def getGitVersion = { ->
 
 version = getGitVersion()
 
+war {
+    enabled = true
+}
+
 bootWar {
     baseName = "simlar-server"
     archiveName = "${baseName}##${version}.war"
