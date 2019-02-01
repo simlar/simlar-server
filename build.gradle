@@ -125,11 +125,15 @@ version = getGitVersion()
 
 war {
     enabled = true
+    baseName = "simlar-server"
+    archiveName = "${baseName}##${version}.war"
+    rootSpec.exclude("application-default.properties")
+    manifest {
+        attributes("Implementation-Version": version)
+    }
 }
 
 bootWar {
-    baseName = "simlar-server"
-    archiveName = "${baseName}##${version}.war"
     rootSpec.exclude("application-default.properties")
     manifest {
         attributes("Implementation-Version": version)
