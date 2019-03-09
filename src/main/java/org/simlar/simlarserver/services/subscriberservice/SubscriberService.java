@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.services.subscriberservice;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.Subscriber;
@@ -71,6 +72,7 @@ public final class SubscriberService {
         });
     }
 
+    @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD") // false positive
     private Long findSubscriberId(final SimlarId simlarId) {
         final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), settingsService.getDomain());
         if (CollectionUtils.isEmpty(ids)) {
