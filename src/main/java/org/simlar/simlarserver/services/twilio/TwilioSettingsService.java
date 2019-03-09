@@ -22,39 +22,26 @@
 package org.simlar.simlarserver.services.twilio;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Getter
+@Setter
 @ToString
 @Component
+@ConfigurationProperties(prefix = "twilio")
 class TwilioSettingsService {
-    private final String url;
-    private final String smsSourceNumber;
-    private final String sid;
-    private final String authToken;
-    private final String callbackUser;
-    private final String callbackPassword;
-
-    @SuppressWarnings("ConstructorWithTooManyParameters")
-    TwilioSettingsService(
-            @Value("${twilio.url:api.twilio.com/2010-04-01/Accounts}")
-                                                  final String url,
-            @Value("${twilio.smsSourceNumber:}")  final String smsSourceNumber,
-            @Value("${twilio.sid:}")              final String sid,
-            @Value("${twilio.authToken:}")        final String authToken,
-            @Value("${twilio.callbackUser:}")     final String callbackUser,
-            @Value("${twilio.callbackPassword:}") final String callbackPassword
-    ) {
-        this.url              = String.format("https://%s/%s/", url, sid);
-        this.smsSourceNumber  = smsSourceNumber;
-        this.sid              = sid;
-        this.authToken        = authToken;
-        this.callbackUser     = callbackUser;
-        this.callbackPassword = callbackPassword;
-    }
+    @Value("${url:api.twilio.com/2010-04-01/Accounts}")
+    private String url;
+    private String smsSourceNumber;
+    private String sid;
+    private String authToken;
+    private String callbackUser;
+    private String callbackPassword;
 
     public final boolean isConfigured() {
         return StringUtils.isNotEmpty(url) &&
@@ -63,5 +50,9 @@ class TwilioSettingsService {
                 StringUtils.isNotEmpty(authToken) &&
                 StringUtils.isNotEmpty(callbackUser) &&
                 StringUtils.isNotEmpty(callbackPassword);
+    }
+
+    public final String getUrl() {
+        return String.format("https://%s/%s/", url, sid);
     }
 }
