@@ -19,29 +19,43 @@
  *
  */
 
-package org.simlar.simlarserver.services.settingsservice;
+package org.simlar.simlarserver.services.createaccountservice;
 
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@SuppressWarnings("PMD.AvoidUsingShortType")
 @Getter
+@Setter
 @Component
-public final class SettingsService {
-    private final String domain;
-    private final short port;
-    private final String version;
+@ConfigurationProperties(prefix = "accountCreation")
+public final class CreateAccountSettingsService {
+    @Value("${alertSmsNumbers:}")
+    private String[] alertSmsNumbers;
 
-    @Autowired // fix IntelliJ inspection warning unused
-    private SettingsService(
-            @Value("${domain:}") final String                                      domain,
-            @Value("${port:6161}") final short                                     port,
-            @Value("${info.app.version:}") final String                            version
-            ) {
-        this.domain                                      = domain;
-        this.port                                        = port;
-        this.version                                     = version;
-    }
+    @Value("${maxRequestsPerSimlarIdPerDay:10}")
+    private int maxRequestsPerSimlarIdPerDay;
+
+    @Value("${maxRequestsPerIpPerHour:60}")
+    private int maxRequestsPerIpPerHour;
+
+    @Value("${maxRequestsTotalPerHour:220}")
+    private int maxRequestsTotalPerHour;
+
+    @Value("${maxRequestsTotalPerDay:1440}")
+    private int maxRequestsTotalPerDay;
+
+    @Value("${maxConfirms:10}")
+    private int maxConfirms;
+
+    @Value("${maxCalls:3}")
+    private int maxCalls;
+
+    @Value("${callDelaySecondsMin:90}")
+    private int callDelaySecondsMin;
+
+    @Value("${callDelaySecondsMax:600}")
+    private int callDelaySecondsMax;
 }

@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
-import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.CallText;
@@ -63,7 +62,7 @@ public final class CreateAccountService {
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{" + Password.REGISTRATION_CODE_LENGTH + '}');
 
     private final SmsService smsService;
-    private final SettingsService settingsService;
+    private final CreateAccountSettingsService settingsService;
     private final AccountCreationRequestCountRepository accountCreationRepository;
     private final SubscriberService subscriberService;
     private final TransactionTemplate transactionTemplate;
@@ -71,7 +70,7 @@ public final class CreateAccountService {
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
     @Autowired // fix IntelliJ inspection warning unused
-    private CreateAccountService(final SmsService smsService, final SettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
+    private CreateAccountService(final SmsService smsService, final CreateAccountSettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
         this.smsService = smsService;
         this.settingsService = settingsService;
         this.accountCreationRepository = accountCreationRepository;
@@ -92,18 +91,18 @@ public final class CreateAccountService {
         }
 
         final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip, now);
-        checkRequestTriesLimit(dbEntry.getRequestTries(), settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay(),
+        checkRequestTriesLimit(dbEntry.getRequestTries(), settingsService.getMaxRequestsPerSimlarIdPerDay(),
                 String.format("too many create account requests with number '%s'", telephoneNumber));
 
         final Instant anHourAgo = now.minus(Duration.ofHours(1));
-        checkRequestTriesLimit(accountCreationRepository.sumRequestTries(ip, anHourAgo), settingsService.getAccountCreationMaxRequestsPerIpPerHour(),
+        checkRequestTriesLimit(accountCreationRepository.sumRequestTries(ip, anHourAgo), settingsService.getMaxRequestsPerIpPerHour(),
                 String.format("too many create account requests for ip '%s' ", ip));
 
-        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(anHourAgo), settingsService.getAccountCreationMaxRequestsTotalPerHour(),
+        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(anHourAgo), settingsService.getMaxRequestsTotalPerHour(),
                 "too many total create account requests within one hour");
 
         checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(now.minus(Duration.ofDays(1))),
-                settingsService.getAccountCreationMaxRequestsTotalPerDay(),
+                settingsService.getMaxRequestsTotalPerDay(),
                 "too many total create account requests within one day");
 
         dbEntry.setRegistrationCode(Password.generateRegistrationCode());
@@ -168,7 +167,7 @@ public final class CreateAccountService {
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
     private void checkRequestTriesLimitWithAlert(final int requestTries, final int limit, final String message) {
         if (requestTries == limit / 2) {
-            for (final String alertNumber: settingsService.getAccountCreationAlertSmsNumbers()) {
+            for (final String alertNumber: settingsService.getAlertSmsNumbers()) {
                 smsService.sendSms(alertNumber, "50% Alert for: " + message);
             }
         } else {
@@ -189,10 +188,10 @@ public final class CreateAccountService {
             }
 
             final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), now).getSeconds();
-            if (secondsSinceRequest < settingsService.getAccountCreationCallDelaySecondsMin()) {
+            if (secondsSinceRequest < settingsService.getCallDelaySecondsMin()) {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since request: " + secondsSinceRequest + 's');
             }
-            if (secondsSinceRequest > settingsService.getAccountCreationCallDelaySecondsMax()) {
+            if (secondsSinceRequest > settingsService.getCallDelaySecondsMax()) {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since request: " + secondsSinceRequest + 's');
             }
 
@@ -216,7 +215,7 @@ public final class CreateAccountService {
 
         final AccountCreationRequestCount dbEntry = updateCalls(simlarId, password, now);
 
-        if (dbEntry.getCalls() > settingsService.getAccountCreationMaxCalls()) {
+        if (dbEntry.getCalls() > settingsService.getMaxCalls()) {
             throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too many calls within the last 24 hours");
         }
 
@@ -255,7 +254,7 @@ public final class CreateAccountService {
         }
 
         final int confirmTries = creationRequest.getConfirmTries();
-        if (confirmTries > settingsService.getAccountCreationMaxConfirms()) {
+        if (confirmTries > settingsService.getMaxConfirms()) {
             throw new XmlErrorTooManyConfirmTriesException("Too many confirm tries(" + confirmTries + ") for simlarId: " + simlarId);
         }
 

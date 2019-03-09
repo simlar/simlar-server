@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
-import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.services.createaccountservice.CreateAccountSettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -61,7 +61,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     private AccountCreationRequestCountRepository accountCreationRepository;
 
     @Autowired
-    private SettingsService settingsService;
+    private CreateAccountSettingsService settingsService;
 
     @Autowired
     private SubscriberService subscriberService;
@@ -141,7 +141,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     public void testRequestTelephoneNumberLimit() {
         final String telephoneNumber = "+15005023024";
 
-        final int max = settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay();
+        final int max = settingsService.getMaxRequestsPerSimlarIdPerDay();
         for (int i = 0; i < max; i++) {
             if ((i & 1) == 0) {
                 assertPostCreateAccountError(24, true, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-de");
@@ -158,7 +158,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
         assertEquals(before.getConfirmTries(), after.getConfirmTries());
         assertEquals(before.getRequestTries() + 1, after.getRequestTries());
-        assertEquals(settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay() + 1, after.getRequestTries());
+        assertEquals(settingsService.getMaxRequestsPerSimlarIdPerDay() + 1, after.getRequestTries());
         assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
         assertEquals(before.getPassword(), after.getPassword());
 
@@ -233,7 +233,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     }
 
     private void adjustDbTimestampByCallDelaySecondsMin(final String simlarId) {
-        adjustDbTimestampMinusSeconds(simlarId, settingsService.getAccountCreationCallDelaySecondsMin() + 2);
+        adjustDbTimestampMinusSeconds(simlarId, settingsService.getCallDelaySecondsMin() + 2);
     }
 
     @Test
@@ -271,19 +271,19 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final Instant originalTimestamp = requestCount.getTimestamp();
         assertNotNull(originalTimestamp);
 
-        requestCount.setTimestamp(originalTimestamp.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMax() + 2));
+        requestCount.setTimestamp(originalTimestamp.plusSeconds(settingsService.getCallDelaySecondsMax() + 2));
         accountCreationRepository.save(requestCount);
         assertPostCallError(68, telephoneNumber, password);
 
-        requestCount.setTimestamp(originalTimestamp.minusSeconds(settingsService.getAccountCreationCallDelaySecondsMax() + 2));
+        requestCount.setTimestamp(originalTimestamp.minusSeconds(settingsService.getCallDelaySecondsMax() + 2));
         accountCreationRepository.save(requestCount);
         assertPostCallError(68, telephoneNumber, password);
 
-        requestCount.setTimestamp(originalTimestamp.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
+        requestCount.setTimestamp(originalTimestamp.plusSeconds(settingsService.getCallDelaySecondsMin() + 2));
         accountCreationRepository.save(requestCount);
         assertPostCallError(68, telephoneNumber, password);
 
-        requestCount.setTimestamp(originalTimestamp.minusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2));
+        requestCount.setTimestamp(originalTimestamp.minusSeconds(settingsService.getCallDelaySecondsMin() + 2));
         accountCreationRepository.save(requestCount);
         final XmlSuccessCreateAccountRequest response = postCall(XmlSuccessCreateAccountRequest.class, true, true, telephoneNumber, password);
         assertNotNull(response);
@@ -294,7 +294,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final String telephoneNumber = "+15005023029";
         final String simlarId = "*15005023029*";
 
-        final int max = settingsService.getAccountCreationMaxCalls();
+        final int max = settingsService.getMaxCalls();
         for (int i = 0; i < max; ++i) {
             final String password = assertPostCreateAccountSuccess(simlarId, telephoneNumber, "ios-en");
 
@@ -382,7 +382,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         final String registrationCode = "432516";
 
         final AccountCreationRequestCount before = new AccountCreationRequestCount(simlarId, "V3RY-5AF3", registrationCode, Instant.now(), "127.0.0.1");
-        before.setConfirmTries(settingsService.getAccountCreationMaxConfirms());
+        before.setConfirmTries(settingsService.getMaxConfirms());
         accountCreationRepository.save(before);
         assertPostConfirmAccountError(25, CreateAccountController.COMMAND_CONFIRM, simlarId, registrationCode);
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
@@ -439,7 +439,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
         // wrong confirms
         //noinspection MethodCallInLoopCondition
-        for (int i = 0; i < settingsService.getAccountCreationMaxConfirms(); ++i) {
+        for (int i = 0; i < settingsService.getMaxConfirms(); ++i) {
             assertPostConfirmAccountError(26, CreateAccountController.COMMAND_CONFIRM, simlarId.get(), "123456");
         }
 
