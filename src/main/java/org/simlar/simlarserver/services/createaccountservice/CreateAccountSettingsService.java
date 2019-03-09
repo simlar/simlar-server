@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "accountCreation")
+@ConfigurationProperties(prefix = "create.account")
 public final class CreateAccountSettingsService {
     @Value("${alertSmsNumbers:}")
     private String[] alertSmsNumbers;

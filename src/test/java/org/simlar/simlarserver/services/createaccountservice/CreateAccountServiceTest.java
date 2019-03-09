@@ -59,10 +59,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @TestPropertySource(properties = {
-        "accountCreation.alertSmsNumbers = 1234, 5678",
-        "accountCreation.maxRequestsPerIpPerHour = 12",
-        "accountCreation.maxRequestsTotalPerHour = 15",
-        "accountCreation.maxRequestsTotalPerDay = 30"})
+        "create.account.alertSmsNumbers = 1234, 5678",
+        "create.account.maxRequestsPerIpPerHour = 12",
+        "create.account.maxRequestsTotalPerHour = 15",
+        "create.account.maxRequestsTotalPerDay = 30"})
 @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
