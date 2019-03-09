@@ -53,7 +53,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.apache.commons:commons-lang3:3.8.1")
     implementation("org.apache.commons:commons-text:1.6")
-    implementation("commons-codec:commons-codec:1.11")
+    implementation("commons-codec:commons-codec:1.12")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.10.7")
 
     runtime("org.mariadb.jdbc:mariadb-java-client:2.4.0")
