@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Component
@@ -58,4 +60,13 @@ public final class CreateAccountSettingsService {
 
     @Value("${callDelaySecondsMax:600}")
     private int callDelaySecondsMax;
+
+    private List<Regional> regionals;
+
+    @Setter
+    @Getter
+    public static final class Regional {
+        private String regionCode;
+        private int maxRequestsPerHour;
+    }
 }

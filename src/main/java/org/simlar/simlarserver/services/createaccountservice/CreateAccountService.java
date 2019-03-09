@@ -48,10 +48,12 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -77,6 +79,16 @@ public final class CreateAccountService {
         this.subscriberService = subscriberService;
         transactionTemplate = new TransactionTemplate(transactionManager);
         this.taskScheduler = taskScheduler;
+
+        final List<CreateAccountSettingsService.Regional> regionals = settingsService.getRegionals();
+        if (CollectionUtils.isEmpty(regionals)) {
+            log.info("no regional settings");
+        } else {
+            log.info("regional settings '{}'", regionals.size());
+            for (final CreateAccountSettingsService.Regional regional: regionals) {
+                log.info("regional setting region code '{}' with max requests per hour '{}'", regional.getRegionCode(), regional.getMaxRequestsPerHour());
+            }
+        }
     }
 
     public AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip) {
