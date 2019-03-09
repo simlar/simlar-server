@@ -3,6 +3,7 @@ CREATE DATABASE kamailio;
 CREATE USER 'simlar'@'localhost' IDENTIFIED BY 'changeMe123';
 GRANT ALL PRIVILEGES ON kamailio.* TO 'simlar'@'localhost';
 
+use kamailio;
 CREATE TABLE `subscriber` (
     `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
     `username` varchar(64) NOT NULL DEFAULT '',

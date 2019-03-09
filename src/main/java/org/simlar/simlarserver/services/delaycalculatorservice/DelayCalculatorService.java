@@ -79,7 +79,7 @@ public final class DelayCalculatorService {
         });
     }
 
-    @SuppressFBWarnings( "OCP_OVERLY_CONCRETE_PARAMETER") // Instant instead of Temporal
+    @SuppressFBWarnings("OCP_OVERLY_CONCRETE_PARAMETER") // Instant instead of Temporal
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
     private static int calculateTotalRequestedContactsStatic(final ContactsRequestCount saved, final Instant now, final String hash, final int count) {
         if (saved == null) {
