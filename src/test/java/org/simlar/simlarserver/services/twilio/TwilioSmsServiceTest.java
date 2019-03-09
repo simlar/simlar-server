@@ -99,7 +99,7 @@ public final class TwilioSmsServiceTest {
         final String message         = "Test no network";
 
         final TwilioSettingsService twilioSettings = new TwilioSettingsService();
-        twilioSettings.setUrl("no.example.com");
+        twilioSettings.setBaseUrl("no.example.com");
         twilioSettings.setSmsSourceNumber("+1");
         twilioSettings.setSid("007");
         twilioSettings.setAuthToken("secret");

@@ -35,8 +35,8 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "twilio")
 class TwilioSettingsService {
-    @Value("${url:api.twilio.com/2010-04-01/Accounts}")
-    private String url;
+    @Value("${baseUrl:api.twilio.com/2010-04-01/Accounts}")
+    private String baseUrl;
     private String smsSourceNumber;
     private String sid;
     private String authToken;
@@ -44,7 +44,7 @@ class TwilioSettingsService {
     private String callbackPassword;
 
     public final boolean isConfigured() {
-        return StringUtils.isNotEmpty(url) &&
+        return StringUtils.isNotEmpty(baseUrl) &&
                 StringUtils.isNotEmpty(smsSourceNumber) &&
                 StringUtils.isNotEmpty(sid) &&
                 StringUtils.isNotEmpty(authToken) &&
@@ -53,6 +53,6 @@ class TwilioSettingsService {
     }
 
     public final String getUrl() {
-        return String.format("https://%s/%s/", url, sid);
+        return String.format("https://%s/%s/", baseUrl, sid);
     }
 }
