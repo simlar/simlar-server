@@ -26,8 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings({"InstanceVariableNamingConvention", "MethodParameterNamingConvention", "ClassWithTooManyFields", "PMD.AvoidUsingShortType"})
@@ -66,7 +64,7 @@ public final class SettingsService {
         this.domain                                      = domain;
         this.port                                        = port;
         this.version                                     = version;
-        this.accountCreationAlertSmsNumbers              = Collections.unmodifiableList(Arrays.asList(accountCreationAlertSmsNumbers));
+        this.accountCreationAlertSmsNumbers              = List.of(accountCreationAlertSmsNumbers);
         this.accountCreationMaxRequestsPerSimlarIdPerDay = accountCreationMaxRequestsPerSimlarIdPerDay;
         this.accountCreationMaxRequestsPerIpPerHour      = accountCreationMaxRequestsPerIpPerHour;
         this.accountCreationMaxRequestsTotalPerHour      = accountCreationMaxRequestsTotalPerHour;
