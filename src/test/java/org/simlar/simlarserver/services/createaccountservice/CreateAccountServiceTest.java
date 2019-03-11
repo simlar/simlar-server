@@ -319,7 +319,7 @@ public final class CreateAccountServiceTest {
         assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
 
 
-        /// check limit reset after an hour
+        /// check limit reset after a day
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*15005012011*");
         assertNotNull(after);
         assertNotNull(after.getTimestamp());
