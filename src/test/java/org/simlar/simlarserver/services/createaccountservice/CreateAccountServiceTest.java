@@ -45,6 +45,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.TemporalAmount;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.containsString;
@@ -224,6 +225,14 @@ public final class CreateAccountServiceTest {
         assertEquals(1, accountCreationRepository.findBySimlarId(simlarId).getRequestTries());
     }
 
+    private void reduceAccountCreationTimestamp(final String simlarId, final TemporalAmount minus) {
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
+        assertNotNull(after.getTimestamp());
+        after.setTimestamp(after.getTimestamp().minus(minus));
+        accountCreationRepository.save(after);
+    }
+
+    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @DirtiesContext
     @Test
     public void testCreateAccountRequestIpLimitWithinOneHour() {
@@ -246,15 +255,12 @@ public final class CreateAccountServiceTest {
 
 
         /// check limit reset after an hour
-        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*15005023040*");
-        assertNotNull(after.getTimestamp());
-        after.setTimestamp(after.getTimestamp().minus(Duration.ofMinutes(61)));
-        accountCreationRepository.save(after);
-
+        reduceAccountCreationTimestamp("*15005023040*", Duration.ofMinutes(61));
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, ip);
     }
 
+    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHour() {
@@ -280,11 +286,7 @@ public final class CreateAccountServiceTest {
 
 
         /// check limit reset after an hour
-        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*15005022141*");
-        assertNotNull(after.getTimestamp());
-        after.setTimestamp(after.getTimestamp().minus(Duration.ofMinutes(61)));
-        accountCreationRepository.save(after);
-
+        reduceAccountCreationTimestamp("*15005022141*", Duration.ofMinutes(61));
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
     }
@@ -322,16 +324,12 @@ public final class CreateAccountServiceTest {
 
 
         /// check limit reset after a day
-        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*15005012011*");
-        assertNotNull(after);
-        assertNotNull(after.getTimestamp());
-        after.setTimestamp(after.getTimestamp().minus(Duration.ofHours(25)));
-        accountCreationRepository.save(after);
-
+        reduceAccountCreationTimestamp("*15005012011*", Duration.ofHours(25));
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
     }
 
+    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHourRegionalLimit() {
@@ -356,19 +354,8 @@ public final class CreateAccountServiceTest {
         assertCreateAccountRequestSuccess("+15005022149", "192.168.1.23");
 
         /// check limit reset after an hour
-        {
-            final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*16005022141*");
-            assertNotNull(after.getTimestamp());
-            after.setTimestamp(after.getTimestamp().minus(Duration.ofMinutes(61)));
-            accountCreationRepository.save(after);
-        }
-        {
-            final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*16005022142*");
-            assertNotNull(after.getTimestamp());
-            after.setTimestamp(after.getTimestamp().minus(Duration.ofMinutes(61)));
-            accountCreationRepository.save(after);
-        }
-
+        reduceAccountCreationTimestamp("*16005022141*", Duration.ofMinutes(61));
+        reduceAccountCreationTimestamp("*16005022142*", Duration.ofMinutes(61));
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
     }
