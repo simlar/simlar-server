@@ -80,12 +80,12 @@ public final class CreateAccountService {
         transactionTemplate = new TransactionTemplate(transactionManager);
         this.taskScheduler = taskScheduler;
 
-        final List<CreateAccountSettingsService.Regional> regionals = settingsService.getRegionals();
-        if (CollectionUtils.isEmpty(regionals)) {
+        final List<RegionalSettings> regionalSettings = settingsService.getRegionalSettings();
+        if (CollectionUtils.isEmpty(regionalSettings)) {
             log.info("no regional settings");
         } else {
-            log.info("regional settings '{}'", regionals.size());
-            for (final CreateAccountSettingsService.Regional regional: regionals) {
+            log.info("regional settings '{}'", regionalSettings.size());
+            for (final RegionalSettings regional: regionalSettings) {
                 log.info("regional setting region code '{}' with max requests per hour '{}'", regional.getRegionCode(), regional.getMaxRequestsPerHour());
             }
         }
@@ -117,9 +117,9 @@ public final class CreateAccountService {
                 settingsService.getMaxRequestsTotalPerDay(),
                 "too many total create account requests within one day");
 
-        final List<CreateAccountSettingsService.Regional> regionals = settingsService.getRegionals();
-        if (!CollectionUtils.isEmpty(regionals)) {
-            for (final CreateAccountSettingsService.Regional regional: regionals) {
+        final List<RegionalSettings> regionalSettings = settingsService.getRegionalSettings();
+        if (!CollectionUtils.isEmpty(regionalSettings)) {
+            for (final RegionalSettings regional: regionalSettings) {
                 final String regionCode = regional.getRegionCode();
                 if (StringUtils.isNotEmpty(regionCode) && simlarId.get().startsWith('*' + regionCode)) {
                     checkRequestTriesLimit(accountCreationRepository.sumRequestTriesForRegion('*' + regionCode + '%', anHourAgo), regional.getMaxRequestsPerHour(),

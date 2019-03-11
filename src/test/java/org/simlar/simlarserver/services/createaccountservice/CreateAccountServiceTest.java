@@ -64,8 +64,8 @@ import static org.mockito.Mockito.when;
         "create.account.maxRequestsPerIpPerHour = 12",
         "create.account.maxRequestsTotalPerHour = 15",
         "create.account.maxRequestsTotalPerDay = 30",
-        "create.account.regionals[0].regionCode = 160",
-        "create.account.regionals[0].maxRequestsPerHour=4"})
+        "create.account.regionalSettings[0].regionCode = 160",
+        "create.account.regionalSettings[0].maxRequestsPerHour=4"})
 @SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods"})
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
@@ -333,7 +333,7 @@ public final class CreateAccountServiceTest {
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHourRegionalLimit() {
-        final int max = settingsService.getRegionals().get(0).getMaxRequestsPerHour();
+        final int max = settingsService.getRegionalSettings().get(0).getMaxRequestsPerHour();
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = "+1600502214" + i % 10;
             final String ip = "192.168.23." + (i % 255 + 1);

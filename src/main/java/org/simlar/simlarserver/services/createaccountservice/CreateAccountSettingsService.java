@@ -61,12 +61,5 @@ public final class CreateAccountSettingsService {
     @Value("${callDelaySecondsMax:600}")
     private int callDelaySecondsMax;
 
-    private List<Regional> regionals;
-
-    @Setter
-    @Getter
-    public static final class Regional {
-        private String regionCode;
-        private int maxRequestsPerHour;
-    }
+    private List<RegionalSettings> regionalSettings;
 }
