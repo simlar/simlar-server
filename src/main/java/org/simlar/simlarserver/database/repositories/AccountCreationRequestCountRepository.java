@@ -36,4 +36,7 @@ public interface AccountCreationRequestCountRepository extends CrudRepository<Ac
 
     @Query("SELECT SUM(requestTries) FROM AccountCreationRequestCount WHERE timestamp >= ?1")
     int sumRequestTries(final Instant timestamp);
+
+    @Query("SELECT SUM(requestTries) FROM AccountCreationRequestCount WHERE simlarId like ?1 AND timestamp >= ?2")
+    int sumRequestTriesForRegion(final String likeSimlarId, final Instant timestamp);
 }

@@ -117,6 +117,17 @@ public final class CreateAccountService {
                 settingsService.getMaxRequestsTotalPerDay(),
                 "too many total create account requests within one day");
 
+        final List<CreateAccountSettingsService.Regional> regionals = settingsService.getRegionals();
+        if (!CollectionUtils.isEmpty(regionals)) {
+            for (final CreateAccountSettingsService.Regional regional: regionals) {
+                final String regionCode = regional.getRegionCode();
+                if (StringUtils.isNotEmpty(regionCode) && simlarId.get().startsWith('*' + regionCode)) {
+                    checkRequestTriesLimit(accountCreationRepository.sumRequestTriesForRegion('*' + regionCode + '%', anHourAgo), regional.getMaxRequestsPerHour(),
+                            String.format("too many create account requests for region '%s' ", regionCode));
+                }
+            }
+        }
+
         dbEntry.setRegistrationCode(Password.generateRegistrationCode());
         final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
         if (!smsService.sendSms(telephoneNumber, smsMessage)) {
