@@ -62,8 +62,10 @@ import static org.mockito.Mockito.when;
         "create.account.alertSmsNumbers = 1234, 5678",
         "create.account.maxRequestsPerIpPerHour = 12",
         "create.account.maxRequestsTotalPerHour = 15",
-        "create.account.maxRequestsTotalPerDay = 30"})
-@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
+        "create.account.maxRequestsTotalPerDay = 30",
+        "create.account.regionals[0].regionCode = 160",
+        "create.account.regionals[0].maxRequestsPerHour=4"})
+@SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods"})
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
 public final class CreateAccountServiceTest {
@@ -325,6 +327,47 @@ public final class CreateAccountServiceTest {
         assertNotNull(after.getTimestamp());
         after.setTimestamp(after.getTimestamp().minus(Duration.ofHours(25)));
         accountCreationRepository.save(after);
+
+        reset(smsService);
+        assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
+    }
+
+    @DirtiesContext
+    @Test
+    public void testCreateAccountRequestTotalLimitWithinOneHourRegionalLimit() {
+        final int max = settingsService.getRegionals().get(0).getMaxRequestsPerHour();
+        for (int i = 0; i < max; i++) {
+            final String telephoneNumber = "+1600502214" + i % 10;
+            final String ip = "192.168.23." + (i % 255 + 1);
+            reset(smsService);
+
+            if ((i & 1) == 0) {
+                //noinspection ObjectAllocationInLoop
+                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+            } else {
+                assertCreateAccountRequestSuccess(telephoneNumber, ip);
+            }
+        }
+
+        final String telephoneNumber = "+16005022140";
+        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
+
+        /// check other numbers work
+        assertCreateAccountRequestSuccess("+15005022149", "192.168.1.23");
+
+        /// check limit reset after an hour
+        {
+            final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*16005022141*");
+            assertNotNull(after.getTimestamp());
+            after.setTimestamp(after.getTimestamp().minus(Duration.ofMinutes(61)));
+            accountCreationRepository.save(after);
+        }
+        {
+            final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*16005022142*");
+            assertNotNull(after.getTimestamp());
+            after.setTimestamp(after.getTimestamp().minus(Duration.ofMinutes(61)));
+            accountCreationRepository.save(after);
+        }
 
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
