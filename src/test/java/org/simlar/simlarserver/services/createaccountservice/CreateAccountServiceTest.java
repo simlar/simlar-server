@@ -269,7 +269,7 @@ public final class CreateAccountServiceTest {
             final String telephoneNumber = "+1500502214" + i % 10;
             final String ip = "192.168.42." + (i % 255 + 1);
             reset(smsService);
-            if (i == max / 2 - 1) {
+            if (i == max / 2) {
                 assertCreateAccountRequestSuccessWithSmsAlert(telephoneNumber, ip);
             } else {
                 if ((i & 1) == 0) {
@@ -301,7 +301,7 @@ public final class CreateAccountServiceTest {
             final String telephoneNumber = '+' + number;
             final String ip = "192.168.42." + (i % 255 + 1);
 
-            if (i == max / 2 - 1) {
+            if (i == max / 2) {
                 assertCreateAccountRequestSuccessWithSmsAlert(telephoneNumber, ip);
             } else {
                 if ((i & 1) == 0) {
@@ -355,7 +355,6 @@ public final class CreateAccountServiceTest {
 
         /// check limit reset after an hour
         reduceAccountCreationTimestamp("*16005022141*", Duration.ofMinutes(61));
-        reduceAccountCreationTimestamp("*16005022142*", Duration.ofMinutes(61));
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
     }

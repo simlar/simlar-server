@@ -102,10 +102,6 @@ public final class CreateAccountService {
             throw new XmlErrorNoIpException("request account creation with empty ip for telephone number:  " + telephoneNumber);
         }
 
-        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip, now);
-        checkRequestTriesLimit(dbEntry.getRequestTries(), settingsService.getMaxRequestsPerSimlarIdPerDay(),
-                String.format("too many create account requests with number '%s'", telephoneNumber));
-
         final Instant anHourAgo = now.minus(Duration.ofHours(1));
         checkRequestTriesLimit(accountCreationRepository.sumRequestTries(ip, anHourAgo), settingsService.getMaxRequestsPerIpPerHour(),
                 String.format("too many create account requests for ip '%s' ", ip));
@@ -127,6 +123,10 @@ public final class CreateAccountService {
                 }
             }
         }
+
+        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip, now);
+        checkRequestTriesLimit(dbEntry.getRequestTries() - 1, settingsService.getMaxRequestsPerSimlarIdPerDay(),
+                String.format("too many create account requests with number '%s'", telephoneNumber));
 
         dbEntry.setRegistrationCode(Password.generateRegistrationCode());
         final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
@@ -181,14 +181,16 @@ public final class CreateAccountService {
     }
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
-    private static void checkRequestTriesLimit(final int requestTries, final int limit, final String message) {
-        if (requestTries > limit) {
+    private static void checkRequestTriesLimit(final Integer requests, final int limit, final String message) {
+        final int requestTries = requests == null ? 0 : requests;
+        if (requestTries >= limit) {
             throw new XmlErrorTooManyRequestTriesException(String.format("%s %d <= %d", message, requestTries, limit));
         }
     }
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
-    private void checkRequestTriesLimitWithAlert(final int requestTries, final int limit, final String message) {
+    private void checkRequestTriesLimitWithAlert(final Integer requests, final int limit, final String message) {
+        final int requestTries = requests == null ? 0 : requests;
         if (requestTries == limit / 2) {
             for (final String alertNumber: settingsService.getAlertSmsNumbers()) {
                 smsService.sendSms(alertNumber, "50% Alert for: " + message);
