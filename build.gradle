@@ -59,7 +59,7 @@ dependencies {
     runtime("org.mariadb.jdbc:mariadb-java-client:2.4.0")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
-    testImplementation("com.h2database:h2:1.4.198")
+    testImplementation("com.h2database:h2:1.4.199")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito:mockito-core:2.25.0")
 }
