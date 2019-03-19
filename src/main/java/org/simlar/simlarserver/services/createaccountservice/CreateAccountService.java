@@ -162,7 +162,7 @@ public final class CreateAccountService {
 
     private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip, final Instant now) {
         return transactionTemplate.execute(status -> {
-            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
+            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get());
             if (dbEntry == null) {
                 return accountCreationRepository.save(new AccountCreationRequestCount(simlarId, Password.generate(), Password.generateRegistrationCode(), now, ip));
             }
@@ -204,7 +204,7 @@ public final class CreateAccountService {
                                                     @SuppressWarnings("TypeMayBeWeakened") final String password,
                                                     @SuppressWarnings("TypeMayBeWeakened") final Instant now) {
         return transactionTemplate.execute(status -> {
-            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
+            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get());
             if (dbEntry == null || dbEntry.getTimestamp() == null) {
                 throw new XmlErrorWrongCredentialsException("no sms request found for simlarId: " + simlarId);
             }
@@ -265,7 +265,7 @@ public final class CreateAccountService {
         }
 
         final AccountCreationRequestCount creationRequest = transactionTemplate.execute(status -> {
-            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId.get());
+            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get());
             if (dbEntry == null) {
                 return null;
             }
