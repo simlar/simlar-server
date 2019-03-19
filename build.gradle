@@ -93,6 +93,7 @@ dependencyCheck {
     failBuildOnCVSS = 0
 }
 
+//noinspection GroovyAssignabilityCheck
 task dependencyChecks {
 }
 dependencyChecks.dependsOn dependencyCheckAnalyze
