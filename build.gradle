@@ -56,7 +56,7 @@ dependencies {
     implementation("commons-codec:commons-codec:1.12")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.10.7")
 
-    runtime("org.mariadb.jdbc:mariadb-java-client:2.4.0")
+    runtime("org.mariadb.jdbc:mariadb-java-client:2.4.1")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testImplementation("com.h2database:h2:1.4.199")
