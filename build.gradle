@@ -61,7 +61,7 @@ dependencies {
 
     testImplementation("com.h2database:h2:1.4.199")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito:mockito-core:2.25.0")
+    testImplementation("org.mockito:mockito-core:2.25.1")
 }
 
 repositories {
