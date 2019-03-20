@@ -123,9 +123,18 @@ def getGitVersion = { ->
 
 version = getGitVersion()
 
-bootWar {
+war {
+    enabled = true
     baseName = "simlar-server"
     archiveName = "${baseName}##${version}.war"
+    rootSpec.exclude("application-default.properties")
+    manifest {
+        attributes("Implementation-Version": version)
+    }
+}
+
+bootWar {
+    classifier = 'boot'
     rootSpec.exclude("application-default.properties")
     manifest {
         attributes("Implementation-Version": version)
