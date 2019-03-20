@@ -52,7 +52,7 @@ public enum SmsText {
     private final List<String> texts;
 
     SmsText(final String... texts) {
-        this.texts = Collections.unmodifiableList(Arrays.asList(texts));
+        this.texts = List.of(texts);
     }
 
     String format(final String registrationCode) {

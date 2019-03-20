@@ -23,7 +23,6 @@ package org.simlar.simlarserver.utils;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("UtilityClass")
@@ -31,19 +30,17 @@ public final class TwilioCallBackErrorCode {
     private static final Map<String, String> KNOWN_ERROR_CODES = initKnownErrorCodes();
 
     private static Map<String, String> initKnownErrorCodes() {
-        @SuppressWarnings("PMD.UseConcurrentHashMap")
-        final Map<String, String> knownErrorCodes = new HashMap<>(10);
-        knownErrorCodes.put("30001", "Queue overflow");
-        knownErrorCodes.put("30002", "Account suspended");
-        knownErrorCodes.put("30003", "Unreachable destination handset");
-        knownErrorCodes.put("30004", "Message blocked");
-        knownErrorCodes.put("30005", "Unknown destination handset");
-        knownErrorCodes.put("30006", "Landline or unreachable carrier");
-        knownErrorCodes.put("30007", "Carrier violation");
-        knownErrorCodes.put("30008", "Unknown error");
-        knownErrorCodes.put("30009", "Missing segment");
-        knownErrorCodes.put("30010", "Message price exceeds max price");
-        return Collections.synchronizedMap(Collections.unmodifiableMap(knownErrorCodes));
+        return Collections.synchronizedMap(Map.of(
+                "30001", "Queue overflow",
+                "30002", "Account suspended",
+                "30003", "Unreachable destination handset",
+                "30004", "Message blocked",
+                "30005", "Unknown destination handset",
+                "30006", "Landline or unreachable carrier",
+                "30007", "Carrier violation",
+                "30008", "Unknown error",
+                "30009", "Missing segment",
+                "30010", "Message price exceeds max price"));
     }
 
     private TwilioCallBackErrorCode() {
