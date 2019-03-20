@@ -24,7 +24,7 @@ Maybe some alternatives will work, too:
 
 
 ### Build dependencies ###
-Java Development Kit 1.8
+Java Development Kit 11
 
 ### Compile (Console) ###
 ```
