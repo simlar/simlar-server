@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @ControllerAdvice
 @Controller
-final class ErrorController {
+final class SimlarErrorController {
     private static ResponseEntity<XmlError> createXmlError(final HttpStatus status, final XmlErrorExceptionClientResponse response) {
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_XML).body(new XmlError(response.getId(), response.getMessage()));
     }
