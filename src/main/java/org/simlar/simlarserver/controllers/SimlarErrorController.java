@@ -27,6 +27,7 @@ import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorExceptionClientResponse;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,14 +37,34 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @ControllerAdvice
 @Controller
-final class SimlarErrorController {
+final class SimlarErrorController implements ErrorController {
+    private static final String ERROR_PATH = "/error";
+
     private static ResponseEntity<XmlError> createXmlError(final HttpStatus status, final XmlErrorExceptionClientResponse response) {
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_XML).body(new XmlError(response.getId(), response.getMessage()));
+    }
+
+    @Override
+    public String getErrorPath() {
+        return ERROR_PATH;
+    }
+
+    @SuppressFBWarnings("SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING")
+    @RequestMapping(path = ERROR_PATH)
+    public static ResponseEntity<XmlError> whiteLabelErrorPage(final HttpServletRequest request) {
+        final String    uri        = (String)    request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
+        final Integer   statusCode = (Integer)   request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        final String    message    = (String)    request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
+        final Throwable exception  = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+
+        log.warn("white label error on uri = '{}' with statusCode '{}' and message '{}'", uri, statusCode, message, exception);
+        return createXmlError(HttpStatus.NOT_FOUND, XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
     @SuppressFBWarnings("SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING")

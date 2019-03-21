@@ -143,4 +143,9 @@ public final class SimlarErrorControllerTest extends BaseControllerTest {
         assertHttpGet404("/index.html");
         assertHttpGet404(ContactsController.REQUEST_PATH);
     }
+
+    @Test
+    public void testErrorPage() {
+        assertHttpGet404("/error");
+    }
 }
