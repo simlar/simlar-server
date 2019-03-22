@@ -29,6 +29,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * TODO: Once spring boot 2.2 releases, use constructor binding and make this class immutable.
+ */
 @Getter
 @Setter
 @Component
