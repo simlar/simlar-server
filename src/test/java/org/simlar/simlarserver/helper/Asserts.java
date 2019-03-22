@@ -47,7 +47,8 @@ public final class Asserts {
             return;
         }
 
-        assertTrue(message, abs(Duration.between(expected, actual).getSeconds()) <= 1);
+        final long difference = abs(Duration.between(expected, actual).getSeconds());
+        assertTrue(message + " expected " + expected + " actual " + actual + " difference too big " + difference, difference <= 1);
     }
 
     public static void assertAlmostEquals(final String message, final SmsProviderLog expected, final SmsProviderLog actual) {
