@@ -48,12 +48,10 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -80,14 +78,8 @@ public final class CreateAccountService {
         transactionTemplate = new TransactionTemplate(transactionManager);
         this.taskScheduler = taskScheduler;
 
-        final List<RegionalSettings> regionalSettings = settingsService.getRegionalSettings();
-        if (CollectionUtils.isEmpty(regionalSettings)) {
-            log.info("no regional settings");
-        } else {
-            log.info("regional settings '{}'", regionalSettings.size());
-            for (final RegionalSettings regional: regionalSettings) {
-                log.info("regional setting region code '{}' with max requests per hour '{}'", regional.getRegionCode(), regional.getMaxRequestsPerHour());
-            }
+        for (final RegionalSettings regional: settingsService.getRegionalSettings()) {
+            log.info("regional setting region code '{}' with max requests per hour '{}'", regional.getRegionCode(), regional.getMaxRequestsPerHour());
         }
     }
 
@@ -113,14 +105,11 @@ public final class CreateAccountService {
                 settingsService.getMaxRequestsTotalPerDay(),
                 "too many total create account requests within one day");
 
-        final List<RegionalSettings> regionalSettings = settingsService.getRegionalSettings();
-        if (!CollectionUtils.isEmpty(regionalSettings)) {
-            for (final RegionalSettings regional: regionalSettings) {
-                final String regionCode = regional.getRegionCode();
-                if (StringUtils.isNotEmpty(regionCode) && simlarId.get().startsWith('*' + regionCode)) {
-                    checkRequestTriesLimit(accountCreationRepository.sumRequestTriesForRegion('*' + regionCode + '%', anHourAgo), regional.getMaxRequestsPerHour(),
-                            String.format("too many create account requests for region '%s' ", regionCode));
-                }
+        for (final RegionalSettings regional: settingsService.getRegionalSettings()) {
+            final String regionCode = regional.getRegionCode();
+            if (StringUtils.isNotEmpty(regionCode) && simlarId.get().startsWith('*' + regionCode)) {
+                checkRequestTriesLimit(accountCreationRepository.sumRequestTriesForRegion('*' + regionCode + '%', anHourAgo), regional.getMaxRequestsPerHour(),
+                        String.format("too many create account requests for region '%s' ", regionCode));
             }
         }
 

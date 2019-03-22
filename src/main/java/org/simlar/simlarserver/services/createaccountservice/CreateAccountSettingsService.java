@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,4 +66,12 @@ public final class CreateAccountSettingsService {
     private int callDelaySecondsMax;
 
     private List<RegionalSettings> regionalSettings;
+
+    public List<String> getAlertSmsNumbers() {
+        return List.of(alertSmsNumbers);
+    }
+
+    public List<RegionalSettings> getRegionalSettings() {
+        return regionalSettings == null ? Collections.emptyList() : Collections.unmodifiableList(regionalSettings);
+    }
 }
