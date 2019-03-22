@@ -29,6 +29,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * TODO: Once spring boot 2.2 releases, use constructor binding and make this class immutable.
+ */
 @Getter
 @Setter
 @ToString
