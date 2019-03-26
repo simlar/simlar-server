@@ -161,7 +161,7 @@ public final class CreateAccountService {
             final Instant savedTimestamp = dbEntry.getTimestamp();
             if (savedTimestamp != null && Duration.between(savedTimestamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
                 dbEntry.setRequestTries(1);
-            } else{
+            } else {
                 dbEntry.incrementRequestTries();
             }
             dbEntry.setTimestamp(now);
