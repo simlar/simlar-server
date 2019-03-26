@@ -81,6 +81,8 @@ public final class CreateAccountService {
         for (final RegionalSettings regional: settingsService.getRegionalSettings()) {
             log.info("regional setting region code '{}' with max requests per hour '{}'", regional.getRegionCode(), regional.getMaxRequestsPerHour());
         }
+
+        log.info("alert sms numbers '{}'", String.join(", ", settingsService.getAlertSmsNumbers()));
     }
 
     public AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip) {
