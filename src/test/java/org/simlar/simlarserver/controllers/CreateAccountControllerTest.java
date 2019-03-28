@@ -143,7 +143,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
 
         final int max = settingsService.getMaxRequestsPerSimlarIdPerDay();
         for (int i = 0; i < max; i++) {
-            if ((i & 1) == 0) {
+            if (i % 2 == 0) {
                 assertPostCreateAccountError(24, true, CreateAccountController.COMMAND_REQUEST, telephoneNumber, "android-de");
             } else {
                 assertPostCreateAccountSuccess("*15005023024*", telephoneNumber, "android-en");
