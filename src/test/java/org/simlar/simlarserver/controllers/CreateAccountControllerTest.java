@@ -100,7 +100,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertNotNull(success);
         assertEquals(expectedSimlarId, success.getSimlarId());
         assertNotNull(success.getPassword());
-        assertEquals("password '" + success.getPassword() + "' does not match expected size",14, success.getPassword().length());
+        assertEquals("password '" + success.getPassword() + "' does not match expected size", 14, success.getPassword().length());
         return success.getPassword();
     }
 
