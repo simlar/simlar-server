@@ -47,7 +47,7 @@ dependencies {
     testCompileOnly("com.github.spotbugs:spotbugs-annotations:$spotbugsVersion")
     spotbugs("com.github.spotbugs:spotbugs:$spotbugsVersion")
     spotbugsPlugins("com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb")
-    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.8.0")
+    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0")
 
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
