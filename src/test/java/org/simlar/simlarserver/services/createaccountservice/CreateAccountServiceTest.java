@@ -194,7 +194,7 @@ public final class CreateAccountServiceTest {
         final int max = settingsService.getMaxRequestsPerSimlarIdPerDay();
         for (int i = 0; i < max; i++) {
             reset(smsService);
-            if ((i & 1) == 0) {
+            if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
                 assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
             } else {
@@ -242,7 +242,7 @@ public final class CreateAccountServiceTest {
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = "+1500502304" + i % 10;
             reset(smsService);
-            if ((i & 1) == 0) {
+            if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
                 assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
             } else {
@@ -272,7 +272,7 @@ public final class CreateAccountServiceTest {
             if (i == max / 2) {
                 assertCreateAccountRequestSuccessWithSmsAlert(telephoneNumber, ip);
             } else {
-                if ((i & 1) == 0) {
+                if (i % 2 == 0) {
                     //noinspection ObjectAllocationInLoop
                     assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
                 } else {
@@ -304,7 +304,7 @@ public final class CreateAccountServiceTest {
             if (i == max / 2) {
                 assertCreateAccountRequestSuccessWithSmsAlert(telephoneNumber, ip);
             } else {
-                if ((i & 1) == 0) {
+                if (i % 2 == 0) {
                     //noinspection ObjectAllocationInLoop
                     assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
                 } else {
@@ -339,7 +339,7 @@ public final class CreateAccountServiceTest {
             final String ip = "192.168.23." + (i % 255 + 1);
             reset(smsService);
 
-            if ((i & 1) == 0) {
+            if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
                 assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
             } else {
