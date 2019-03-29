@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.services.createaccountservice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
@@ -173,7 +174,7 @@ public final class CreateAccountService {
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
     private static void checkRequestTriesLimit(final Integer requests, final int limit, final String message) {
-        final int requestTries = requests == null ? 0 : requests;
+        final int requestTries = ObjectUtils.defaultIfNull(requests, 0);
         if (requestTries >= limit) {
             throw new XmlErrorTooManyRequestTriesException(String.format("%s %d <= %d", message, requestTries, limit));
         }
@@ -181,7 +182,7 @@ public final class CreateAccountService {
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
     private void checkRequestTriesLimitWithAlert(final Integer requests, final int limit, final String message) {
-        final int requestTries = requests == null ? 0 : requests;
+        final int requestTries = ObjectUtils.defaultIfNull(requests, 0);
         if (requestTries == limit / 2) {
             for (final String alertNumber: settingsService.getAlertSmsNumbers()) {
                 smsService.sendSms(alertNumber, "50% Alert for: " + message);
