@@ -185,7 +185,7 @@ public final class CreateAccountService {
         final int requestTries = ObjectUtils.defaultIfNull(requests, 0);
         if (requestTries == limit / 2) {
             for (final String alertNumber: settingsService.getAlertSmsNumbers()) {
-                smsService.sendSms(alertNumber, "50% Alert for: " + message);
+                smsService.sendSms(alertNumber, String.format("50%% Alert for %s %d", message, requestTries));
             }
         } else {
             checkRequestTriesLimit(requestTries, limit, message);
