@@ -22,18 +22,28 @@
 package org.simlar.simlarserver.database.repositories;
 
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import javax.persistence.LockModeType;
 import java.time.Instant;
 
 @SuppressWarnings({"unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
 public interface AccountCreationRequestCountRepository extends CrudRepository<AccountCreationRequestCount, Integer> {
     AccountCreationRequestCount findBySimlarId(final String simlarId);
 
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("FROM AccountCreationRequestCount WHERE simlarId = ?1")
+    AccountCreationRequestCount findBySimlarIdForUpdate(final String simlarId);
+
     @Query("SELECT SUM(requestTries) FROM AccountCreationRequestCount WHERE ip = ?1 AND timestamp >= ?2")
-    int sumRequestTries(final String ip, final Instant timestamp);
+    Integer sumRequestTries(final String ip, final Instant timestamp);
 
     @Query("SELECT SUM(requestTries) FROM AccountCreationRequestCount WHERE timestamp >= ?1")
-    int sumRequestTries(final Instant timestamp);
+    Integer sumRequestTries(final Instant timestamp);
+
+    @Query("SELECT SUM(requestTries) FROM AccountCreationRequestCount WHERE simlarId like ?1 AND timestamp >= ?2")
+    Integer sumRequestTriesForRegion(final String likeSimlarId, final Instant timestamp);
 }

@@ -26,52 +26,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-@SuppressWarnings({"InstanceVariableNamingConvention", "MethodParameterNamingConvention", "ClassWithTooManyFields", "PMD.AvoidUsingShortType"})
+@SuppressWarnings("PMD.AvoidUsingShortType")
 @Getter
 @Component
 public final class SettingsService {
     private final String domain;
     private final short port;
     private final String version;
-    private final List<String> accountCreationAlertSmsNumbers;
-    private final int accountCreationMaxRequestsPerSimlarIdPerDay;
-    private final int accountCreationMaxRequestsPerIpPerHour;
-    private final int accountCreationMaxRequestsTotalPerHour;
-    private final int accountCreationMaxRequestsTotalPerDay;
-    private final int accountCreationMaxConfirms;
-    private final int accountCreationMaxCalls;
-    private final int accountCreationCallDelaySecondsMin;
-    private final int accountCreationCallDelaySecondsMax;
 
-    @SuppressWarnings("ConstructorWithTooManyParameters")
     @Autowired // fix IntelliJ inspection warning unused
     private SettingsService(
             @Value("${domain:}") final String                                      domain,
             @Value("${port:6161}") final short                                     port,
-            @Value("${info.app.version:}") final String                            version,
-            @Value("${accountCreation.alertSmsNumbers:}") final String[]           accountCreationAlertSmsNumbers,
-            @Value("${accountCreation.maxRequestsPerSimlarIdPerDay:10}") final int accountCreationMaxRequestsPerSimlarIdPerDay,
-            @Value("${accountCreation.maxRequestsPerIpPerHour:60}") final int      accountCreationMaxRequestsPerIpPerHour,
-            @Value("${accountCreation.maxRequestsTotalPerHour:220}") final int     accountCreationMaxRequestsTotalPerHour,
-            @Value("${accountCreation.maxRequestsTotalPerDay:1440}") final int     accountCreationMaxRequestsTotalPerDay,
-            @Value("${accountCreation.maxConfirms:10}") final int                  accountCreationMaxConfirms,
-            @Value("${accountCreation.maxCalls:3}") final int                      accountCreationMaxCalls,
-            @Value("${accountCreation.CallDelaySecondsMin:90}") final int          accountCreationCallDelaySecondsMin,
-            @Value("${accountCreation.CallDelaySecondsMax:600}") final int         accountCreationCallDelaySecondsMax
+            @Value("${info.app.version:}") final String                            version
             ) {
         this.domain                                      = domain;
         this.port                                        = port;
         this.version                                     = version;
-        this.accountCreationAlertSmsNumbers              = List.of(accountCreationAlertSmsNumbers);
-        this.accountCreationMaxRequestsPerSimlarIdPerDay = accountCreationMaxRequestsPerSimlarIdPerDay;
-        this.accountCreationMaxRequestsPerIpPerHour      = accountCreationMaxRequestsPerIpPerHour;
-        this.accountCreationMaxRequestsTotalPerHour      = accountCreationMaxRequestsTotalPerHour;
-        this.accountCreationMaxRequestsTotalPerDay       = accountCreationMaxRequestsTotalPerDay;
-        this.accountCreationMaxConfirms                  = accountCreationMaxConfirms;
-        this.accountCreationMaxCalls                     = accountCreationMaxCalls;
-        this.accountCreationCallDelaySecondsMin          = accountCreationCallDelaySecondsMin;
-        this.accountCreationCallDelaySecondsMax          = accountCreationCallDelaySecondsMax;
     }
 }

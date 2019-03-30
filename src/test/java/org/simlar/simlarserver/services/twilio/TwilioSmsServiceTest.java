@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.services.twilio;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,7 +82,7 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+0000000001";
         final String message         = "Test not configured";
 
-        final TwilioSettingsService twilioSettings = new TwilioSettingsService("", "", "", "", "", "");
+        final TwilioSettingsService twilioSettings = new TwilioSettingsService();
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));
@@ -90,14 +91,22 @@ public final class TwilioSmsServiceTest {
                 smsProviderLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
+    @SuppressFBWarnings("HARD_CODE_PASSWORD")
+    @SuppressWarnings("TooBroadScope")
     @Test
     public void testSendSmsNoNetwork() {
         final String telephoneNumber = "+0000000002";
         final String message         = "Test no network";
 
-        final TwilioSettingsService twilioSettings = new TwilioSettingsService("no.example.com", "+1", "007", "secret", "user", "password");
-        final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
+        final TwilioSettingsService twilioSettings = new TwilioSettingsService();
+        twilioSettings.setBaseUrl("no.example.com");
+        twilioSettings.setSmsSourceNumber("+1");
+        twilioSettings.setSid("007");
+        twilioSettings.setAuthToken("secret");
+        twilioSettings.setCallbackUser("user");
+        twilioSettings.setCallbackPassword("password");
 
+        final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
         assertFalse(service.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,
                 new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com", message),

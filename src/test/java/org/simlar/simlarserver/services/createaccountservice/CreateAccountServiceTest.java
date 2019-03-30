@@ -29,7 +29,6 @@ import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
-import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.SimlarIdHelper;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorCallNotAllowedAtTheMomentException;
@@ -46,6 +45,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.TemporalAmount;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.containsString;
@@ -60,11 +60,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @TestPropertySource(properties = {
-        "accountCreation.alertSmsNumbers = 1234, 5678",
-        "accountCreation.maxRequestsPerIpPerHour = 12",
-        "accountCreation.maxRequestsTotalPerHour = 15",
-        "accountCreation.maxRequestsTotalPerDay = 30"})
-@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
+        "create.account.alertSmsNumbers = 1234, 5678",
+        "create.account.maxRequestsPerIpPerHour = 12",
+        "create.account.maxRequestsTotalPerHour = 15",
+        "create.account.maxRequestsTotalPerDay = 30",
+        "create.account.regionalSettings[0].regionCode = 160",
+        "create.account.regionalSettings[0].maxRequestsPerHour=4"})
+@SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods"})
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
 public final class CreateAccountServiceTest {
@@ -75,7 +77,7 @@ public final class CreateAccountServiceTest {
     private SmsService smsService;
 
     @Autowired
-    private SettingsService settingsService;
+    private CreateAccountSettingsService settingsService;
 
     @Autowired
     private AccountCreationRequestCountRepository accountCreationRepository;
@@ -151,14 +153,14 @@ public final class CreateAccountServiceTest {
 
     @SuppressWarnings("MethodWithMultipleLoops")
     private void assertCreateAccountRequestSuccessWithSmsAlert(final String telephoneNumber, final String ip) {
-        for (final String alertNumber: settingsService.getAccountCreationAlertSmsNumbers()) {
+        for (final String alertNumber: settingsService.getAlertSmsNumbers()) {
             when(smsService.sendSms(eq(alertNumber), anyString())).thenReturn(Boolean.TRUE);
         }
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
 
         createAccountService.createAccountRequest(telephoneNumber, "", ip);
 
-        for (final String alertNumber: settingsService.getAccountCreationAlertSmsNumbers()) {
+        for (final String alertNumber: settingsService.getAlertSmsNumbers()) {
             verify(smsService).sendSms(eq(alertNumber), anyString());
         }
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
@@ -189,10 +191,10 @@ public final class CreateAccountServiceTest {
     public void testCreateAccountRequestTelephoneNumberLimit() {
         final String telephoneNumber = "+15005023024";
 
-        final int max = settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay();
+        final int max = settingsService.getMaxRequestsPerSimlarIdPerDay();
         for (int i = 0; i < max; i++) {
             reset(smsService);
-            if ((i & 1) == 0) {
+            if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
                 assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
             } else {
@@ -208,7 +210,7 @@ public final class CreateAccountServiceTest {
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
         assertEquals(before.getConfirmTries(), after.getConfirmTries());
         assertEquals(before.getRequestTries() + 1, after.getRequestTries());
-        assertEquals(settingsService.getAccountCreationMaxRequestsPerSimlarIdPerDay() + 1, after.getRequestTries());
+        assertEquals(settingsService.getMaxRequestsPerSimlarIdPerDay() + 1, after.getRequestTries());
         assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
         assertEquals(before.getPassword(), after.getPassword());
 
@@ -223,16 +225,24 @@ public final class CreateAccountServiceTest {
         assertEquals(1, accountCreationRepository.findBySimlarId(simlarId).getRequestTries());
     }
 
+    private void reduceAccountCreationTimestamp(final String simlarId, final TemporalAmount minus) {
+        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
+        assertNotNull(after.getTimestamp());
+        after.setTimestamp(after.getTimestamp().minus(minus));
+        accountCreationRepository.save(after);
+    }
+
+    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @DirtiesContext
     @Test
     public void testCreateAccountRequestIpLimitWithinOneHour() {
         final String ip = "192.168.23.42";
 
-        final int max = settingsService.getAccountCreationMaxRequestsPerIpPerHour();
+        final int max = settingsService.getMaxRequestsPerIpPerHour();
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = "+1500502304" + i % 10;
             reset(smsService);
-            if ((i & 1) == 0) {
+            if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
                 assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
             } else {
@@ -245,27 +255,24 @@ public final class CreateAccountServiceTest {
 
 
         /// check limit reset after an hour
-        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*15005023040*");
-        assertNotNull(after.getTimestamp());
-        after.setTimestamp(after.getTimestamp().minus(Duration.ofMinutes(61)));
-        accountCreationRepository.save(after);
-
+        reduceAccountCreationTimestamp("*15005023040*", Duration.ofMinutes(61));
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, ip);
     }
 
+    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHour() {
-        final int max = settingsService.getAccountCreationMaxRequestsTotalPerHour();
+        final int max = settingsService.getMaxRequestsTotalPerHour();
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = "+1500502214" + i % 10;
             final String ip = "192.168.42." + (i % 255 + 1);
             reset(smsService);
-            if (i == max / 2 - 1) {
+            if (i == max / 2) {
                 assertCreateAccountRequestSuccessWithSmsAlert(telephoneNumber, ip);
             } else {
-                if ((i & 1) == 0) {
+                if (i % 2 == 0) {
                     //noinspection ObjectAllocationInLoop
                     assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
                 } else {
@@ -279,11 +286,7 @@ public final class CreateAccountServiceTest {
 
 
         /// check limit reset after an hour
-        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*15005022141*");
-        assertNotNull(after.getTimestamp());
-        after.setTimestamp(after.getTimestamp().minus(Duration.ofMinutes(61)));
-        accountCreationRepository.save(after);
-
+        reduceAccountCreationTimestamp("*15005022141*", Duration.ofMinutes(61));
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
     }
@@ -291,17 +294,17 @@ public final class CreateAccountServiceTest {
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneDay() {
-        final int max = settingsService.getAccountCreationMaxRequestsTotalPerDay();
+        final int max = settingsService.getMaxRequestsTotalPerDay();
         for (int i = 0; i < max; i++) {
             reset(smsService);
             final String number = "1500501201" + i % 10;
             final String telephoneNumber = '+' + number;
             final String ip = "192.168.42." + (i % 255 + 1);
 
-            if (i == max / 2 - 1) {
+            if (i == max / 2) {
                 assertCreateAccountRequestSuccessWithSmsAlert(telephoneNumber, ip);
             } else {
-                if ((i & 1) == 0) {
+                if (i % 2 == 0) {
                     //noinspection ObjectAllocationInLoop
                     assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
                 } else {
@@ -320,13 +323,38 @@ public final class CreateAccountServiceTest {
         assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
 
 
-        /// check limit reset after an hour
-        final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId("*15005012011*");
-        assertNotNull(after);
-        assertNotNull(after.getTimestamp());
-        after.setTimestamp(after.getTimestamp().minus(Duration.ofHours(25)));
-        accountCreationRepository.save(after);
+        /// check limit reset after a day
+        reduceAccountCreationTimestamp("*15005012011*", Duration.ofHours(25));
+        reset(smsService);
+        assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
+    }
 
+    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
+    @DirtiesContext
+    @Test
+    public void testCreateAccountRequestTotalLimitWithinOneHourRegionalLimit() {
+        final int max = settingsService.getRegionalSettings().get(0).getMaxRequestsPerHour();
+        for (int i = 0; i < max; i++) {
+            final String telephoneNumber = "+1600502214" + i % 10;
+            final String ip = "192.168.23." + (i % 255 + 1);
+            reset(smsService);
+
+            if (i % 2 == 0) {
+                //noinspection ObjectAllocationInLoop
+                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+            } else {
+                assertCreateAccountRequestSuccess(telephoneNumber, ip);
+            }
+        }
+
+        final String telephoneNumber = "+16005022140";
+        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
+
+        /// check other numbers work
+        assertCreateAccountRequestSuccess("+15005022149", "192.168.1.23");
+
+        /// check limit reset after an hour
+        reduceAccountCreationTimestamp("*16005022141*", Duration.ofMinutes(61));
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
     }
@@ -351,28 +379,28 @@ public final class CreateAccountServiceTest {
         final String telephoneNumber = "+15005012150";
         Instant now = Instant.now();
 
-        final int max = settingsService.getAccountCreationMaxCalls();
+        final int max = settingsService.getMaxCalls();
         for (int i = 0; i < max; ++i) {
             final AccountRequest accountRequest = assertCreateAccountRequestSuccess(telephoneNumber, now);
-            now = now.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2);
+            now = now.plusSeconds(settingsService.getCallDelaySecondsMin() + 2);
             assertCreateAccountCallSuccess(telephoneNumber, accountRequest.getPassword(), now);
         }
 
         final AccountRequest accountRequest = assertCreateAccountRequestSuccess(telephoneNumber, now);
-        now = now.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2);
+        now = now.plusSeconds(settingsService.getCallDelaySecondsMin() + 2);
         assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest.getPassword(), now);
 
 
         // wait 12 hours and try again
         now = now.plus(Duration.ofHours(12)).plusSeconds(2);
         final AccountRequest accountRequest2 = assertCreateAccountRequestSuccess(telephoneNumber, now);
-        now = now.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2);
+        now = now.plusSeconds(settingsService.getCallDelaySecondsMin() + 2);
         assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest2.getPassword(), now);
 
         // wait 12 hours and try again with success
         now = now.plus(Duration.ofHours(12)).plusSeconds(2);
         final AccountRequest accountRequest3 = assertCreateAccountRequestSuccess(telephoneNumber, now);
-        now = now.plusSeconds(settingsService.getAccountCreationCallDelaySecondsMin() + 2);
+        now = now.plusSeconds(settingsService.getCallDelaySecondsMin() + 2);
         assertCreateAccountCallSuccess(telephoneNumber, accountRequest3.getPassword(), now);
     }
 }
