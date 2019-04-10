@@ -26,6 +26,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
@@ -51,6 +52,7 @@ import java.util.Objects;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -357,6 +359,35 @@ public final class CreateAccountServiceTest {
         reduceAccountCreationTimestamp("*16005022141*", Duration.ofMinutes(61));
         reset(smsService);
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
+    }
+
+    private String createAccountRequestReceiveSms(final String telephoneNumber, final Instant timestamp) {
+        when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
+        assertNotNull(createAccountService.createAccountRequest(telephoneNumber, "", "192.168.23.42", timestamp));
+        final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(smsService).sendSms(eq(telephoneNumber), argumentCaptor.capture());
+        reset(smsService);
+        return argumentCaptor.getValue();
+    }
+
+    @DirtiesContext
+    @Test
+    public void testRegistrationCodeStaysTheSameForAWhile() {
+        final String telephoneNumber1 = "+15005012151";
+        final String telephoneNumber2 = "+15005012152";
+        final Instant now = Instant.now();
+
+
+        final String sms1 = createAccountRequestReceiveSms(telephoneNumber1, now);
+        final String sms2 = createAccountRequestReceiveSms(telephoneNumber2, now);
+        assertNotEquals(sms1, sms2);
+        for (int i = 1; i < 14; ++i) {
+            assertEquals("after " + i + 'm', sms1, createAccountRequestReceiveSms(telephoneNumber1, now.plusSeconds(i * 60L)));
+            assertEquals("after " + i + 'm', sms2, createAccountRequestReceiveSms(telephoneNumber2, now.plusSeconds(i * 60L)));
+        }
+
+        assertNotEquals(sms1, createAccountRequestReceiveSms(telephoneNumber1, now.plusSeconds(16 * 60)));
+        assertNotEquals(sms2, createAccountRequestReceiveSms(telephoneNumber2, now.plusSeconds(16 * 60)));
     }
 
     @SuppressWarnings("SameParameterValue")
