@@ -41,7 +41,7 @@ import static org.junit.Assert.assertNotNull;
 
 @SuppressWarnings("ClassWithTooManyTransitiveDependencies")
 @RunWith(SpringRunner.class)
-public final class ErrorControllerTest extends BaseControllerTest {
+public final class SimlarErrorControllerTest extends BaseControllerTest {
     private static final class NoExceptionResponseErrorHandler implements ResponseErrorHandler {
         @SuppressWarnings("MethodReturnAlwaysConstant")
         @Override
@@ -142,5 +142,10 @@ public final class ErrorControllerTest extends BaseControllerTest {
         assertHttpGet404("/index");
         assertHttpGet404("/index.html");
         assertHttpGet404(ContactsController.REQUEST_PATH);
+    }
+
+    @Test
+    public void testErrorPage() {
+        assertHttpGet404("/error");
     }
 }
