@@ -381,9 +381,9 @@ public final class CreateAccountServiceTest {
         final String sms1 = createAccountRequestReceiveSms(telephoneNumber1, now);
         final String sms2 = createAccountRequestReceiveSms(telephoneNumber2, now);
         assertNotEquals(sms1, sms2);
-        for (int i = 1; i < 14; ++i) {
-            assertEquals("after " + i + 'm', sms1, createAccountRequestReceiveSms(telephoneNumber1, now.plusSeconds(i * 60L)));
-            assertEquals("after " + i + 'm', sms2, createAccountRequestReceiveSms(telephoneNumber2, now.plusSeconds(i * 60L)));
+        for (int i = 1; i < 4; ++i) {
+            assertEquals("after " + i + 'm', sms1, createAccountRequestReceiveSms(telephoneNumber1, now.plusSeconds(i * 3 * 60L)));
+            assertEquals("after " + i + 'm', sms2, createAccountRequestReceiveSms(telephoneNumber2, now.plusSeconds(i * 3 * 60L)));
         }
 
         assertNotEquals(sms1, createAccountRequestReceiveSms(telephoneNumber1, now.plusSeconds(16 * 60)));
