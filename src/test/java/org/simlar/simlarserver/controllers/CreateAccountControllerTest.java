@@ -446,7 +446,9 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         // too many confirms
         assertPostConfirmAccountError(25, CreateAccountController.COMMAND_CONFIRM, simlarId.get(), dbEntry.getRegistrationCode());
 
-        // second request working
+        // second request working after 15 minutes
+        dbEntry.setRegistrationCodeTimestamp(dbEntry.getRegistrationCodeTimestamp().minus(Duration.ofMinutes(15)));
+        accountCreationRepository.save(dbEntry);
         assertCompleteAccountCreation(telephoneNumber);
     }
 
