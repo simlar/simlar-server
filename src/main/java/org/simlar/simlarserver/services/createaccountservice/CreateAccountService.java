@@ -120,7 +120,7 @@ public final class CreateAccountService {
         checkRequestTriesLimit(dbEntry.getRequestTries() - 1, settingsService.getMaxRequestsPerSimlarIdPerDay(),
                 String.format("too many create account requests with number '%s'", telephoneNumber));
 
-        if (Duration.between(dbEntry.getRegistrationCodeTimestamp().plus(Duration.ofMinutes(15)), now).compareTo(Duration.ZERO) > 0) {
+        if (Duration.between(dbEntry.getRegistrationCodeTimestamp().plus(Duration.ofMinutes(settingsService.getRegistrationCodeExpirationMinutes())), now).compareTo(Duration.ZERO) > 0) {
             dbEntry.setRegistrationCode(Password.generateRegistrationCode());
             dbEntry.setRegistrationCodeTimestamp(now);
             dbEntry.setConfirmTries(0);

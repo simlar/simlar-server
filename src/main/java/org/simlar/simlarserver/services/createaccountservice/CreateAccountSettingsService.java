@@ -33,6 +33,7 @@ import java.util.List;
 /**
  * TODO: Once spring boot 2.2 releases, use constructor binding and make this class immutable.
  */
+@SuppressWarnings({"ClassWithTooManyFields", "ClassWithTooManyMethods"})
 @Getter
 @Setter
 @Component
@@ -64,6 +65,10 @@ public final class CreateAccountSettingsService {
 
     @Value("${callDelaySecondsMax:600}")
     private int callDelaySecondsMax;
+
+    @SuppressWarnings("FieldNamingConvention")
+    @Value("${registrationCodeExpirationMinutes:15}")
+    private int registrationCodeExpirationMinutes;
 
     private List<RegionalSettings> regionalSettings;
 

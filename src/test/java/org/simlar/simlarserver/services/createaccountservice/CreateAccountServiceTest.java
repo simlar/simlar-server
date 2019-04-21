@@ -67,7 +67,8 @@ import static org.mockito.Mockito.when;
         "create.account.maxRequestsTotalPerHour = 15",
         "create.account.maxRequestsTotalPerDay = 30",
         "create.account.regionalSettings[0].regionCode = 160",
-        "create.account.regionalSettings[0].maxRequestsPerHour=4"})
+        "create.account.regionalSettings[0].maxRequestsPerHour=4",
+        "create.account.registrationCodeExpirationMinutes=30"})
 @SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods"})
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
@@ -381,13 +382,18 @@ public final class CreateAccountServiceTest {
         final String sms1 = createAccountRequestReceiveSms(telephoneNumber1, now);
         final String sms2 = createAccountRequestReceiveSms(telephoneNumber2, now);
         assertNotEquals(sms1, sms2);
-        for (int i = 1; i < 4; ++i) {
-            assertEquals("after " + i + 'm', sms1, createAccountRequestReceiveSms(telephoneNumber1, now.plusSeconds(i * 3 * 60L)));
-            assertEquals("after " + i + 'm', sms2, createAccountRequestReceiveSms(telephoneNumber2, now.plusSeconds(i * 3 * 60L)));
+
+        final int expirationMinutes = settingsService.getRegistrationCodeExpirationMinutes();
+        @SuppressWarnings("MultiplyOrDivideByPowerOfTwo")
+        final int stepSize = expirationMinutes / settingsService.getMaxRequestsPerIpPerHour() * 2 + 2;
+        for (int i = 1; i < expirationMinutes / stepSize; ++i) {
+            final int minutes = i * stepSize;
+            assertEquals("after " + minutes + 'm', sms1, createAccountRequestReceiveSms(telephoneNumber1, now.plusSeconds(minutes * 60L)));
+            assertEquals("after " + minutes + 'm', sms2, createAccountRequestReceiveSms(telephoneNumber2, now.plusSeconds(minutes * 60L)));
         }
 
-        assertNotEquals(sms1, createAccountRequestReceiveSms(telephoneNumber1, now.plusSeconds(16 * 60)));
-        assertNotEquals(sms2, createAccountRequestReceiveSms(telephoneNumber2, now.plusSeconds(16 * 60)));
+        assertNotEquals(sms1, createAccountRequestReceiveSms(telephoneNumber1, now.plusSeconds(expirationMinutes * 60L + 1)));
+        assertNotEquals(sms2, createAccountRequestReceiveSms(telephoneNumber2, now.plusSeconds(expirationMinutes * 60L + 1)));
     }
 
     @SuppressWarnings("SameParameterValue")
