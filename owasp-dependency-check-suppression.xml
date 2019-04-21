@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.2.xsd">
     <suppress>
-        <notes><![CDATA[
-   file name: mimepull-1.9.11.jar
-   ]]></notes>
-        <cpe>cpe:/a:eclipse:eclipse_ide</cpe>
-        <cve>CVE-2008-7271</cve>
-        <cve>CVE-2010-4647</cve>
+        <notes>
+            <![CDATA[
+                file name: tomcat-embed-core-9.0.17.jar
+            ]]>
+        </notes>
+        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-core:.*$</gav>
+        <cve>CVE-2019-0232</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: tomcat-embed-websocket-9.0.17.jar
+            ]]>
+        </notes>
+        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-websocket:.*$</gav>
+        <cve>CVE-2019-0232</cve>
     </suppress>
 </suppressions>
