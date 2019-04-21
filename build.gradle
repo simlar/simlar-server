@@ -51,7 +51,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.apache.commons:commons-lang3:3.8.1")
+    implementation("org.apache.commons:commons-lang3:3.9")
     implementation("org.apache.commons:commons-text:1.6")
     implementation("commons-codec:commons-codec:1.12")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.10.10")
