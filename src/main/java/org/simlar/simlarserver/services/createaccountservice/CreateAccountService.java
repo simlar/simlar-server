@@ -120,7 +120,12 @@ public final class CreateAccountService {
         checkRequestTriesLimit(dbEntry.getRequestTries() - 1, settingsService.getMaxRequestsPerSimlarIdPerDay(),
                 String.format("too many create account requests with number '%s'", telephoneNumber));
 
-        dbEntry.setRegistrationCode(Password.generateRegistrationCode());
+        if (Duration.between(dbEntry.getRegistrationCodeTimestamp().plus(Duration.ofMinutes(settingsService.getRegistrationCodeExpirationMinutes())), now).compareTo(Duration.ZERO) > 0) {
+            dbEntry.setRegistrationCode(Password.generateRegistrationCode());
+            dbEntry.setRegistrationCodeTimestamp(now);
+            dbEntry.setConfirmTries(0);
+        }
+
         final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
         if (!smsService.sendSms(telephoneNumber, smsMessage)) {
             throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsMessage);
@@ -167,7 +172,6 @@ public final class CreateAccountService {
             }
             dbEntry.setTimestamp(now);
             dbEntry.setIp(ip);
-            dbEntry.setConfirmTries(0);
             return accountCreationRepository.save(dbEntry);
         });
     }
