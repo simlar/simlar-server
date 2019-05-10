@@ -29,7 +29,7 @@ plugins {
     id "org.springframework.boot" version "2.1.4.RELEASE"
     id "io.spring.dependency-management" version "1.0.7.RELEASE"
     id "com.github.ben-manes.versions" version "0.21.0"
-    id "org.owasp.dependencycheck" version "5.0.0-M2"
+    id "org.owasp.dependencycheck" version "5.0.0-M3.1"
 }
 
 ext {
