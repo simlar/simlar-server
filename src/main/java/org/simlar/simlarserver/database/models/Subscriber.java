@@ -37,7 +37,6 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-@SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
 @NoArgsConstructor
 @Getter
 @Setter

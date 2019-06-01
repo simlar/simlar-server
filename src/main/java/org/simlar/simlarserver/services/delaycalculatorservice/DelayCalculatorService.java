@@ -21,7 +21,6 @@
 
 package org.simlar.simlarserver.services.delaycalculatorservice;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -79,7 +78,6 @@ public final class DelayCalculatorService {
         });
     }
 
-    @SuppressFBWarnings("OCP_OVERLY_CONCRETE_PARAMETER") // Instant instead of Temporal
     @SuppressWarnings("TypeMayBeWeakened") // Instant instead of Temporal
     private static int calculateTotalRequestedContactsStatic(final ContactsRequestCount saved, final Instant now, final String hash, final int count) {
         if (saved == null) {

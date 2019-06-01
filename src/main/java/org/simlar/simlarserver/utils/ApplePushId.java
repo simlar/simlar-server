@@ -21,8 +21,6 @@
 
 package org.simlar.simlarserver.utils;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import java.util.regex.Pattern;
 
 public final class ApplePushId {
@@ -46,7 +44,6 @@ public final class ApplePushId {
         return pushId;
     }
 
-    @SuppressFBWarnings("OPM_OVERLY_PERMISSIVE_METHOD") // false positive
     public static boolean check(final CharSequence input) {
         return input != null && REGEX_PATTERN_PUSH_ID.matcher(input).matches();
     }

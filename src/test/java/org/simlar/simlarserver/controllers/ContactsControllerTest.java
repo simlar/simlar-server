@@ -21,7 +21,6 @@
 
 package org.simlar.simlarserver.controllers;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.testdata.TestUser;
@@ -34,7 +33,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-@SuppressFBWarnings("UCPM_USE_CHARACTER_PARAMETERIZED_METHOD")
 @RunWith(SpringRunner.class)
 public final class ContactsControllerTest extends ContactsControllerBaseTest {
     private void assertWrongCredentials(final String username, final String password) {
