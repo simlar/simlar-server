@@ -32,6 +32,7 @@ public final class ApplePushId {
         this.pushId = pushId;
     }
 
+    @SuppressWarnings("ReturnOfNull")
     public static ApplePushId create(final String pushId) {
         if (!check(pushId)) {
             return null;
