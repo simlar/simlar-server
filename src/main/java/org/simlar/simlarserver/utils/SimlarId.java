@@ -50,6 +50,7 @@ public final class SimlarId implements Comparable<SimlarId> {
         this.simlarId = simlarId;
     }
 
+    @SuppressWarnings("ReturnOfNull")
     public static SimlarId create(final String simlarId) {
         if (!check(simlarId)) {
             return null;
