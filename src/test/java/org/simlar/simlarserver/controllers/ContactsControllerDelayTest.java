@@ -21,7 +21,6 @@
 
 package org.simlar.simlarserver.controllers;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.helper.SimlarIds;
@@ -41,7 +40,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @DirtiesContext
-@SuppressFBWarnings("UCPM_USE_CHARACTER_PARAMETERIZED_METHOD")
 @RunWith(SpringRunner.class)
 public final class ContactsControllerDelayTest extends ContactsControllerBaseTest {
     private static String pipeJoin(final Collection<SimlarId> simlarIds) {

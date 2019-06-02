@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.utils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -124,6 +125,7 @@ public final class SimlarIdTest {
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s2, s1), s2 + '|' + s1);
     }
 
+    @SuppressFBWarnings("OCP_OVERLY_CONCRETE_PARAMETER") // false positive
     private static void assertSortAndUnifySimlarIds(final List<SimlarId> expected, final Collection<SimlarId> input) {
         assertEquals(new TreeSet<>(expected), SimlarId.sortAndUnifySimlarIds(input));
     }

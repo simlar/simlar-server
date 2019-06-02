@@ -21,7 +21,6 @@
 
 package org.simlar.simlarserver.database.models;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +40,6 @@ import javax.persistence.Table;
 import java.time.Instant;
 
 @SuppressWarnings("ClassWithTooManyMethods")
-@SuppressFBWarnings("FCBL_FIELD_COULD_BE_LOCAL")
 @NoArgsConstructor
 @Getter
 @Setter
