@@ -54,7 +54,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation("org.apache.commons:commons-text:1.6")
     implementation("commons-codec:commons-codec:1.12")
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.10.13")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.10.14")
     implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.9.9") // TODO: remove once spring updates its bom
 
