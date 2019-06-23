@@ -3,24 +3,6 @@
     <suppress>
         <notes>
             <![CDATA[
-                file name: tomcat-embed-core-9.0.17.jar
-            ]]>
-        </notes>
-        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-core:.*$</gav>
-        <cve>CVE-2019-0232</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: tomcat-embed-websocket-9.0.17.jar
-            ]]>
-        </notes>
-        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-websocket:.*$</gav>
-        <cve>CVE-2019-0232</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
                 file name: jackson-databind-2.9.9.jar
             ]]></notes>
         <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
