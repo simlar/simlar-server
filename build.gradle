@@ -29,7 +29,7 @@ plugins {
     id "org.springframework.boot" version "2.1.6.RELEASE"
     id "io.spring.dependency-management" version "1.0.8.RELEASE"
     id "com.github.ben-manes.versions" version "0.21.0"
-    id "org.owasp.dependencycheck" version "5.0.0"
+    id "org.owasp.dependencycheck" version "5.1.1"
 }
 
 ext {
@@ -52,17 +52,18 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.apache.commons:commons-lang3:3.9")
-    implementation("org.apache.commons:commons-text:1.6")
+    implementation("org.apache.commons:commons-text:1.7")
     implementation("commons-codec:commons-codec:1.12")
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.10.14")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.10.15")
     implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.9.9.1") // TODO: remove this once transient dependency updates
 
     runtime("org.mariadb.jdbc:mariadb-java-client:2.4.2")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testImplementation("com.h2database:h2:1.4.199")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito:mockito-core:2.28.2")
+    testImplementation("org.mockito:mockito-core:3.0.0")
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -73,7 +74,7 @@ repositories {
 }
 
 pmd {
-    toolVersion = "6.15.0"
+    toolVersion = "6.16.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = [ ]
 }
