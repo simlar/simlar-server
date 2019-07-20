@@ -62,7 +62,7 @@ dependencies {
 
     testImplementation("com.h2database:h2:1.4.199")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito:mockito-core:2.28.2")
+    testImplementation("org.mockito:mockito-core:3.0.0")
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
