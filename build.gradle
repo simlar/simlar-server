@@ -73,7 +73,7 @@ repositories {
 }
 
 pmd {
-    toolVersion = "6.15.0"
+    toolVersion = "6.16.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = [ ]
 }
