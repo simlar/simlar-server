@@ -153,5 +153,6 @@ idea {
         excludeDirs += file("examples")
         excludeDirs += file("pmd-ruleset.xml")
         excludeDirs += file("owasp-dependency-check-suppression.xml")
+        excludeDirs += file("gradlew.bat")
     }
 }
