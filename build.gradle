@@ -29,7 +29,7 @@ plugins {
     id "org.springframework.boot" version "2.1.6.RELEASE"
     id "io.spring.dependency-management" version "1.0.8.RELEASE"
     id "com.github.ben-manes.versions" version "0.21.0"
-    id "org.owasp.dependencycheck" version "5.1.1"
+    id "org.owasp.dependencycheck" version "5.2.0"
 }
 
 ext {
@@ -53,7 +53,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation("org.apache.commons:commons-text:1.7")
-    implementation("commons-codec:commons-codec:1.12")
+    implementation("commons-codec:commons-codec:1.13")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.10.15")
     implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.9.9.1") // TODO: remove this once transient dependency updates
@@ -74,7 +74,7 @@ repositories {
 }
 
 pmd {
-    toolVersion = "6.16.0"
+    toolVersion = "6.17.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = [ ]
 }
@@ -153,5 +153,6 @@ idea {
         excludeDirs += file("examples")
         excludeDirs += file("pmd-ruleset.xml")
         excludeDirs += file("owasp-dependency-check-suppression.xml")
+        excludeDirs += file("gradlew.bat")
     }
 }
