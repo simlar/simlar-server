@@ -52,7 +52,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.apache.commons:commons-lang3:3.9")
-    implementation("org.apache.commons:commons-text:1.7")
+    implementation("org.apache.commons:commons-text:1.8")
     implementation("commons-codec:commons-codec:1.13")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.10.20")
     implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
