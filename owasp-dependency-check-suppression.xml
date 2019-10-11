@@ -8,5 +8,10 @@
         <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
         <cve>CVE-2019-14540</cve>
         <cve>CVE-2019-16335</cve>
+        <cve>CVE-2019-16492</cve>
+        <cve>CVE-2019-16493</cve>
+        <cve>CVE-2019-16942</cve>
+        <cve>CVE-2019-16943</cve>
+        <cve>CVE-2019-17267</cve>
     </suppress>
 </suppressions>
