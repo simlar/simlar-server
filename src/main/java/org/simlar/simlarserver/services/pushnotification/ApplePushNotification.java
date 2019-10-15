@@ -74,10 +74,8 @@ public final class ApplePushNotification {
         final KeyManagerFactory keyFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         keyFactory.init(keyStore, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
 
-        final KeyManager[] keyManagers = keyFactory.getKeyManagers();
-
         final SSLContext sslContext = SSLContext.getInstance(pushNotificationSettings.getApplePushProtocol());
-        sslContext.init(keyManagers, null, null);
+        sslContext.init(keyFactory.getKeyManagers(), null, null);
 
         return sslContext.getSocketFactory();
     }
