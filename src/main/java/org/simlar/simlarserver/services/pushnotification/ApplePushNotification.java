@@ -23,7 +23,8 @@ import java.util.Objects;
 @Slf4j
 @Component
 public final class ApplePushNotification {
-    static final String APPLE_SERVER_SANDBOX = "api.sandbox.push.apple.com";
+    private static final String APPLE_SERVER_SANDBOX = "api.sandbox.push.apple.com";
+    static final String APPLE_SERVER_SANDBOX_URL = "https://" + APPLE_SERVER_SANDBOX + "/3/device/";
 
     private final PushNotificationSettingsService pushNotificationSettings;
 
@@ -106,7 +107,7 @@ public final class ApplePushNotification {
 
     public void requestVoipPushNotification() {
         final CertificatePinner certificatePinner = new CertificatePinner.Builder()
-                .add("api.sandbox.push.apple.com", "sha256/tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=")
+                .add(APPLE_SERVER_SANDBOX, "sha256/tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=")
                 .build();
 
         final OkHttpClient client = new OkHttpClient.Builder()
@@ -119,6 +120,6 @@ public final class ApplePushNotification {
         new RestTemplateBuilder()
                 .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
                 .build()
-                .postForObject("https://" + APPLE_SERVER_SANDBOX + "/3/device/" + "device", null, String.class);
+                .postForObject(APPLE_SERVER_SANDBOX_URL + "device", null, String.class);
     }
 }

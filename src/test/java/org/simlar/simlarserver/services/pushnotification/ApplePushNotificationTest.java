@@ -43,7 +43,7 @@ public final class ApplePushNotificationTest {
             new RestTemplateBuilder()
                     .requestFactory(OkHttp3ClientHttpRequestFactory::new)
                     .build()
-                    .postForObject("https://" + ApplePushNotification.APPLE_SERVER_SANDBOX + "/3/device/" + "deviceToken", null, String.class);
+                    .postForObject(ApplePushNotification.APPLE_SERVER_SANDBOX_URL + "deviceToken", null, String.class);
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.FORBIDDEN, e.getStatusCode());
