@@ -12,14 +12,13 @@ import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.security.Key;
 import java.security.KeyStore;
-import java.security.cert.X509Certificate;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
@@ -55,20 +54,16 @@ public final class ApplePushNotificationTest {
     public void testReadKeyStore() throws Exception {
         final KeyStore keyStore = applePushNotification.createKeyStore();
 
-        final Collection<String> aliases = Collections.list(keyStore.aliases());
+        final List<String> aliases = Collections.list(keyStore.aliases());
         assertEquals(1, aliases.size());
 
-        for (final String alias : aliases) {
-            //System.out.println("alias: " + alias);
+        final String alias = aliases.get(0);
+        assertNotNull(ApplePushNotification.getKey(keyStore, alias, pushNotificationSettings.getAppleVoipCertificatePassword()));
 
-            final X509Certificate certificate = (X509Certificate) keyStore.getCertificate(alias);
-            //System.out.println("certificate subject: " + certificate.getSubjectDN());
-            assertNotNull(certificate);
-
-            final Key key = keyStore.getKey(alias, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
-            //System.out.println("key:" + key);
-            assertNotNull(key);
-        }
+        final String certificateSubject = ApplePushNotification.getCertificateSubject(keyStore, alias);
+        assertNotNull(certificateSubject);
+        assertTrue(certificateSubject.contains("VoIP"));
+        assertTrue(certificateSubject.contains("simlar"));
     }
 
     @Test

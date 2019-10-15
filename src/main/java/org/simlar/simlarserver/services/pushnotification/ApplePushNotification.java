@@ -8,10 +8,15 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.Collections;
+import java.util.Objects;
 
 @AllArgsConstructor
 @Slf4j
@@ -21,13 +26,46 @@ public final class ApplePushNotification {
 
     private final PushNotificationSettingsService pushNotificationSettings;
 
+    @Nullable
+    static String getCertificateSubject(final KeyStore keyStore, final String alias) {
+        try {
+            final Certificate certificate = keyStore.getCertificate(alias);
+            if (!(certificate instanceof X509Certificate)) {
+                return null;
+            }
+
+            return Objects.toString(((X509Certificate) certificate).getSubjectDN());
+        } catch (final KeyStoreException e) {
+            log.error("failed to load certificate with alias '{}'", alias, e);
+            return null;
+        }
+    }
+
+    @Nullable
+    static String getKey(final KeyStore keyStore, final String alias, final String password) {
+        try {
+            final Key key = keyStore.getKey(alias, password.toCharArray());
+            return key == null ? null : key.getClass().getSimpleName();
+        } catch (final KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
+            log.error("failed to load key with alias '{}'", alias, e);
+            return null;
+        }
+    }
+
     KeyStore createKeyStore() throws Exception {
         final File file = new File(pushNotificationSettings.getAppleVoipCertificatePath());
         if (!file.exists()) {
             throw new FileNotFoundException("File does not exist: " + file.getAbsolutePath());
         }
 
-        return KeyStore.getInstance(file, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
+        final KeyStore keyStore = KeyStore.getInstance(file, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
+        Collections.list(keyStore.aliases()).forEach(alias ->
+                log.info("found alias '{}'key='{}'  cert='{}'",
+                        alias,
+                        getKey(keyStore, alias, pushNotificationSettings.getAppleVoipCertificatePassword()),
+                        getCertificateSubject(keyStore, alias)));
+
+        return keyStore;
     }
 
     private SSLSocketFactory createSSLSocketFactory(final KeyStore keyStore) throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException, KeyManagementException {
