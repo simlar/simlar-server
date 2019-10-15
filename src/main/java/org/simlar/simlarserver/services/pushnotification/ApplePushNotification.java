@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
+import org.simlar.simlarserver.services.pushnotification.json.ApplePushNotificationRequest;
+import org.simlar.simlarserver.services.pushnotification.json.ApplePushNotificationRequestDetails;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -122,9 +124,12 @@ public final class ApplePushNotification {
         }
 
         final OkHttpClient client = clientBuilder.build();
+
+        final ApplePushNotificationRequest request = new ApplePushNotificationRequest(new ApplePushNotificationRequestDetails("Simlar Call", "ringtone.wav"));
+
         new RestTemplateBuilder()
                 .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
                 .build()
-                .postForObject(APPLE_SERVER_SANDBOX_URL + deviceToken, null, String.class);
+                .postForObject(APPLE_SERVER_SANDBOX_URL + deviceToken, request, String.class);
     }
 }

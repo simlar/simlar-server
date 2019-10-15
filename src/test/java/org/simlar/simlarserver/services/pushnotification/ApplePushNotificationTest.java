@@ -87,13 +87,13 @@ public final class ApplePushNotificationTest {
     }
 
     @Test
-    public void testConnectToAppleWithCertificatePayloadEmpty() {
+    public void testConnectToAppleWithCertificateBadDeviceToken() {
         try {
             applePushNotification.requestVoipPushNotification("invalidDeviceToken");
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
-            assertEquals("{\"reason\":\"PayloadEmpty\"}", e.getResponseBodyAsString());
+            assertEquals("{\"reason\":\"BadDeviceToken\"}", e.getResponseBodyAsString());
         }
     }
 }
