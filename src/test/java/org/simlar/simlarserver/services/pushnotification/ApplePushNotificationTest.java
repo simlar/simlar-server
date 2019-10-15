@@ -1,6 +1,7 @@
 package org.simlar.simlarserver.services.pushnotification;
 
 import org.junit.Before;
+import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -104,10 +105,15 @@ public final class ApplePushNotificationTest {
 
     @Test
     public void testConnectToAppleWithCertificatePayloadEmpty() throws Exception {
+        final CertificatePinner certificatePinner = new CertificatePinner.Builder()
+                .add("api.sandbox.push.apple.com",  "sha256/tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=")
+                .build();
+
         final OkHttpClient client = new OkHttpClient.Builder()
                 .sslSocketFactory(
                         createSSLSocketFactory(createKeyStore()),
                         createTrustManager())
+                .certificatePinner(certificatePinner)
                 .build();
 
         try {
