@@ -12,8 +12,10 @@ import javax.annotation.Nullable;
 import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.Objects;
@@ -52,7 +54,7 @@ public final class ApplePushNotification {
         }
     }
 
-    KeyStore createKeyStore() throws Exception {
+    KeyStore createKeyStore() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException {
         final File file = new File(pushNotificationSettings.getAppleVoipCertificatePath());
         if (!file.exists()) {
             throw new FileNotFoundException("File does not exist: " + file.getAbsolutePath());
