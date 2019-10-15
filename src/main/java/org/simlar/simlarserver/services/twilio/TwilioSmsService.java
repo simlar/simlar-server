@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.services.twilio;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,8 +46,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
-
-import java.io.IOException;
 
 @AllArgsConstructor
 @Slf4j
@@ -127,8 +126,8 @@ public final class TwilioSmsService implements SmsService {
             log.error("while sending '{}' request to '{}' unable to parse response: '{}'", type, telephoneNumber, response, e);
             smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
-        } catch (final IOException e) {
-            log.error("while sending '{}' request to '{}' IOException during response parsing: '{}'", type, telephoneNumber, response, e);
+        } catch (final JsonProcessingException e) {
+            log.error("while sending '{}' request to '{}' JsonProcessingException during response parsing: '{}'", type, telephoneNumber, response, e);
             smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, null, "SimlarServerException", "not parsable response: " + response, text));
             return false;
         }
