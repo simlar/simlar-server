@@ -39,9 +39,11 @@ import org.springframework.stereotype.Component;
 class PushNotificationSettingsService {
     private String appleVoipCertificatePath;
     private String appleVoipCertificatePassword;
+    private String applePushProtocol;
 
     public final boolean isConfigured() {
         return StringUtils.isNotEmpty(appleVoipCertificatePath) &&
-                StringUtils.isNotEmpty(appleVoipCertificatePassword);
+                StringUtils.isNotEmpty(appleVoipCertificatePassword) &&
+                StringUtils.isNotEmpty(applePushProtocol);
     }
 }
