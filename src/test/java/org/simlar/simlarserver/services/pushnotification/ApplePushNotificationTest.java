@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public final class ApplePushNotificationTest {
     }
 
     @Test
-    public void testReadKeyStore() throws Exception {
+    public void testReadKeyStore() throws KeyStoreException {
         final KeyStore keyStore = applePushNotification.createKeyStore();
 
         final List<String> aliases = Collections.list(keyStore.aliases());
@@ -67,7 +68,7 @@ public final class ApplePushNotificationTest {
     }
 
     @Test
-    public void testConnectToAppleWithCertificatePayloadEmpty() throws Exception {
+    public void testConnectToAppleWithCertificatePayloadEmpty() {
         try {
             applePushNotification.requestVoipPushNotification();
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());

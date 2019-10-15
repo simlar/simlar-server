@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Nullable;
 import javax.net.ssl.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -54,39 +53,58 @@ public final class ApplePushNotification {
         }
     }
 
-    KeyStore createKeyStore() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException {
+    KeyStore createKeyStore() {
         final File file = new File(pushNotificationSettings.getAppleVoipCertificatePath());
         if (!file.exists()) {
-            throw new FileNotFoundException("File does not exist: " + file.getAbsolutePath());
+            throw new AppleKeyStoreException("Certificate file does not exist: " + file.getAbsolutePath());
         }
 
-        final KeyStore keyStore = KeyStore.getInstance(file, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
-        Collections.list(keyStore.aliases()).forEach(alias ->
-                log.info("found alias '{}'key='{}'  cert='{}'",
-                        alias,
-                        getKey(keyStore, alias, pushNotificationSettings.getAppleVoipCertificatePassword()),
-                        getCertificateSubject(keyStore, alias)));
-
-        return keyStore;
+        try {
+            final KeyStore keyStore = KeyStore.getInstance(file, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
+            Collections.list(keyStore.aliases()).forEach(alias ->
+                    log.info("found alias '{}'key='{}'  cert='{}'",
+                            alias,
+                            getKey(keyStore, alias, pushNotificationSettings.getAppleVoipCertificatePassword()),
+                            getCertificateSubject(keyStore, alias)));
+            return keyStore;
+        } catch (final IOException | CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
+            throw new AppleKeyStoreException("failed to create key store from: " + file.getAbsolutePath(), e);
+        }
     }
 
-    private SSLSocketFactory createSSLSocketFactory(final KeyStore keyStore) throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException, KeyManagementException {
-        final KeyManagerFactory keyFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        keyFactory.init(keyStore, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
+    private SSLSocketFactory createSSLSocketFactory(final KeyStore keyStore) {
+        try {
+            final KeyManagerFactory keyFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyFactory.init(keyStore, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
 
-        final SSLContext sslContext = SSLContext.getInstance(pushNotificationSettings.getApplePushProtocol());
-        sslContext.init(keyFactory.getKeyManagers(), null, null);
+            final SSLContext sslContext = SSLContext.getInstance(pushNotificationSettings.getApplePushProtocol());
+            sslContext.init(keyFactory.getKeyManagers(), null, null);
 
-        return sslContext.getSocketFactory();
+            return sslContext.getSocketFactory();
+        } catch (final NoSuchAlgorithmException | UnrecoverableKeyException | KeyStoreException | KeyManagementException e) {
+            throw new AppleKeyStoreException("failed to create SSLSocketFactory store from keystore with protocol; " + pushNotificationSettings.getApplePushProtocol(),  e);
+        }
     }
 
-    private static X509TrustManager createTrustManager() throws NoSuchAlgorithmException, KeyStoreException {
-        final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        trustManagerFactory.init((KeyStore) null);
-        return (X509TrustManager) trustManagerFactory.getTrustManagers()[0];
+    private static TrustManagerFactory createTrustManagerFactory() {
+        try {
+            final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init((KeyStore) null);
+            return trustManagerFactory;
+        } catch (final NoSuchAlgorithmException | KeyStoreException e) {
+            throw new AppleKeyStoreException("failed to create TrustManagerFactory", e);
+        }
     }
 
-    public void requestVoipPushNotification() throws Exception {
+    private static X509TrustManager createTrustManager() {
+        final TrustManager trustManager = createTrustManagerFactory().getTrustManagers()[0];
+        if (!(trustManager instanceof X509TrustManager)) {
+            throw new AppleKeyStoreException("first trust manager of invalid type: " + trustManager.getClass().getSimpleName());
+        }
+        return (X509TrustManager) trustManager;
+    }
+
+    public void requestVoipPushNotification() {
         final CertificatePinner certificatePinner = new CertificatePinner.Builder()
                 .add("api.sandbox.push.apple.com", "sha256/tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=")
                 .build();
