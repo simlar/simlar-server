@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -106,17 +107,21 @@ public final class ApplePushNotification {
     }
 
     public void requestVoipPushNotification() {
-        final CertificatePinner certificatePinner = new CertificatePinner.Builder()
-                .add(APPLE_SERVER_SANDBOX, "sha256/tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=")
-                .build();
-
-        final OkHttpClient client = new OkHttpClient.Builder()
+        final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(
                         createSSLSocketFactory(createKeyStore()),
-                        createTrustManager())
-                .certificatePinner(certificatePinner)
-                .build();
+                        createTrustManager());
 
+        final String certificatePinning = pushNotificationSettings.getAppleVoipCertificatePinning();
+        if (StringUtils.isEmpty(certificatePinning)) {
+            log.warn("certificate pinning disabled");
+        } else {
+            clientBuilder.certificatePinner(new CertificatePinner.Builder()
+                    .add(APPLE_SERVER_SANDBOX, certificatePinning)
+                    .build());
+        }
+
+        final OkHttpClient client = clientBuilder.build();
         new RestTemplateBuilder()
                 .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
                 .build()

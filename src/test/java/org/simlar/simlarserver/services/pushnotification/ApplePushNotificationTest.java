@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -65,6 +66,24 @@ public final class ApplePushNotificationTest {
         assertNotNull(certificateSubject);
         assertTrue(certificateSubject.contains("VoIP"));
         assertTrue(certificateSubject.contains("simlar"));
+    }
+
+    @Test
+    public void testConnectToAppleWithWrongCertificatePinning() {
+        try {
+            final PushNotificationSettingsService settings = new PushNotificationSettingsService();
+            settings.setApplePushProtocol(pushNotificationSettings.getApplePushProtocol());
+            settings.setAppleVoipCertificatePath(pushNotificationSettings.getAppleVoipCertificatePath());
+            settings.setAppleVoipCertificatePassword(pushNotificationSettings.getAppleVoipCertificatePassword());
+            settings.setAppleVoipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=");
+
+            new ApplePushNotification(settings).requestVoipPushNotification();
+            fail("expected exception not thrown: " + ResourceAccessException.class.getSimpleName());
+        } catch (final ResourceAccessException e) {
+            assertEquals("SSLPeerUnverifiedException", e.getCause().getClass().getSimpleName());
+            assertNotNull(e.getMessage());
+            assertTrue(e.getMessage().contains("Certificate pinning failure!"));
+        }
     }
 
     @Test
