@@ -106,7 +106,7 @@ public final class ApplePushNotification {
         return (X509TrustManager) trustManager;
     }
 
-    public void requestVoipPushNotification() {
+    public void requestVoipPushNotification(final String deviceToken) {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(
                         createSSLSocketFactory(createKeyStore()),
@@ -125,6 +125,6 @@ public final class ApplePushNotification {
         new RestTemplateBuilder()
                 .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
                 .build()
-                .postForObject(APPLE_SERVER_SANDBOX_URL + "device", null, String.class);
+                .postForObject(APPLE_SERVER_SANDBOX_URL + deviceToken, null, String.class);
     }
 }

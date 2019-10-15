@@ -77,7 +77,7 @@ public final class ApplePushNotificationTest {
             settings.setAppleVoipCertificatePassword(pushNotificationSettings.getAppleVoipCertificatePassword());
             settings.setAppleVoipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=");
 
-            new ApplePushNotification(settings).requestVoipPushNotification();
+            new ApplePushNotification(settings).requestVoipPushNotification("invalidDeviceToken");
             fail("expected exception not thrown: " + ResourceAccessException.class.getSimpleName());
         } catch (final ResourceAccessException e) {
             assertEquals("SSLPeerUnverifiedException", e.getCause().getClass().getSimpleName());
@@ -89,7 +89,7 @@ public final class ApplePushNotificationTest {
     @Test
     public void testConnectToAppleWithCertificatePayloadEmpty() {
         try {
-            applePushNotification.requestVoipPushNotification();
+            applePushNotification.requestVoipPushNotification("invalidDeviceToken");
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
