@@ -1,8 +1,6 @@
 package org.simlar.simlarserver.services.pushnotification;
 
 import org.junit.Before;
-import okhttp3.CertificatePinner;
-import okhttp3.OkHttpClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
@@ -10,19 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
-import javax.net.ssl.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.security.*;
+import java.security.Key;
+import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -32,10 +26,11 @@ import static org.junit.Assume.assumeTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
 public final class ApplePushNotificationTest {
-    private static final String APPLE_SERVER_SANDBOX = "api.sandbox.push.apple.com";
-
     @Autowired
     private PushNotificationSettingsService pushNotificationSettings;
+
+    @Autowired
+    private ApplePushNotification applePushNotification;
 
     @Before
     public void verifyConfiguration() {
@@ -48,7 +43,7 @@ public final class ApplePushNotificationTest {
             new RestTemplateBuilder()
                     .requestFactory(OkHttp3ClientHttpRequestFactory::new)
                     .build()
-                    .postForObject("https://" + APPLE_SERVER_SANDBOX + "/3/device/" + "deviceToken", null, String.class);
+                    .postForObject("https://" + ApplePushNotification.APPLE_SERVER_SANDBOX + "/3/device/" + "deviceToken", null, String.class);
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.FORBIDDEN, e.getStatusCode());
@@ -56,18 +51,9 @@ public final class ApplePushNotificationTest {
         }
     }
 
-    private KeyStore createKeyStore() throws Exception {
-        final File file = new File(pushNotificationSettings.getAppleVoipCertificatePath());
-        if (!file.exists()) {
-            throw new FileNotFoundException("File does not exist: " + file.getAbsolutePath());
-        }
-
-        return KeyStore.getInstance(file, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
-    }
-
     @Test
     public void testReadKeyStore() throws Exception {
-        final KeyStore keyStore = createKeyStore();
+        final KeyStore keyStore = applePushNotification.createKeyStore();
 
         final Collection<String> aliases = Collections.list(keyStore.aliases());
         assertEquals(1, aliases.size());
@@ -85,42 +71,10 @@ public final class ApplePushNotificationTest {
         }
     }
 
-    private SSLSocketFactory createSSLSocketFactory(final KeyStore keyStore) throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException, KeyManagementException {
-        final KeyManagerFactory keyFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        keyFactory.init(keyStore, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
-
-        final KeyManager[] keyManagers = keyFactory.getKeyManagers();
-
-        final SSLContext sslContext = SSLContext.getInstance(pushNotificationSettings.getApplePushProtocol());
-        sslContext.init(keyManagers, null, null);
-
-        return sslContext.getSocketFactory();
-    }
-
-    private static X509TrustManager createTrustManager() throws NoSuchAlgorithmException, KeyStoreException {
-        final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        trustManagerFactory.init((KeyStore) null);
-        return (X509TrustManager) trustManagerFactory.getTrustManagers()[0];
-    }
-
     @Test
     public void testConnectToAppleWithCertificatePayloadEmpty() throws Exception {
-        final CertificatePinner certificatePinner = new CertificatePinner.Builder()
-                .add("api.sandbox.push.apple.com",  "sha256/tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=")
-                .build();
-
-        final OkHttpClient client = new OkHttpClient.Builder()
-                .sslSocketFactory(
-                        createSSLSocketFactory(createKeyStore()),
-                        createTrustManager())
-                .certificatePinner(certificatePinner)
-                .build();
-
         try {
-            new RestTemplateBuilder()
-                    .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
-                    .build()
-                    .postForObject("https://" + APPLE_SERVER_SANDBOX + "/3/device/" + "device", null, String.class);
+            applePushNotification.requestVoipPushNotification();
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
