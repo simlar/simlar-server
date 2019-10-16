@@ -124,6 +124,10 @@ final class ApplePushNotification {
     }
 
     public void requestVoipPushNotification(final ApplePushServer server, final String deviceToken) {
+        requestVoipPushNotification(server.getUrl() + deviceToken, server.getBaseUrl());
+    }
+
+    void requestVoipPushNotification(final String url, final String urlPin) {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(
                         createSSLSocketFactory(),
@@ -134,7 +138,7 @@ final class ApplePushNotification {
             log.warn("certificate pinning disabled");
         } else {
             clientBuilder.certificatePinner(new CertificatePinner.Builder()
-                    .add(server.getBaseUrl(), certificatePinning)
+                    .add(urlPin, certificatePinning)
                     .build());
         }
 
@@ -151,6 +155,6 @@ final class ApplePushNotification {
         new RestTemplateBuilder()
                 .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
                 .build()
-                .postForObject(server.getUrl() + deviceToken, entity, String.class);
+                .postForObject(url, entity, String.class);
     }
 }
