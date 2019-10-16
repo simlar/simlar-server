@@ -41,6 +41,7 @@ class PushNotificationSettingsService {
     private String appleVoipCertificatePassword;
     private String appleVoipCertificatePinning;
     private String applePushProtocol;
+    private String appleVoipTestDeviceToken;
 
     public final boolean isConfigured() {
         return StringUtils.isNotEmpty(appleVoipCertificatePath) &&

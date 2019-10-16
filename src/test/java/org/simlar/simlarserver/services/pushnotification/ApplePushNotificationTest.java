@@ -1,5 +1,7 @@
 package org.simlar.simlarserver.services.pushnotification;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -95,5 +97,14 @@ public final class ApplePushNotificationTest {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
             assertEquals("{\"reason\":\"BadDeviceToken\"}", e.getResponseBodyAsString());
         }
+    }
+
+    @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
+    @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "PMD.JUnitTestsShouldIncludeAssert"})
+    @Test
+    public void testRequestAppleVoipPushNotification() {
+        final String deviceToken = pushNotificationSettings.getAppleVoipTestDeviceToken();
+        assumeTrue("This test needs a valid device token in the properties", StringUtils.isNotEmpty(deviceToken));
+        applePushNotification.requestVoipPushNotification(deviceToken);
     }
 }
