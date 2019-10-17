@@ -112,7 +112,7 @@ public final class TwilioSmsServiceTest {
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
         assertFalse(service.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,
-                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com", message),
+                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com: Name or service not known", message),
                 smsProviderLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
