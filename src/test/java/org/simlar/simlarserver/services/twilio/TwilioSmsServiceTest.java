@@ -82,7 +82,7 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+0000000001";
         final String message         = "Test not configured";
 
-        final TwilioSettingsService twilioSettings = new TwilioSettingsService();
+        final TwilioSettingsService twilioSettings = new TwilioSettingsService(null, null, null, null, null, null);
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));
@@ -98,13 +98,13 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+0000000002";
         final String message         = "Test no network";
 
-        final TwilioSettingsService twilioSettings = new TwilioSettingsService();
-        twilioSettings.setBaseUrl("no.example.com");
-        twilioSettings.setSmsSourceNumber("+1");
-        twilioSettings.setSid("007");
-        twilioSettings.setAuthToken("secret");
-        twilioSettings.setCallbackUser("user");
-        twilioSettings.setCallbackPassword("password");
+        final TwilioSettingsService twilioSettings = new TwilioSettingsService(
+                "no.example.com",
+                "+1",
+                "007",
+                "secret",
+                "user",
+                "password");
 
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
         assertFalse(service.sendSms(telephoneNumber, message));

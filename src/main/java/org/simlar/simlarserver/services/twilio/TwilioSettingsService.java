@@ -21,30 +21,27 @@
 
 package org.simlar.simlarserver.services.twilio;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-/**
- * TODO: Once spring boot 2.2 releases, use constructor binding and make this class immutable.
- */
+@AllArgsConstructor
 @Getter
-@Setter
 @ToString
-@Component
+@ConstructorBinding
 @ConfigurationProperties(prefix = "twilio")
 class TwilioSettingsService {
     @Value("${baseUrl:api.twilio.com/2010-04-01/Accounts}")
-    private String baseUrl;
-    private String smsSourceNumber;
-    private String sid;
-    private String authToken;
-    private String callbackUser;
-    private String callbackPassword;
+    private final String baseUrl;
+    private final String smsSourceNumber;
+    private final String sid;
+    private final String authToken;
+    private final String callbackUser;
+    private final String callbackPassword;
 
     public final boolean isConfigured() {
         return StringUtils.isNotEmpty(baseUrl) &&
