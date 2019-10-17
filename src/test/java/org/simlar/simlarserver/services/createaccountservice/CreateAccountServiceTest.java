@@ -41,7 +41,6 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesExc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Duration;
@@ -61,7 +60,9 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@TestPropertySource(properties = {
+@SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods"})
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = SimlarServer.class, properties = {
         "create.account.alertSmsNumbers = 1234, 5678",
         "create.account.maxRequestsPerIpPerHour = 12",
         "create.account.maxRequestsTotalPerHour = 15",
@@ -69,9 +70,6 @@ import static org.mockito.Mockito.when;
         "create.account.regionalSettings[0].regionCode = 160",
         "create.account.regionalSettings[0].maxRequestsPerHour=4",
         "create.account.registrationCodeExpirationMinutes=30"})
-@SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods"})
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = SimlarServer.class)
 public final class CreateAccountServiceTest {
     @Autowired
     private CreateAccountService createAccountService;
