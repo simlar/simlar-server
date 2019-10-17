@@ -21,27 +21,24 @@
 
 package org.simlar.simlarserver.services.pushnotification;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-/**
- * TODO: Once spring boot 2.2 releases, use constructor binding and make this class immutable.
- */
+@AllArgsConstructor
 @Getter
-@Setter
 @ToString
-@Component
+@ConstructorBinding
 @ConfigurationProperties(prefix = "push")
 class PushNotificationSettingsService {
-    private String appleVoipCertificatePath;
-    private String appleVoipCertificatePassword;
-    private String appleVoipCertificatePinning;
-    private String applePushProtocol;
-    private String appleVoipTestDeviceToken;
+    private final String appleVoipCertificatePath;
+    private final String appleVoipCertificatePassword;
+    private final String appleVoipCertificatePinning;
+    private final String applePushProtocol;
+    private final String appleVoipTestDeviceToken;
 
     public final boolean isConfigured() {
         return StringUtils.isNotEmpty(appleVoipCertificatePath) &&
