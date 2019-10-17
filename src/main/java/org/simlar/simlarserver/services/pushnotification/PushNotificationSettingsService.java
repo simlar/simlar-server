@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.services.pushnotification;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +32,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @AllArgsConstructor
 @Getter
 @ToString
+@Builder
 @ConstructorBinding
 @ConfigurationProperties(prefix = "push")
 class PushNotificationSettingsService {

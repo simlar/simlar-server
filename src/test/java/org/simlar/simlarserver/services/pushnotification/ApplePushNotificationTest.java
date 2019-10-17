@@ -73,11 +73,12 @@ public final class ApplePushNotificationTest {
     @Test
     public void testConnectToAppleWithWrongCertificatePinning() {
         try {
-            final PushNotificationSettingsService settings = new PushNotificationSettingsService();
-            settings.setApplePushProtocol(pushNotificationSettings.getApplePushProtocol());
-            settings.setAppleVoipCertificatePath(pushNotificationSettings.getAppleVoipCertificatePath());
-            settings.setAppleVoipCertificatePassword(pushNotificationSettings.getAppleVoipCertificatePassword());
-            settings.setAppleVoipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=");
+            final PushNotificationSettingsService settings =PushNotificationSettingsService.builder()
+                    .applePushProtocol(pushNotificationSettings.getApplePushProtocol())
+                    .appleVoipCertificatePath(pushNotificationSettings.getAppleVoipCertificatePath())
+                    .appleVoipCertificatePassword(pushNotificationSettings.getAppleVoipCertificatePassword())
+                    .appleVoipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=")
+                    .build();
 
             new ApplePushNotification(settings).requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
             fail("expected exception not thrown: " + ResourceAccessException.class.getSimpleName());
