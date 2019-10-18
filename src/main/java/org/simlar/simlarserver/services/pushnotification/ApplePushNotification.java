@@ -38,7 +38,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Slf4j
 @Component
-public final class ApplePushNotification {
+final class ApplePushNotification {
     private static final String APPLE_SERVER_SANDBOX = "api.sandbox.push.apple.com";
     static final String APPLE_SERVER_SANDBOX_URL = "https://" + APPLE_SERVER_SANDBOX + "/3/device/";
 
