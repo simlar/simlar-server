@@ -35,7 +35,7 @@ import java.util.List;
 @ConstructorBinding
 @ConfigurationProperties(prefix = "create.account")
 public final class CreateAccountSettingsService {
-    private final String[] alertSmsNumbers;
+    private final List<String> alertSmsNumbers;
 
     private final int maxRequestsPerSimlarIdPerDay;
 
@@ -74,7 +74,7 @@ public final class CreateAccountSettingsService {
             @SuppressWarnings("MethodParameterNamingConvention")
             @DefaultValue("15") final int registrationCodeExpirationMinutes,
             final List<RegionalSettings> regionalSettings) {
-        this.alertSmsNumbers = alertSmsNumbers;
+        this.alertSmsNumbers = List.of(alertSmsNumbers);
         this.maxRequestsPerSimlarIdPerDay = maxRequestsPerSimlarIdPerDay;
         this.maxRequestsPerIpPerHour = maxRequestsPerIpPerHour;
         this.maxRequestsTotalPerHour = maxRequestsTotalPerHour;
@@ -84,14 +84,6 @@ public final class CreateAccountSettingsService {
         this.callDelaySecondsMin = callDelaySecondsMin;
         this.callDelaySecondsMax = callDelaySecondsMax;
         this.registrationCodeExpirationMinutes = registrationCodeExpirationMinutes;
-        this.regionalSettings = regionalSettings;
-    }
-
-    public List<String> getAlertSmsNumbers() {
-        return List.of(alertSmsNumbers);
-    }
-
-    public List<RegionalSettings> getRegionalSettings() {
-        return regionalSettings == null ? Collections.emptyList() : Collections.unmodifiableList(regionalSettings);
+        this.regionalSettings = regionalSettings == null ? Collections.emptyList() : Collections.unmodifiableList(regionalSettings);
     }
 }
