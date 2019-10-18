@@ -21,53 +21,71 @@
 
 package org.simlar.simlarserver.services.createaccountservice;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings({"ClassWithTooManyFields", "ClassWithTooManyMethods"})
-@AllArgsConstructor
 @Getter
 @ConstructorBinding
 @ConfigurationProperties(prefix = "create.account")
 public final class CreateAccountSettingsService {
-    @Value("${alertSmsNumbers:}")
     private final String[] alertSmsNumbers;
 
-    @Value("${maxRequestsPerSimlarIdPerDay:10}")
     private final int maxRequestsPerSimlarIdPerDay;
 
-    @Value("${maxRequestsPerIpPerHour:60}")
     private final int maxRequestsPerIpPerHour;
 
-    @Value("${maxRequestsTotalPerHour:220}")
     private final int maxRequestsTotalPerHour;
 
-    @Value("${maxRequestsTotalPerDay:1440}")
     private final int maxRequestsTotalPerDay;
 
-    @Value("${maxConfirms:10}")
     private final int maxConfirms;
 
-    @Value("${maxCalls:3}")
     private final int maxCalls;
 
-    @Value("${callDelaySecondsMin:90}")
     private final int callDelaySecondsMin;
 
-    @Value("${callDelaySecondsMax:600}")
     private final int callDelaySecondsMax;
 
     @SuppressWarnings("FieldNamingConvention")
-    @Value("${registrationCodeExpirationMinutes:15}")
     private final int registrationCodeExpirationMinutes;
 
     private final List<RegionalSettings> regionalSettings;
+
+
+    @Autowired // fix IntelliJ inspection warning unused
+    @SuppressWarnings("ConstructorWithTooManyParameters")
+    public CreateAccountSettingsService(
+            @DefaultValue("") final String[] alertSmsNumbers,
+            @DefaultValue("10") final int maxRequestsPerSimlarIdPerDay,
+            @DefaultValue("60") final int maxRequestsPerIpPerHour,
+            @DefaultValue("220") final int maxRequestsTotalPerHour,
+            @DefaultValue("1440") final int maxRequestsTotalPerDay,
+            @DefaultValue("10") final int maxConfirms,
+            @DefaultValue("3") final int maxCalls,
+            @DefaultValue("90") final int callDelaySecondsMin,
+            @DefaultValue("600") final int callDelaySecondsMax,
+            @SuppressWarnings("MethodParameterNamingConvention")
+            @DefaultValue("15") final int registrationCodeExpirationMinutes,
+            final List<RegionalSettings> regionalSettings) {
+        this.alertSmsNumbers = alertSmsNumbers;
+        this.maxRequestsPerSimlarIdPerDay = maxRequestsPerSimlarIdPerDay;
+        this.maxRequestsPerIpPerHour = maxRequestsPerIpPerHour;
+        this.maxRequestsTotalPerHour = maxRequestsTotalPerHour;
+        this.maxRequestsTotalPerDay = maxRequestsTotalPerDay;
+        this.maxConfirms = maxConfirms;
+        this.maxCalls = maxCalls;
+        this.callDelaySecondsMin = callDelaySecondsMin;
+        this.callDelaySecondsMax = callDelaySecondsMax;
+        this.registrationCodeExpirationMinutes = registrationCodeExpirationMinutes;
+        this.regionalSettings = regionalSettings;
+    }
 
     public List<String> getAlertSmsNumbers() {
         return List.of(alertSmsNumbers);
