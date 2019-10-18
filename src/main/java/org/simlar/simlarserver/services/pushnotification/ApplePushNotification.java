@@ -105,6 +105,7 @@ final class ApplePushNotification {
         }
     }
 
+    @SuppressFBWarnings("WEM_WEAK_EXCEPTION_MESSAGING")
     private static TrustManagerFactory createTrustManagerFactory() {
         try {
             final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
