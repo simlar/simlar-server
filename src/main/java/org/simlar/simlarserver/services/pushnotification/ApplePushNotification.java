@@ -40,9 +40,6 @@ import java.util.Objects;
 @Slf4j
 @Component
 final class ApplePushNotification {
-    private static final String APPLE_SERVER_SANDBOX = "api.sandbox.push.apple.com";
-    static final String APPLE_SERVER_SANDBOX_URL = "https://" + APPLE_SERVER_SANDBOX + "/3/device/";
-
     private final PushNotificationSettingsService pushNotificationSettings;
 
     @Nullable
@@ -126,7 +123,7 @@ final class ApplePushNotification {
         return (X509TrustManager) trustManager;
     }
 
-    public void requestVoipPushNotification(final String deviceToken) {
+    public void requestVoipPushNotification(final ApplePushServer server, final String deviceToken) {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(
                         createSSLSocketFactory(),
@@ -137,7 +134,7 @@ final class ApplePushNotification {
             log.warn("certificate pinning disabled");
         } else {
             clientBuilder.certificatePinner(new CertificatePinner.Builder()
-                    .add(APPLE_SERVER_SANDBOX, certificatePinning)
+                    .add(server.getBaseUrl(), certificatePinning)
                     .build());
         }
 
@@ -154,6 +151,6 @@ final class ApplePushNotification {
         new RestTemplateBuilder()
                 .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
                 .build()
-                .postForObject(APPLE_SERVER_SANDBOX_URL + deviceToken, entity, String.class);
+                .postForObject(server.getUrl() + deviceToken, entity, String.class);
     }
 }

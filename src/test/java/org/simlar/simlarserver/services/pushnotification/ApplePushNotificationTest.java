@@ -46,7 +46,7 @@ public final class ApplePushNotificationTest {
             new RestTemplateBuilder()
                     .requestFactory(OkHttp3ClientHttpRequestFactory::new)
                     .build()
-                    .postForObject(ApplePushNotification.APPLE_SERVER_SANDBOX_URL + "deviceToken", null, String.class);
+                    .postForObject(ApplePushServer.SANDBOX.getUrl() + "deviceToken", null, String.class);
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.FORBIDDEN, e.getStatusCode());
@@ -79,7 +79,7 @@ public final class ApplePushNotificationTest {
             settings.setAppleVoipCertificatePassword(pushNotificationSettings.getAppleVoipCertificatePassword());
             settings.setAppleVoipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=");
 
-            new ApplePushNotification(settings).requestVoipPushNotification("invalidDeviceToken");
+            new ApplePushNotification(settings).requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
             fail("expected exception not thrown: " + ResourceAccessException.class.getSimpleName());
         } catch (final ResourceAccessException e) {
             assertEquals("SSLPeerUnverifiedException", e.getCause().getClass().getSimpleName());
@@ -91,7 +91,7 @@ public final class ApplePushNotificationTest {
     @Test
     public void testConnectToAppleWithCertificateBadDeviceToken() {
         try {
-            applePushNotification.requestVoipPushNotification("invalidDeviceToken");
+            applePushNotification.requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
@@ -105,6 +105,6 @@ public final class ApplePushNotificationTest {
     public void testRequestAppleVoipPushNotification() {
         final String deviceToken = pushNotificationSettings.getAppleVoipTestDeviceToken();
         assumeTrue("This test needs a valid device token in the properties", StringUtils.isNotEmpty(deviceToken));
-        applePushNotification.requestVoipPushNotification(deviceToken);
+        applePushNotification.requestVoipPushNotification(ApplePushServer.SANDBOX, deviceToken);
     }
 }
