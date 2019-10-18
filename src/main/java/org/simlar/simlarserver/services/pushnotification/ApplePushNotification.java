@@ -91,7 +91,9 @@ final class ApplePushNotification {
         }
     }
 
-    private SSLSocketFactory createSSLSocketFactory(final KeyStore keyStore) {
+    private SSLSocketFactory createSSLSocketFactory() {
+        final KeyStore keyStore = createKeyStore();
+
         try {
             final KeyManagerFactory keyFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyFactory.init(keyStore, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
@@ -127,7 +129,7 @@ final class ApplePushNotification {
     public void requestVoipPushNotification(final String deviceToken) {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(
-                        createSSLSocketFactory(createKeyStore()),
+                        createSSLSocketFactory(),
                         createTrustManager());
 
         final String certificatePinning = pushNotificationSettings.getAppleVoipCertificatePinning();
