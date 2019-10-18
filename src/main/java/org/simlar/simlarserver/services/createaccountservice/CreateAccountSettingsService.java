@@ -30,7 +30,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings({"ClassWithTooManyFields", "ClassWithTooManyMethods"})
+@SuppressWarnings("ClassWithTooManyFields")
 @Getter
 @ConstructorBinding
 @ConfigurationProperties(prefix = "create.account")
