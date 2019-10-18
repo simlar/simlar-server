@@ -36,7 +36,7 @@ public final class ApplePushNotificationMockServerTest {
     @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "PMD.JUnitTestsShouldIncludeAssert"})
     @Test
-    public void testRequestAppleVoipPushNotification() {
+    public void testRequestAppleVoipPushNotification() throws AppleKeyStoreException {
         new MockServerClient("localhost", mockServer.getLocalPort())
                 .when(
                         request()
@@ -55,7 +55,7 @@ public final class ApplePushNotificationMockServerTest {
     }
 
     @Test
-    public void testRequestAppleVoipPushNotificationWithInvalidDeviceToken() {
+    public void testRequestAppleVoipPushNotificationWithInvalidDeviceToken() throws AppleKeyStoreException {
         new MockServerClient("localhost", mockServer.getLocalPort())
                 .when(
                         request()
