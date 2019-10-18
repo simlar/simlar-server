@@ -1,5 +1,6 @@
 package org.simlar.simlarserver.services.pushnotification;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.CertificatePinner;
@@ -70,6 +71,7 @@ final class ApplePushNotification {
         }
     }
 
+    @SuppressFBWarnings("PATH_TRAVERSAL_IN")
     KeyStore createKeyStore() {
         final File file = new File(pushNotificationSettings.getAppleVoipCertificatePath());
         if (!file.exists()) {
