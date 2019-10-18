@@ -25,34 +25,31 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
+@SuppressWarnings("DesignForExtension") // mocked in test
 @AllArgsConstructor
 @Getter
 @ToString
 @ConstructorBinding
 @ConfigurationProperties(prefix = "twilio")
 class TwilioSettingsService {
-    @Value("${baseUrl:api.twilio.com/2010-04-01/Accounts}")
-    private final String baseUrl;
     private final String smsSourceNumber;
     private final String sid;
     private final String authToken;
     private final String callbackUser;
     private final String callbackPassword;
 
-    public final boolean isConfigured() {
-        return StringUtils.isNotEmpty(baseUrl) &&
-                StringUtils.isNotEmpty(smsSourceNumber) &&
+    public boolean isConfigured() {
+        return StringUtils.isNotEmpty(smsSourceNumber) &&
                 StringUtils.isNotEmpty(sid) &&
                 StringUtils.isNotEmpty(authToken) &&
                 StringUtils.isNotEmpty(callbackUser) &&
                 StringUtils.isNotEmpty(callbackPassword);
     }
 
-    public final String getUrl() {
-        return String.format("https://%s/%s/", baseUrl, sid);
+    public String getUrl() {
+        return String.format("https://api.twilio.com/2010-04-01/Accounts/%s/", sid);
     }
 }
