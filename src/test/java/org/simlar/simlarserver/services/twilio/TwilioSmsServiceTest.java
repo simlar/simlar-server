@@ -45,6 +45,7 @@ import static org.junit.Assume.assumeTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
+import static org.simlar.simlarserver.helper.Asserts.assertAlmostEqualsContainsError;
 
 @DirtiesContext // setting the domain properties dirties context
 @TestPropertySource(properties = "domain = sip.simlar.org") // domain is an essential part of the callback url
@@ -111,8 +112,8 @@ public final class TwilioSmsServiceTest {
 
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
         assertFalse(service.sendSms(telephoneNumber, message));
-        assertAlmostEquals(message,
-                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com: Name or service not known", message),
+        assertAlmostEqualsContainsError(message,
+                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com:", message),
                 smsProviderLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
