@@ -9,6 +9,8 @@ import org.mockserver.integration.ClientAndServer;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.Instant;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
@@ -44,6 +46,7 @@ public final class ApplePushNotificationMockServerTest {
                                 .withPath("/deviceToken")
                                 .withHeader("apns-push-type", "voip")
                                 .withHeader("apns-topic", "org.simlar.Simlar.voip")
+                                .withHeader("apns-expiration", "42")
                                 .withBody("{\"aps\":{\"alert\":\"Simlar Call\",\"sound\":\"ringtone.wav\"}}")
                 )
                 .respond(
@@ -51,7 +54,7 @@ public final class ApplePushNotificationMockServerTest {
                                 .withStatusCode(200)
                 );
 
-        applePushNotification.requestVoipPushNotification("http://localhost:" + mockServer.getLocalPort() + "/deviceToken", "localhost");
+        applePushNotification.requestVoipPushNotification("http://localhost:" + mockServer.getLocalPort() + "/deviceToken", "localhost", Instant.parse("1970-01-01T00:00:42Z"));
     }
 
     @Test
@@ -69,7 +72,7 @@ public final class ApplePushNotificationMockServerTest {
                 );
 
         try {
-            applePushNotification.requestVoipPushNotification("http://localhost:" + mockServer.getLocalPort() + "/invalidDeviceToken", "localhost");
+            applePushNotification.requestVoipPushNotification("http://localhost:" + mockServer.getLocalPort() + "/invalidDeviceToken", "localhost", Instant.now());
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());

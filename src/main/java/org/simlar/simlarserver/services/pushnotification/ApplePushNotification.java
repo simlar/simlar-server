@@ -33,6 +33,8 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -124,10 +126,10 @@ final class ApplePushNotification {
     }
 
     public void requestVoipPushNotification(final ApplePushServer server, final String deviceToken) throws AppleKeyStoreException {
-        requestVoipPushNotification(server.getUrl() + deviceToken, server.getBaseUrl());
+        requestVoipPushNotification(server.getUrl() + deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
     }
 
-    void requestVoipPushNotification(final String url, final String urlPin) throws AppleKeyStoreException {
+    void requestVoipPushNotification(final String url, final String urlPin, final Instant expiration) throws AppleKeyStoreException {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(
                         createSSLSocketFactory(),
@@ -148,6 +150,7 @@ final class ApplePushNotification {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("apns-push-type", "voip");
         headers.add("apns-topic", "org.simlar.Simlar.voip");
+        headers.add("apns-expiration", Long.toString(expiration.atZone(ZoneOffset.UTC).toEpochSecond()));
 
         final ApplePushNotificationRequest request = new ApplePushNotificationRequest(new ApplePushNotificationRequestDetails("Simlar Call", "ringtone.wav"));
         final HttpEntity<ApplePushNotificationRequest> entity = new HttpEntity<>(request, headers);
