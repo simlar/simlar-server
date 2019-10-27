@@ -48,7 +48,7 @@ public final class GooglePushNotificationMockServerTest {
                                         "}\n")
                 );
 
-        GooglePushNotificationService.requestGooglePush("http://localhost:" + mockServer.getLocalPort(), "simlar-org", "someBearer", "someToken");
+        GooglePushNotificationService.requestPushNotification("http://localhost:" + mockServer.getLocalPort(), "simlar-org", "someBearer", "someToken");
     }
 
     @After
