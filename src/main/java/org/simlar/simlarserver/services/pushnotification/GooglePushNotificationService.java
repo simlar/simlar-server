@@ -2,6 +2,7 @@ package org.simlar.simlarserver.services.pushnotification;
 
 import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationAndroidDetails;
@@ -72,6 +73,7 @@ final class GooglePushNotificationService {
         requestPushNotification("https://fcm.googleapis.com/", pushNotificationSettings.getProjectId(), bearer, token);
     }
 
+    @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
     static void requestPushNotification(final String url, final String projectId, final String bearer, final String token) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
