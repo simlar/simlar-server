@@ -31,16 +31,14 @@ public final class GooglePushNotificationMockServerTest {
                                 .withMethod("POST")
                                 .withPath("/v1/projects/simlar-org/messages:send")
                                 .withHeader("Authorization", "Bearer someBearer")
-                                .withBody("{" +
-                                        "\"message\":{" +
+                                .withBody("{\"message\":{" +
                                           "\"android\":{" +
                                             "\"ttl\":\"60s\"," +
                                             "\"priority\":\"high\"," +
                                             "\"collapse_key\":\"call\"" +
                                           "}," +
                                           "\"token\":\"someToken\"" +
-                                        "}" +
-                                        "}")
+                                        "}}")
                 )
                 .respond(
                         response()
