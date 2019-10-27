@@ -14,9 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 
 @Slf4j
@@ -36,12 +36,10 @@ final class GooglePushNotificationService {
     }
 
     private static GoogleCredentials createGoogleCredentials(final String jsonFile) {
-        try (final FileInputStream stream = new FileInputStream(jsonFile)) {
+        try {
             return GoogleCredentials
-                    .fromStream(stream)
+                    .fromStream(Files.newInputStream(Path.of(jsonFile)))
                     .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
-        } catch (final FileNotFoundException e) {
-            log.error("file not found '{}'", jsonFile, e);
         } catch (final IOException e) {
             log.error("'{}' while creating google credentials using file '{}'", e.getClass().getSimpleName(), jsonFile, e);
         }
