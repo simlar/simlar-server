@@ -27,7 +27,7 @@ final class GooglePushNotificationService {
     @Nullable
     private final GoogleCredentials googleCredentials;
 
-    GooglePushNotificationService(final GooglePushNotificationSettingsService pushNotificationSettings) {
+    private GooglePushNotificationService(final GooglePushNotificationSettingsService pushNotificationSettings) {
         this.pushNotificationSettings = pushNotificationSettings;
 
         googleCredentials = pushNotificationSettings.isConfigured()
