@@ -36,6 +36,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 class GooglePushNotificationSettingsService {
     private final String credentialsJsonPath;
     private final String projectId;
+    private final String testDeviceToken;
 
     public final boolean isConfigured() {
         return StringUtils.isNotEmpty(credentialsJsonPath) &&
