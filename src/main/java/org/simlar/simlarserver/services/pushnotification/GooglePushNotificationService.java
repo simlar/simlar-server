@@ -1,5 +1,8 @@
 package org.simlar.simlarserver.services.pushnotification;
 
+import com.google.auth.oauth2.AccessToken;
+import com.google.auth.oauth2.GoogleCredentials;
+import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationAndroidDetails;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationRequest;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationRequestDetails;
@@ -7,8 +10,53 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Collections;
+
+@Slf4j
+@Component
 final class GooglePushNotificationService {
+    private final GooglePushNotificationSettingsService pushNotificationSettings;
+
+    @Nullable
+    private final GoogleCredentials googleCredentials;
+
+    GooglePushNotificationService(final GooglePushNotificationSettingsService pushNotificationSettings) {
+        this.pushNotificationSettings = pushNotificationSettings;
+
+        googleCredentials = pushNotificationSettings.isConfigured()
+                ? createGoogleCredentials(pushNotificationSettings.getCredentialsJsonPath())
+                : null;
+    }
+
+    private static GoogleCredentials createGoogleCredentials(final String jsonFile) {
+        try (final FileInputStream stream = new FileInputStream(jsonFile)) {
+            return GoogleCredentials
+                    .fromStream(stream)
+                    .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
+        } catch (final FileNotFoundException e) {
+            log.error("file not found '{}'", jsonFile, e);
+        } catch (final IOException e) {
+            log.error("'{}' while creating google credentials using file '{}'", e.getClass().getSimpleName(), jsonFile, e);
+        }
+        return null;
+    }
+
+    @Nullable
+    AccessToken getAccessToken() throws IOException {
+        if (googleCredentials == null) {
+            return null;
+        }
+
+        googleCredentials.refreshIfExpired();
+        return googleCredentials.getAccessToken();
+    }
+
     static void requestPushNotification(final String url, final String projectId, final String bearer, final String token) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
