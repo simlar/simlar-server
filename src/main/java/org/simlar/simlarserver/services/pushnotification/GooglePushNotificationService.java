@@ -3,6 +3,7 @@ package org.simlar.simlarserver.services.pushnotification;
 import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationAndroidDetails;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationRequest;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationRequestDetails;
@@ -60,6 +61,17 @@ final class GooglePushNotificationService {
 
         googleCredentials.refreshIfExpired();
         return googleCredentials.getAccessToken();
+    }
+
+    public void requestPushNotification(final String token) throws IOException {
+        final AccessToken accessToken = getAccessToken();
+        final String bearer = accessToken == null ? null : accessToken.getTokenValue();
+        if (StringUtils.isEmpty(bearer)) {
+            log.error("no bearer token '{}'", accessToken);
+            return;
+        }
+
+        requestPushNotification("https://fcm.googleapis.com/", pushNotificationSettings.getProjectId(), bearer, token);
     }
 
     static void requestPushNotification(final String url, final String projectId, final String bearer, final String token) {

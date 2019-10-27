@@ -35,8 +35,10 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ConfigurationProperties(prefix = "push.google")
 class GooglePushNotificationSettingsService {
     private final String credentialsJsonPath;
+    private final String projectId;
 
     public final boolean isConfigured() {
-        return StringUtils.isNotEmpty(credentialsJsonPath);
+        return StringUtils.isNotEmpty(credentialsJsonPath) &&
+                StringUtils.isNotEmpty(projectId);
     }
 }
