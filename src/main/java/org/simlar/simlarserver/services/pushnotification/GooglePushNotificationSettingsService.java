@@ -23,12 +23,14 @@ package org.simlar.simlarserver.services.pushnotification;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
 @AllArgsConstructor
 @Getter
+@ToString
 @ConstructorBinding
 @ConfigurationProperties(prefix = "push.google")
 class GooglePushNotificationSettingsService {

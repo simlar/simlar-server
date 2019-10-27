@@ -50,6 +50,11 @@ final class GooglePushNotificationService {
     @Nullable
     AccessToken getAccessToken() throws IOException {
         if (googleCredentials == null) {
+            if (pushNotificationSettings.isConfigured()) {
+                log.warn("no google credentials configured");
+            } else {
+                log.error("no google credentials configured with settings: '{}'", pushNotificationSettings);
+            }
             return null;
         }
 
