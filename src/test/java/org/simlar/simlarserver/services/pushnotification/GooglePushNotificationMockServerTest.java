@@ -6,10 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -35,16 +31,16 @@ public final class GooglePushNotificationMockServerTest {
                                 .withMethod("POST")
                                 .withPath("/v1/projects/simlar-org/messages:send")
                                 .withHeader("Authorization", "Bearer someBearer")
-                                .withBody("{\n" +
-                                        "  \"message\":{\n" +
-                                        "     \"android\":{\n" +
-                                        "       \"ttl\":\"60s\",\n" +
-                                        "       \"collapse_key\":\"call\",\n" +
-                                        "       \"priority\":\"high\"\n" +
-                                        "     },\n" +
-                                        "     \"token\":\"someToken\"\n" +
-                                        "  }\n" +
-                                        "}\n")
+                                .withBody("{" +
+                                        "\"message\":{" +
+                                          "\"android\":{" +
+                                            "\"ttl\":\"60s\"," +
+                                            "\"collapse_key\":\"call\"," +
+                                            "\"priority\":\"high\"" +
+                                          "}," +
+                                          "\"token\":\"someToken\"" +
+                                        "}" +
+                                        "}")
                 )
                 .respond(
                         response()
@@ -54,30 +50,7 @@ public final class GooglePushNotificationMockServerTest {
                                         "}\n")
                 );
 
-        requestGooglePush("http://localhost:" + mockServer.getLocalPort(), "simlar-org", "someBearer", "someToken");
-    }
-
-    private static void requestGooglePush(final String url, final String projectId, final String bearer, final String token) {
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", "Bearer " + bearer);
-
-        final String request = "{\n" +
-                "  \"message\":{\n" +
-                "     \"android\":{\n" +
-                "       \"ttl\":\"60s\",\n" +
-                "       \"collapse_key\":\"call\",\n" +
-                "       \"priority\":\"high\"\n" +
-                "     },\n" +
-                "     \"token\":\"" + token + "\"\n" +
-                "  }\n" +
-                "}\n";
-
-        new RestTemplateBuilder()
-                .build()
-                .postForObject(url + "/v1/projects/" + projectId + "/messages:send",
-                        new HttpEntity<>(request, headers),
-                        String.class);
+        GooglePushNotificationService.requestGooglePush("http://localhost:" + mockServer.getLocalPort(), "simlar-org", "someBearer", "someToken");
     }
 
     @After
