@@ -13,18 +13,6 @@ final class GooglePushNotificationService {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + bearer);
-/*
-        final String request = "{\n" +
-                "  \"message\":{\n" +
-                "     \"android\":{\n" +
-                "       \"ttl\":\"60s\",\n" +
-                "       \"collapse_key\":\"call\",\n" +
-                "       \"priority\":\"high\"\n" +
-                "     },\n" +
-                "     \"token\":\"" + token + "\"\n" +
-                "  }\n" +
-                "}\n";
- */
 
         final GooglePushNotificationRequest request = new GooglePushNotificationRequest(
                 new GooglePushNotificationRequestDetails(

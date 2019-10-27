@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.services.pushnotification.json;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,6 +33,9 @@ import lombok.ToString;
 @AllArgsConstructor
 public final class GooglePushNotificationAndroidDetails {
     private final String ttl;
-    private final String collapse_key;
+
+    @JsonProperty("collapse_key")
+    private final String collapseKey;
+
     private final String priority;
 }

@@ -35,8 +35,8 @@ public final class GooglePushNotificationMockServerTest {
                                         "\"message\":{" +
                                           "\"android\":{" +
                                             "\"ttl\":\"60s\"," +
-                                            "\"collapse_key\":\"call\"," +
-                                            "\"priority\":\"high\"" +
+                                            "\"priority\":\"high\"," +
+                                            "\"collapse_key\":\"call\"" +
                                           "}," +
                                           "\"token\":\"someToken\"" +
                                         "}" +
