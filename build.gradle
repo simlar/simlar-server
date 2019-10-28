@@ -46,8 +46,8 @@ dependencies {
     compileOnly("com.github.spotbugs:spotbugs-annotations:$spotbugsVersion")
     testCompileOnly("com.github.spotbugs:spotbugs-annotations:$spotbugsVersion")
     spotbugs("com.github.spotbugs:spotbugs:$spotbugsVersion")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.4.6")
-    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0")
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.4.7")
+    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.0")
 
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
