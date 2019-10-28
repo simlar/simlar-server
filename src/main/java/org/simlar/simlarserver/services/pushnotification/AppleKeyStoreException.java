@@ -1,7 +1,6 @@
 package org.simlar.simlarserver.services.pushnotification;
 
-@SuppressWarnings("CheckedExceptionClass")
-final class AppleKeyStoreException extends Exception {
+final class AppleKeyStoreException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     AppleKeyStoreException(final String message) {

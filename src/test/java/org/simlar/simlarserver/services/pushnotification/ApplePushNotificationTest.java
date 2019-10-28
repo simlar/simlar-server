@@ -55,7 +55,7 @@ public final class ApplePushNotificationTest {
     }
 
     @Test
-    public void testReadKeyStore() throws KeyStoreException, AppleKeyStoreException {
+    public void testReadKeyStore() throws KeyStoreException {
         final KeyStore keyStore = applePushNotification.createKeyStore();
 
         final List<String> aliases = Collections.list(keyStore.aliases());
@@ -71,7 +71,7 @@ public final class ApplePushNotificationTest {
     }
 
     @Test
-    public void testConnectToAppleWithWrongCertificatePinning() throws AppleKeyStoreException {
+    public void testConnectToAppleWithWrongCertificatePinning() {
         try {
             final PushNotificationSettingsService settings =PushNotificationSettingsService.builder()
                     .applePushProtocol(pushNotificationSettings.getApplePushProtocol())
@@ -90,7 +90,7 @@ public final class ApplePushNotificationTest {
     }
 
     @Test
-    public void testConnectToAppleWithCertificateBadDeviceToken() throws AppleKeyStoreException {
+    public void testConnectToAppleWithCertificateBadDeviceToken() {
         try {
             applePushNotification.requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
@@ -103,7 +103,7 @@ public final class ApplePushNotificationTest {
     @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "PMD.JUnitTestsShouldIncludeAssert"})
     @Test
-    public void testRequestAppleVoipPushNotification() throws AppleKeyStoreException {
+    public void testRequestAppleVoipPushNotification() {
         final String deviceToken = pushNotificationSettings.getAppleVoipTestDeviceToken();
         assumeTrue("This test needs a valid device token in the properties", StringUtils.isNotEmpty(deviceToken));
         applePushNotification.requestVoipPushNotification(ApplePushServer.SANDBOX, deviceToken);

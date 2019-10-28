@@ -70,7 +70,7 @@ final class ApplePushNotification {
     }
 
     @SuppressFBWarnings("PATH_TRAVERSAL_IN")
-    KeyStore createKeyStore() throws AppleKeyStoreException {
+    KeyStore createKeyStore() {
         final File file = new File(pushNotificationSettings.getAppleVoipCertificatePath());
         if (!file.exists()) {
             throw new AppleKeyStoreException("Certificate file does not exist: " + file.getAbsolutePath());
@@ -89,7 +89,7 @@ final class ApplePushNotification {
         }
     }
 
-    private SSLSocketFactory createSSLSocketFactory() throws AppleKeyStoreException {
+    private SSLSocketFactory createSSLSocketFactory() {
         final KeyStore keyStore = createKeyStore();
 
         try {
@@ -106,7 +106,7 @@ final class ApplePushNotification {
     }
 
     @SuppressFBWarnings("WEM_WEAK_EXCEPTION_MESSAGING")
-    private static TrustManagerFactory createTrustManagerFactory() throws AppleKeyStoreException {
+    private static TrustManagerFactory createTrustManagerFactory() {
         try {
             final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init((KeyStore) null);
@@ -116,7 +116,7 @@ final class ApplePushNotification {
         }
     }
 
-    private static X509TrustManager createTrustManager() throws AppleKeyStoreException {
+    private static X509TrustManager createTrustManager() {
         final TrustManager trustManager = createTrustManagerFactory().getTrustManagers()[0];
         if (!(trustManager instanceof X509TrustManager)) {
             throw new AppleKeyStoreException("first trust manager of invalid type: " + trustManager.getClass().getSimpleName());
@@ -124,11 +124,11 @@ final class ApplePushNotification {
         return (X509TrustManager) trustManager;
     }
 
-    public void requestVoipPushNotification(final ApplePushServer server, final String deviceToken) throws AppleKeyStoreException {
+    public void requestVoipPushNotification(final ApplePushServer server, final String deviceToken) {
         requestVoipPushNotification(server.getUrl() + deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
     }
 
-    void requestVoipPushNotification(final String url, final String urlPin, final Instant expiration) throws AppleKeyStoreException {
+    void requestVoipPushNotification(final String url, final String urlPin, final Instant expiration) {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(
                         createSSLSocketFactory(),
