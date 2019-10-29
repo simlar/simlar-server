@@ -22,61 +22,68 @@
 package org.simlar.simlarserver.services.createaccountservice;
 
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.Collections;
 import java.util.List;
 
-/**
- * TODO: Once spring boot 2.2 releases, use constructor binding and make this class immutable.
- */
-@SuppressWarnings({"ClassWithTooManyFields", "ClassWithTooManyMethods"})
+@SuppressWarnings("ClassWithTooManyFields")
 @Getter
-@Setter
-@Component
+@ConstructorBinding
 @ConfigurationProperties(prefix = "create.account")
 public final class CreateAccountSettingsService {
-    @Value("${alertSmsNumbers:}")
-    private String[] alertSmsNumbers;
+    private final List<String> alertSmsNumbers;
 
-    @Value("${maxRequestsPerSimlarIdPerDay:10}")
-    private int maxRequestsPerSimlarIdPerDay;
+    private final int maxRequestsPerSimlarIdPerDay;
 
-    @Value("${maxRequestsPerIpPerHour:60}")
-    private int maxRequestsPerIpPerHour;
+    private final int maxRequestsPerIpPerHour;
 
-    @Value("${maxRequestsTotalPerHour:220}")
-    private int maxRequestsTotalPerHour;
+    private final int maxRequestsTotalPerHour;
 
-    @Value("${maxRequestsTotalPerDay:1440}")
-    private int maxRequestsTotalPerDay;
+    private final int maxRequestsTotalPerDay;
 
-    @Value("${maxConfirms:10}")
-    private int maxConfirms;
+    private final int maxConfirms;
 
-    @Value("${maxCalls:3}")
-    private int maxCalls;
+    private final int maxCalls;
 
-    @Value("${callDelaySecondsMin:90}")
-    private int callDelaySecondsMin;
+    private final int callDelaySecondsMin;
 
-    @Value("${callDelaySecondsMax:600}")
-    private int callDelaySecondsMax;
+    private final int callDelaySecondsMax;
 
     @SuppressWarnings("FieldNamingConvention")
-    @Value("${registrationCodeExpirationMinutes:15}")
-    private int registrationCodeExpirationMinutes;
+    private final int registrationCodeExpirationMinutes;
 
-    private List<RegionalSettings> regionalSettings;
+    private final List<RegionalSettings> regionalSettings;
 
-    public List<String> getAlertSmsNumbers() {
-        return List.of(alertSmsNumbers);
-    }
 
-    public List<RegionalSettings> getRegionalSettings() {
-        return regionalSettings == null ? Collections.emptyList() : Collections.unmodifiableList(regionalSettings);
+    @Autowired // fix IntelliJ inspection warning unused
+    @SuppressWarnings("ConstructorWithTooManyParameters")
+    public CreateAccountSettingsService(
+            @DefaultValue("") final String[] alertSmsNumbers,
+            @DefaultValue("10") final int maxRequestsPerSimlarIdPerDay,
+            @DefaultValue("60") final int maxRequestsPerIpPerHour,
+            @DefaultValue("220") final int maxRequestsTotalPerHour,
+            @DefaultValue("1440") final int maxRequestsTotalPerDay,
+            @DefaultValue("10") final int maxConfirms,
+            @DefaultValue("3") final int maxCalls,
+            @DefaultValue("90") final int callDelaySecondsMin,
+            @DefaultValue("600") final int callDelaySecondsMax,
+            @SuppressWarnings("MethodParameterNamingConvention")
+            @DefaultValue("15") final int registrationCodeExpirationMinutes,
+            final List<RegionalSettings> regionalSettings) {
+        this.alertSmsNumbers = List.of(alertSmsNumbers);
+        this.maxRequestsPerSimlarIdPerDay = maxRequestsPerSimlarIdPerDay;
+        this.maxRequestsPerIpPerHour = maxRequestsPerIpPerHour;
+        this.maxRequestsTotalPerHour = maxRequestsTotalPerHour;
+        this.maxRequestsTotalPerDay = maxRequestsTotalPerDay;
+        this.maxConfirms = maxConfirms;
+        this.maxCalls = maxCalls;
+        this.callDelaySecondsMin = callDelaySecondsMin;
+        this.callDelaySecondsMax = callDelaySecondsMax;
+        this.registrationCodeExpirationMinutes = registrationCodeExpirationMinutes;
+        this.regionalSettings = regionalSettings == null ? Collections.emptyList() : Collections.unmodifiableList(regionalSettings);
     }
 }

@@ -42,6 +42,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
 
 @DirtiesContext // setting the domain properties dirties context
@@ -82,7 +84,7 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+0000000001";
         final String message         = "Test not configured";
 
-        final TwilioSettingsService twilioSettings = new TwilioSettingsService();
+        final TwilioSettingsService twilioSettings = new TwilioSettingsService(null, null, null, null, null);
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));
@@ -98,13 +100,14 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+0000000002";
         final String message         = "Test no network";
 
-        final TwilioSettingsService twilioSettings = new TwilioSettingsService();
-        twilioSettings.setBaseUrl("no.example.com");
-        twilioSettings.setSmsSourceNumber("+1");
-        twilioSettings.setSid("007");
-        twilioSettings.setAuthToken("secret");
-        twilioSettings.setCallbackUser("user");
-        twilioSettings.setCallbackPassword("password");
+        final TwilioSettingsService twilioSettings = mock(TwilioSettingsService.class);
+        when(twilioSettings.isConfigured()).thenReturn(Boolean.TRUE);
+        when(twilioSettings.getUrl()).thenReturn("https://no.example.com/index");
+        when(twilioSettings.getSmsSourceNumber()).thenReturn("+1");
+        when(twilioSettings.getSid()).thenReturn("007");
+        when(twilioSettings.getAuthToken()).thenReturn("secret");
+        when(twilioSettings.getCallbackUser()).thenReturn("user");
+        when(twilioSettings.getCallbackPassword()).thenReturn("password");
 
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
         assertFalse(service.sendSms(telephoneNumber, message));
