@@ -54,7 +54,7 @@ public final class ApplePushNotificationMockServerTest {
                                 .withStatusCode(200)
                 );
 
-        applePushNotification.requestVoipPushNotification("http://localhost:" + mockServer.getLocalPort() + "/deviceToken", "localhost", Instant.parse("1970-01-01T00:00:42Z"));
+        applePushNotification.requestVoipPushNotification("http://localhost:" + mockServer.getLocalPort() + "/deviceToken", "localhost", Instant.ofEpochSecond(42));
     }
 
     @Test
