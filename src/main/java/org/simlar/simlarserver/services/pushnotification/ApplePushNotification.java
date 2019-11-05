@@ -34,7 +34,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -150,7 +149,7 @@ final class ApplePushNotification {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("apns-push-type", "voip");
         headers.add("apns-topic", "org.simlar.Simlar.voip");
-        headers.add("apns-expiration", Long.toString(expiration.atZone(ZoneOffset.UTC).toEpochSecond()));
+        headers.add("apns-expiration", Long.toString(expiration.getEpochSecond()));
 
         final ApplePushNotificationRequest request = new ApplePushNotificationRequest(new ApplePushNotificationRequestDetails("Simlar Call", "ringtone.wav"));
         final HttpEntity<ApplePushNotificationRequest> entity = new HttpEntity<>(request, headers);
