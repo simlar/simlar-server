@@ -69,7 +69,7 @@ final class ApplePushNotification {
         }
     }
 
-    @SuppressFBWarnings("PATH_TRAVERSAL_IN")
+    @SuppressFBWarnings({"PATH_TRAVERSAL_IN", "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"})
     KeyStore createKeyStore() {
         final File file = new File(pushNotificationSettings.getAppleVoipCertificatePath());
         if (!file.exists()) {
@@ -89,6 +89,7 @@ final class ApplePushNotification {
         }
     }
 
+    @SuppressFBWarnings("EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS")
     private SSLSocketFactory createSSLSocketFactory() {
         final KeyStore keyStore = createKeyStore();
 
@@ -105,7 +106,7 @@ final class ApplePushNotification {
         }
     }
 
-    @SuppressFBWarnings("WEM_WEAK_EXCEPTION_MESSAGING")
+    @SuppressFBWarnings({"WEM_WEAK_EXCEPTION_MESSAGING", "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"})
     private static TrustManagerFactory createTrustManagerFactory() {
         try {
             final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
