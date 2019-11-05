@@ -52,7 +52,7 @@ final class ApplePushNotification {
                 return null;
             }
 
-            return Objects.toString(((X509Certificate) certificate).getSubjectDN());
+            return Objects.toString(((X509Certificate) certificate).getSubjectX500Principal());
         } catch (final KeyStoreException e) {
             log.error("failed to load certificate with alias '{}'", alias, e);
             return null;
