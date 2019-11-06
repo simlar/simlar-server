@@ -12,6 +12,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 
@@ -125,11 +126,11 @@ final class ApplePushNotification {
         return (X509TrustManager) trustManager;
     }
 
-    public void requestVoipPushNotification(final ApplePushServer server, final String deviceToken) {
-        requestVoipPushNotification(server.getUrl() + deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
+    public String requestVoipPushNotification(final ApplePushServer server, final String deviceToken) {
+        return requestVoipPushNotification(server.getUrl() + deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
     }
 
-    void requestVoipPushNotification(final String url, final String urlPin, final Instant expiration) {
+    String requestVoipPushNotification(final String url, final String urlPin, final Instant expiration) {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(
                         createSSLSocketFactory(),
@@ -155,9 +156,19 @@ final class ApplePushNotification {
         final ApplePushNotificationRequest request = new ApplePushNotificationRequest(new ApplePushNotificationRequestDetails("Simlar Call", "ringtone.wav"));
         final HttpEntity<ApplePushNotificationRequest> entity = new HttpEntity<>(request, headers);
 
-        new RestTemplateBuilder()
+        final ResponseEntity<String> response = new RestTemplateBuilder()
                 .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
                 .build()
-                .postForObject(url, entity, String.class);
+                .postForEntity(url, entity, String.class);
+
+        return getHeaderApnsId(response);
+    }
+
+    private static <T> String getHeaderApnsId(final ResponseEntity<T> entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return StringUtils.join(entity.getHeaders().get("apns-id"), ", ");
     }
 }
