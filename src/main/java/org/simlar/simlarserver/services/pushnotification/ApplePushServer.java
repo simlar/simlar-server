@@ -28,7 +28,7 @@ import lombok.Getter;
 @Getter
 enum ApplePushServer {
     PRODUCTION("api.push.apple.com"),
-    SANDBOX("api.sandbox.push.apple.com");
+    SANDBOX("api.development.push.apple.com");
 
     private final String baseUrl;
 
