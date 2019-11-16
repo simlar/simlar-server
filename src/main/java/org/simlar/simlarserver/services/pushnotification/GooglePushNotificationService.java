@@ -12,6 +12,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -84,10 +85,12 @@ final class GooglePushNotificationService {
                     new GooglePushNotificationAndroidDetails("60s", "call", "high"),
                     token));
 
-        new RestTemplateBuilder()
+        final ResponseEntity<String> response = new RestTemplateBuilder()
                 .build()
-                .postForObject(url + "/v1/projects/" + projectId + "/messages:send",
+                .postForEntity(url + "/v1/projects/" + projectId + "/messages:send",
                         new HttpEntity<>(request, headers),
                         String.class);
+
+        log.info("received response '{}'", response);
     }
 }
