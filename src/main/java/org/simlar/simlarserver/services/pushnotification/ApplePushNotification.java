@@ -161,14 +161,6 @@ final class ApplePushNotification {
                 .build()
                 .postForEntity(url, entity, String.class);
 
-        return getHeaderApnsId(response);
-    }
-
-    private static <T> String getHeaderApnsId(final ResponseEntity<T> entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        return StringUtils.join(entity.getHeaders().get("apns-id"), ", ");
+        return StringUtils.join(response.getHeaders().get("apns-id"), ", ");
     }
 }
