@@ -171,6 +171,13 @@ final class ApplePushNotification {
             log.warn("received unexpected response status '{}'", statusCode);
         }
 
-        return StringUtils.join(response.getHeaders().get("apns-id"), ", ");
+        final String apnsId = StringUtils.join(response.getHeaders().get("apns-id"), ", ");
+        if (StringUtils.isEmpty(apnsId)) {
+            log.warn("received empty apnsId");
+        } else {
+            log.info("successfully received apnsId '{}'", apnsId);
+        }
+
+        return apnsId;
     }
 }
