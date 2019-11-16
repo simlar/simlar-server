@@ -26,15 +26,15 @@ import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
 
-@TestPropertySource(properties = "info.app.version = " + VersionControllerTest.VERSION)
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = SimlarServer.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        classes = SimlarServer.class,
+        properties = "info.app.version = " + VersionControllerTest.VERSION)
 public final class VersionControllerTest {
     @SuppressWarnings("WeakerAccess")
     static final String VERSION = "0.0.7-test";

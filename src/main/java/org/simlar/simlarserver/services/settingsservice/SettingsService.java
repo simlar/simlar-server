@@ -35,7 +35,7 @@ public final class SettingsService {
     private final String version;
 
     @Autowired // fix IntelliJ inspection warning unused
-    private SettingsService(
+    public SettingsService(
             @Value("${domain:}") final String                                      domain,
             @Value("${port:6161}") final short                                     port,
             @Value("${info.app.version:}") final String                            version
