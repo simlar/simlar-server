@@ -35,8 +35,6 @@ public final class ApplePushNotificationMockServerTest {
         mockServer = startClientAndServer();
     }
 
-    @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
-    @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "PMD.JUnitTestsShouldIncludeAssert"})
     @Test
     public void testRequestAppleVoipPushNotification() {
         new MockServerClient("localhost", mockServer.getLocalPort())
@@ -52,9 +50,14 @@ public final class ApplePushNotificationMockServerTest {
                 .respond(
                         response()
                                 .withStatusCode(200)
+                                .withHeader("apns-id", "someApnsId")
                 );
 
-        applePushNotification.requestVoipPushNotification("http://localhost:" + mockServer.getLocalPort() + "/deviceToken", "localhost", Instant.ofEpochSecond(42));
+        assertEquals("someApnsId",
+            applePushNotification.requestVoipPushNotification(
+                    "http://localhost:" + mockServer.getLocalPort() + "/deviceToken",
+                    "localhost",
+                    Instant.ofEpochSecond(42)));
     }
 
     @Test
