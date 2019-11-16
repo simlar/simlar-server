@@ -9,6 +9,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.time.Instant;
 
@@ -86,6 +87,22 @@ public final class ApplePushNotificationMockServerTest {
                         .withStatusCode(204));
 
         assertNull(requestVoipPushNotification("deviceToken204", Instant.ofEpochSecond(24)));
+    }
+
+    @Test
+    public void testRequestAppleVoipPushNotificationWithInternalServerError() {
+        createMockServerRequest("invalidDeviceToken", "25",
+                response()
+                        .withStatusCode(500)
+                        .withBody("{\"reason\":\"Should not happen\"}"));
+
+        try {
+            requestVoipPushNotification("invalidDeviceToken", Instant.ofEpochSecond(25));
+            fail("expected exception not thrown: " + HttpServerErrorException.class.getSimpleName());
+        } catch (final HttpServerErrorException e) {
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, e.getStatusCode());
+            assertEquals("{\"reason\":\"Should not happen\"}", e.getResponseBodyAsString());
+        }
     }
 
     @Test
