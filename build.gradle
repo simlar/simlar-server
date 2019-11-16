@@ -58,7 +58,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.2.2")
     implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
 
-    runtime("org.mariadb.jdbc:mariadb-java-client:2.5.1")
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.5.1")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testImplementation("com.h2database:h2:1.4.200")
