@@ -13,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -75,6 +76,15 @@ public final class ApplePushNotificationMockServerTest {
                         .withBody("{\"reason\":\"Should not happen\"}"));
 
         assertEquals("otherApnsId", requestVoipPushNotification("otherDeviceToken", Instant.ofEpochSecond(23)));
+    }
+
+    @Test
+    public void testRequestAppleVoipPushNotificationWithResponseStatusNoContent() {
+        createMockServerRequest("deviceToken204", "24",
+                response()
+                        .withStatusCode(204));
+
+        assertNull(requestVoipPushNotification("deviceToken204", Instant.ofEpochSecond(24)));
     }
 
     @Test

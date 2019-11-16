@@ -11,6 +11,7 @@ import org.simlar.simlarserver.services.pushnotification.json.ApplePushNotificat
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
@@ -163,6 +164,11 @@ final class ApplePushNotification {
 
         if (response.hasBody()) {
             log.warn("received unexpected body '{}'", response.getBody());
+        }
+
+        final HttpStatus statusCode = response.getStatusCode();
+        if (statusCode != HttpStatus.OK) {
+            log.warn("received unexpected response status '{}'", statusCode);
         }
 
         return StringUtils.join(response.getHeaders().get("apns-id"), ", ");
