@@ -52,7 +52,8 @@ public final class ApplePushNotificationMockServerTest {
 
     private String requestVoipPushNotification(final String deviceToken, final Instant expiration) {
         return applePushNotification.requestVoipPushNotification(
-                "http://localhost:" + mockServer.getLocalPort() + '/' + deviceToken,
+                "http://localhost:" + mockServer.getLocalPort() + '/',
+                deviceToken,
                 "localhost",
                 expiration);
     }

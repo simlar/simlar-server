@@ -128,10 +128,10 @@ final class ApplePushNotification {
     }
 
     public String requestVoipPushNotification(final ApplePushServer server, final String deviceToken) {
-        return requestVoipPushNotification(server.getUrl() + deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
+        return requestVoipPushNotification(server.getUrl(), deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
     }
 
-    String requestVoipPushNotification(final String url, final String urlPin, final Instant expiration) {
+    String requestVoipPushNotification(final String url, final String deviceToken, final String urlPin, final Instant expiration) {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(
                         createSSLSocketFactory(),
@@ -160,22 +160,22 @@ final class ApplePushNotification {
         final ResponseEntity<String> response = new RestTemplateBuilder()
                 .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
                 .build()
-                .postForEntity(url, entity, String.class);
+                .postForEntity(url + deviceToken, entity, String.class);
 
         if (response.hasBody()) {
-            log.warn("received unexpected body '{}'", response.getBody());
+            log.warn("request with device token '{}' received unexpected body '{}'", deviceToken, response.getBody());
         }
 
         final HttpStatus statusCode = response.getStatusCode();
         if (statusCode != HttpStatus.OK) {
-            log.warn("received unexpected response status '{}'", statusCode);
+            log.warn("request with device token '{}' received unexpected response status '{}'", deviceToken, statusCode);
         }
 
         final String apnsId = StringUtils.join(response.getHeaders().get("apns-id"), ", ");
         if (StringUtils.isEmpty(apnsId)) {
-            log.warn("received empty apnsId");
+            log.warn("request with device token '{}' received empty apnsId", deviceToken);
         } else {
-            log.info("successfully received apnsId '{}'", apnsId);
+            log.info("request with device token '{}' successfully received apnsId '{}'", apnsId, deviceToken);
         }
 
         return apnsId;
