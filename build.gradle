@@ -25,11 +25,11 @@ plugins {
     id "idea"
     id "war"
     id "pmd"
-    id "com.github.spotbugs" version "2.0.0"
+    id "com.github.spotbugs" version "2.0.1"
     id "org.springframework.boot" version "2.2.0.RELEASE"
     id "io.spring.dependency-management" version "1.0.8.RELEASE"
     id "com.github.ben-manes.versions" version "0.27.0"
-    id "org.owasp.dependencycheck" version "5.2.2"
+    id "org.owasp.dependencycheck" version "5.2.4"
 }
 
 ext {
@@ -47,14 +47,14 @@ dependencies {
     testCompileOnly("com.github.spotbugs:spotbugs-annotations:$spotbugsVersion")
     spotbugs("com.github.spotbugs:spotbugs:$spotbugsVersion")
     spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.4.7")
-    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.0")
+    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1")
 
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation("org.apache.commons:commons-text:1.8")
     implementation("commons-codec:commons-codec:1.13")
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.10.21")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.10.23")
     implementation("com.squareup.okhttp3:okhttp:4.2.2")
     implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
 
@@ -64,7 +64,7 @@ dependencies {
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito:mockito-core:3.1.0")
-    testImplementation("org.mock-server:mockserver-netty:5.6.1")
+    testImplementation("org.mock-server:mockserver-netty:5.7.1")
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -75,7 +75,7 @@ repositories {
 }
 
 pmd {
-    toolVersion = "6.18.0"
+    toolVersion = "6.19.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = [ ]
 }
