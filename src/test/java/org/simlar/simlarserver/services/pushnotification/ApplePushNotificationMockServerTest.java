@@ -54,10 +54,10 @@ public final class ApplePushNotificationMockServerTest {
                 );
 
         assertEquals("someApnsId",
-            applePushNotification.requestVoipPushNotification(
-                    "http://localhost:" + mockServer.getLocalPort() + "/deviceToken",
-                    "localhost",
-                    Instant.ofEpochSecond(42)));
+                applePushNotification.requestVoipPushNotification(
+                        "http://localhost:" + mockServer.getLocalPort() + "/deviceToken",
+                        "localhost",
+                        Instant.ofEpochSecond(42)));
     }
 
     @Test
