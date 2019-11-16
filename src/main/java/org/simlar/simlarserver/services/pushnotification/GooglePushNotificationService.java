@@ -1,13 +1,17 @@
 package org.simlar.simlarserver.services.pushnotification;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationAndroidDetails;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationRequest;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationRequestDetails;
+import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationResponse;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -63,19 +67,21 @@ final class GooglePushNotificationService {
         return googleCredentials.getAccessToken();
     }
 
-    public void requestPushNotification(final String token) throws IOException {
+    @Nullable
+    public String requestPushNotification(final String token) throws IOException {
         final AccessToken accessToken = getAccessToken();
         final String bearer = accessToken == null ? null : accessToken.getTokenValue();
         if (StringUtils.isEmpty(bearer)) {
             log.error("no bearer token '{}'", accessToken);
-            return;
+            return null;
         }
 
-        requestPushNotification("https://fcm.googleapis.com/", pushNotificationSettings.getProjectId(), bearer, token);
+        return requestPushNotification("https://fcm.googleapis.com/", pushNotificationSettings.getProjectId(), bearer, token);
     }
 
+    @Nullable
     @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
-    static void requestPushNotification(final String url, final String projectId, final String bearer, final String token) {
+    static String requestPushNotification(final String url, final String projectId, final String bearer, final String token) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + bearer);
@@ -91,6 +97,22 @@ final class GooglePushNotificationService {
                         new HttpEntity<>(request, headers),
                         String.class);
 
-        log.info("received response '{}'", response);
+        try {
+            final String messageId = new ObjectMapper().readValue(
+                    ObjectUtils.defaultIfNull(response.getBody(), ""),
+                    GooglePushNotificationResponse.class)
+                    .getName();
+
+            if (StringUtils.isEmpty(messageId)) {
+                log.error("request with device token '{}' unable to parse messageId from response '{}'", token, response.getBody());
+                return null;
+            }
+
+            log.info("request with device token '{}' received response with messageId '{}'", token, messageId);
+            return messageId;
+        } catch (final JsonProcessingException e) {
+            log.error("request with device token '{}' unable to parse response '{}'", token, response.getBody());
+            return null;
+        }
     }
 }

@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -21,8 +22,6 @@ public final class GooglePushNotificationMockServerTest {
         mockServer = startClientAndServer();
     }
 
-    @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
-    @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "PMD.JUnitTestsShouldIncludeAssert"})
     @Test
     public void testRequestAppleVoipPushNotification() {
         new MockServerClient("localhost", mockServer.getLocalPort())
@@ -48,7 +47,9 @@ public final class GooglePushNotificationMockServerTest {
                                         "}\n")
                 );
 
-        GooglePushNotificationService.requestPushNotification("http://localhost:" + mockServer.getLocalPort(), "simlar-org", "someBearer", "someToken");
+        assertEquals(
+                "projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e",
+               GooglePushNotificationService.requestPushNotification("http://localhost:" + mockServer.getLocalPort(), "simlar-org", "someBearer", "someToken"));
     }
 
     @After
