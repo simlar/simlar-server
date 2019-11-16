@@ -61,6 +61,32 @@ public final class ApplePushNotificationMockServerTest {
     }
 
     @Test
+    public void testRequestAppleVoipPushNotificationWithResponseBody() {
+        new MockServerClient("localhost", mockServer.getLocalPort())
+                .when(
+                        request()
+                                .withMethod("POST")
+                                .withPath("/otherDeviceToken")
+                                .withHeader("apns-push-type", "voip")
+                                .withHeader("apns-topic", "org.simlar.Simlar.voip")
+                                .withHeader("apns-expiration", "42")
+                                .withBody("{\"aps\":{\"alert\":\"Simlar Call\",\"sound\":\"ringtone.wav\"}}")
+                )
+                .respond(
+                        response()
+                                .withStatusCode(200)
+                                .withHeader("apns-id", "otherApnsId")
+                                .withBody("{\"reason\":\"Should not happen\"}")
+                );
+
+        assertEquals("otherApnsId",
+                applePushNotification.requestVoipPushNotification(
+                        "http://localhost:" + mockServer.getLocalPort() + "/otherDeviceToken",
+                        "localhost",
+                        Instant.ofEpochSecond(42)));
+    }
+
+    @Test
     public void testRequestAppleVoipPushNotificationWithInvalidDeviceToken() {
         new MockServerClient("localhost", mockServer.getLocalPort())
                 .when(

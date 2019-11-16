@@ -161,6 +161,10 @@ final class ApplePushNotification {
                 .build()
                 .postForEntity(url, entity, String.class);
 
+        if (response.hasBody()) {
+            log.warn("received unexpected body '{}'", response.getBody());
+        }
+
         return StringUtils.join(response.getHeaders().get("apns-id"), ", ");
     }
 }
