@@ -78,5 +78,5 @@ In a production environment a configuration is needed to configure e.g. the doma
 Have a look at the [example](examples/config.properties).
 
 For development you may place your configurations in ```src/main/resources/application-default.properties```.
-The [example](examples/application-default.properties) configures the database and sets a log pattern with filename and linenumber.
+The [example](examples/application-default.properties) configures the database and sets a log pattern with filename and line number.
 If you do not want to set up a database for development you may change the dependency type of the h2 database to ```providedRuntime```.
