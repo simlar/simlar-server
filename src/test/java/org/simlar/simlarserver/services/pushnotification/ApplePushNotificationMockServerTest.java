@@ -6,12 +6,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.HttpResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -35,47 +38,82 @@ public final class ApplePushNotificationMockServerTest {
         mockServer = startClientAndServer();
     }
 
-    @Test
-    public void testRequestAppleVoipPushNotification() {
+    private void createMockServerRequest(final String deviceToken, final long expiration, final HttpResponse response) {
         new MockServerClient("localhost", mockServer.getLocalPort())
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/deviceToken")
+                                .withPath('/' + deviceToken)
                                 .withHeader("apns-push-type", "voip")
                                 .withHeader("apns-topic", "org.simlar.Simlar.voip")
-                                .withHeader("apns-expiration", "42")
+                                .withHeader("apns-expiration", Long.toString(expiration))
                                 .withBody("{\"aps\":{\"alert\":\"Simlar Call\",\"sound\":\"ringtone.wav\"}}")
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withHeader("apns-id", "someApnsId")
-                );
+                ).respond(response);
+    }
 
-        assertEquals("someApnsId",
-            applePushNotification.requestVoipPushNotification(
-                    "http://localhost:" + mockServer.getLocalPort() + "/deviceToken",
-                    "localhost",
-                    Instant.ofEpochSecond(42)));
+    private String requestVoipPushNotification(final String deviceToken, final long expiration) {
+        return applePushNotification.requestVoipPushNotification(
+                "http://localhost:" + mockServer.getLocalPort() + '/',
+                deviceToken,
+                "localhost",
+                Instant.ofEpochSecond(expiration));
+    }
+
+    @Test
+    public void testRequestAppleVoipPushNotification() {
+        createMockServerRequest("deviceToken", 42,
+                response()
+                        .withStatusCode(200)
+                        .withHeader("apns-id", "someApnsId"));
+
+        assertEquals("someApnsId", requestVoipPushNotification("deviceToken", 42));
+    }
+
+    @Test
+    public void testRequestAppleVoipPushNotificationWithResponseBody() {
+        createMockServerRequest("otherDeviceToken", 23,
+                response()
+                        .withStatusCode(200)
+                        .withHeader("apns-id", "otherApnsId")
+                        .withBody("{\"reason\":\"Should not happen\"}"));
+
+        assertEquals("otherApnsId", requestVoipPushNotification("otherDeviceToken", 23));
+    }
+
+    @Test
+    public void testRequestAppleVoipPushNotificationWithResponseStatusNoContent() {
+        createMockServerRequest("deviceToken204", 24,
+                response()
+                        .withStatusCode(204));
+
+        assertNull(requestVoipPushNotification("deviceToken204", 24));
+    }
+
+    @Test
+    public void testRequestAppleVoipPushNotificationWithInternalServerError() {
+        createMockServerRequest("invalidDeviceToken", 25,
+                response()
+                        .withStatusCode(500)
+                        .withBody("{\"reason\":\"Should not happen\"}"));
+
+        try {
+            requestVoipPushNotification("invalidDeviceToken", 25);
+            fail("expected exception not thrown: " + HttpServerErrorException.class.getSimpleName());
+        } catch (final HttpServerErrorException e) {
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, e.getStatusCode());
+            assertEquals("{\"reason\":\"Should not happen\"}", e.getResponseBodyAsString());
+        }
     }
 
     @Test
     public void testRequestAppleVoipPushNotificationWithInvalidDeviceToken() {
-        new MockServerClient("localhost", mockServer.getLocalPort())
-                .when(
-                        request()
-                                .withMethod("POST")
-                                .withPath("/invalidDeviceToken")
-                )
-                .respond(
-                        response()
-                                .withStatusCode(400)
-                                .withBody("{\"reason\":\"BadDeviceToken\"}")
-                );
+        createMockServerRequest("invalidDeviceToken", 26,
+                response()
+                        .withStatusCode(400)
+                        .withBody("{\"reason\":\"BadDeviceToken\"}"));
 
         try {
-            applePushNotification.requestVoipPushNotification("http://localhost:" + mockServer.getLocalPort() + "/invalidDeviceToken", "localhost", Instant.now());
+            requestVoipPushNotification("invalidDeviceToken", 26);
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
