@@ -176,7 +176,7 @@ final class ApplePushNotification {
                 log.warn("request with device token '{}' received unexpected response status '{}'", deviceToken, statusCode);
             }
 
-            final String apnsId = StringUtils.join(response.getHeaders().get("apns-id"), ", ");
+            final String apnsId = response.getHeaders().getFirst("apns-id");
             if (StringUtils.isEmpty(apnsId)) {
                 log.warn("request with device token '{}' received empty apnsId", deviceToken);
             } else {
