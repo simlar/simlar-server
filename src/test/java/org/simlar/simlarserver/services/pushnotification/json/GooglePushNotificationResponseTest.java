@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 
 public final class GooglePushNotificationResponseTest {
@@ -28,5 +29,20 @@ public final class GooglePushNotificationResponseTest {
     @Test
     public void testSerialization() throws JsonProcessingException {
         assertEquals("{\"name\":\"newName\"}", new ObjectMapper().writeValueAsString(new GooglePushNotificationResponse("newName")));
+    }
+
+    @Test
+    public void testParseMessageIdNull() {
+        assertNull(new GooglePushNotificationResponse(null).parseMessageId(null));
+    }
+
+    @Test
+    public void testParseMessageIdFail() {
+        assertNull(new GooglePushNotificationResponse("no message id").parseMessageId("projectID"));
+    }
+
+    @Test
+    public void testParseMessageIdSuccess() {
+        assertEquals("0:1572168901680225%09814fb0002e7a5e", new GooglePushNotificationResponse("projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e").parseMessageId("simlar-org"));
     }
 }
