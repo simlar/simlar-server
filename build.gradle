@@ -56,7 +56,7 @@ dependencies {
     implementation("commons-codec:commons-codec:1.13")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.10.21")
     implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.10.0") // TODO: remove this once transient dependency updates
+    implementation("com.fasterxml.jackson.core:jackson-core:2.10.1") // TODO: remove this once transient dependency updates
     implementation("com.fasterxml.jackson.core:jackson-databind:2.10.0") // TODO: remove this once transient dependency updates
 
     runtime("org.mariadb.jdbc:mariadb-java-client:2.5.1")
