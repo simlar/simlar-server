@@ -101,7 +101,7 @@ final class GooglePushNotificationService {
             final String messageId = new ObjectMapper().readValue(
                     ObjectUtils.defaultIfNull(response.getBody(), ""),
                     GooglePushNotificationResponse.class)
-                    .parseMessageId(projectId);
+                    .getName();
 
             if (StringUtils.isEmpty(messageId)) {
                 log.error("request with device token '{}' unable to parse messageId from response '{}'", token, response.getBody());

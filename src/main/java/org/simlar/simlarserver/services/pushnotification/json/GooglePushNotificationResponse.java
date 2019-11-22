@@ -28,10 +28,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.annotation.Nullable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,14 +37,4 @@ import java.util.regex.Pattern;
 @EqualsAndHashCode
 public final class GooglePushNotificationResponse {
     private String name;
-
-    @Nullable
-    public String parseMessageId(final String projectId) {
-        if (projectId == null) {
-            return null;
-        }
-
-        final Matcher matcher = Pattern.compile("projects/" + projectId + "/messages/(.+)").matcher(name);
-        return matcher.matches() ? matcher.group(1) : null;
-    }
 }

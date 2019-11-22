@@ -48,7 +48,7 @@ public final class GooglePushNotificationMockServerTest {
                 );
 
         assertEquals(
-                "0:1572168901680225%09814fb0002e7a5e",
+                "projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e",
                GooglePushNotificationService.requestPushNotification("http://localhost:" + mockServer.getLocalPort(), "simlar-org", "someBearer", "someToken"));
     }
 
