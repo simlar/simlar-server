@@ -102,29 +102,34 @@ final class GooglePushNotificationService {
                             new HttpEntity<>(request, headers),
                             String.class);
 
-            try {
-                final String messageId = new ObjectMapper().readValue(
-                        ObjectUtils.defaultIfNull(response.getBody(), ""),
-                        GooglePushNotificationResponse.class)
-                        .getName();
+            final String messageId = parseResponse(response.getBody());
 
-                if (StringUtils.isEmpty(messageId)) {
-                    log.error("request with device token '{}' unable to parse messageId from response '{}'", token, response.getBody());
-                    return null;
-                }
-
-                log.info("request with device token '{}' received response with messageId '{}'", token, messageId);
-                return messageId;
-            } catch (final JsonProcessingException e) {
-                log.error("request with device token '{}' unable to parse response '{}'", token, response.getBody());
+            if (StringUtils.isEmpty(messageId)) {
+                log.error("request with device token '{}' unable to parse messageId from response '{}'", token, response.getBody());
                 return null;
             }
+
+            log.info("request with device token '{}' received response with messageId '{}'", token, messageId);
+            return messageId;
         } catch (final HttpStatusCodeException e) {
             log.error("request with device token '{}' status code '{}' and body '{}'", token, e.getStatusCode(), e.getResponseBodyAsString());
             throw e;
         } catch (final RestClientException e) {
             log.error("request with device token '{}' error '{}'", token, ExceptionUtils.getRootCauseMessage(e));
             throw e;
+        }
+    }
+
+    @Nullable
+    private static String parseResponse(final String response) {
+        try {
+            return new ObjectMapper().readValue(
+                    ObjectUtils.defaultIfNull(response, ""),
+                    GooglePushNotificationResponse.class)
+                    .getName();
+        } catch (final JsonProcessingException e) {
+            log.error("unable to parse response '{}'", response);
+            return null;
         }
     }
 }
