@@ -41,13 +41,13 @@ final class GooglePushNotificationService {
                 : null;
     }
 
-    private static GoogleCredentials createGoogleCredentials(final String jsonFile) {
+    private static GoogleCredentials createGoogleCredentials(final String credentialsJsonPath) {
         try {
             return GoogleCredentials
-                    .fromStream(Files.newInputStream(Path.of(jsonFile)))
+                    .fromStream(Files.newInputStream(Path.of(credentialsJsonPath)))
                     .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
         } catch (final IOException e) {
-            log.error("'{}' while creating google credentials using file '{}'", e.getClass().getSimpleName(), jsonFile, e);
+            log.error("'{}' while creating google credentials using file '{}'", e.getClass().getSimpleName(), credentialsJsonPath, e);
         }
         return null;
     }
