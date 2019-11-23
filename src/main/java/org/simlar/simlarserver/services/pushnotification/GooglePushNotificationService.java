@@ -93,6 +93,7 @@ final class GooglePushNotificationService {
     }
 
     @Nullable
+    @SuppressWarnings("MethodWithTooManyParameters")
     @SuppressFBWarnings({"MOM_MISLEADING_OVERLOAD_MODEL", "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"})
     static String requestPushNotification(final String url, final String urlPin, final String certificatePinning, final String projectId, final String bearer, final String token) {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
