@@ -1,6 +1,5 @@
 package org.simlar.simlarserver.services.pushnotification;
 
-import com.google.auth.oauth2.AccessToken;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,9 +34,8 @@ public final class GooglePushNotificationServiceTest {
 
     @Test
     public void testGetJsonWebToken() throws IOException {
-        final AccessToken accessToken = pushNotificationService.getAccessToken();
-        assertNotNull(accessToken);
-        assertEquals("ya29.c.Kl6", StringUtils.left(accessToken.getTokenValue(), 10));
+        final String bearer = pushNotificationService.getAccessTokenValue();
+        assertEquals("ya29.c.Kl6", StringUtils.left(bearer, 10));
     }
 
     @Test

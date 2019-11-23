@@ -53,7 +53,7 @@ final class GooglePushNotificationService {
     }
 
     @Nullable
-    AccessToken getAccessToken() throws IOException {
+    String getAccessTokenValue() throws IOException {
         if (googleCredentials == null) {
             if (pushNotificationSettings.isConfigured()) {
                 log.warn("no google credentials configured");
@@ -64,15 +64,16 @@ final class GooglePushNotificationService {
         }
 
         googleCredentials.refreshIfExpired();
-        return googleCredentials.getAccessToken();
+
+        final AccessToken accessToken = googleCredentials.getAccessToken();
+        return accessToken == null ? null : accessToken.getTokenValue();
     }
 
     @Nullable
     public String requestPushNotification(final String token) throws IOException {
-        final AccessToken accessToken = getAccessToken();
-        final String bearer = accessToken == null ? null : accessToken.getTokenValue();
+        final String bearer = getAccessTokenValue();
         if (StringUtils.isEmpty(bearer)) {
-            log.error("no bearer token '{}'", accessToken);
+            log.error("no bearer token");
             return null;
         }
 
