@@ -37,7 +37,7 @@ public final class GooglePushNotificationServiceTest {
     public void testGetJsonWebToken() throws IOException {
         final AccessToken accessToken = pushNotificationService.getAccessToken();
         assertNotNull(accessToken);
-        assertEquals("ya29.c.Kl6", accessToken.getTokenValue().substring(0, 10));
+        assertEquals("ya29.c.Kl6", StringUtils.left(accessToken.getTokenValue(), 10));
     }
 
     @Test
