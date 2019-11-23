@@ -1,0 +1,23 @@
+package org.simlar.simlarserver.services.pushnotification;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
+import org.simlar.simlarserver.utils.SimlarId;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Nullable;
+
+@AllArgsConstructor
+@Slf4j
+@Component
+final class PushNotificationService {
+    private final PushNotificationsRepository pushNotificationsRepository;
+    private final ApplePushNotificationService applePushNotificationService;
+    private final GooglePushNotificationService googlePushNotificationService;
+
+    @Nullable
+    public String sendPushNotification(final SimlarId simlarId) {
+        return null;
+    }
+}
