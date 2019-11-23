@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.services.pushnotification;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +31,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 
 @AllArgsConstructor
 @Getter
+@Builder
 @ToString
 @ConstructorBinding
 @ConfigurationProperties(prefix = "push.google")
@@ -37,6 +39,7 @@ class GooglePushNotificationSettingsService {
     private final String credentialsJsonPath;
     private final String projectId;
     private final String testDeviceToken;
+    private final String firebaseCertificatePinning;
 
     public final boolean isConfigured() {
         return StringUtils.isNotEmpty(credentialsJsonPath) &&

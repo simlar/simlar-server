@@ -47,6 +47,8 @@ public final class GooglePushNotificationMockServerTest {
     private String requestPushNotification(final String deviceToken) {
         return GooglePushNotificationService.requestPushNotification(
                 "http://localhost:" + mockServer.getLocalPort(),
+                "localhost",
+                null,
                 "simlar-org",
                 "someBearer",
                 deviceToken);

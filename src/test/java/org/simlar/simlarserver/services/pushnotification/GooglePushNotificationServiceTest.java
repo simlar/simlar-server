@@ -10,11 +10,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
@@ -36,6 +38,24 @@ public final class GooglePushNotificationServiceTest {
     public void testGetJsonWebToken() throws IOException {
         final String bearer = pushNotificationService.getAccessTokenValue();
         assertEquals("ya29.c.Kl6", StringUtils.left(bearer, 10));
+    }
+
+    @Test
+    public void testRequestPushNotificationWithWrongCertificatePinning() throws IOException {
+        try {
+            final GooglePushNotificationSettingsService settings = GooglePushNotificationSettingsService.builder()
+                    .credentialsJsonPath(pushNotificationSettings.getCredentialsJsonPath())
+                    .projectId(pushNotificationSettings.getProjectId())
+                    .firebaseCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=")
+                    .build();
+
+            new GooglePushNotificationService(settings).requestPushNotification("invalidDeviceToken");
+            fail("expected exception not thrown: " + ResourceAccessException.class.getSimpleName());
+        } catch (final ResourceAccessException e) {
+            assertEquals("SSLPeerUnverifiedException", e.getCause().getClass().getSimpleName());
+            assertNotNull(e.getMessage());
+            assertTrue(e.getMessage().contains("Certificate pinning failure!"));
+        }
     }
 
     @Test
