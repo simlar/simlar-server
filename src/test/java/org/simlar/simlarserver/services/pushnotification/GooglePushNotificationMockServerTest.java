@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.HttpResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -25,8 +26,7 @@ public final class GooglePushNotificationMockServerTest {
         mockServer = startClientAndServer();
     }
 
-    @Test
-    public void testRequestAppleVoipPushNotification() {
+    private void createMockServerRequest(final String deviceToken, final HttpResponse response) {
         new MockServerClient("localhost", mockServer.getLocalPort())
                 .when(
                         request()
@@ -39,68 +39,63 @@ public final class GooglePushNotificationMockServerTest {
                                             "\"priority\":\"high\"," +
                                             "\"collapse_key\":\"call\"" +
                                           "}," +
-                                          "\"token\":\"someToken\"" +
+                                          "\"token\":\"" + deviceToken + '"' +
                                         "}}")
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withBody("{\n" +
-                                        "  \"name\": \"projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e\"\n" +
-                                        "}\n")
-                );
+                ).respond(response);
+    }
+
+    private String requestPushNotification(final String deviceToken) {
+        return GooglePushNotificationService.requestPushNotification(
+                "http://localhost:" + mockServer.getLocalPort(),
+                "simlar-org",
+                "someBearer",
+                deviceToken);
+    }
+
+    @Test
+    public void testRequestAppleVoipPushNotification() {
+        createMockServerRequest("someToken",
+                response()
+                        .withStatusCode(200)
+                        .withBody("{\n" +
+                                "  \"name\": \"projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e\"\n" +
+                                "}\n"));
 
         assertEquals(
                 "projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e",
-                GooglePushNotificationService.requestPushNotification("http://localhost:" + mockServer.getLocalPort(), "simlar-org", "someBearer", "someToken"));
+                requestPushNotification("someToken"));
     }
 
     @Test
     public void testRequestPushNotificationWithInvalidToken() {
-        new MockServerClient("localhost", mockServer.getLocalPort())
-                .when(
-                        request()
-                                .withMethod("POST")
-                                .withPath("/v1/projects/simlar-org/messages:send")
-                                .withHeader("Authorization", "Bearer someBearer")
-                                .withBody("{\"message\":{" +
-                                          "\"android\":{" +
-                                            "\"ttl\":\"60s\"," +
-                                            "\"priority\":\"high\"," +
-                                            "\"collapse_key\":\"call\"" +
-                                          "}," +
-                                          "\"token\":\"invalidToken\"" +
-                                        "}}")
-                )
-                .respond(
-                        response()
-                                .withStatusCode(400)
-                                .withBody("{\n" +
-                                        "  \"error\": {\n" +
-                                        "    \"code\": 400,\n" +
-                                        "    \"message\": \"The registration token is not a valid FCM registration token\",\n" +
-                                        "    \"status\": \"INVALID_ARGUMENT\",\n" +
-                                        "    \"details\": [\n" +
-                                        "      {\n" +
-                                        "        \"@type\": \"type.googleapis.com/google.firebase.fcm.v1.FcmError\",\n" +
-                                        "        \"errorCode\": \"INVALID_ARGUMENT\"\n" +
-                                        "      },\n" +
-                                        "      {\n" +
-                                        "        \"@type\": \"type.googleapis.com/google.rpc.BadRequest\",\n" +
-                                        "        \"fieldViolations\": [\n" +
-                                        "          {\n" +
-                                        "            \"field\": \"message.token\",\n" +
-                                        "            \"description\": \"The registration token is not a valid FCM registration token\"\n" +
-                                        "          }\n" +
-                                        "        ]\n" +
-                                        "      }\n" +
-                                        "    ]\n" +
-                                        "  }\n" +
-                                        "}\n")
-                );
+        createMockServerRequest("invalidToken",
+                response()
+                        .withStatusCode(400)
+                        .withBody("{\n" +
+                                "  \"error\": {\n" +
+                                "    \"code\": 400,\n" +
+                                "    \"message\": \"The registration token is not a valid FCM registration token\",\n" +
+                                "    \"status\": \"INVALID_ARGUMENT\",\n" +
+                                "    \"details\": [\n" +
+                                "      {\n" +
+                                "        \"@type\": \"type.googleapis.com/google.firebase.fcm.v1.FcmError\",\n" +
+                                "        \"errorCode\": \"INVALID_ARGUMENT\"\n" +
+                                "      },\n" +
+                                "      {\n" +
+                                "        \"@type\": \"type.googleapis.com/google.rpc.BadRequest\",\n" +
+                                "        \"fieldViolations\": [\n" +
+                                "          {\n" +
+                                "            \"field\": \"message.token\",\n" +
+                                "            \"description\": \"The registration token is not a valid FCM registration token\"\n" +
+                                "          }\n" +
+                                "        ]\n" +
+                                "      }\n" +
+                                "    ]\n" +
+                                "  }\n" +
+                                "}\n"));
 
         try {
-            GooglePushNotificationService.requestPushNotification("http://localhost:" + mockServer.getLocalPort(), "simlar-org", "someBearer", "invalidToken");
+            requestPushNotification("invalidToken");
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
