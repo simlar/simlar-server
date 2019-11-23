@@ -71,28 +71,7 @@ public final class GooglePushNotificationMockServerTest {
         createMockServerRequest("invalidToken",
                 response()
                         .withStatusCode(400)
-                        .withBody("{\n" +
-                                "  \"error\": {\n" +
-                                "    \"code\": 400,\n" +
-                                "    \"message\": \"The registration token is not a valid FCM registration token\",\n" +
-                                "    \"status\": \"INVALID_ARGUMENT\",\n" +
-                                "    \"details\": [\n" +
-                                "      {\n" +
-                                "        \"@type\": \"type.googleapis.com/google.firebase.fcm.v1.FcmError\",\n" +
-                                "        \"errorCode\": \"INVALID_ARGUMENT\"\n" +
-                                "      },\n" +
-                                "      {\n" +
-                                "        \"@type\": \"type.googleapis.com/google.rpc.BadRequest\",\n" +
-                                "        \"fieldViolations\": [\n" +
-                                "          {\n" +
-                                "            \"field\": \"message.token\",\n" +
-                                "            \"description\": \"The registration token is not a valid FCM registration token\"\n" +
-                                "          }\n" +
-                                "        ]\n" +
-                                "      }\n" +
-                                "    ]\n" +
-                                "  }\n" +
-                                "}\n"));
+                        .withBody(GooglePushNotificationErrorResponse.INVALID_TOKEN));
 
         try {
             requestPushNotification("invalidToken");
