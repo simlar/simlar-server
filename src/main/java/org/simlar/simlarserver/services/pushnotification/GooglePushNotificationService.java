@@ -84,7 +84,7 @@ final class GooglePushNotificationService {
     }
 
     @Nullable
-    @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
+    @SuppressFBWarnings({"MOM_MISLEADING_OVERLOAD_MODEL", "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"})
     static String requestPushNotification(final String url, final String projectId, final String bearer, final String token) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
