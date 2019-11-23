@@ -72,7 +72,7 @@ public final class ApplePushNotificationTest {
     @Test
     public void testConnectToAppleWithWrongCertificatePinning() {
         try {
-            final PushNotificationSettingsService settings =PushNotificationSettingsService.builder()
+            final PushNotificationSettingsService settings = PushNotificationSettingsService.builder()
                     .applePushProtocol(pushNotificationSettings.getApplePushProtocol())
                     .appleVoipCertificatePath(pushNotificationSettings.getAppleVoipCertificatePath())
                     .appleVoipCertificatePassword(pushNotificationSettings.getAppleVoipCertificatePassword())
