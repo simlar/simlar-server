@@ -45,29 +45,7 @@ public final class GooglePushNotificationServiceTest {
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
-            //noinspection SpellCheckingInspection
-            assertEquals("{\n" +
-                    "  \"error\": {\n" +
-                    "    \"code\": 400,\n" +
-                    "    \"message\": \"The registration token is not a valid FCM registration token\",\n" +
-                    "    \"status\": \"INVALID_ARGUMENT\",\n" +
-                    "    \"details\": [\n" +
-                    "      {\n" +
-                    "        \"@type\": \"type.googleapis.com/google.firebase.fcm.v1.FcmError\",\n" +
-                    "        \"errorCode\": \"INVALID_ARGUMENT\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"@type\": \"type.googleapis.com/google.rpc.BadRequest\",\n" +
-                    "        \"fieldViolations\": [\n" +
-                    "          {\n" +
-                    "            \"field\": \"message.token\",\n" +
-                    "            \"description\": \"The registration token is not a valid FCM registration token\"\n" +
-                    "          }\n" +
-                    "        ]\n" +
-                    "      }\n" +
-                    "    ]\n" +
-                    "  }\n" +
-                    "}\n", e.getResponseBodyAsString());
+            assertEquals(GooglePushNotificationErrorResponse.INVALID_TOKEN, e.getResponseBodyAsString());
         }
     }
 

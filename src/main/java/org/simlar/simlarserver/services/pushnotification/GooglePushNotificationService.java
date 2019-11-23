@@ -8,6 +8,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationAndroidDetails;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationRequest;
 import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationRequestDetails;
@@ -18,6 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClientException;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -81,7 +84,7 @@ final class GooglePushNotificationService {
     }
 
     @Nullable
-    @SuppressFBWarnings("MOM_MISLEADING_OVERLOAD_MODEL")
+    @SuppressFBWarnings({"MOM_MISLEADING_OVERLOAD_MODEL", "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"})
     static String requestPushNotification(final String url, final String projectId, final String bearer, final String token) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -92,17 +95,14 @@ final class GooglePushNotificationService {
                     new GooglePushNotificationAndroidDetails("60s", "call", "high"),
                     token));
 
-        final ResponseEntity<String> response = new RestTemplateBuilder()
-                .build()
-                .postForEntity(url + "/v1/projects/" + projectId + "/messages:send",
-                        new HttpEntity<>(request, headers),
-                        String.class);
-
         try {
-            final String messageId = new ObjectMapper().readValue(
-                    ObjectUtils.defaultIfNull(response.getBody(), ""),
-                    GooglePushNotificationResponse.class)
-                    .getName();
+            final ResponseEntity<String> response = new RestTemplateBuilder()
+                    .build()
+                    .postForEntity(url + "/v1/projects/" + projectId + "/messages:send",
+                            new HttpEntity<>(request, headers),
+                            String.class);
+
+            final String messageId = parseResponse(response.getBody());
 
             if (StringUtils.isEmpty(messageId)) {
                 log.error("request with device token '{}' unable to parse messageId from response '{}'", token, response.getBody());
@@ -111,8 +111,24 @@ final class GooglePushNotificationService {
 
             log.info("request with device token '{}' received response with messageId '{}'", token, messageId);
             return messageId;
+        } catch (final HttpStatusCodeException e) {
+            log.error("request with device token '{}' status code '{}' and body '{}'", token, e.getStatusCode(), e.getResponseBodyAsString());
+            throw e;
+        } catch (final RestClientException e) {
+            log.error("request with device token '{}' error '{}'", token, ExceptionUtils.getRootCauseMessage(e));
+            throw e;
+        }
+    }
+
+    @Nullable
+    private static String parseResponse(final String response) {
+        try {
+            return new ObjectMapper().readValue(
+                    ObjectUtils.defaultIfNull(response, ""),
+                    GooglePushNotificationResponse.class)
+                    .getName();
         } catch (final JsonProcessingException e) {
-            log.error("request with device token '{}' unable to parse response '{}'", token, response.getBody());
+            log.error("unable to parse response '{}'", response);
             return null;
         }
     }
