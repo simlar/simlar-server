@@ -32,7 +32,7 @@ public final class ApplePushNotificationTest {
     private PushNotificationSettingsService pushNotificationSettings;
 
     @Autowired
-    private ApplePushNotification applePushNotification;
+    private ApplePushNotificationService applePushNotificationService;
 
     @Before
     public void verifyConfiguration() {
@@ -55,15 +55,15 @@ public final class ApplePushNotificationTest {
 
     @Test
     public void testReadKeyStore() throws KeyStoreException {
-        final KeyStore keyStore = applePushNotification.createKeyStore();
+        final KeyStore keyStore = applePushNotificationService.createKeyStore();
 
         final List<String> aliases = Collections.list(keyStore.aliases());
         assertEquals(1, aliases.size());
 
         final String alias = aliases.get(0);
-        assertNotNull(ApplePushNotification.getKey(keyStore, alias, pushNotificationSettings.getAppleVoipCertificatePassword()));
+        assertNotNull(ApplePushNotificationService.getKey(keyStore, alias, pushNotificationSettings.getAppleVoipCertificatePassword()));
 
-        final String certificateSubject = ApplePushNotification.getCertificateSubject(keyStore, alias);
+        final String certificateSubject = ApplePushNotificationService.getCertificateSubject(keyStore, alias);
         assertNotNull(certificateSubject);
         assertTrue(certificateSubject.contains("VoIP"));
         assertTrue(certificateSubject.contains("simlar"));
@@ -79,7 +79,7 @@ public final class ApplePushNotificationTest {
                     .appleVoipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=")
                     .build();
 
-            new ApplePushNotification(settings).requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
+            new ApplePushNotificationService(settings).requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
             fail("expected exception not thrown: " + ResourceAccessException.class.getSimpleName());
         } catch (final ResourceAccessException e) {
             assertEquals("SSLPeerUnverifiedException", e.getCause().getClass().getSimpleName());
@@ -91,7 +91,7 @@ public final class ApplePushNotificationTest {
     @Test
     public void testConnectToAppleWithCertificateBadDeviceToken() {
         try {
-            applePushNotification.requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
+            applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
@@ -103,6 +103,6 @@ public final class ApplePushNotificationTest {
     public void testRequestAppleVoipPushNotification() {
         final String deviceToken = pushNotificationSettings.getAppleVoipTestDeviceToken();
         assumeTrue("This test needs a valid device token in the properties", StringUtils.isNotEmpty(deviceToken));
-        assertNotNull(applePushNotification.requestVoipPushNotification(ApplePushServer.SANDBOX, deviceToken));
+        assertNotNull(applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, deviceToken));
     }
 }

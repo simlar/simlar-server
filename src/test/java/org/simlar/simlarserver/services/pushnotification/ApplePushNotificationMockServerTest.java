@@ -23,13 +23,13 @@ import static org.mockserver.model.HttpResponse.response;
 @SuppressFBWarnings("UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
 @SuppressWarnings({"IOResourceOpenedButNotSafelyClosed", "resource"}) // MockServerClient used as documented
 public final class ApplePushNotificationMockServerTest {
-    private ApplePushNotification applePushNotification;
+    private ApplePushNotificationService applePushNotificationService;
 
     private ClientAndServer mockServer;
 
     @Before
     public void setup() {
-        applePushNotification = new ApplePushNotification(PushNotificationSettingsService.builder()
+        applePushNotificationService = new ApplePushNotificationService(PushNotificationSettingsService.builder()
                 .applePushProtocol("TLSv1.3")
                 .appleVoipCertificatePath("src/test/resources/self-signed.p12")
                 .appleVoipCertificatePassword("s3cr3t")
@@ -52,7 +52,7 @@ public final class ApplePushNotificationMockServerTest {
     }
 
     private String requestVoipPushNotification(final String deviceToken, final long expiration) {
-        return applePushNotification.requestVoipPushNotification(
+        return applePushNotificationService.requestVoipPushNotification(
                 "http://localhost:" + mockServer.getLocalPort() + '/',
                 deviceToken,
                 "localhost",

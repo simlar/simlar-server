@@ -45,7 +45,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Slf4j
 @Component
-final class ApplePushNotification {
+final class ApplePushNotificationService {
     private final PushNotificationSettingsService pushNotificationSettings;
 
     @Nullable
