@@ -27,6 +27,10 @@ public final class PushNotificationServiceTest {
 
     @SuppressWarnings("unused")
     @MockBean
+    private ApplePushNotificationService applePushNotificationService;
+
+    @SuppressWarnings("unused")
+    @MockBean
     private GooglePushNotificationService googlePushNotificationService;
 
     @Autowired
@@ -35,6 +39,15 @@ public final class PushNotificationServiceTest {
     @Test
     public void testRequestPushNotificationWithNull() {
         assertNull(pushNotificationService.sendPushNotification(null));
+    }
+
+    @Test
+    public void testRequestApplePushNotification() {
+        pushNotificationsRepository.save(new PushNotification("*12342*", DeviceType.IOS_VOIP, "someToken"));
+
+        when(applePushNotificationService.requestVoipPushNotification(ApplePushServer.PRODUCTION, "someToken")).thenReturn("someMessageId");
+        assertEquals("someMessageId", pushNotificationService.sendPushNotification( SimlarId.create("*12342*")));
+        verify(applePushNotificationService).requestVoipPushNotification(eq(ApplePushServer.PRODUCTION), eq("someToken"));
     }
 
     @Test

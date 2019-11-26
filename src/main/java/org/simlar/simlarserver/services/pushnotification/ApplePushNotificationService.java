@@ -42,10 +42,11 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.Objects;
 
+@SuppressWarnings("DesignForExtension") // mocked in tests
 @AllArgsConstructor
 @Slf4j
 @Component
-final class ApplePushNotificationService {
+class ApplePushNotificationService {
     private final PushNotificationSettingsService pushNotificationSettings;
 
     @Nullable

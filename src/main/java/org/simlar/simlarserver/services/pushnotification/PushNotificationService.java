@@ -28,6 +28,8 @@ final class PushNotificationService {
         switch (pushNotification.getDeviceType()) {
             case ANDROID:
                 return googlePushNotificationService.requestPushNotification(pushNotification.getPushId());
+            case IOS_VOIP:
+                return applePushNotificationService.requestVoipPushNotification(ApplePushServer.PRODUCTION, pushNotification.getPushId());
         }
 
         return null;
