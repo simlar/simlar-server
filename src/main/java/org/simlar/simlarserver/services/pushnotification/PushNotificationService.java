@@ -2,6 +2,7 @@ package org.simlar.simlarserver.services.pushnotification;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.simlar.simlarserver.data.DeviceType;
 import org.simlar.simlarserver.database.models.PushNotification;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -24,8 +25,14 @@ final class PushNotificationService {
         }
 
         final PushNotification pushNotification = pushNotificationsRepository.findBySimlarId(simlarId.get());
+        final DeviceType deviceType = pushNotification == null ? null : pushNotification.getDeviceType();
+        if (deviceType == null) {
+            log.error("no device type found for simlarId '{}'", simlarId);
+            return null;
+        }
+
         //noinspection SwitchStatement
-        switch (pushNotification.getDeviceType()) {
+        switch (deviceType) {
             case ANDROID:
                 return googlePushNotificationService.requestPushNotification(pushNotification.getPushId());
             case IOS_VOIP:
@@ -35,7 +42,7 @@ final class PushNotificationService {
             case IOS:
             case IOS_DEVELOPMENT:
             default:
-                log.error("unsupported device type '{}'", pushNotification.getDeviceType());
+                log.error("unsupported device type '{}'", deviceType);
                 return null;
         }
     }

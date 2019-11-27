@@ -79,4 +79,9 @@ public final class PushNotificationServiceTest {
         assertEquals("someMessageId", pushNotificationService.sendPushNotification( SimlarId.create("*12345*")));
         verify(googlePushNotificationService).requestPushNotification(eq("someToken"));
     }
+
+    @Test
+    public void testRequestPushNotificationWithUnknownSimlarId() {
+        assertNull(pushNotificationService.sendPushNotification( SimlarId.create("*12346*")));
+    }
 }
