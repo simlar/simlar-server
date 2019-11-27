@@ -12,8 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -35,13 +33,13 @@ public final class GooglePushNotificationServiceTest {
     }
 
     @Test
-    public void testGetJsonWebToken() throws IOException {
+    public void testGetJsonWebToken() {
         final String bearer = pushNotificationService.getAccessTokenValue();
         assertEquals("ya29.c.Kl6", StringUtils.left(bearer, 10));
     }
 
     @Test
-    public void testRequestPushNotificationWithWrongCertificatePinning() throws IOException {
+    public void testRequestPushNotificationWithWrongCertificatePinning() {
         try {
             final GooglePushNotificationSettingsService settings = GooglePushNotificationSettingsService.builder()
                     .credentialsJsonPath(pushNotificationSettings.getCredentialsJsonPath())
@@ -59,7 +57,7 @@ public final class GooglePushNotificationServiceTest {
     }
 
     @Test
-    public void testRequestPushNotificationWithInvalidToken() throws IOException {
+    public void testRequestPushNotificationWithInvalidToken() {
         try {
             pushNotificationService.requestPushNotification("invalidToken");
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
@@ -70,7 +68,7 @@ public final class GooglePushNotificationServiceTest {
     }
 
     @Test
-    public void testRequestPushNotificationWithValidToken() throws IOException {
+    public void testRequestPushNotificationWithValidToken() {
         final String deviceToken = pushNotificationSettings.getTestDeviceToken();
         assumeTrue("This test needs a valid device token in the properties", StringUtils.isNotEmpty(deviceToken));
 
