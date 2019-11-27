@@ -42,6 +42,18 @@ public final class PushNotificationServiceTest {
     }
 
     @Test
+    public void testRequestApplePushNotificationUnsupported() {
+        pushNotificationsRepository.save(new PushNotification("*12340*", DeviceType.IOS, "someToken"));
+        assertNull(pushNotificationService.sendPushNotification( SimlarId.create("*12340*")));
+    }
+
+    @Test
+    public void testRequestApplePushNotificationUnsupportedDevelopment() {
+        pushNotificationsRepository.save(new PushNotification("*12341*", DeviceType.IOS_DEVELOPMENT, "otherToken"));
+        assertNull(pushNotificationService.sendPushNotification( SimlarId.create("*12341*")));
+    }
+
+    @Test
     public void testRequestApplePushNotification() {
         pushNotificationsRepository.save(new PushNotification("*12342*", DeviceType.IOS_VOIP, "someToken"));
 
