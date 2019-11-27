@@ -30,6 +30,8 @@ final class PushNotificationService {
                 return googlePushNotificationService.requestPushNotification(pushNotification.getPushId());
             case IOS_VOIP:
                 return applePushNotificationService.requestVoipPushNotification(ApplePushServer.PRODUCTION, pushNotification.getPushId());
+            case IOS_VOIP_DEVELOPMENT:
+                return applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, pushNotification.getPushId());
         }
 
         return null;

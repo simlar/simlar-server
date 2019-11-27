@@ -51,6 +51,15 @@ public final class PushNotificationServiceTest {
     }
 
     @Test
+    public void testRequestApplePushNotificationDevelopment() {
+        pushNotificationsRepository.save(new PushNotification("*12343*", DeviceType.IOS_VOIP_DEVELOPMENT, "otherToken"));
+
+        when(applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, "otherToken")).thenReturn("otherMessageId");
+        assertEquals("otherMessageId", pushNotificationService.sendPushNotification( SimlarId.create("*12343*")));
+        verify(applePushNotificationService).requestVoipPushNotification(eq(ApplePushServer.SANDBOX), eq("otherToken"));
+    }
+
+    @Test
     public void testRequestGooglePushNotification() {
         pushNotificationsRepository.save(new PushNotification("*12345*", DeviceType.ANDROID, "someToken"));
 
