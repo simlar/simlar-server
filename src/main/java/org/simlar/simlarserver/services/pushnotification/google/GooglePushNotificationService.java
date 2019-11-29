@@ -1,4 +1,4 @@
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.google;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,10 +11,10 @@ import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationAndroidDetails;
-import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationRequest;
-import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationRequestDetails;
-import org.simlar.simlarserver.services.pushnotification.json.GooglePushNotificationResponse;
+import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationAndroidDetails;
+import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationRequest;
+import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationRequestDetails;
+import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationResponse;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -34,7 +34,7 @@ import java.util.Collections;
 @SuppressWarnings("DesignForExtension") // mocked in tests
 @Slf4j
 @Component
-class GooglePushNotificationService {
+public class GooglePushNotificationService {
     private final GooglePushNotificationSettingsService pushNotificationSettings;
 
     @Nullable

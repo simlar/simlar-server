@@ -19,22 +19,23 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification.json;
+package org.simlar.simlarserver.services.pushnotification.google.json;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Setter
 @ToString
 @EqualsAndHashCode
-public final class GooglePushNotificationResponse {
-    private String name;
+@AllArgsConstructor
+public final class GooglePushNotificationAndroidDetails {
+    private final String ttl;
+
+    @JsonProperty("collapse_key")
+    private final String collapseKey;
+
+    private final String priority;
 }

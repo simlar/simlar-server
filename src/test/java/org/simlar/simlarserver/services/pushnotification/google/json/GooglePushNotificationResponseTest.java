@@ -1,4 +1,4 @@
-package org.simlar.simlarserver.services.pushnotification.json;
+package org.simlar.simlarserver.services.pushnotification.google.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

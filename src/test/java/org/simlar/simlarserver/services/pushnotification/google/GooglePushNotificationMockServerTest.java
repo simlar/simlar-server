@@ -1,4 +1,4 @@
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.google;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.After;

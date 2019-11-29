@@ -1,4 +1,4 @@
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.google;
 
 @SuppressWarnings("UtilityClass")
 final class GooglePushNotificationErrorResponse {

@@ -19,30 +19,22 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.google.json;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 
+
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder
+@Setter
 @ToString
-@ConstructorBinding
-@ConfigurationProperties(prefix = "push.google")
-class GooglePushNotificationSettingsService {
-    private final String credentialsJsonPath;
-    private final String projectId;
-    private final String testDeviceToken;
-    private final String firebaseCertificatePinning;
-
-    public final boolean isConfigured() {
-        return StringUtils.isNotEmpty(credentialsJsonPath) &&
-                StringUtils.isNotEmpty(projectId);
-    }
+@EqualsAndHashCode
+public final class GooglePushNotificationResponse {
+    private String name;
 }

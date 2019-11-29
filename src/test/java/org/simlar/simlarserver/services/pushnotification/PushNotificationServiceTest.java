@@ -8,6 +8,7 @@ import org.simlar.simlarserver.database.models.PushNotification;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
 import org.simlar.simlarserver.services.pushnotification.apple.ApplePushNotificationService;
 import org.simlar.simlarserver.services.pushnotification.apple.ApplePushServer;
+import org.simlar.simlarserver.services.pushnotification.google.GooglePushNotificationService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
