@@ -22,7 +22,7 @@ import static org.mockserver.model.HttpResponse.response;
 
 @SuppressFBWarnings("UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
 @SuppressWarnings({"IOResourceOpenedButNotSafelyClosed", "resource"}) // MockServerClient used as documented
-public final class ApplePushNotificationMockServerTest {
+public final class ApplePushNotificationServiceMockServerTest {
     private ApplePushNotificationService applePushNotificationService;
 
     private ClientAndServer mockServer;
