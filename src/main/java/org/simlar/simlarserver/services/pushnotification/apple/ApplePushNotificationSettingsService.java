@@ -19,18 +19,32 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification.json;
+package org.simlar.simlarserver.services.pushnotification.apple;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
+@AllArgsConstructor
 @Getter
 @ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public final class ApplePushNotificationRequestDetails {
-    private final String alert;
-    private final String sound;
+@Builder
+@ConstructorBinding
+@ConfigurationProperties(prefix = "push.apple")
+class ApplePushNotificationSettingsService {
+    private final String voipCertificatePath;
+    private final String voipCertificatePassword;
+    private final String voipCertificatePinning;
+    private final String sslProtocol;
+    private final String voipTestDeviceToken;
+
+    public final boolean isConfigured() {
+        return StringUtils.isNotEmpty(voipCertificatePath) &&
+                StringUtils.isNotEmpty(voipCertificatePassword) &&
+                StringUtils.isNotEmpty(sslProtocol);
+    }
 }

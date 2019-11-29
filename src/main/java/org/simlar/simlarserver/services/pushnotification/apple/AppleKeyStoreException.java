@@ -1,4 +1,4 @@
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.apple;
 
 final class AppleKeyStoreException extends RuntimeException {
     private static final long serialVersionUID = 1L;

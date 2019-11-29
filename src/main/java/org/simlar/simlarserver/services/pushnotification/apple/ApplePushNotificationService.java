@@ -1,4 +1,4 @@
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.apple;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
@@ -7,8 +7,8 @@ import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.simlar.simlarserver.services.pushnotification.json.ApplePushNotificationRequest;
-import org.simlar.simlarserver.services.pushnotification.json.ApplePushNotificationRequestDetails;
+import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequest;
+import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestDetails;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +46,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Slf4j
 @Component
-class ApplePushNotificationService {
+public class ApplePushNotificationService {
     private final ApplePushNotificationSettingsService pushNotificationSettings;
 
     @Nullable
