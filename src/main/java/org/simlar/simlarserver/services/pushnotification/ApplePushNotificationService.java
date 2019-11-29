@@ -103,12 +103,12 @@ class ApplePushNotificationService {
             final KeyManagerFactory keyFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyFactory.init(keyStore, pushNotificationSettings.getVoipCertificatePassword().toCharArray());
 
-            final SSLContext sslContext = SSLContext.getInstance(pushNotificationSettings.getPushProtocol());
+            final SSLContext sslContext = SSLContext.getInstance(pushNotificationSettings.getSslProtocol());
             sslContext.init(keyFactory.getKeyManagers(), null, null);
 
             return sslContext.getSocketFactory();
         } catch (final NoSuchAlgorithmException | UnrecoverableKeyException | KeyStoreException | KeyManagementException e) {
-            throw new AppleKeyStoreException("failed to create SSLSocketFactory store from keystore with protocol; " + pushNotificationSettings.getPushProtocol(),  e);
+            throw new AppleKeyStoreException("failed to create SSLSocketFactory store from keystore with protocol; " + pushNotificationSettings.getSslProtocol(),  e);
         }
     }
 

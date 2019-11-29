@@ -39,12 +39,12 @@ class ApplePushNotificationSettingsService {
     private final String voipCertificatePath;
     private final String voipCertificatePassword;
     private final String voipCertificatePinning;
-    private final String pushProtocol;
+    private final String sslProtocol;
     private final String voipTestDeviceToken;
 
     public final boolean isConfigured() {
         return StringUtils.isNotEmpty(voipCertificatePath) &&
                 StringUtils.isNotEmpty(voipCertificatePassword) &&
-                StringUtils.isNotEmpty(pushProtocol);
+                StringUtils.isNotEmpty(sslProtocol);
     }
 }
