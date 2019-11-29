@@ -34,17 +34,17 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ToString
 @Builder
 @ConstructorBinding
-@ConfigurationProperties(prefix = "push")
-class PushNotificationSettingsService {
-    private final String appleVoipCertificatePath;
-    private final String appleVoipCertificatePassword;
-    private final String appleVoipCertificatePinning;
-    private final String applePushProtocol;
-    private final String appleVoipTestDeviceToken;
+@ConfigurationProperties(prefix = "push.apple")
+class ApplePushNotificationSettingsService {
+    private final String voipCertificatePath;
+    private final String voipCertificatePassword;
+    private final String voipCertificatePinning;
+    private final String pushProtocol;
+    private final String voipTestDeviceToken;
 
     public final boolean isConfigured() {
-        return StringUtils.isNotEmpty(appleVoipCertificatePath) &&
-                StringUtils.isNotEmpty(appleVoipCertificatePassword) &&
-                StringUtils.isNotEmpty(applePushProtocol);
+        return StringUtils.isNotEmpty(voipCertificatePath) &&
+                StringUtils.isNotEmpty(voipCertificatePassword) &&
+                StringUtils.isNotEmpty(pushProtocol);
     }
 }

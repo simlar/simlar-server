@@ -29,10 +29,10 @@ public final class ApplePushNotificationServiceMockServerTest {
 
     @Before
     public void setup() {
-        applePushNotificationService = new ApplePushNotificationService(PushNotificationSettingsService.builder()
-                .applePushProtocol("TLSv1.3")
-                .appleVoipCertificatePath("src/test/resources/self-signed.p12")
-                .appleVoipCertificatePassword("s3cr3t")
+        applePushNotificationService = new ApplePushNotificationService(ApplePushNotificationSettingsService.builder()
+                .pushProtocol("TLSv1.3")
+                .voipCertificatePath("src/test/resources/self-signed.p12")
+                .voipCertificatePassword("s3cr3t")
                 .build());
 
         mockServer = startClientAndServer();
