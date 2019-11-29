@@ -27,7 +27,7 @@ import static org.junit.Assume.assumeTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
-public final class ApplePushNotificationTest {
+public final class ApplePushNotificationServiceTest {
     @Autowired
     private PushNotificationSettingsService pushNotificationSettings;
 
