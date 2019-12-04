@@ -21,9 +21,11 @@
 
 package org.simlar.simlarserver.controllers;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.services.pushnotification.PushNotificationService;
+import org.simlar.simlarserver.services.pushnotification.PushNotificationSettingsService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessSendPushNotification;
@@ -38,9 +40,15 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public final class SendPushNotificationControllerTest extends BaseControllerTest {
+    private static final String API_KEY = "someApiKey";
+
     @SuppressWarnings("unused")
     @MockBean
     private PushNotificationService pushNotificationsService;
+
+    @SuppressWarnings("unused")
+    @MockBean
+    private PushNotificationSettingsService pushNotificationSettings;
 
     private <T> T postSendPushNotification(final Class<T> responseClass, final String apiKey, final String simlarId) {
         return postRequest(responseClass, SendPushNotificationController.REQUEST_PATH, createParameters(new String[][] {
@@ -49,9 +57,31 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
         }));
     }
 
+    @Before
+    public void mockSettings() {
+        when(pushNotificationSettings.getApiKey()).thenReturn(API_KEY);
+    }
+
+    @Test
+    public void testSendPushNotificationWithNoApiKeyConfigured() {
+        when(pushNotificationSettings.getApiKey()).thenReturn(null);
+        final XmlError response = postSendPushNotification(XmlError.class, null, "NoSimlarId");
+
+        assertNotNull(response);
+        assertEquals(10, response.getId());
+    }
+
+    @Test
+    public void testSendPushNotificationWithWrongApiKey() {
+        final XmlError response = postSendPushNotification(XmlError.class, "wrongApiKey", "NoSimlarId");
+
+        assertNotNull(response);
+        assertEquals(10, response.getId());
+    }
+
     @Test
     public void testSendPushNotificationWithMalformattedSimlarId() {
-        final XmlError response = postSendPushNotification(XmlError.class,"someApiKey", "NoSimlarId");
+        final XmlError response = postSendPushNotification(XmlError.class, API_KEY, "NoSimlarId");
 
         verify(pushNotificationsService).sendPushNotification(eq(null));
         assertNotNull(response);
@@ -64,7 +94,7 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
         assertNotNull(simlarId);
 
         when(pushNotificationsService.sendPushNotification(simlarId)).thenReturn("someMessageId");
-        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class,"someApiKey", simlarId.get());
+        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class, API_KEY, simlarId.get());
 
         verify(pushNotificationsService).sendPushNotification(eq(simlarId));
         assertNotNull(response);

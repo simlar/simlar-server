@@ -25,9 +25,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.services.pushnotification.PushNotificationService;
+import org.simlar.simlarserver.services.pushnotification.PushNotificationSettingsService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessSendPushNotification;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToRequestPushNotificationException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,6 +42,7 @@ final class SendPushNotificationController {
     public static final String REQUEST_PATH = "/send-push-notification.xml";
 
     private final PushNotificationService pushNotificationsService;
+    private final PushNotificationSettingsService pushNotificationsSettings;
 
     /**
      * This method handles http post requests. You may test it with:
@@ -57,6 +60,15 @@ final class SendPushNotificationController {
     @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessSendPushNotification sendPushNotification(@RequestParam final String apiKey, @RequestParam final String simlarId) {
         log.info("'{}' requested with simlarId '{}'", REQUEST_PATH, simlarId);
+
+        final String configuredApiKey = pushNotificationsSettings.getApiKey();
+        if (StringUtils.isBlank(configuredApiKey)) {
+            throw  new XmlErrorWrongCredentialsException("received apiKey '" + apiKey + "' but none configured");
+        }
+
+        if (!StringUtils.equals(apiKey, configuredApiKey)) {
+            throw  new XmlErrorWrongCredentialsException("wrong apiKey '" + apiKey + '\'');
+        }
 
         final String messageId = pushNotificationsService.sendPushNotification(SimlarId.create(simlarId));
         if (StringUtils.isBlank(messageId)) {
