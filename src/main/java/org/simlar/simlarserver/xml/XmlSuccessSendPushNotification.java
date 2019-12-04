@@ -43,5 +43,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "success")
 public final class XmlSuccessSendPushNotification {
     @XmlAttribute
-    private String simlarId;
+    private String messageId;
 }

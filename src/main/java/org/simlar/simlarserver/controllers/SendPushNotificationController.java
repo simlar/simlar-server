@@ -56,8 +56,8 @@ final class SendPushNotificationController {
     public XmlSuccessSendPushNotification sendPushNotification(@RequestParam final String apiKey, @RequestParam final String simlarId) {
         log.info("'{}' requested with simlarId '{}'", REQUEST_PATH, simlarId);
 
-        pushNotificationsService.sendPushNotification(SimlarId.create(simlarId));
+        final String messageId = pushNotificationsService.sendPushNotification(SimlarId.create(simlarId));
 
-        return new XmlSuccessSendPushNotification(simlarId);
+        return new XmlSuccessSendPushNotification(messageId);
     }
 }

@@ -31,8 +31,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public final class SendPushNotificationControllerTest extends BaseControllerTest {
@@ -49,21 +51,23 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
 
     @Test
     public void testSendPushNotificationWithMalformattedSimlarId() {
-        final String simlarId = "NoSimlarId";
-        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class,"someApiKey", simlarId);
+        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class,"someApiKey", "NoSimlarId");
 
         verify(pushNotificationsService).sendPushNotification(eq(null));
         assertNotNull(response);
-        assertEquals(simlarId, response.getSimlarId());
+        assertNull(response.getMessageId());
     }
 
     @Test
     public void testSendPushNotification() {
-        final String simlarId = "*0001*";
-        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class,"someApiKey", simlarId);
+        final SimlarId simlarId = SimlarId.create("*0001*");
+        assertNotNull(simlarId);
 
-        verify(pushNotificationsService).sendPushNotification(eq(SimlarId.create(simlarId)));
+        when(pushNotificationsService.sendPushNotification(simlarId)).thenReturn("someMessageId");
+        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class,"someApiKey", simlarId.get());
+
+        verify(pushNotificationsService).sendPushNotification(eq(simlarId));
         assertNotNull(response);
-        assertEquals(simlarId, response.getSimlarId());
+        assertEquals("someMessageId", response.getMessageId());
     }
 }
