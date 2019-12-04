@@ -23,9 +23,11 @@ package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.services.pushnotification.PushNotificationService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessSendPushNotification;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToRequestPushNotificationException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,6 +59,9 @@ final class SendPushNotificationController {
         log.info("'{}' requested with simlarId '{}'", REQUEST_PATH, simlarId);
 
         final String messageId = pushNotificationsService.sendPushNotification(SimlarId.create(simlarId));
+        if (StringUtils.isBlank(messageId)) {
+            throw new XmlErrorFailedToRequestPushNotificationException("failed to request push notification to simlarId '" + simlarId + '\'');
+        }
 
         return new XmlSuccessSendPushNotification(messageId);
     }

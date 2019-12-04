@@ -25,13 +25,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.services.pushnotification.PushNotificationService;
 import org.simlar.simlarserver.utils.SimlarId;
+import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessSendPushNotification;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,11 +51,11 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
 
     @Test
     public void testSendPushNotificationWithMalformattedSimlarId() {
-        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class,"someApiKey", "NoSimlarId");
+        final XmlError response = postSendPushNotification(XmlError.class,"someApiKey", "NoSimlarId");
 
         verify(pushNotificationsService).sendPushNotification(eq(null));
         assertNotNull(response);
-        assertNull(response.getMessageId());
+        assertEquals(98, response.getId());
     }
 
     @Test
