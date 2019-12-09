@@ -28,13 +28,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
-@SuppressWarnings("DesignForExtension") // mocked in test
 @AllArgsConstructor
 @Getter
 @ToString
 @ConstructorBinding
 @ConfigurationProperties(prefix = "twilio")
-class TwilioSettingsService {
+final class TwilioSettingsService {
     private final String smsSourceNumber;
     private final String sid;
     private final String authToken;
