@@ -65,6 +65,7 @@ dependencies {
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito:mockito-core:3.2.4")
+    testImplementation("org.mockito:mockito-inline:3.2.4")
     testImplementation("org.mock-server:mockserver-netty:5.8.0")
 }
 
