@@ -31,9 +31,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 
+@SuppressWarnings("DesignForExtension") // mocked in tests
 @Slf4j
 @Component
-final class GooglePushNotificationService {
+class GooglePushNotificationService {
     private final GooglePushNotificationSettingsService pushNotificationSettings;
 
     @Nullable
@@ -59,7 +60,7 @@ final class GooglePushNotificationService {
     }
 
     @Nullable
-    String getAccessTokenValue() throws IOException {
+    String getAccessTokenValue() {
         if (googleCredentials == null) {
             if (pushNotificationSettings.isConfigured()) {
                 log.warn("no google credentials configured");
@@ -69,14 +70,19 @@ final class GooglePushNotificationService {
             return null;
         }
 
-        googleCredentials.refreshIfExpired();
+        try {
+            googleCredentials.refreshIfExpired();
+        } catch (final IOException e) {
+            log.error("failed to refresh google credentials", e);
+            return null;
+        }
 
         final AccessToken accessToken = googleCredentials.getAccessToken();
         return accessToken == null ? null : accessToken.getTokenValue();
     }
 
     @Nullable
-    public String requestPushNotification(final String token) throws IOException {
+    public String requestPushNotification(final String token) {
         final String bearer = getAccessTokenValue();
         if (StringUtils.isEmpty(bearer)) {
             log.error("no bearer token");
