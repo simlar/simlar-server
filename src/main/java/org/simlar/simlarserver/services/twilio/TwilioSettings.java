@@ -33,7 +33,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ToString
 @ConstructorBinding
 @ConfigurationProperties(prefix = "twilio")
-final class TwilioSettingsService {
+final class TwilioSettings {
     private final String smsSourceNumber;
     private final String sid;
     private final String authToken;
