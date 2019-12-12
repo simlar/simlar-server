@@ -33,6 +33,6 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ToString
 @ConstructorBinding
 @ConfigurationProperties(prefix = "push")
-public class PushNotificationSettingsService {
+public class PushNotificationSettings {
     private final String apiKey;
 }

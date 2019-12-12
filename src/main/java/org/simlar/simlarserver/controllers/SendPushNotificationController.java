@@ -25,7 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.services.pushnotification.PushNotificationService;
-import org.simlar.simlarserver.services.pushnotification.PushNotificationSettingsService;
+import org.simlar.simlarserver.services.pushnotification.PushNotificationSettings;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessSendPushNotification;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToRequestPushNotificationException;
@@ -42,7 +42,7 @@ final class SendPushNotificationController {
     public static final String REQUEST_PATH = "/send-push-notification.xml";
 
     private final PushNotificationService pushNotificationsService;
-    private final PushNotificationSettingsService pushNotificationsSettings;
+    private final PushNotificationSettings pushNotificationsSettings;
 
     /**
      * This method handles http post requests. You may test it with:
