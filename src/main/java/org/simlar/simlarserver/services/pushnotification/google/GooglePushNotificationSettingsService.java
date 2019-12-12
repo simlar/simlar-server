@@ -42,7 +42,6 @@ class GooglePushNotificationSettingsService {
     private final String firebaseCertificatePinning;
 
     public final boolean isConfigured() {
-        return StringUtils.isNotEmpty(credentialsJsonPath) &&
-                StringUtils.isNotEmpty(projectId);
+        return StringUtils.isNoneEmpty(credentialsJsonPath, projectId);
     }
 }
