@@ -63,7 +63,7 @@ public final class TwilioSmsServiceTest {
         assumeTrue("This test needs a Twilio configuration with Twilio test credentials", twilioSettings.isConfigured());
         assertEquals("Twilio test credentials", "+15005550006", twilioSettings.getSmsSourceNumber());
 
-        settingsService = new SettingsService("sip.simlar.org", (short)6161, "test");
+        settingsService = new SettingsService("sip.simlar.org", (short)6161);
         twilioSmsService = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Simlar Authors.
+ * Copyright (C) 2019 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,26 +19,20 @@
  *
  */
 
-package org.simlar.simlarserver.services.settingsservice;
+package org.simlar.simlarserver.services.versionservice;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@SuppressWarnings("PMD.AvoidUsingShortType")
 @Getter
 @Component
-public final class SettingsService {
-    private final String domain;
-    private final short port;
+public final class VersionService {
+    private final String version;
 
     @Autowired // fix IntelliJ inspection warning unused
-    public SettingsService(
-            @Value("${domain:}") final String                                      domain,
-            @Value("${port:6161}") final short                                     port
-            ) {
-        this.domain                                      = domain;
-        this.port                                        = port;
+    public VersionService(@Value("${info.app.version:}") final String version) {
+        this.version = version;
     }
 }

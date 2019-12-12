@@ -24,7 +24,7 @@ package org.simlar.simlarserver.controllers;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.services.versionservice.VersionService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 final class VersionController {
     public  static final String REQUEST_PATH = "/version";
 
-    private final SettingsService settingsService;
+    private final VersionService versionService;
 
     /**
      * This method handles http get requests. You may test it with:
@@ -48,7 +48,7 @@ final class VersionController {
     @SuppressFBWarnings("URV_UNRELATED_RETURN_VALUES")
     @GetMapping(value = REQUEST_PATH, produces = MediaType.TEXT_PLAIN_VALUE)
     public Object getVersion() {
-        final String version = settingsService.getVersion();
+        final String version = versionService.getVersion();
         log.info("'{}' requested with version '{}'", REQUEST_PATH, version);
         return version + '\n';
     }
