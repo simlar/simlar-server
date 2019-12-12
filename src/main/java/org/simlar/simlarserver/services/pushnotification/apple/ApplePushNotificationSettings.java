@@ -35,7 +35,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @Builder
 @ConstructorBinding
 @ConfigurationProperties(prefix = "push.apple")
-class ApplePushNotificationSettingsService {
+class ApplePushNotificationSettings {
     private final String voipCertificatePath;
     private final String voipCertificatePassword;
     private final String voipCertificatePinning;
