@@ -35,7 +35,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ToString
 @ConstructorBinding
 @ConfigurationProperties(prefix = "push.google")
-class GooglePushNotificationSettingsService {
+class GooglePushNotificationSettings {
     private final String credentialsJsonPath;
     private final String projectId;
     private final String testDeviceToken;

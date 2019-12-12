@@ -22,7 +22,7 @@ import static org.junit.Assume.assumeTrue;
 @SpringBootTest(classes = SimlarServer.class)
 public final class GooglePushNotificationServiceTest {
     @Autowired
-    private GooglePushNotificationSettingsService pushNotificationSettings;
+    private GooglePushNotificationSettings pushNotificationSettings;
 
     @Autowired
     private GooglePushNotificationService pushNotificationService;
@@ -41,7 +41,7 @@ public final class GooglePushNotificationServiceTest {
     @Test
     public void testRequestPushNotificationWithWrongCertificatePinning() {
         try {
-            final GooglePushNotificationSettingsService settings = GooglePushNotificationSettingsService.builder()
+            final GooglePushNotificationSettings settings = GooglePushNotificationSettings.builder()
                     .credentialsJsonPath(pushNotificationSettings.getCredentialsJsonPath())
                     .projectId(pushNotificationSettings.getProjectId())
                     .firebaseCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=")
