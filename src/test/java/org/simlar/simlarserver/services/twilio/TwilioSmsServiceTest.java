@@ -29,7 +29,7 @@ import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsProviderLog;
 import org.simlar.simlarserver.database.repositories.SmsProviderLogRepository;
-import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.services.SharedSettings;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,7 +48,7 @@ import static org.simlar.simlarserver.helper.Asserts.assertAlmostEqualsContainsE
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
 public final class TwilioSmsServiceTest {
-    private SettingsService settingsService;
+    private SharedSettings sharedSettings;
 
     private TwilioSmsService twilioSmsService;
 
@@ -63,8 +63,8 @@ public final class TwilioSmsServiceTest {
         assumeTrue("This test needs a Twilio configuration with Twilio test credentials", twilioSettings.isConfigured());
         assertEquals("Twilio test credentials", "+15005550006", twilioSettings.getSmsSourceNumber());
 
-        settingsService = new SettingsService("sip.simlar.org", (short)6161);
-        twilioSmsService = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
+        sharedSettings = new SharedSettings("sip.simlar.org", (short)6161);
+        twilioSmsService = new TwilioSmsService(sharedSettings, twilioSettings, smsProviderLogRepository);
     }
 
     @Test
@@ -83,7 +83,7 @@ public final class TwilioSmsServiceTest {
         final String message         = "Test not configured";
 
         final TwilioSettings settings = new TwilioSettings(null, null, null, null, null);
-        final SmsService service = new TwilioSmsService(settingsService, settings, smsProviderLogRepository);
+        final SmsService service = new TwilioSmsService(sharedSettings, settings, smsProviderLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,
@@ -107,7 +107,7 @@ public final class TwilioSmsServiceTest {
         when(mockedSettings.getCallbackUser()).thenReturn("user");
         when(mockedSettings.getCallbackPassword()).thenReturn("password");
 
-        final SmsService service = new TwilioSmsService(settingsService, mockedSettings, smsProviderLogRepository);
+        final SmsService service = new TwilioSmsService(sharedSettings, mockedSettings, smsProviderLogRepository);
         assertFalse(service.sendSms(telephoneNumber, message));
         assertAlmostEqualsContainsError(message,
                 new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com:", message),

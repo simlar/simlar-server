@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
-import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.services.SharedSettings;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +43,13 @@ import java.util.List;
 @Slf4j
 @Component
 public final class SubscriberService {
-    private final SettingsService settingsService;
+    private final SharedSettings sharedSettings;
     private final SubscriberRepository subscriberRepository;
     private final TransactionTemplate transactionTemplate;
 
     @Autowired // fix IntelliJ inspection warning unused
-    private SubscriberService(final SettingsService settingsService, final SubscriberRepository subscriberRepository, final PlatformTransactionManager transactionManager) {
-        this.settingsService = settingsService;
+    private SubscriberService(final SharedSettings sharedSettings, final SubscriberRepository subscriberRepository, final PlatformTransactionManager transactionManager) {
+        this.sharedSettings = sharedSettings;
         this.subscriberRepository = subscriberRepository;
         transactionTemplate = new TransactionTemplate(transactionManager);
     }
@@ -59,7 +59,7 @@ public final class SubscriberService {
             throw new IllegalArgumentException("simlarId=" + simlarId + " password=" + password);
         }
 
-        final Subscriber subscriber = new Subscriber(simlarId.get(), settingsService.getDomain(), password);
+        final Subscriber subscriber = new Subscriber(simlarId.get(), sharedSettings.getDomain(), password);
 
         //noinspection AnonymousInnerClass
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -74,7 +74,7 @@ public final class SubscriberService {
 
     @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD") // false positive
     private Long findSubscriberId(final SimlarId simlarId) {
-        final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), settingsService.getDomain());
+        final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), sharedSettings.getDomain());
         if (CollectionUtils.isEmpty(ids)) {
             return null;
         }
@@ -95,7 +95,7 @@ public final class SubscriberService {
             return false;
         }
 
-        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain());
+        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain());
         if (CollectionUtils.isEmpty(savedHa1s)) {
             return false;
         }
@@ -119,6 +119,6 @@ public final class SubscriberService {
             return 0;
         }
 
-        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), settingsService.getDomain()).isEmpty() ? 0 : 1;
+        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), sharedSettings.getDomain()).isEmpty() ? 0 : 1;
     }
 }

@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
-import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.services.SharedSettings;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public final class SubscriberServiceTest {
     private SubscriberRepository subscriberRepository;
 
     @Autowired
-    private SettingsService settingsService;
+    private SharedSettings sharedSettings;
 
     @Test(expected = IllegalArgumentException.class)
     public void testSaveNoSimlarIdNoPassword() {
@@ -73,13 +73,13 @@ public final class SubscriberServiceTest {
     public void testSaveSuccess() {
         final String simlarId = "*2000*";
 
-        assertTrue(subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).isEmpty());
+        assertTrue(subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain()).isEmpty());
         subscriberService.save(SimlarId.create(simlarId), "sdflkj34gd3F");
-        assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).size());
-        assertEquals("988395d60155f38eae4bb15657275d13", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).get(0));
+        assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain()).size());
+        assertEquals("988395d60155f38eae4bb15657275d13", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain()).get(0));
         subscriberService.save(SimlarId.create(simlarId), "FdUfFjH34gd3");
-        assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).size());
-        assertEquals("fb14b3adf050f0e9b71bf866702188b5", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, settingsService.getDomain()).get(0));
+        assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain()).size());
+        assertEquals("fb14b3adf050f0e9b71bf866702188b5", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain()).get(0));
     }
 
     @SuppressWarnings("TooBroadScope")

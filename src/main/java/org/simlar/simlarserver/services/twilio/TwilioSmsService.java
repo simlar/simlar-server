@@ -34,7 +34,7 @@ import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsProviderLog;
 import org.simlar.simlarserver.database.repositories.SmsProviderLogRepository;
 import org.simlar.simlarserver.json.twilio.MessageResponse;
-import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.services.SharedSettings;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.TwilioCallBackErrorCode;
 import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
@@ -55,14 +55,14 @@ public final class TwilioSmsService implements SmsService {
     public static final String REQUEST_PATH_CALL_STATUS = "twilio/call-status.json";
     public static final String REQUEST_PATH_CALL        = "twilio/call.xml";
 
-    private final SettingsService       settingsService;
+    private final SharedSettings sharedSettings;
     private final TwilioSettings twilioSettings;
     private final SmsProviderLogRepository smsProviderLogRepository;
 
     private String createCallbackBaseUrl() {
         return "https://" +
                 twilioSettings.getCallbackUser() + ':' + twilioSettings.getCallbackPassword() + '@' +
-                settingsService.getDomain() + ':' + settingsService.getPort() + '/';
+                sharedSettings.getDomain() + ':' + sharedSettings.getPort() + '/';
     }
 
     private String postRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {

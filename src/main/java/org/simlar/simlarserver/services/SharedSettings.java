@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver.services.settingsservice;
+package org.simlar.simlarserver.services;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +31,12 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @Getter
 @ConstructorBinding
 @ConfigurationProperties
-public final class SettingsService {
+public final class SharedSettings {
     private final String domain;
     private final short port;
 
     @Autowired // fix IntelliJ inspection warning unused
-    public SettingsService(
+    public SharedSettings(
             @DefaultValue("") final String domain,
             @DefaultValue("6161") final short port
     ) {
