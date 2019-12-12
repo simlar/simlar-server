@@ -42,11 +42,12 @@ class TwilioSettingsService {
     private final String callbackPassword;
 
     public boolean isConfigured() {
-        return StringUtils.isNotEmpty(smsSourceNumber) &&
-                StringUtils.isNotEmpty(sid) &&
-                StringUtils.isNotEmpty(authToken) &&
-                StringUtils.isNotEmpty(callbackUser) &&
-                StringUtils.isNotEmpty(callbackPassword);
+        return StringUtils.isNoneEmpty(
+                smsSourceNumber,
+                sid,
+                authToken,
+                callbackUser,
+                callbackPassword);
     }
 
     public String getUrl() {
