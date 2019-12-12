@@ -1,4 +1,4 @@
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.google;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;

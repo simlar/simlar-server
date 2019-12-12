@@ -1,4 +1,4 @@
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.apple;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
@@ -7,8 +7,8 @@ import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.simlar.simlarserver.services.pushnotification.json.ApplePushNotificationRequest;
-import org.simlar.simlarserver.services.pushnotification.json.ApplePushNotificationRequestDetails;
+import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequest;
+import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestDetails;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -46,8 +46,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @Slf4j
 @Component
-class ApplePushNotificationService {
-    private final PushNotificationSettingsService pushNotificationSettings;
+public class ApplePushNotificationService {
+    private final ApplePushNotificationSettingsService pushNotificationSettings;
 
     @Nullable
     static String getCertificateSubject(final KeyStore keyStore, final String alias) {
@@ -77,17 +77,17 @@ class ApplePushNotificationService {
 
     @SuppressFBWarnings({"PATH_TRAVERSAL_IN", "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"})
     KeyStore createKeyStore() {
-        final File file = new File(pushNotificationSettings.getAppleVoipCertificatePath());
+        final File file = new File(pushNotificationSettings.getVoipCertificatePath());
         if (!file.exists()) {
             throw new AppleKeyStoreException("Certificate file does not exist: " + file.getAbsolutePath());
         }
 
         try {
-            final KeyStore keyStore = KeyStore.getInstance(file, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
+            final KeyStore keyStore = KeyStore.getInstance(file, pushNotificationSettings.getVoipCertificatePassword().toCharArray());
             Collections.list(keyStore.aliases()).forEach(alias ->
                     log.info("found alias '{}'key='{}'  cert='{}'",
                             alias,
-                            getKey(keyStore, alias, pushNotificationSettings.getAppleVoipCertificatePassword()),
+                            getKey(keyStore, alias, pushNotificationSettings.getVoipCertificatePassword()),
                             getCertificateSubject(keyStore, alias)));
             return keyStore;
         } catch (final IOException | CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
@@ -101,14 +101,14 @@ class ApplePushNotificationService {
 
         try {
             final KeyManagerFactory keyFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            keyFactory.init(keyStore, pushNotificationSettings.getAppleVoipCertificatePassword().toCharArray());
+            keyFactory.init(keyStore, pushNotificationSettings.getVoipCertificatePassword().toCharArray());
 
-            final SSLContext sslContext = SSLContext.getInstance(pushNotificationSettings.getApplePushProtocol());
+            final SSLContext sslContext = SSLContext.getInstance(pushNotificationSettings.getSslProtocol());
             sslContext.init(keyFactory.getKeyManagers(), null, null);
 
             return sslContext.getSocketFactory();
         } catch (final NoSuchAlgorithmException | UnrecoverableKeyException | KeyStoreException | KeyManagementException e) {
-            throw new AppleKeyStoreException("failed to create SSLSocketFactory store from keystore with protocol; " + pushNotificationSettings.getApplePushProtocol(),  e);
+            throw new AppleKeyStoreException("failed to create SSLSocketFactory store from keystore with protocol; " + pushNotificationSettings.getSslProtocol(),  e);
         }
     }
 
@@ -142,7 +142,7 @@ class ApplePushNotificationService {
                         createSSLSocketFactory(),
                         createTrustManager());
 
-        final String certificatePinning = pushNotificationSettings.getAppleVoipCertificatePinning();
+        final String certificatePinning = pushNotificationSettings.getVoipCertificatePinning();
         if (StringUtils.isEmpty(certificatePinning)) {
             log.warn("certificate pinning disabled");
         } else {

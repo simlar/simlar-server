@@ -19,8 +19,9 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification.json;
+package org.simlar.simlarserver.services.pushnotification.apple.json;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,9 +31,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class GooglePushNotificationRequestDetails {
-    //@JsonProperty("message")
-    private final GooglePushNotificationAndroidDetails android;
-
-    private final String token;
+public final class ApplePushNotificationRequest {
+    @JsonProperty("aps")
+    private final ApplePushNotificationRequestDetails details;
 }

@@ -19,32 +19,22 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.google.json;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 
+
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
-@Builder
-@ConstructorBinding
-@ConfigurationProperties(prefix = "push")
-class PushNotificationSettingsService {
-    private final String appleVoipCertificatePath;
-    private final String appleVoipCertificatePassword;
-    private final String appleVoipCertificatePinning;
-    private final String applePushProtocol;
-    private final String appleVoipTestDeviceToken;
-
-    public final boolean isConfigured() {
-        return StringUtils.isNotEmpty(appleVoipCertificatePath) &&
-                StringUtils.isNotEmpty(appleVoipCertificatePassword) &&
-                StringUtils.isNotEmpty(applePushProtocol);
-    }
+@EqualsAndHashCode
+public final class GooglePushNotificationResponse {
+    private String name;
 }

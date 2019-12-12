@@ -1,4 +1,4 @@
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.apple;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
@@ -29,7 +29,7 @@ import static org.junit.Assume.assumeTrue;
 @SpringBootTest(classes = SimlarServer.class)
 public final class ApplePushNotificationServiceTest {
     @Autowired
-    private PushNotificationSettingsService pushNotificationSettings;
+    private ApplePushNotificationSettingsService pushNotificationSettings;
 
     @Autowired
     private ApplePushNotificationService applePushNotificationService;
@@ -61,7 +61,7 @@ public final class ApplePushNotificationServiceTest {
         assertEquals(1, aliases.size());
 
         final String alias = aliases.get(0);
-        assertNotNull(ApplePushNotificationService.getKey(keyStore, alias, pushNotificationSettings.getAppleVoipCertificatePassword()));
+        assertNotNull(ApplePushNotificationService.getKey(keyStore, alias, pushNotificationSettings.getVoipCertificatePassword()));
 
         final String certificateSubject = ApplePushNotificationService.getCertificateSubject(keyStore, alias);
         assertNotNull(certificateSubject);
@@ -72,11 +72,11 @@ public final class ApplePushNotificationServiceTest {
     @Test
     public void testConnectToAppleWithWrongCertificatePinning() {
         try {
-            final PushNotificationSettingsService settings = PushNotificationSettingsService.builder()
-                    .applePushProtocol(pushNotificationSettings.getApplePushProtocol())
-                    .appleVoipCertificatePath(pushNotificationSettings.getAppleVoipCertificatePath())
-                    .appleVoipCertificatePassword(pushNotificationSettings.getAppleVoipCertificatePassword())
-                    .appleVoipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=")
+            final ApplePushNotificationSettingsService settings = ApplePushNotificationSettingsService.builder()
+                    .sslProtocol(pushNotificationSettings.getSslProtocol())
+                    .voipCertificatePath(pushNotificationSettings.getVoipCertificatePath())
+                    .voipCertificatePassword(pushNotificationSettings.getVoipCertificatePassword())
+                    .voipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=")
                     .build();
 
             new ApplePushNotificationService(settings).requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
@@ -101,7 +101,7 @@ public final class ApplePushNotificationServiceTest {
 
     @Test
     public void testRequestAppleVoipPushNotification() {
-        final String deviceToken = pushNotificationSettings.getAppleVoipTestDeviceToken();
+        final String deviceToken = pushNotificationSettings.getVoipTestDeviceToken();
         assumeTrue("This test needs a valid device token in the properties", StringUtils.isNotEmpty(deviceToken));
         assertNotNull(applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, deviceToken));
     }

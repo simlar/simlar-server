@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification.json;
+package org.simlar.simlarserver.services.pushnotification.google.json;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -30,6 +30,9 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class GooglePushNotificationRequest {
-    private final GooglePushNotificationRequestDetails message;
+public final class GooglePushNotificationRequestDetails {
+    //@JsonProperty("message")
+    private final GooglePushNotificationAndroidDetails android;
+
+    private final String token;
 }

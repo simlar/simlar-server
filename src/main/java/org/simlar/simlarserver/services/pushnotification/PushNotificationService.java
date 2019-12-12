@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.data.DeviceType;
 import org.simlar.simlarserver.database.models.PushNotification;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
+import org.simlar.simlarserver.services.pushnotification.apple.ApplePushNotificationService;
+import org.simlar.simlarserver.services.pushnotification.apple.ApplePushServer;
+import org.simlar.simlarserver.services.pushnotification.google.GooglePushNotificationService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.stereotype.Component;
 

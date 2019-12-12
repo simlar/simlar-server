@@ -19,14 +19,14 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.pushnotification.apple;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-enum ApplePushServer {
+public enum ApplePushServer {
     PRODUCTION("api.push.apple.com"),
     SANDBOX("api.development.push.apple.com");
 
