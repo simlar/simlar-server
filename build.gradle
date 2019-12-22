@@ -150,6 +150,19 @@ bootWar {
     }
 }
 
+tasks.withType(AbstractArchiveTask) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+springBoot {
+    buildInfo {
+        properties {
+             time = null
+        }
+    }
+}
+
 idea {
     module {
         /// IntelliJ inspection excludes
