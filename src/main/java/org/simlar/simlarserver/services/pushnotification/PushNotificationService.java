@@ -13,10 +13,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("DesignForExtension") // mocked in tests
 @AllArgsConstructor
 @Slf4j
 @Component
-final class PushNotificationService {
+public class PushNotificationService {
     private final PushNotificationsRepository pushNotificationsRepository;
     private final ApplePushNotificationService applePushNotificationService;
     private final GooglePushNotificationService googlePushNotificationService;
