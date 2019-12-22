@@ -24,10 +24,13 @@ package org.simlar.simlarserver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.PropertySource;
 
+@SuppressWarnings("ClassWithTooManyDependents")
 @PropertySource(value = "file:/etc/simlar-server/config.properties", ignoreResourceNotFound = true)
+@ConfigurationPropertiesScan
 @SpringBootApplication
 public class SimlarServer extends SpringBootServletInitializer {
 

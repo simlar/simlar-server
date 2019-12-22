@@ -105,6 +105,7 @@ public final class SimlarId implements Comparable<SimlarId> {
 
     @Override
     public boolean equals(final Object obj) {
+        //noinspection ConstantConditions // false positive class cast warning
         return this == obj ||
                 obj != null && Objects.equals(getClass(), obj.getClass()) && Objects.equals(simlarId, ((SimlarId) obj).simlarId);
     }

@@ -33,8 +33,6 @@ import org.simlar.simlarserver.services.settingsservice.SettingsService;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
@@ -42,14 +40,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.simlar.simlarserver.helper.Asserts.assertAlmostEquals;
+import static org.simlar.simlarserver.helper.Asserts.assertAlmostEqualsContainsError;
 
-@DirtiesContext // setting the domain properties dirties context
-@TestPropertySource(properties = "domain = sip.simlar.org") // domain is an essential part of the callback url
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class)
 public final class TwilioSmsServiceTest {
-    @Autowired
+    private SettingsService settingsService;
+
     private TwilioSmsService twilioSmsService;
 
     @Autowired
@@ -58,13 +58,13 @@ public final class TwilioSmsServiceTest {
     @Autowired
     private SmsProviderLogRepository smsProviderLogRepository;
 
-    @Autowired
-    private SettingsService settingsService;
-
     @Before
-    public void verifyConfiguration() {
+    public void setup() {
         assumeTrue("This test needs a Twilio configuration with Twilio test credentials", twilioSettingsService.isConfigured());
         assertEquals("Twilio test credentials", "+15005550006", twilioSettingsService.getSmsSourceNumber());
+
+        settingsService = new SettingsService("sip.simlar.org", (short)6161, "test");
+        twilioSmsService = new TwilioSmsService(settingsService, twilioSettingsService, smsProviderLogRepository);
     }
 
     @Test
@@ -82,7 +82,7 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+0000000001";
         final String message         = "Test not configured";
 
-        final TwilioSettingsService twilioSettings = new TwilioSettingsService();
+        final TwilioSettingsService twilioSettings = new TwilioSettingsService(null, null, null, null, null);
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
 
         assertFalse(service.sendSms(telephoneNumber, message));
@@ -98,18 +98,19 @@ public final class TwilioSmsServiceTest {
         final String telephoneNumber = "+0000000002";
         final String message         = "Test no network";
 
-        final TwilioSettingsService twilioSettings = new TwilioSettingsService();
-        twilioSettings.setBaseUrl("no.example.com");
-        twilioSettings.setSmsSourceNumber("+1");
-        twilioSettings.setSid("007");
-        twilioSettings.setAuthToken("secret");
-        twilioSettings.setCallbackUser("user");
-        twilioSettings.setCallbackPassword("password");
+        final TwilioSettingsService twilioSettings = mock(TwilioSettingsService.class);
+        when(twilioSettings.isConfigured()).thenReturn(Boolean.TRUE);
+        when(twilioSettings.getUrl()).thenReturn("https://no.example.com/index");
+        when(twilioSettings.getSmsSourceNumber()).thenReturn("+1");
+        when(twilioSettings.getSid()).thenReturn("007");
+        when(twilioSettings.getAuthToken()).thenReturn("secret");
+        when(twilioSettings.getCallbackUser()).thenReturn("user");
+        when(twilioSettings.getCallbackPassword()).thenReturn("password");
 
         final SmsService service = new TwilioSmsService(settingsService, twilioSettings, smsProviderLogRepository);
         assertFalse(service.sendSms(telephoneNumber, message));
-        assertAlmostEquals(message,
-                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com", message),
+        assertAlmostEqualsContainsError(message,
+                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com:", message),
                 smsProviderLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 

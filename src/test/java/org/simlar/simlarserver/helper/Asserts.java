@@ -52,6 +52,18 @@ public final class Asserts {
     }
 
     public static void assertAlmostEquals(final String message, final SmsProviderLog expected, final SmsProviderLog actual) {
+        assertAlmostEqualsWithoutError(message, expected, actual);
+        assertEquals(message, expected.getError(), actual.getError());
+    }
+
+    public static void assertAlmostEqualsContainsError(final String message, final SmsProviderLog expected, final SmsProviderLog actual) {
+        assertAlmostEqualsWithoutError(message, expected, actual);
+        assertNotNull(message, actual.getError());
+        assertTrue(message, actual.getError().contains(expected.getError()));
+    }
+
+    private static void assertAlmostEqualsWithoutError(final String message, final SmsProviderLog expected, final SmsProviderLog actual) {
+
         if (expected == null || actual == null) {
             assertSame(message, expected, actual);
             return;
@@ -68,7 +80,6 @@ public final class Asserts {
         }
         assertAlmostEquals(message, expected.getCallbackTimestamp(), actual.getCallbackTimestamp());
         assertEquals(message, expected.getStatus(), actual.getStatus());
-        assertEquals(message, expected.getError(), actual.getError());
         assertEquals(message, expected.getMessage(), actual.getMessage());
     }
 }

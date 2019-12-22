@@ -1,14 +1,15 @@
 package org.simlar.simlarserver.services.createaccountservice;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-/**
- * TODO: Once spring boot 2.2 releases, use constructor binding and make this class immutable.
- */
-@Setter
+@AllArgsConstructor
 @Getter
+@ConstructorBinding
+@ConfigurationProperties
 final class RegionalSettings {
-    private String regionCode;
-    private int maxRequestsPerHour;
+    private final String regionCode;
+    private final int maxRequestsPerHour;
 }

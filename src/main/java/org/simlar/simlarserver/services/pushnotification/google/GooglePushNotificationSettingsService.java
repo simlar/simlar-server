@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Simlar Authors.
+ * Copyright (C) 2019 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,38 +19,29 @@
  *
  */
 
-package org.simlar.simlarserver.services.twilio;
+package org.simlar.simlarserver.services.pushnotification.google;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
-@SuppressWarnings("DesignForExtension") // mocked in test
 @AllArgsConstructor
 @Getter
+@Builder
 @ToString
 @ConstructorBinding
-@ConfigurationProperties(prefix = "twilio")
-class TwilioSettingsService {
-    private final String smsSourceNumber;
-    private final String sid;
-    private final String authToken;
-    private final String callbackUser;
-    private final String callbackPassword;
+@ConfigurationProperties(prefix = "push.google")
+class GooglePushNotificationSettingsService {
+    private final String credentialsJsonPath;
+    private final String projectId;
+    private final String testDeviceToken;
+    private final String firebaseCertificatePinning;
 
-    public boolean isConfigured() {
-        return StringUtils.isNoneEmpty(
-                smsSourceNumber,
-                sid,
-                authToken,
-                callbackUser,
-                callbackPassword);
-    }
-
-    public String getUrl() {
-        return String.format("https://api.twilio.com/2010-04-01/Accounts/%s/", sid);
+    public final boolean isConfigured() {
+        return StringUtils.isNoneEmpty(credentialsJsonPath, projectId);
     }
 }

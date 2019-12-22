@@ -71,6 +71,7 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
         assertLoginWithWrongCredentials("*", "xxxxxxx");
         assertLoginWithWrongCredentials(TestUser.U1.getSimlarId(), null);
         assertLoginWithWrongCredentials(TestUser.U1.getSimlarId(), "xxxxxxx");
+        assertLoginWithWrongCredentials(TestUser.SIMLAR_ID_NOT_REGISTERED, "xxxxxxx");
     }
 
     private void assertStorePushId(final TestUser testUser, final int deviceType, final String pushId) {
