@@ -38,14 +38,14 @@ ext {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
-    compileOnly("org.projectlombok:lombok:$lombokVersion")
-    testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
-    testCompileOnly("org.projectlombok:lombok:$lombokVersion")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
 
-    compileOnly("com.github.spotbugs:spotbugs-annotations:$spotbugsVersion")
-    testCompileOnly("com.github.spotbugs:spotbugs-annotations:$spotbugsVersion")
-    spotbugs("com.github.spotbugs:spotbugs:$spotbugsVersion")
+    compileOnly("com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}")
+    testCompileOnly("com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}")
+    spotbugs("com.github.spotbugs:spotbugs:${spotbugsVersion}")
     spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.4.7")
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1")
 
