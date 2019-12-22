@@ -63,11 +63,11 @@ final class SendPushNotificationController {
 
         final String configuredApiKey = pushNotificationsSettings.getApiKey();
         if (StringUtils.isBlank(configuredApiKey)) {
-            throw  new XmlErrorWrongCredentialsException("received apiKey '" + apiKey + "' but none configured");
+            throw new XmlErrorWrongCredentialsException("received apiKey '" + apiKey + "' but none configured");
         }
 
         if (!StringUtils.equals(apiKey, configuredApiKey)) {
-            throw  new XmlErrorWrongCredentialsException("wrong apiKey '" + apiKey + '\'');
+            throw new XmlErrorWrongCredentialsException("wrong apiKey '" + apiKey + '\'');
         }
 
         final String messageId = pushNotificationsService.sendPushNotification(SimlarId.create(simlarId));
