@@ -31,10 +31,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 
-@SuppressWarnings("DesignForExtension") // mocked in tests
 @Slf4j
 @Component
-public class GooglePushNotificationService {
+public final class GooglePushNotificationService {
     private final GooglePushNotificationSettingsService pushNotificationSettings;
 
     @Nullable
