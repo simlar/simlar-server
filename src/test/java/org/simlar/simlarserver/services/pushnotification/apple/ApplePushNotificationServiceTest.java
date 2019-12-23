@@ -29,7 +29,7 @@ import static org.junit.Assume.assumeTrue;
 @SpringBootTest(classes = SimlarServer.class)
 public final class ApplePushNotificationServiceTest {
     @Autowired
-    private ApplePushNotificationSettingsService pushNotificationSettings;
+    private ApplePushNotificationSettings pushNotificationSettings;
 
     @Autowired
     private ApplePushNotificationService applePushNotificationService;
@@ -72,7 +72,7 @@ public final class ApplePushNotificationServiceTest {
     @Test
     public void testConnectToAppleWithWrongCertificatePinning() {
         try {
-            final ApplePushNotificationSettingsService settings = ApplePushNotificationSettingsService.builder()
+            final ApplePushNotificationSettings settings = ApplePushNotificationSettings.builder()
                     .sslProtocol(pushNotificationSettings.getSslProtocol())
                     .voipCertificatePath(pushNotificationSettings.getVoipCertificatePath())
                     .voipCertificatePassword(pushNotificationSettings.getVoipCertificatePassword())

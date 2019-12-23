@@ -34,7 +34,7 @@ import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsProviderLog;
 import org.simlar.simlarserver.database.repositories.SmsProviderLogRepository;
 import org.simlar.simlarserver.json.twilio.MessageResponse;
-import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.services.SharedSettings;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.TwilioCallBackErrorCode;
 import org.simlar.simlarserver.xml.XmlTwilioCallResponse;
@@ -55,20 +55,20 @@ public final class TwilioSmsService implements SmsService {
     public static final String REQUEST_PATH_CALL_STATUS = "twilio/call-status.json";
     public static final String REQUEST_PATH_CALL        = "twilio/call.xml";
 
-    private final SettingsService       settingsService;
-    private final TwilioSettingsService twilioSettingsService;
+    private final SharedSettings sharedSettings;
+    private final TwilioSettings twilioSettings;
     private final SmsProviderLogRepository smsProviderLogRepository;
 
     private String createCallbackBaseUrl() {
         return "https://" +
-                twilioSettingsService.getCallbackUser() + ':' + twilioSettingsService.getCallbackPassword() + '@' +
-                settingsService.getDomain() + ':' + settingsService.getPort() + '/';
+                twilioSettings.getCallbackUser() + ':' + twilioSettings.getCallbackPassword() + '@' +
+                sharedSettings.getDomain() + ':' + sharedSettings.getPort() + '/';
     }
 
     private String postRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {
         final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("To", telephoneNumber);
-        parameters.add("From", twilioSettingsService.getSmsSourceNumber());
+        parameters.add("From", twilioSettings.getSmsSourceNumber());
         //noinspection SwitchStatement
         switch (type) { // NOPMD.SwitchStmtsShouldHaveDefault
             case SMS:
@@ -82,8 +82,8 @@ public final class TwilioSmsService implements SmsService {
         }
 
         try {
-            final String response = new RestTemplateBuilder().basicAuthentication(twilioSettingsService.getSid(), twilioSettingsService.getAuthToken()).build()
-                    .postForObject(twilioSettingsService.getUrl() + type.getUrlPostfix(), parameters, String.class);
+            final String response = new RestTemplateBuilder().basicAuthentication(twilioSettings.getSid(), twilioSettings.getAuthToken()).build()
+                    .postForObject(twilioSettings.getUrl() + type.getUrlPostfix(), parameters, String.class);
 
             log.info("response to '{}' request: '{}'", type, response);
             return response;
@@ -135,8 +135,8 @@ public final class TwilioSmsService implements SmsService {
 
     @SuppressWarnings({"BooleanMethodNameMustStartWithQuestion", "MethodWithMultipleReturnPoints"})
     private boolean doPostRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {
-        if (!twilioSettingsService.isConfigured()) {
-            log.error("twilio not configured '{}'", twilioSettingsService);
+        if (!twilioSettings.isConfigured()) {
+            log.error("twilio not configured '{}'", twilioSettings);
             smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, null, "SimlarServerException", "twilio not configured", text));
             return false;
         }

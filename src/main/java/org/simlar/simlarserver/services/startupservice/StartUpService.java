@@ -23,8 +23,9 @@ package org.simlar.simlarserver.services.startupservice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.simlar.simlarserver.services.settingsservice.SettingsService;
+import org.simlar.simlarserver.services.SharedSettings;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.services.versionservice.VersionService;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +44,17 @@ import java.sql.DatabaseMetaData;
 @Slf4j
 @Component
 final class StartUpService {
-    private final SettingsService   settingsService;
+    private final VersionService    versionService;
+    private final SharedSettings    sharedSettings;
     private final SubscriberService subscriberService;
     private final String            hibernateDdlAuto;
     private final String            datasourceUrl;
     private final String            databaseProduct;
 
     @Autowired // fix IntelliJ inspection warning unused
-    private StartUpService(final SettingsService settingsService, final SubscriberService subscriberService, final HibernateProperties hibernateProperties, final DataSource dataSource) {
-        this.settingsService   = settingsService;
+    private StartUpService(final VersionService versionService, final SharedSettings sharedSettings, final SubscriberService subscriberService, final HibernateProperties hibernateProperties, final DataSource dataSource) {
+        this.versionService    = versionService;
+        this.sharedSettings    = sharedSettings;
         this.subscriberService = subscriberService;
         hibernateDdlAuto       = hibernateProperties.getDdlAuto();
 
@@ -85,7 +88,7 @@ final class StartUpService {
     @SuppressWarnings("unused")
     @EventListener
     public void handleApplicationReadyEvent(final ApplicationReadyEvent event) {
-        log.info("started on domain='{}', hibernateDdlAuto='{}', dataSource='{}', databaseProduct='{}' and version='{}'", settingsService.getDomain(), hibernateDdlAuto, datasourceUrl, databaseProduct, settingsService.getVersion());
+        log.info("started on domain='{}', hibernateDdlAuto='{}', dataSource='{}', databaseProduct='{}' and version='{}'", sharedSettings.getDomain(), hibernateDdlAuto, datasourceUrl, databaseProduct, versionService.getVersion());
 
         if (event.getApplicationContext() instanceof WebApplicationContext && ("create-drop".equals(hibernateDdlAuto) || StringUtils.contains(datasourceUrl, "h2:mem"))) {
             createTestData();

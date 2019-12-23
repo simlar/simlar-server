@@ -63,7 +63,7 @@ public final class CreateAccountService {
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{" + Password.REGISTRATION_CODE_LENGTH + '}');
 
     private final SmsService smsService;
-    private final CreateAccountSettingsService settingsService;
+    private final CreateAccountSettings createAccountSettings;
     private final AccountCreationRequestCountRepository accountCreationRepository;
     private final SubscriberService subscriberService;
     private final TransactionTemplate transactionTemplate;
@@ -71,19 +71,19 @@ public final class CreateAccountService {
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
     @Autowired // fix IntelliJ inspection warning unused
-    private CreateAccountService(final SmsService smsService, final CreateAccountSettingsService settingsService, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
+    private CreateAccountService(final SmsService smsService, final CreateAccountSettings createAccountSettings, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
         this.smsService = smsService;
-        this.settingsService = settingsService;
+        this.createAccountSettings = createAccountSettings;
         this.accountCreationRepository = accountCreationRepository;
         this.subscriberService = subscriberService;
         transactionTemplate = new TransactionTemplate(transactionManager);
         this.taskScheduler = taskScheduler;
 
-        for (final RegionalSettings regional: settingsService.getRegionalSettings()) {
+        for (final RegionalSettings regional: createAccountSettings.getRegionalSettings()) {
             log.info("regional setting region code '{}' with max requests per hour '{}'", regional.getRegionCode(), regional.getMaxRequestsPerHour());
         }
 
-        log.info("alert sms numbers '{}'", String.join(", ", settingsService.getAlertSmsNumbers()));
+        log.info("alert sms numbers '{}'", String.join(", ", createAccountSettings.getAlertSmsNumbers()));
     }
 
     public AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip) {
@@ -98,17 +98,17 @@ public final class CreateAccountService {
         }
 
         final Instant anHourAgo = now.minus(Duration.ofHours(1));
-        checkRequestTriesLimit(accountCreationRepository.sumRequestTries(ip, anHourAgo), settingsService.getMaxRequestsPerIpPerHour(),
+        checkRequestTriesLimit(accountCreationRepository.sumRequestTries(ip, anHourAgo), createAccountSettings.getMaxRequestsPerIpPerHour(),
                 String.format("too many create account requests for ip '%s' ", ip));
 
-        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(anHourAgo), settingsService.getMaxRequestsTotalPerHour(),
+        checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(anHourAgo), createAccountSettings.getMaxRequestsTotalPerHour(),
                 "too many total create account requests within one hour");
 
         checkRequestTriesLimitWithAlert(accountCreationRepository.sumRequestTries(now.minus(Duration.ofDays(1))),
-                settingsService.getMaxRequestsTotalPerDay(),
+                createAccountSettings.getMaxRequestsTotalPerDay(),
                 "too many total create account requests within one day");
 
-        for (final RegionalSettings regional: settingsService.getRegionalSettings()) {
+        for (final RegionalSettings regional: createAccountSettings.getRegionalSettings()) {
             final String regionCode = '*' + regional.getRegionCode();
             if (StringUtils.isNotEmpty(regionCode) && simlarId.get().startsWith(regionCode)) {
                 checkRequestTriesLimit(accountCreationRepository.sumRequestTriesForRegion(regionCode + '%', anHourAgo), regional.getMaxRequestsPerHour(),
@@ -117,10 +117,10 @@ public final class CreateAccountService {
         }
 
         final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip, now);
-        checkRequestTriesLimit(dbEntry.getRequestTries() - 1, settingsService.getMaxRequestsPerSimlarIdPerDay(),
+        checkRequestTriesLimit(dbEntry.getRequestTries() - 1, createAccountSettings.getMaxRequestsPerSimlarIdPerDay(),
                 String.format("too many create account requests with number '%s'", telephoneNumber));
 
-        if (Duration.between(dbEntry.getRegistrationCodeTimestamp().plus(Duration.ofMinutes(settingsService.getRegistrationCodeExpirationMinutes())), now).compareTo(Duration.ZERO) > 0) {
+        if (Duration.between(dbEntry.getRegistrationCodeTimestamp().plus(Duration.ofMinutes(createAccountSettings.getRegistrationCodeExpirationMinutes())), now).compareTo(Duration.ZERO) > 0) {
             dbEntry.setRegistrationCode(Password.generateRegistrationCode());
             dbEntry.setRegistrationCodeTimestamp(now);
             dbEntry.setConfirmTries(0);
@@ -188,7 +188,7 @@ public final class CreateAccountService {
     private void checkRequestTriesLimitWithAlert(final Integer requests, final int limit, final String message) {
         final int requestTries = ObjectUtils.defaultIfNull(requests, 0);
         if (requestTries == limit / 2) {
-            for (final String alertNumber: settingsService.getAlertSmsNumbers()) {
+            for (final String alertNumber: createAccountSettings.getAlertSmsNumbers()) {
                 smsService.sendSms(alertNumber, String.format("50%% Alert for %s %d", message, requestTries));
             }
         } else {
@@ -209,10 +209,10 @@ public final class CreateAccountService {
             }
 
             final long secondsSinceRequest = Duration.between(dbEntry.getTimestamp(), now).getSeconds();
-            if (secondsSinceRequest < settingsService.getCallDelaySecondsMin()) {
+            if (secondsSinceRequest < createAccountSettings.getCallDelaySecondsMin()) {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because not enough time elapsed since request: " + secondsSinceRequest + 's');
             }
-            if (secondsSinceRequest > settingsService.getCallDelaySecondsMax()) {
+            if (secondsSinceRequest > createAccountSettings.getCallDelaySecondsMax()) {
                 throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too much time elapsed since request: " + secondsSinceRequest + 's');
             }
 
@@ -236,7 +236,7 @@ public final class CreateAccountService {
 
         final AccountCreationRequestCount dbEntry = updateCalls(simlarId, password, now);
 
-        if (dbEntry.getCalls() > settingsService.getMaxCalls()) {
+        if (dbEntry.getCalls() > createAccountSettings.getMaxCalls()) {
             throw new XmlErrorCallNotAllowedAtTheMomentException("aborting call to " + simlarId + " because too many calls within the last 24 hours");
         }
 
@@ -275,7 +275,7 @@ public final class CreateAccountService {
         }
 
         final int confirmTries = creationRequest.getConfirmTries();
-        if (confirmTries > settingsService.getMaxConfirms()) {
+        if (confirmTries > createAccountSettings.getMaxConfirms()) {
             throw new XmlErrorTooManyConfirmTriesException("Too many confirm tries(" + confirmTries + ") for simlarId: " + simlarId);
         }
 

@@ -19,20 +19,20 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification;
+package org.simlar.simlarserver.services.versionservice;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@SuppressWarnings("unused")
-@AllArgsConstructor
 @Getter
-@ToString
-@ConstructorBinding
-@ConfigurationProperties(prefix = "push")
-public class PushNotificationSettingsService {
-    private final String apiKey;
+@Component
+public final class VersionService {
+    private final String version;
+
+    @Autowired // fix IntelliJ inspection warning unused
+    public VersionService(@Value("${info.app.version:}") final String version) {
+        this.version = version;
+    }
 }

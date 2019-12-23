@@ -34,12 +34,12 @@ import java.util.Collections;
 @Slf4j
 @Component
 public final class GooglePushNotificationService {
-    private final GooglePushNotificationSettingsService pushNotificationSettings;
+    private final GooglePushNotificationSettings pushNotificationSettings;
 
     @Nullable
     private final GoogleCredentials googleCredentials;
 
-    GooglePushNotificationService(final GooglePushNotificationSettingsService pushNotificationSettings) {
+    GooglePushNotificationService(final GooglePushNotificationSettings pushNotificationSettings) {
         this.pushNotificationSettings = pushNotificationSettings;
 
         googleCredentials = pushNotificationSettings.isConfigured()

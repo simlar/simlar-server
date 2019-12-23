@@ -46,7 +46,7 @@ import java.util.Objects;
 @Slf4j
 @Component
 public final class ApplePushNotificationService {
-    private final ApplePushNotificationSettingsService pushNotificationSettings;
+    private final ApplePushNotificationSettings pushNotificationSettings;
 
     @Nullable
     static String getCertificateSubject(final KeyStore keyStore, final String alias) {

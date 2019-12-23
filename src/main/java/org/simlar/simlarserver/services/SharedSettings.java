@@ -19,37 +19,28 @@
  *
  */
 
-package org.simlar.simlarserver.services.twilio;
+package org.simlar.simlarserver.services;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
-@AllArgsConstructor
+@SuppressWarnings("PMD.AvoidUsingShortType")
 @Getter
-@ToString
 @ConstructorBinding
-@ConfigurationProperties(prefix = "twilio")
-final class TwilioSettingsService {
-    private final String smsSourceNumber;
-    private final String sid;
-    private final String authToken;
-    private final String callbackUser;
-    private final String callbackPassword;
+@ConfigurationProperties
+public final class SharedSettings {
+    private final String domain;
+    private final short port;
 
-    public boolean isConfigured() {
-        return StringUtils.isNoneEmpty(
-                smsSourceNumber,
-                sid,
-                authToken,
-                callbackUser,
-                callbackPassword);
-    }
-
-    public String getUrl() {
-        return String.format("https://api.twilio.com/2010-04-01/Accounts/%s/", sid);
+    @Autowired // fix IntelliJ inspection warning unused
+    public SharedSettings(
+            @DefaultValue("") final String domain,
+            @DefaultValue("6161") final short port
+    ) {
+        this.domain = domain;
+        this.port = port;
     }
 }

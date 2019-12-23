@@ -34,7 +34,7 @@ import java.util.List;
 @Getter
 @ConstructorBinding
 @ConfigurationProperties(prefix = "create.account")
-public final class CreateAccountSettingsService {
+public final class CreateAccountSettings {
     private final List<String> alertSmsNumbers;
 
     private final int maxRequestsPerSimlarIdPerDay;
@@ -61,7 +61,7 @@ public final class CreateAccountSettingsService {
 
     @Autowired // fix IntelliJ inspection warning unused
     @SuppressWarnings("ConstructorWithTooManyParameters")
-    public CreateAccountSettingsService(
+    public CreateAccountSettings(
             @DefaultValue("") final String[] alertSmsNumbers,
             @DefaultValue("10") final int maxRequestsPerSimlarIdPerDay,
             @DefaultValue("60") final int maxRequestsPerIpPerHour,

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Simlar Authors.
+ * Copyright (C) 2016 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,10 +19,9 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification.apple;
+package org.simlar.simlarserver.services.twilio;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
@@ -32,20 +31,25 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @AllArgsConstructor
 @Getter
 @ToString
-@Builder
 @ConstructorBinding
-@ConfigurationProperties(prefix = "push.apple")
-class ApplePushNotificationSettingsService {
-    private final String voipCertificatePath;
-    private final String voipCertificatePassword;
-    private final String voipCertificatePinning;
-    private final String sslProtocol;
-    private final String voipTestDeviceToken;
+@ConfigurationProperties(prefix = "twilio")
+final class TwilioSettings {
+    private final String smsSourceNumber;
+    private final String sid;
+    private final String authToken;
+    private final String callbackUser;
+    private final String callbackPassword;
 
-    public final boolean isConfigured() {
+    public boolean isConfigured() {
         return StringUtils.isNoneEmpty(
-                voipCertificatePath,
-                voipCertificatePassword,
-                sslProtocol);
+                smsSourceNumber,
+                sid,
+                authToken,
+                callbackUser,
+                callbackPassword);
+    }
+
+    public String getUrl() {
+        return String.format("https://api.twilio.com/2010-04-01/Accounts/%s/", sid);
     }
 }

@@ -78,7 +78,7 @@ public final class CreateAccountServiceTest {
     private SmsService smsService;
 
     @Autowired
-    private CreateAccountSettingsService settingsService;
+    private CreateAccountSettings createAccountSettings;
 
     @Autowired
     private AccountCreationRequestCountRepository accountCreationRepository;
@@ -154,14 +154,14 @@ public final class CreateAccountServiceTest {
 
     @SuppressWarnings("MethodWithMultipleLoops")
     private void assertCreateAccountRequestSuccessWithSmsAlert(final String telephoneNumber, final String ip) {
-        for (final String alertNumber: settingsService.getAlertSmsNumbers()) {
+        for (final String alertNumber: createAccountSettings.getAlertSmsNumbers()) {
             when(smsService.sendSms(eq(alertNumber), anyString())).thenReturn(Boolean.TRUE);
         }
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
 
         createAccountService.createAccountRequest(telephoneNumber, "", ip);
 
-        for (final String alertNumber: settingsService.getAlertSmsNumbers()) {
+        for (final String alertNumber: createAccountSettings.getAlertSmsNumbers()) {
             verify(smsService).sendSms(eq(alertNumber), anyString());
         }
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
@@ -192,7 +192,7 @@ public final class CreateAccountServiceTest {
     public void testCreateAccountRequestTelephoneNumberLimit() {
         final String telephoneNumber = "+15005023024";
 
-        final int max = settingsService.getMaxRequestsPerSimlarIdPerDay();
+        final int max = createAccountSettings.getMaxRequestsPerSimlarIdPerDay();
         for (int i = 0; i < max; i++) {
             reset(smsService);
             if (i % 2 == 0) {
@@ -211,7 +211,7 @@ public final class CreateAccountServiceTest {
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
         assertEquals(before.getConfirmTries(), after.getConfirmTries());
         assertEquals(before.getRequestTries() + 1, after.getRequestTries());
-        assertEquals(settingsService.getMaxRequestsPerSimlarIdPerDay() + 1, after.getRequestTries());
+        assertEquals(createAccountSettings.getMaxRequestsPerSimlarIdPerDay() + 1, after.getRequestTries());
         assertEquals(before.getRegistrationCode(), after.getRegistrationCode());
         assertEquals(before.getPassword(), after.getPassword());
 
@@ -239,7 +239,7 @@ public final class CreateAccountServiceTest {
     public void testCreateAccountRequestIpLimitWithinOneHour() {
         final String ip = "192.168.23.42";
 
-        final int max = settingsService.getMaxRequestsPerIpPerHour();
+        final int max = createAccountSettings.getMaxRequestsPerIpPerHour();
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = "+1500502304" + i % 10;
             reset(smsService);
@@ -265,7 +265,7 @@ public final class CreateAccountServiceTest {
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHour() {
-        final int max = settingsService.getMaxRequestsTotalPerHour();
+        final int max = createAccountSettings.getMaxRequestsTotalPerHour();
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = "+1500502214" + i % 10;
             final String ip = "192.168.42." + (i % 255 + 1);
@@ -295,7 +295,7 @@ public final class CreateAccountServiceTest {
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneDay() {
-        final int max = settingsService.getMaxRequestsTotalPerDay();
+        final int max = createAccountSettings.getMaxRequestsTotalPerDay();
         for (int i = 0; i < max; i++) {
             reset(smsService);
             final String number = "1500501201" + i % 10;
@@ -334,7 +334,7 @@ public final class CreateAccountServiceTest {
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHourRegionalLimit() {
-        final int max = settingsService.getRegionalSettings().get(0).getMaxRequestsPerHour();
+        final int max = createAccountSettings.getRegionalSettings().get(0).getMaxRequestsPerHour();
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = "+1600502214" + i % 10;
             final String ip = "192.168.23." + (i % 255 + 1);
@@ -381,9 +381,9 @@ public final class CreateAccountServiceTest {
         final String sms2 = createAccountRequestReceiveSms(telephoneNumber2, now);
         assertNotEquals(sms1, sms2);
 
-        final int expirationMinutes = settingsService.getRegistrationCodeExpirationMinutes();
+        final int expirationMinutes = createAccountSettings.getRegistrationCodeExpirationMinutes();
         @SuppressWarnings("MultiplyOrDivideByPowerOfTwo")
-        final int stepSize = expirationMinutes / settingsService.getMaxRequestsPerIpPerHour() * 2 + 2;
+        final int stepSize = expirationMinutes / createAccountSettings.getMaxRequestsPerIpPerHour() * 2 + 2;
         for (int i = 1; i < expirationMinutes / stepSize; ++i) {
             final int minutes = i * stepSize;
             assertEquals("after " + minutes + 'm', sms1, createAccountRequestReceiveSms(telephoneNumber1, now.plusSeconds(minutes * 60L)));
@@ -414,28 +414,28 @@ public final class CreateAccountServiceTest {
         final String telephoneNumber = "+15005012150";
         Instant now = Instant.now();
 
-        final int max = settingsService.getMaxCalls();
+        final int max = createAccountSettings.getMaxCalls();
         for (int i = 0; i < max; ++i) {
             final AccountRequest accountRequest = assertCreateAccountRequestSuccess(telephoneNumber, now);
-            now = now.plusSeconds(settingsService.getCallDelaySecondsMin() + 2);
+            now = now.plusSeconds(createAccountSettings.getCallDelaySecondsMin() + 2);
             assertCreateAccountCallSuccess(telephoneNumber, accountRequest.getPassword(), now);
         }
 
         final AccountRequest accountRequest = assertCreateAccountRequestSuccess(telephoneNumber, now);
-        now = now.plusSeconds(settingsService.getCallDelaySecondsMin() + 2);
+        now = now.plusSeconds(createAccountSettings.getCallDelaySecondsMin() + 2);
         assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest.getPassword(), now);
 
 
         // wait 12 hours and try again
         now = now.plus(Duration.ofHours(12)).plusSeconds(2);
         final AccountRequest accountRequest2 = assertCreateAccountRequestSuccess(telephoneNumber, now);
-        now = now.plusSeconds(settingsService.getCallDelaySecondsMin() + 2);
+        now = now.plusSeconds(createAccountSettings.getCallDelaySecondsMin() + 2);
         assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest2.getPassword(), now);
 
         // wait 12 hours and try again with success
         now = now.plus(Duration.ofHours(12)).plusSeconds(2);
         final AccountRequest accountRequest3 = assertCreateAccountRequestSuccess(telephoneNumber, now);
-        now = now.plusSeconds(settingsService.getCallDelaySecondsMin() + 2);
+        now = now.plusSeconds(createAccountSettings.getCallDelaySecondsMin() + 2);
         assertCreateAccountCallSuccess(telephoneNumber, accountRequest3.getPassword(), now);
     }
 }

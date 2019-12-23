@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.services.pushnotification.PushNotificationService;
-import org.simlar.simlarserver.services.pushnotification.PushNotificationSettingsService;
+import org.simlar.simlarserver.services.pushnotification.PushNotificationSettings;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessSendPushNotification;
@@ -48,7 +48,7 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
 
     @SuppressWarnings("unused")
     @MockBean
-    private PushNotificationSettingsService pushNotificationSettings;
+    private PushNotificationSettings pushNotificationSettings;
 
     private <T> T postSendPushNotification(final Class<T> responseClass, final String apiKey, final String simlarId) {
         return postRequest(responseClass, SendPushNotificationController.REQUEST_PATH, createParameters(new String[][] {
