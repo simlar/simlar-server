@@ -45,7 +45,7 @@ import java.sql.DatabaseMetaData;
 @Component
 final class StartUpService {
     private final VersionService    versionService;
-    private final SharedSettings sharedSettings;
+    private final SharedSettings    sharedSettings;
     private final SubscriberService subscriberService;
     private final String            hibernateDdlAuto;
     private final String            datasourceUrl;
