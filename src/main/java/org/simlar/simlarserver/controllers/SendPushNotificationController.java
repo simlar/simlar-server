@@ -47,19 +47,19 @@ final class SendPushNotificationController {
     /**
      * This method handles http post requests. You may test it with:
      * <blockquote>
-     * curl --data "apiKey=someKey&simlarId=*0001*" http://localhost:8080/send-push-notification.xml
+     * curl --data "apiKey=someKey&callee=*0001*" http://localhost:8080/send-push-notification.xml
      * </blockquote>
      *
      * @param apiKey
      *            a key for authorization
-     * @param simlarId
-     *            the simlarId identifies the client the push notification should go to
+     * @param callee
+     *            a simlarId identifying the client the push notification should go to
      * @return XmlError or XmlSuccessPushSendNotification
      *            error message or success message containing deviceType and pushId
      */
     @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE)
-    public XmlSuccessSendPushNotification sendPushNotification(@RequestParam final String apiKey, @RequestParam final String simlarId) {
-        log.info("'{}' requested with simlarId '{}'", REQUEST_PATH, simlarId);
+    public XmlSuccessSendPushNotification sendPushNotification(@RequestParam final String apiKey, @RequestParam final String callee) {
+        log.info("'{}' requested with callee '{}'", REQUEST_PATH, callee);
 
         final String configuredApiKey = pushNotificationsSettings.getApiKey();
         if (StringUtils.isBlank(configuredApiKey)) {
@@ -70,9 +70,9 @@ final class SendPushNotificationController {
             throw new XmlErrorWrongCredentialsException("wrong apiKey '" + apiKey + '\'');
         }
 
-        final String messageId = pushNotificationsService.sendPushNotification(null, SimlarId.create(simlarId));
+        final String messageId = pushNotificationsService.sendPushNotification(null, SimlarId.create(callee));
         if (StringUtils.isBlank(messageId)) {
-            throw new XmlErrorFailedToRequestPushNotificationException("failed to request push notification to simlarId '" + simlarId + '\'');
+            throw new XmlErrorFailedToRequestPushNotificationException("failed to request push notification to callee '" + callee + '\'');
         }
 
         return new XmlSuccessSendPushNotification(messageId);

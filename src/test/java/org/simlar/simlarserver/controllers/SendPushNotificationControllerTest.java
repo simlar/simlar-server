@@ -50,10 +50,10 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
     @MockBean
     private PushNotificationSettings pushNotificationSettings;
 
-    private <T> T postSendPushNotification(final Class<T> responseClass, final String apiKey, final String simlarId) {
+    private <T> T postSendPushNotification(final Class<T> responseClass, final String apiKey, final String callee) {
         return postRequest(responseClass, SendPushNotificationController.REQUEST_PATH, createParameters(new String[][] {
                 { "apiKey", apiKey },
-                { "simlarId", simlarId }
+                { "callee", callee }
         }));
     }
 
@@ -90,13 +90,13 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
 
     @Test
     public void testSendPushNotification() {
-        final SimlarId simlarId = SimlarId.create("*0001*");
-        assertNotNull(simlarId);
+        final SimlarId callee = SimlarId.create("*0001*");
+        assertNotNull(callee);
 
-        when(pushNotificationsService.sendPushNotification(null, simlarId)).thenReturn("someMessageId");
-        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class, API_KEY, simlarId.get());
+        when(pushNotificationsService.sendPushNotification(null, callee)).thenReturn("someMessageId");
+        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class, API_KEY, callee.get());
 
-        verify(pushNotificationsService).sendPushNotification(eq(null), eq(simlarId));
+        verify(pushNotificationsService).sendPushNotification(eq(null), eq(callee));
         assertNotNull(response);
         assertEquals("someMessageId", response.getMessageId());
     }
