@@ -83,7 +83,7 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
     public void testSendPushNotificationWithMalformattedSimlarId() {
         final XmlError response = postSendPushNotification(XmlError.class, API_KEY, "NoSimlarId");
 
-        verify(pushNotificationsService).sendPushNotification(eq(null));
+        verify(pushNotificationsService).sendPushNotification(eq(null), eq(null));
         assertNotNull(response);
         assertEquals(98, response.getId());
     }
@@ -93,10 +93,10 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
         final SimlarId simlarId = SimlarId.create("*0001*");
         assertNotNull(simlarId);
 
-        when(pushNotificationsService.sendPushNotification(simlarId)).thenReturn("someMessageId");
+        when(pushNotificationsService.sendPushNotification(null, simlarId)).thenReturn("someMessageId");
         final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class, API_KEY, simlarId.get());
 
-        verify(pushNotificationsService).sendPushNotification(eq(simlarId));
+        verify(pushNotificationsService).sendPushNotification(eq(null), eq(simlarId));
         assertNotNull(response);
         assertEquals("someMessageId", response.getMessageId());
     }

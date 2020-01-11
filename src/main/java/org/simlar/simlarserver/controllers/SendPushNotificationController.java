@@ -70,7 +70,7 @@ final class SendPushNotificationController {
             throw new XmlErrorWrongCredentialsException("wrong apiKey '" + apiKey + '\'');
         }
 
-        final String messageId = pushNotificationsService.sendPushNotification(SimlarId.create(simlarId));
+        final String messageId = pushNotificationsService.sendPushNotification(null, SimlarId.create(simlarId));
         if (StringUtils.isBlank(messageId)) {
             throw new XmlErrorFailedToRequestPushNotificationException("failed to request push notification to simlarId '" + simlarId + '\'');
         }
