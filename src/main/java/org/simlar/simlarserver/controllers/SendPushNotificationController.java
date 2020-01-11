@@ -52,14 +52,16 @@ final class SendPushNotificationController {
      *
      * @param apiKey
      *            a key for authorization
+     * @param caller
+     *            a simlarId identifying the client starting the call
      * @param callee
      *            a simlarId identifying the client the push notification should go to
      * @return XmlError or XmlSuccessPushSendNotification
      *            error message or success message containing deviceType and pushId
      */
     @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE)
-    public XmlSuccessSendPushNotification sendPushNotification(@RequestParam final String apiKey, @RequestParam final String callee) {
-        log.info("'{}' requested with callee '{}'", REQUEST_PATH, callee);
+    public XmlSuccessSendPushNotification sendPushNotification(@RequestParam final String apiKey, @RequestParam final String caller, @RequestParam final String callee) {
+        log.info("push notification requested with caller '{}' inviting callee '{}'", caller, callee);
 
         final String configuredApiKey = pushNotificationsSettings.getApiKey();
         if (StringUtils.isBlank(configuredApiKey)) {
@@ -70,9 +72,9 @@ final class SendPushNotificationController {
             throw new XmlErrorWrongCredentialsException("wrong apiKey '" + apiKey + '\'');
         }
 
-        final String messageId = pushNotificationsService.sendPushNotification(null, SimlarId.create(callee));
+        final String messageId = pushNotificationsService.sendPushNotification(SimlarId.create(caller), SimlarId.create(callee));
         if (StringUtils.isBlank(messageId)) {
-            throw new XmlErrorFailedToRequestPushNotificationException("failed to request push notification to callee '" + callee + '\'');
+            throw new XmlErrorFailedToRequestPushNotificationException("failed to request push notification with caller '" + caller + "' inviting  callee '" + callee + '\'');
         }
 
         return new XmlSuccessSendPushNotification(messageId);

@@ -50,9 +50,10 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
     @MockBean
     private PushNotificationSettings pushNotificationSettings;
 
-    private <T> T postSendPushNotification(final Class<T> responseClass, final String apiKey, final String callee) {
+    private <T> T postSendPushNotification(final Class<T> responseClass, final String apiKey, final String caller, final String callee) {
         return postRequest(responseClass, SendPushNotificationController.REQUEST_PATH, createParameters(new String[][] {
                 { "apiKey", apiKey },
+                { "caller", caller },
                 { "callee", callee }
         }));
     }
@@ -65,7 +66,7 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
     @Test
     public void testSendPushNotificationWithNoApiKeyConfigured() {
         when(pushNotificationSettings.getApiKey()).thenReturn(null);
-        final XmlError response = postSendPushNotification(XmlError.class, null, "NoSimlarId");
+        final XmlError response = postSendPushNotification(XmlError.class, null, "NoSimlarId", "NoSimlarId2");
 
         assertNotNull(response);
         assertEquals(10, response.getId());
@@ -73,7 +74,7 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
 
     @Test
     public void testSendPushNotificationWithWrongApiKey() {
-        final XmlError response = postSendPushNotification(XmlError.class, "wrongApiKey", "NoSimlarId");
+        final XmlError response = postSendPushNotification(XmlError.class, "wrongApiKey", "NoSimlarId", "NoSimlarId2");
 
         assertNotNull(response);
         assertEquals(10, response.getId());
@@ -81,7 +82,7 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
 
     @Test
     public void testSendPushNotificationWithMalformattedSimlarId() {
-        final XmlError response = postSendPushNotification(XmlError.class, API_KEY, "NoSimlarId");
+        final XmlError response = postSendPushNotification(XmlError.class, API_KEY, "NoSimlarId", "NoSimlarId2");
 
         verify(pushNotificationsService).sendPushNotification(eq(null), eq(null));
         assertNotNull(response);
@@ -90,13 +91,16 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
 
     @Test
     public void testSendPushNotification() {
-        final SimlarId callee = SimlarId.create("*0001*");
+        final SimlarId caller = SimlarId.create("*0001*");
+        assertNotNull(caller);
+
+        final SimlarId callee = SimlarId.create("*0002*");
         assertNotNull(callee);
 
-        when(pushNotificationsService.sendPushNotification(null, callee)).thenReturn("someMessageId");
-        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class, API_KEY, callee.get());
+        when(pushNotificationsService.sendPushNotification(caller, callee)).thenReturn("someMessageId");
+        final XmlSuccessSendPushNotification response = postSendPushNotification(XmlSuccessSendPushNotification.class, API_KEY, caller.get(), callee.get());
 
-        verify(pushNotificationsService).sendPushNotification(eq(null), eq(callee));
+        verify(pushNotificationsService).sendPushNotification(eq(caller), eq(callee));
         assertNotNull(response);
         assertEquals("someMessageId", response.getMessageId());
     }
