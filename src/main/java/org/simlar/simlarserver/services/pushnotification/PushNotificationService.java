@@ -43,15 +43,15 @@ public final class PushNotificationService {
     private final GooglePushNotificationService googlePushNotificationService;
 
     @Nullable
-    public String sendPushNotification(final SimlarId simlarId) {
-        if (simlarId == null) {
+    public String sendPushNotification(final SimlarId callee) {
+        if (callee == null) {
             return null;
         }
 
-        final PushNotification pushNotification = pushNotificationsRepository.findBySimlarId(simlarId.get());
+        final PushNotification pushNotification = pushNotificationsRepository.findBySimlarId(callee.get());
         final DeviceType deviceType = pushNotification == null ? null : pushNotification.getDeviceType();
         if (deviceType == null) {
-            log.error("no device type found for simlarId '{}'", simlarId);
+            log.error("no device type found for callee '{}'", callee);
             return null;
         }
 
