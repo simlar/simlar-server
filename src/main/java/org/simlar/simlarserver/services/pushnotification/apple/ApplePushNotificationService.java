@@ -180,7 +180,7 @@ public final class ApplePushNotificationService {
             if (StringUtils.isEmpty(apnsId)) {
                 log.warn("request with device token '{}' received empty apnsId", deviceToken);
             } else {
-                log.info("request with device token '{}' successfully received apnsId '{}'", apnsId, deviceToken);
+                log.info("request with device token '{}' successfully received apnsId '{}'", deviceToken, apnsId);
             }
 
             return apnsId;
