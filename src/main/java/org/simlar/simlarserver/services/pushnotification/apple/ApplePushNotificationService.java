@@ -68,8 +68,6 @@ import java.util.Objects;
 @Slf4j
 @Component
 public final class ApplePushNotificationService {
-    private static final ApplePushNotificationRequestDetails PUSH_NOTIFICATION_DETAILS = new ApplePushNotificationRequestDetails("Simlar Call", "ringtone.wav");
-
     private final ApplePushNotificationSettings pushNotificationSettings;
 
     @Nullable
@@ -182,7 +180,7 @@ public final class ApplePushNotificationService {
         headers.add("apns-topic", "org.simlar.Simlar.voip");
         headers.add("apns-expiration", Long.toString(expiration.getEpochSecond()));
 
-        final ApplePushNotificationRequest request = new ApplePushNotificationRequest(PUSH_NOTIFICATION_DETAILS, caller);
+        final ApplePushNotificationRequest request = new ApplePushNotificationRequest(new ApplePushNotificationRequestDetails("Simlar Call", "ringtone.wav"), caller);
         final HttpEntity<ApplePushNotificationRequest> entity = new HttpEntity<>(request, headers);
 
         try {
