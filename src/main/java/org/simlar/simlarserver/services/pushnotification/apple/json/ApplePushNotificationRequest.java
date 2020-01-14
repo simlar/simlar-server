@@ -34,4 +34,6 @@ import lombok.ToString;
 public final class ApplePushNotificationRequest {
     @JsonProperty("aps")
     private final ApplePushNotificationRequestDetails details;
+
+    private final ApplePushNotificationRequestCaller caller;
 }
