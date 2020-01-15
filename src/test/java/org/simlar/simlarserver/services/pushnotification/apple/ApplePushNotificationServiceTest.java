@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
+import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestCaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -100,7 +101,8 @@ public final class ApplePushNotificationServiceTest {
                     .voipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=")
                     .build();
 
-            new ApplePushNotificationService(settings).requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
+            final ApplePushNotificationRequestCaller caller = new ApplePushNotificationRequestCaller("initializationVector", "encryptedSimlarId");
+            new ApplePushNotificationService(settings).requestVoipPushNotification(ApplePushServer.SANDBOX, caller, "invalidDeviceToken");
             fail("expected exception not thrown: " + ResourceAccessException.class.getSimpleName());
         } catch (final ResourceAccessException e) {
             assertEquals("SSLPeerUnverifiedException", e.getCause().getClass().getSimpleName());
@@ -112,7 +114,8 @@ public final class ApplePushNotificationServiceTest {
     @Test
     public void testConnectToAppleWithCertificateBadDeviceToken() {
         try {
-            applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, "invalidDeviceToken");
+            final ApplePushNotificationRequestCaller caller = new ApplePushNotificationRequestCaller("initializationVector", "encryptedSimlarId");
+            applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, caller, "invalidDeviceToken");
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
@@ -124,6 +127,11 @@ public final class ApplePushNotificationServiceTest {
     public void testRequestAppleVoipPushNotification() {
         final String deviceToken = pushNotificationSettings.getVoipTestDeviceToken();
         assumeTrue("This test needs a valid device token in the properties", StringUtils.isNotEmpty(deviceToken));
-        assertNotNull(applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, deviceToken));
+
+        final String passwordHash = pushNotificationSettings.getVoipTestPasswordHash();
+        assumeTrue("This test needs a valid password hash according to the device token in the properties", StringUtils.isNotEmpty(passwordHash));
+
+        final ApplePushNotificationRequestCaller caller = ApplePushNotificationRequestCaller.create("*0001*", passwordHash);
+        assertNotNull(applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, caller, deviceToken));
     }
 }

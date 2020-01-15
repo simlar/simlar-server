@@ -60,9 +60,9 @@ public final class PushNotificationService {
             case ANDROID:
                 return googlePushNotificationService.requestPushNotification(pushNotification.getPushId());
             case IOS_VOIP:
-                return applePushNotificationService.requestVoipPushNotification(ApplePushServer.PRODUCTION, pushNotification.getPushId());
+                return applePushNotificationService.requestVoipPushNotification(ApplePushServer.PRODUCTION, null, pushNotification.getPushId());
             case IOS_VOIP_DEVELOPMENT:
-                return applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, pushNotification.getPushId());
+                return applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, null, pushNotification.getPushId());
             case IOS:
             case IOS_DEVELOPMENT:
             default:
