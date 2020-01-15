@@ -35,6 +35,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -113,6 +114,22 @@ public final class SubscriberServiceTest {
         assertEquals(0, subscriberService.getStatus(simlarIdNotSaved));
         subscriberService.save(simlarIdSaved, "as234f2dsd");
         assertEquals(1, subscriberService.getStatus(simlarIdSaved));
+    }
+
+    @Test
+    public void testGetHa1() {
+        final SimlarId simlarIdSaved = SimlarId.create("*2004*");
+        final SimlarId simlarIdNotSaved = SimlarId.create("*2005*");
+
+        assertNull(subscriberService.getHa1(null));
+        assertNull(subscriberService.getHa1(simlarIdSaved));
+        assertNull(subscriberService.getHa1(simlarIdNotSaved));
+        subscriberService.save(simlarIdSaved, "xxxxxx");
+        //noinspection SpellCheckingInspection
+        assertEquals("9efee90fe330da22762a2493e6805a69", subscriberService.getHa1(simlarIdSaved));
+        assertNull(subscriberService.getHa1(simlarIdNotSaved));
+        subscriberService.save(simlarIdSaved, "as234f2dsd");
+        assertEquals("234f6f5d04f73725a14c8f3f3a664e11", subscriberService.getHa1(simlarIdSaved));
     }
 
     @DirtiesContext
