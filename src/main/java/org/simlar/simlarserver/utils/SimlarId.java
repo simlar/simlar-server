@@ -72,7 +72,7 @@ public final class SimlarId implements Comparable<SimlarId> {
         return simlarId;
     }
 
-    public static boolean check(final CharSequence input) {
+    static boolean check(final CharSequence input) {
         return input != null && REGEX_PATTERN_SIMLAR_ID.matcher(input).matches();
     }
 
