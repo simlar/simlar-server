@@ -45,17 +45,19 @@ public final class AesUtilTest {
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testEncrypt() {
-        assertEquals("yO/RCxz+1KPNiauH6OcOYw==", AesUtil.encrypt("*491761234567*", "s1i9Y10Y1GH3SyiqzDJt4A==", "ab977b3a12eff330413a17c263ae3115"));
-        assertEquals("omB8ufYAfl9weoZzMPJUSw==", AesUtil.encrypt("*0*", "qUsR756nX6zQEVhYPm6MoA==", "somePasswordHash"));
-        assertEquals("AXMwY3sWW2UZiX4jhXOxFA==", AesUtil.encrypt("*491761234567*", "HP8Lfz+Hg4V7+tHsJwSiXA==", "somePasswordHash"));
+        assertEquals("KyeJ9yu/uARXRlVruHINLQ==", AesUtil.encrypt("*491761234567*", "s1i9Y10Y1GH3SyiqzDJt4A==", "ab977b3a12eff330413a17c263ae3115"));
+        assertEquals("34luyz78kUfBNALRm71i8A==", AesUtil.encrypt("*0*", "qUsR756nX6zQEVhYPm6MoA==", "somePasswordHash"));
+        assertEquals("RFIHtCQB//cDF3VTh9ZWqQ==", AesUtil.encrypt("*491761234567*", "HP8Lfz+Hg4V7+tHsJwSiXA==", "somePasswordHash"));
+        assertEquals("kUh5p5CBGXpin5cJ2HmG4Q==", AesUtil.encrypt("*491761234567*", "HP8Lfz+Hg4V7+tHsJwSiXA==", "otherPasswordHash"));
     }
 
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testDecrypt() {
-        assertEquals("*491761234567*", AesUtil.decrypt("yO/RCxz+1KPNiauH6OcOYw==", "s1i9Y10Y1GH3SyiqzDJt4A==", "ab977b3a12eff330413a17c263ae3115"));
-        assertEquals("*0*", AesUtil.decrypt("omB8ufYAfl9weoZzMPJUSw==", "qUsR756nX6zQEVhYPm6MoA==", "somePasswordHash"));
-        assertEquals("*491761234567*", AesUtil.decrypt("AXMwY3sWW2UZiX4jhXOxFA==", "HP8Lfz+Hg4V7+tHsJwSiXA==", "somePasswordHash"));
+        assertEquals("*491761234567*", AesUtil.decrypt("KyeJ9yu/uARXRlVruHINLQ==", "s1i9Y10Y1GH3SyiqzDJt4A==", "ab977b3a12eff330413a17c263ae3115"));
+        assertEquals("*0*", AesUtil.decrypt("34luyz78kUfBNALRm71i8A==", "qUsR756nX6zQEVhYPm6MoA==", "somePasswordHash"));
+        assertEquals("*491761234567*", AesUtil.decrypt("RFIHtCQB//cDF3VTh9ZWqQ==", "HP8Lfz+Hg4V7+tHsJwSiXA==", "somePasswordHash"));
+        assertEquals("*491761234567*", AesUtil.decrypt("kUh5p5CBGXpin5cJ2HmG4Q==", "HP8Lfz+Hg4V7+tHsJwSiXA==", "otherPasswordHash"));
     }
 
     @Test

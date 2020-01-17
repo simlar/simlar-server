@@ -22,6 +22,7 @@ package org.simlar.simlarserver.utils;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.Nullable;
@@ -60,7 +61,7 @@ public final class AesUtil {
     private static byte[] aes(final int mode, final byte[] message, final String initializationVector, final String password) {
         try {
             final AlgorithmParameterSpec ivParameterSpec = new IvParameterSpec(Base64.decodeBase64(initializationVector));
-            final Key secretKeySpec = new SecretKeySpec(password.getBytes(StandardCharsets.UTF_8), "AES");
+            final Key secretKeySpec = new SecretKeySpec(DigestUtils.sha256(password), "AES");
 
             final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(mode, secretKeySpec, ivParameterSpec);
