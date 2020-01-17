@@ -29,7 +29,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -52,13 +52,17 @@ public final class AesUtil {
         return Base64.encodeBase64String(initializationVector);
     }
 
-    @SuppressFBWarnings("EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS")
+    @SuppressFBWarnings({
+            "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS", /// spring style
+            "CIPHER_INTEGRITY", /// no decryption oracle and integrity is given by the format of a simlarId
+            "STATIC_IV" /// false positive
+    })
     private static byte[] aes(final int mode, final byte[] message, final String initializationVector, final String password) {
         try {
-            final AlgorithmParameterSpec ivParameterSpec = new GCMParameterSpec(128, Base64.decodeBase64(initializationVector));
+            final AlgorithmParameterSpec ivParameterSpec = new IvParameterSpec(Base64.decodeBase64(initializationVector));
             final Key secretKeySpec = new SecretKeySpec(password.getBytes(StandardCharsets.UTF_8), "AES");
 
-            final Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(mode, secretKeySpec, ivParameterSpec);
             return cipher.doFinal(message);
         } catch (final NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
