@@ -56,7 +56,7 @@ public final class GooglePushNotificationServiceTest {
     @Test
     public void testGetJsonWebToken() {
         final String bearer = pushNotificationService.getAccessTokenValue();
-        assertEquals("ya29.c.Kl6", StringUtils.left(bearer, 10));
+        assertEquals("ya29.c.", StringUtils.left(bearer, 7));
     }
 
     @Test
