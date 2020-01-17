@@ -20,6 +20,7 @@
 
 package org.simlar.simlarserver.utils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -51,6 +52,11 @@ public final class AesUtil {
         return Base64.encodeBase64String(initializationVector);
     }
 
+    @SuppressFBWarnings({
+            "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS", /// spring style
+            "CIPHER_INTEGRITY", /// no decryption oracle and integrity is given by the format of a simlarId
+            "STATIC_IV" /// false positive
+    })
     private static byte[] aes(final int mode, final byte[] message, final String initializationVector, final String password) {
         try {
             final AlgorithmParameterSpec ivParameterSpec = new IvParameterSpec(Base64.decodeBase64(initializationVector));
