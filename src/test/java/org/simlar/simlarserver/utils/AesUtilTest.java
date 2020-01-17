@@ -45,17 +45,17 @@ public final class AesUtilTest {
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testEncrypt() {
-        assertEquals("yO/RCxz+1KPNiauH6OcOYw==", AesUtil.encrypt("*491761234567*", "s1i9Y10Y1GH3SyiqzDJt4A==", "ab977b3a12eff330413a17c263ae3115"));
-        assertEquals("omB8ufYAfl9weoZzMPJUSw==", AesUtil.encrypt("*0*", "qUsR756nX6zQEVhYPm6MoA==", "somePasswordHash"));
-        assertEquals("AXMwY3sWW2UZiX4jhXOxFA==", AesUtil.encrypt("*491761234567*", "HP8Lfz+Hg4V7+tHsJwSiXA==", "somePasswordHash"));
+        assertEquals("S5UdMzzRg28+ldRVlNOYboTGoEKGUmfTHMOV3lUz", AesUtil.encrypt("*491761234567*", "s1i9Y10Y1GH3SyiqzDJt4A==", "ab977b3a12eff330413a17c263ae3115"));
+        assertEquals("HY+HoJb4sOOMBiCrKVCw2I6ulQ==", AesUtil.encrypt("*0*", "qUsR756nX6zQEVhYPm6MoA==", "somePasswordHash"));
+        assertEquals("SqPbPo379YtXNq41uyOIVQpWrg28cLPZBejCH3VI", AesUtil.encrypt("*491761234567*", "HP8Lfz+Hg4V7+tHsJwSiXA==", "somePasswordHash"));
     }
 
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testDecrypt() {
-        assertEquals("*491761234567*", AesUtil.decrypt("yO/RCxz+1KPNiauH6OcOYw==", "s1i9Y10Y1GH3SyiqzDJt4A==", "ab977b3a12eff330413a17c263ae3115"));
-        assertEquals("*0*", AesUtil.decrypt("omB8ufYAfl9weoZzMPJUSw==", "qUsR756nX6zQEVhYPm6MoA==", "somePasswordHash"));
-        assertEquals("*491761234567*", AesUtil.decrypt("AXMwY3sWW2UZiX4jhXOxFA==", "HP8Lfz+Hg4V7+tHsJwSiXA==", "somePasswordHash"));
+        assertEquals("*491761234567*", AesUtil.decrypt("S5UdMzzRg28+ldRVlNOYboTGoEKGUmfTHMOV3lUz", "s1i9Y10Y1GH3SyiqzDJt4A==", "ab977b3a12eff330413a17c263ae3115"));
+        assertEquals("*0*", AesUtil.decrypt("HY+HoJb4sOOMBiCrKVCw2I6ulQ==", "qUsR756nX6zQEVhYPm6MoA==", "somePasswordHash"));
+        assertEquals("*491761234567*", AesUtil.decrypt("SqPbPo379YtXNq41uyOIVQpWrg28cLPZBejCH3VI", "HP8Lfz+Hg4V7+tHsJwSiXA==", "somePasswordHash"));
     }
 
     @Test
