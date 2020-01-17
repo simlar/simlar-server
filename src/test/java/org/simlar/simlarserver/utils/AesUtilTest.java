@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.utils;
 
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -28,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 public final class AesUtilTest {
     @Test
     public void testGenerateInitializationVector() {
-        assertEquals(16, AesUtil.generateInitializationVector().length());
+        assertEquals(16, Base64.decodeBase64(AesUtil.generateInitializationVector()).length);
     }
 
     @Test (expected = AesUtilException.class)
@@ -44,17 +45,17 @@ public final class AesUtilTest {
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testEncrypt() {
-        assertEquals("+w50s3gTRjT0Qiv/QxlTLQ==", AesUtil.encrypt("*491761234567*", "1234567890123456", "ab977b3a12eff330413a17c263ae3115"));
-        assertEquals("H8sDzqzLjhIRdenAYZsx5Q==", AesUtil.encrypt("*0*", "1234567890123456", "somePasswordHash"));
-        assertEquals("uKSO2MwGWDrloOhLwPa50g==", AesUtil.encrypt("*491761234567*", "1234567890123456", "somePasswordHash"));
+        assertEquals("yO/RCxz+1KPNiauH6OcOYw==", AesUtil.encrypt("*491761234567*", "s1i9Y10Y1GH3SyiqzDJt4A==", "ab977b3a12eff330413a17c263ae3115"));
+        assertEquals("omB8ufYAfl9weoZzMPJUSw==", AesUtil.encrypt("*0*", "qUsR756nX6zQEVhYPm6MoA==", "somePasswordHash"));
+        assertEquals("AXMwY3sWW2UZiX4jhXOxFA==", AesUtil.encrypt("*491761234567*", "HP8Lfz+Hg4V7+tHsJwSiXA==", "somePasswordHash"));
     }
 
     @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testDecrypt() {
-        assertEquals("*491761234567*", AesUtil.decrypt("+w50s3gTRjT0Qiv/QxlTLQ==", "1234567890123456", "ab977b3a12eff330413a17c263ae3115"));
-        assertEquals("*0*", AesUtil.decrypt("H8sDzqzLjhIRdenAYZsx5Q==", "1234567890123456", "somePasswordHash"));
-        assertEquals("*491761234567*", AesUtil.decrypt("uKSO2MwGWDrloOhLwPa50g==", "1234567890123456", "somePasswordHash"));
+        assertEquals("*491761234567*", AesUtil.decrypt("yO/RCxz+1KPNiauH6OcOYw==", "s1i9Y10Y1GH3SyiqzDJt4A==", "ab977b3a12eff330413a17c263ae3115"));
+        assertEquals("*0*", AesUtil.decrypt("omB8ufYAfl9weoZzMPJUSw==", "qUsR756nX6zQEVhYPm6MoA==", "somePasswordHash"));
+        assertEquals("*491761234567*", AesUtil.decrypt("AXMwY3sWW2UZiX4jhXOxFA==", "HP8Lfz+Hg4V7+tHsJwSiXA==", "somePasswordHash"));
     }
 
     @Test

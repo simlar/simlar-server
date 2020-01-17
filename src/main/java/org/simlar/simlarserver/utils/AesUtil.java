@@ -21,7 +21,6 @@
 package org.simlar.simlarserver.utils;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.Nullable;
@@ -36,6 +35,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
 @SuppressWarnings("UtilityClass")
@@ -45,12 +45,15 @@ public final class AesUtil {
     }
 
     public static String generateInitializationVector() {
-        return RandomStringUtils.randomAlphanumeric(16);
+        final byte[] initializationVector = new byte[16];
+        new SecureRandom().nextBytes(initializationVector);
+
+        return Base64.encodeBase64String(initializationVector);
     }
 
     private static byte[] aes(final int mode, final byte[] message, final String initializationVector, final String password) {
         try {
-            final AlgorithmParameterSpec ivParameterSpec = new IvParameterSpec(initializationVector.getBytes(StandardCharsets.UTF_8));
+            final AlgorithmParameterSpec ivParameterSpec = new IvParameterSpec(Base64.decodeBase64(initializationVector));
             final Key secretKeySpec = new SecretKeySpec(password.getBytes(StandardCharsets.UTF_8), "AES");
 
             final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
