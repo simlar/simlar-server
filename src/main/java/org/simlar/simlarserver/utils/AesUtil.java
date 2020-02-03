@@ -72,11 +72,11 @@ public final class AesUtil {
     }
 
     @Nullable
-    public static String encrypt(final String message, final String initializationVector, final String password){
+    public static String encrypt(final String message, final String initializationVector, final String password) {
         return Base64.encodeBase64String(aes(Cipher.ENCRYPT_MODE, message.getBytes(StandardCharsets.UTF_8), initializationVector, password));
     }
 
-    public static String decrypt(final String message, final String initializationVector, final String password){
+    public static String decrypt(final String message, final String initializationVector, final String password) {
         return new String(aes(Cipher.DECRYPT_MODE, Base64.decodeBase64(message), initializationVector, password), StandardCharsets.UTF_8);
     }
 }
