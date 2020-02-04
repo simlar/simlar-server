@@ -32,6 +32,7 @@ owasp
 parameterized
 parsable
 pipefail
+pkcs
 prmc
 readlink
 redistributors

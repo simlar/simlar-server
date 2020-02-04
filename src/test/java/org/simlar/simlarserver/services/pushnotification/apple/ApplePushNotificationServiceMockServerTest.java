@@ -28,6 +28,8 @@ import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpResponse;
+import org.mockserver.model.JsonBody;
+import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestCaller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -68,13 +70,24 @@ public final class ApplePushNotificationServiceMockServerTest {
                                 .withHeader("apns-push-type", "voip")
                                 .withHeader("apns-topic", "org.simlar.Simlar.voip")
                                 .withHeader("apns-expiration", Long.toString(expiration))
-                                .withBody("{\"aps\":{\"alert\":\"Simlar Call\",\"sound\":\"ringtone.wav\"}}")
+                                .withBody(new JsonBody(
+                                        "{\n" +
+                                        "  \"caller\" : {\n" +
+                                        "    \"initializationVector\" : \"someInitializationVector\",\n" +
+                                        "    \"encryptedSimlarId\" : \"someEncryptedSimlarId\"\n" +
+                                        "  },\n" +
+                                        "  \"aps\" : {\n" +
+                                        "    \"alert\" : \"Simlar Call\",\n" +
+                                        "    \"sound\" : \"ringtone.wav\"\n" +
+                                        "  }\n" +
+                                        "}\n"))
                 ).respond(response);
     }
 
     private String requestVoipPushNotification(final String deviceToken, final long expiration) {
         return applePushNotificationService.requestVoipPushNotification(
                 "http://localhost:" + mockServer.getLocalPort() + '/',
+                new ApplePushNotificationRequestCaller("someInitializationVector", "someEncryptedSimlarId"),
                 deviceToken,
                 "localhost",
                 Instant.ofEpochSecond(expiration));

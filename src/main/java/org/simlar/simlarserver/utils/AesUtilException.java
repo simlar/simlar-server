@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Simlar Authors.
+ * Copyright (C) 2020 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -16,24 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-package org.simlar.simlarserver.services.pushnotification.apple.json;
+package org.simlar.simlarserver.utils;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+public final class AesUtilException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public final class ApplePushNotificationRequest {
-    @JsonProperty("aps")
-    private final ApplePushNotificationRequestDetails details;
+    public AesUtilException(final String message) {
+        super(message);
+    }
 
-    private final ApplePushNotificationRequestCaller caller;
+    public AesUtilException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 }
