@@ -152,8 +152,8 @@ public final class ApplePushNotificationService {
         return (X509TrustManager) trustManager;
     }
 
-    public String requestVoipPushNotification(final ApplePushServer server, final String deviceToken) {
-        return requestVoipPushNotification(server.getUrl(), null, deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
+    public String requestVoipPushNotification(final ApplePushServer server, final ApplePushNotificationRequestCaller caller, final String deviceToken) {
+        return requestVoipPushNotification(server.getUrl(), caller, deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
     }
 
     @SuppressFBWarnings("EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS")

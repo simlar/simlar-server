@@ -21,22 +21,18 @@
 
 package org.simlar.simlarserver.services.pushnotification.apple.json;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import org.junit.Test;
 import org.simlar.simlarserver.utils.AesUtil;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public final class ApplePushNotificationRequestCaller {
-    private final String initializationVector;
-    private final String encryptedSimlarId;
+import static org.junit.Assert.assertEquals;
 
-    public static ApplePushNotificationRequestCaller create(final String callerSimlarId, final String calleePasswordHash) {
-        final String initializationVector = AesUtil.generateInitializationVector();
-        return new ApplePushNotificationRequestCaller(initializationVector, AesUtil.encrypt(callerSimlarId, initializationVector, calleePasswordHash));
+public final class ApplePushNotificationRequestCallerTest {
+    @Test
+    public void testCreate() {
+        final String simlarId = "*007*";
+        final String passwordHash = "3e05c148ee4f6e5bcb2bbad98c43d704";
+
+        final ApplePushNotificationRequestCaller caller = ApplePushNotificationRequestCaller.create(simlarId, passwordHash);
+        assertEquals(simlarId, AesUtil.decrypt(caller.getEncryptedSimlarId(), caller.getInitializationVector(), passwordHash));
     }
 }

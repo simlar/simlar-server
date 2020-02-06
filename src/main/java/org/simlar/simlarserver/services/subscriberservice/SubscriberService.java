@@ -24,6 +24,7 @@ package org.simlar.simlarserver.services.subscriberservice;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.SharedSettings;
@@ -86,25 +87,34 @@ public final class SubscriberService {
         return ids.get(0);
     }
 
-    public boolean checkCredentials(final String simlarId, @SuppressWarnings("TypeMayBeWeakened") final String ha1) {
-        if (!SimlarId.check(simlarId)) {
-            return false;
-        }
+    public boolean checkCredentials(final String simlarId, final String ha1) {
+        return checkCredentials(SimlarId.create(simlarId), ha1);
+    }
 
+    private boolean checkCredentials(final SimlarId simlarId, @SuppressWarnings("TypeMayBeWeakened") final String ha1) {
         if (StringUtils.isEmpty(ha1)) {
             return false;
         }
 
-        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain());
+        return StringUtils.equals(ha1, getHa1(simlarId));
+    }
+
+    @Nullable
+    public String getHa1(final SimlarId simlarId) {
+        if (simlarId == null) {
+            return null;
+        }
+
+        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), sharedSettings.getDomain());
         if (CollectionUtils.isEmpty(savedHa1s)) {
-            return false;
+            return null;
         }
 
         if (savedHa1s.size() > 1) {
             log.error("found more than 1 subscriber for simlarId={}", simlarId);
         }
 
-        return StringUtils.equals(ha1, savedHa1s.get(0));
+        return savedHa1s.get(0);
     }
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
