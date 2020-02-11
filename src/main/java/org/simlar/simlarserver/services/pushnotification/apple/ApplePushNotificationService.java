@@ -29,6 +29,7 @@ import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequest;
+import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestCaller;
 import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestDetails;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -151,12 +152,12 @@ public final class ApplePushNotificationService {
         return (X509TrustManager) trustManager;
     }
 
-    public String requestVoipPushNotification(final ApplePushServer server, final String deviceToken) {
-        return requestVoipPushNotification(server.getUrl(), deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
+    public String requestVoipPushNotification(final ApplePushServer server, final ApplePushNotificationRequestCaller caller, final String deviceToken) {
+        return requestVoipPushNotification(server.getUrl(), caller, deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
     }
 
     @SuppressFBWarnings("EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS")
-    String requestVoipPushNotification(final String url, final String deviceToken, final String urlPin, final Instant expiration) {
+    String requestVoipPushNotification(final String url, final ApplePushNotificationRequestCaller caller, final String deviceToken, final String urlPin, final Instant expiration) {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(
                         createSSLSocketFactory(),
@@ -179,7 +180,7 @@ public final class ApplePushNotificationService {
         headers.add("apns-topic", "org.simlar.Simlar.voip");
         headers.add("apns-expiration", Long.toString(expiration.getEpochSecond()));
 
-        final ApplePushNotificationRequest request = new ApplePushNotificationRequest(new ApplePushNotificationRequestDetails("Simlar Call", "ringtone.wav"));
+        final ApplePushNotificationRequest request = new ApplePushNotificationRequest(new ApplePushNotificationRequestDetails("Simlar Call", "ringtone.wav"), caller);
         final HttpEntity<ApplePushNotificationRequest> entity = new HttpEntity<>(request, headers);
 
         try {

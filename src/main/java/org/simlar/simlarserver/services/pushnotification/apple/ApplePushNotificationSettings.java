@@ -41,6 +41,7 @@ class ApplePushNotificationSettings {
     private final String voipCertificatePinning;
     private final String sslProtocol;
     private final String voipTestDeviceToken;
+    private final String voipTestPasswordHash;
 
     public final boolean isConfigured() {
         return StringUtils.isNoneEmpty(

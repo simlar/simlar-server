@@ -29,7 +29,10 @@ import org.simlar.simlarserver.database.models.PushNotification;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
 import org.simlar.simlarserver.services.pushnotification.apple.ApplePushNotificationService;
 import org.simlar.simlarserver.services.pushnotification.apple.ApplePushServer;
+import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestCaller;
 import org.simlar.simlarserver.services.pushnotification.google.GooglePushNotificationService;
+import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
+import org.simlar.simlarserver.utils.AesUtil;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,7 +40,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,42 +63,62 @@ public final class PushNotificationServiceTest {
     @MockBean
     private GooglePushNotificationService googlePushNotificationService;
 
+    @SuppressWarnings("unused")
+    @MockBean
+    private SubscriberService subscriberService;
+
     @Autowired
     private PushNotificationService pushNotificationService;
 
     @Test
     public void testRequestPushNotificationWithNull() {
-        assertNull(pushNotificationService.sendPushNotification(null));
+        assertNull(pushNotificationService.sendPushNotification(null, null));
     }
 
     @Test
     public void testRequestApplePushNotificationUnsupported() {
         pushNotificationsRepository.save(new PushNotification("*12340*", DeviceType.IOS, "someToken"));
-        assertNull(pushNotificationService.sendPushNotification(SimlarId.create("*12340*")));
+        assertNull(pushNotificationService.sendPushNotification(SimlarId.create("*12340*"), SimlarId.create("*04321*")));
     }
 
     @Test
     public void testRequestApplePushNotificationUnsupportedDevelopment() {
         pushNotificationsRepository.save(new PushNotification("*12341*", DeviceType.IOS_DEVELOPMENT, "otherToken"));
-        assertNull(pushNotificationService.sendPushNotification(SimlarId.create("*12341*")));
+        assertNull(pushNotificationService.sendPushNotification(SimlarId.create("*12341*"), SimlarId.create("*14321*")));
     }
 
     @Test
     public void testRequestApplePushNotification() {
-        pushNotificationsRepository.save(new PushNotification("*12342*", DeviceType.IOS_VOIP, "someToken"));
+        final SimlarId caller = SimlarId.create("*24321*");
+        assertNotNull(caller);
+        final SimlarId callee = SimlarId.create("*12342*");
+        assertNotNull(callee);
+        pushNotificationsRepository.save(new PushNotification(callee.get(), DeviceType.IOS_VOIP, "someToken"));
 
-        when(applePushNotificationService.requestVoipPushNotification(ApplePushServer.PRODUCTION, "someToken")).thenReturn("someMessageId");
-        assertEquals("someMessageId", pushNotificationService.sendPushNotification(SimlarId.create("*12342*")));
-        verify(applePushNotificationService).requestVoipPushNotification(eq(ApplePushServer.PRODUCTION), eq("someToken"));
+        when(subscriberService.getHa1(callee)).thenReturn("somePasswordHash");
+        when(applePushNotificationService.requestVoipPushNotification(eq(ApplePushServer.PRODUCTION), any(ApplePushNotificationRequestCaller.class), eq("someToken"))).thenReturn("someMessageId");
+        assertEquals("someMessageId", pushNotificationService.sendPushNotification(caller, callee));
+        verify(applePushNotificationService).requestVoipPushNotification(
+                eq(ApplePushServer.PRODUCTION),
+                argThat(arg -> AesUtil.decrypt(arg.getEncryptedSimlarId(), arg.getInitializationVector(), "somePasswordHash").equals(caller.get())),
+                eq("someToken"));
     }
 
     @Test
     public void testRequestApplePushNotificationDevelopment() {
-        pushNotificationsRepository.save(new PushNotification("*12343*", DeviceType.IOS_VOIP_DEVELOPMENT, "otherToken"));
+        final SimlarId caller = SimlarId.create("*34321*");
+        assertNotNull(caller);
+        final SimlarId callee = SimlarId.create("*12343*");
+        assertNotNull(callee);
+        pushNotificationsRepository.save(new PushNotification(callee.get(), DeviceType.IOS_VOIP_DEVELOPMENT, "otherToken"));
 
-        when(applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, "otherToken")).thenReturn("otherMessageId");
-        assertEquals("otherMessageId", pushNotificationService.sendPushNotification(SimlarId.create("*12343*")));
-        verify(applePushNotificationService).requestVoipPushNotification(eq(ApplePushServer.SANDBOX), eq("otherToken"));
+        when(subscriberService.getHa1(callee)).thenReturn("otherPasswordHash");
+        when(applePushNotificationService.requestVoipPushNotification(eq(ApplePushServer.SANDBOX), any(ApplePushNotificationRequestCaller.class), eq("otherToken"))).thenReturn("otherMessageId");
+        assertEquals("otherMessageId", pushNotificationService.sendPushNotification(caller, callee));
+        verify(applePushNotificationService).requestVoipPushNotification(
+                eq(ApplePushServer.SANDBOX),
+                argThat(arg -> AesUtil.decrypt(arg.getEncryptedSimlarId(), arg.getInitializationVector(), "otherPasswordHash").equals(caller.get())),
+                eq("otherToken"));
     }
 
     @Test
@@ -100,12 +126,12 @@ public final class PushNotificationServiceTest {
         pushNotificationsRepository.save(new PushNotification("*12345*", DeviceType.ANDROID, "someToken"));
 
         when(googlePushNotificationService.requestPushNotification("someToken")).thenReturn("someMessageId");
-        assertEquals("someMessageId", pushNotificationService.sendPushNotification(SimlarId.create("*12345*")));
+        assertEquals("someMessageId", pushNotificationService.sendPushNotification(SimlarId.create("*54321*"), SimlarId.create("*12345*")));
         verify(googlePushNotificationService).requestPushNotification(eq("someToken"));
     }
 
     @Test
     public void testRequestPushNotificationWithUnknownSimlarId() {
-        assertNull(pushNotificationService.sendPushNotification(SimlarId.create("*12346*")));
+        assertNull(pushNotificationService.sendPushNotification(SimlarId.create("*64321*"), SimlarId.create("*12346*")));
     }
 }

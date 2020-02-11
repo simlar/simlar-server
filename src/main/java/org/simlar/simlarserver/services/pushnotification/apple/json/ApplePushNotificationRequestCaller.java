@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Simlar Authors.
+ * Copyright (C) 2020 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -21,19 +21,22 @@
 
 package org.simlar.simlarserver.services.pushnotification.apple.json;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.simlar.simlarserver.utils.AesUtil;
 
 @Getter
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public final class ApplePushNotificationRequest {
-    @JsonProperty("aps")
-    private final ApplePushNotificationRequestDetails details;
+public final class ApplePushNotificationRequestCaller {
+    private final String initializationVector;
+    private final String encryptedSimlarId;
 
-    private final ApplePushNotificationRequestCaller caller;
+    public static ApplePushNotificationRequestCaller create(final String callerSimlarId, final String calleePasswordHash) {
+        final String initializationVector = AesUtil.generateInitializationVector();
+        return new ApplePushNotificationRequestCaller(initializationVector, AesUtil.encrypt(callerSimlarId, initializationVector, calleePasswordHash));
+    }
 }
