@@ -33,7 +33,7 @@ plugins {
 }
 
 ext {
-    lombokVersion = "1.18.10"
+    lombokVersion = "1.18.12"
     spotbugsVersion = "3.1.12"
     mockitoVersion = "3.2.4"
 }
