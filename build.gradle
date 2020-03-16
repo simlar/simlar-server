@@ -35,7 +35,7 @@ plugins {
 ext {
     lombokVersion = "1.18.12"
     spotbugsVersion = "4.0.0"
-    mockitoVersion = "3.3.1"
+    mockitoVersion = "3.3.3"
 }
 
 dependencies {
