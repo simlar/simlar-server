@@ -89,14 +89,6 @@ spotbugs {
     excludeFilter = file("$rootProject.projectDir/ides/spotbugs/excludeFilter.xml")
 }
 
-//noinspection GroovyAssignabilityCheck,UnnecessaryQualifiedReference
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
 dependencyCheck {
     suppressionFile = "owasp-dependency-check-suppression.xml"
     failBuildOnCVSS = 0
