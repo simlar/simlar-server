@@ -25,7 +25,7 @@ plugins {
     id "idea"
     id "war"
     id "pmd"
-    id "com.github.spotbugs" version "3.0.0"
+    id "com.github.spotbugs" version "4.0.4"
     id "org.springframework.boot" version "2.2.6.RELEASE"
     id "io.spring.dependency-management" version "1.0.9.RELEASE"
     id "com.github.ben-manes.versions" version "0.28.0"
@@ -34,7 +34,7 @@ plugins {
 
 ext {
     lombokVersion = "1.18.12"
-    spotbugsVersion = "4.0.0"
+    spotbugsVersion = "4.0.1"
     mockitoVersion = "3.3.3"
 }
 
@@ -87,14 +87,6 @@ spotbugs {
     effort = "max"
     reportLevel = "low"
     excludeFilter = file("$rootProject.projectDir/ides/spotbugs/excludeFilter.xml")
-}
-
-//noinspection GroovyAssignabilityCheck,UnnecessaryQualifiedReference
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
 }
 
 dependencyCheck {
