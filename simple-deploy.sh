@@ -29,7 +29,7 @@ scp build/libs/simlar-server*.war ${REMOTE}:"${REMOTE_DIR}/"
 
 
 echo "install war file"
-ssh ${REMOTE} "systemctl stop tomcat8.service ; rm -rf /var/lib/tomcat8/webapps/simlar-server* ; mv "${REMOTE_DIR}"/simlar-server*.war /var/lib/tomcat8/webapps/ ; systemctl start tomcat8.service"
+ssh ${REMOTE} "systemctl stop tomcat9.service ; rm -rf /var/lib/tomcat9/webapps/simlar-server* ; mv "${REMOTE_DIR}"/simlar-server*.war /var/lib/tomcat9/webapps/ ; systemctl start tomcat9.service"
 
 
 echo "waiting"
