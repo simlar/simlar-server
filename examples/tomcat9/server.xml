@@ -43,6 +43,18 @@
               description="User database that can be updated and saved"
               factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
               pathname="conf/tomcat-users.xml" />
+
+    <!-- Simlar database
+    -->
+    <Resource
+        name="jdbc/Simlar"
+        global="jdbc/Simlar"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="org.mariadb.jdbc.Driver"
+        url="jdbc:mariadb://localhost/kamailio"
+        username="simlar"
+        password="changeMe123" />
   </GlobalNamingResources>
 
   <!-- A "Service" is a collection of one or more "Connectors" that share
@@ -66,7 +78,7 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
     -->
-    <Connector port="8080" protocol="HTTP/1.1"
+    <Connector address="127.0.0.1" port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
                redirectPort="8443" />
     <!-- A "Connector" using the shared thread pool-->
@@ -113,9 +125,7 @@
     -->
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
-    <!--
-    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
-    -->
+    <Connector address="127.0.0.1" port="8009" protocol="AJP/1.3" redirectPort="8443" />
 
 
     <!-- An Engine represents the entry point (within Catalina) that processes
@@ -148,7 +158,7 @@
       </Realm>
 
       <Host name="localhost"  appBase="webapps"
-            unpackWARs="true" autoDeploy="true">
+            unpackWARs="true" autoDeploy="true" undeployOldVersions="true">
 
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->

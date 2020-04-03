@@ -28,4 +28,11 @@
     <!--
     <Manager pathname="" />
     -->
+
+    <ResourceLink
+        name="jdbc/Simlar"
+        global="jdbc/Simlar"
+        auth="Container"
+        type="javax.sql.DataSource" />
+
 </Context>
