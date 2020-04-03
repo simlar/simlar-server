@@ -49,7 +49,7 @@ public class Subscriber {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, columnDefinition = "int(10) unsigned")
+    @Column(nullable = false, columnDefinition = "int(10)")
     private Long   id;
 
     @Column(nullable = false, length = 64)
@@ -58,13 +58,13 @@ public class Subscriber {
     @Column(nullable = false, length = 64)
     private String domain;
 
-    @Column(nullable = false, length = 25)
+    @Column(nullable = false, length = 64)
     private String password;
 
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false, length = 128)
     private String ha1;
 
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false, length = 128)
     private String ha1b;
 
     @SuppressWarnings("UnnecessaryThis")
