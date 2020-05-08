@@ -1,3 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: dom4j-2.1.1.jar
+                TODO: remove once spotbugs updates.
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org\.dom4j/dom4j@2\.1\.1$</packageUrl>
+        <cve>CVE-2020-10683</cve>
+    </suppress>
 </suppressions>
