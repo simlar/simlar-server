@@ -60,7 +60,7 @@ dependencies {
     implementation("commons-codec:commons-codec:1.14")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.12.1")
     implementation("com.squareup.okhttp3:okhttp:4.5.0")
-    implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
+    implementation("org.glassfish.jaxb:jaxb-runtime:2.3.3")
     implementation("com.google.auth:google-auth-library-oauth2-http:0.20.0")
 
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.6.0")
