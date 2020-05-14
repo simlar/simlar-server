@@ -36,7 +36,7 @@ ext {
     lombokVersion = "1.18.12"
     spotbugsVersion = "4.0.1"
     mockitoVersion = "3.3.3"
-    log4jVersion = "2.13.2" // TODO: remove once transitional dependencies are new enough to pass owasp check
+    log4jVersion = "2.13.3" // TODO: remove once transitional dependencies are new enough to pass owasp check
 }
 
 dependencies {
