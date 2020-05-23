@@ -11,4 +11,8 @@ install:
 script:
   - ./gradlew build
   - ./gradlew dependencyUpdates
-  - ./gradlew dependencyCheckAnalyze
+  - ./gradlew dependencyCheckAnalyze --info
+
+cache:
+  directories:
+    - /home/travis/.gradle/dependency-check-data/4.0
