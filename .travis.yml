@@ -12,3 +12,7 @@ script:
   - ./gradlew build
   - ./gradlew dependencyUpdates
   - ./gradlew dependencyCheckAnalyze
+
+cache:
+  directories:
+    - /home/travis/.gradle/dependency-check-data/4.0
