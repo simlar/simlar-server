@@ -11,7 +11,7 @@ install:
 script:
   - ./gradlew build
   - ./gradlew dependencyUpdates
-  - ./gradlew dependencyCheckAnalyze
+  - ./gradlew dependencyCheckAnalyze --info
 
 cache:
   directories:
