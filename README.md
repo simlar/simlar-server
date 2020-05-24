@@ -1,7 +1,7 @@
 simlar-server
 ==============
 
-[![Build Status](https://travis-ci.org/simlar/simlar-server.svg?branch=master)](https://travis-ci.org/simlar/simlar-server)
+[![Build Status](https://travis-ci.com/simlar/simlar-server.svg?branch=master)](https://travis-ci.org/simlar/simlar-server)
 
 
 **This project is work in progress and not complete, yet.**
