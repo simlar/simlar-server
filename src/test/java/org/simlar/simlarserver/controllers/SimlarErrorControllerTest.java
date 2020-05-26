@@ -65,18 +65,27 @@ public final class SimlarErrorControllerTest extends BaseControllerTest {
         assertEquals(1, xmlError.getId());
     }
 
+    private static void assertUnknownStructure(final ResponseEntity<String> response) {
+        assertNotNull(response);
+        assertEquals(MediaType.APPLICATION_XML, response.getHeaders().getContentType());
+        assertNotNull(response.getBody());
+
+        assertUnknownStructure(unmarshal(XmlError.class, response.getBody()));
+    }
+
     private void assertHttpPost(final String requestPath, final MultiValueMap<String, String> parameters) {
         assertNotNull(requestPath);
         assertUnknownStructure(postRequest(XmlError.class, requestPath, parameters));
     }
 
     private static void assertUnknownStructure404(final ResponseEntity<String> response) {
-        assertNotNull(response);
+        assertUnknownStructure(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals(MediaType.APPLICATION_XML, response.getHeaders().getContentType());
-        assertNotNull(response.getBody());
+    }
 
-        assertUnknownStructure(unmarshal(XmlError.class, response.getBody()));
+    private static void assertUnknownStructure500(final ResponseEntity<String> response) {
+        assertUnknownStructure(response);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     private void assertHttpPost404(final String requestPath, final MultiValueMap<String, String> parameters) {
@@ -146,6 +155,8 @@ public final class SimlarErrorControllerTest extends BaseControllerTest {
 
     @Test
     public void testErrorPage() {
-        assertHttpGet404("/error");
+        final String url = getBaseUrl() + "/error";
+        assertUnknownStructure500(createNoExceptionRestTemplate().getForEntity(url, String.class));
+        assertUnknownStructure500(createNoExceptionRestTemplate().postForEntity(url, null, String.class));
     }
 }
