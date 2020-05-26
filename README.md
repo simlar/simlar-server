@@ -33,7 +33,7 @@ Java Development Kit 11
 ```
 
 ### Run ###
-As the simlar-server is a spring-boot application you may start it with an embed tomcat server and an in-memory database.
+As the simlar-server is a spring-boot application you may start it with an embedded tomcat server and an in-memory database.
 ```
 ./gradlew bootRun
 ```
