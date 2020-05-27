@@ -44,7 +44,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
-import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -52,7 +51,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
@@ -179,19 +177,6 @@ public final class CreateAccountServiceTest {
         assertCreateAccountRequestSuccess("+15005510001");
     }
 
-    @SuppressWarnings("PMD.DoNotUseThreads")
-    private static void assertException(final Class<? extends Exception> expected, final Runnable runnable) {
-        //noinspection OverlyBroadCatchBlock
-        try {
-            runnable.run();
-            fail("expected exception not thrown: " + expected.getSimpleName());
-        } catch (final Exception exception) {
-            if (!Objects.equals(expected, exception.getClass())) {
-                throw new AssertionError("expected exception '" + expected.getSimpleName() + "' but '" + exception.getClass().getSimpleName() + "' was thrown", exception);
-            }
-        }
-    }
-
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTelephoneNumberLimit() {
@@ -202,7 +187,7 @@ public final class CreateAccountServiceTest {
             reset(smsService);
             if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
-                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
+                assertThrows(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
             } else {
                 assertCreateAccountRequestSuccess(telephoneNumber);
             }
@@ -211,7 +196,7 @@ public final class CreateAccountServiceTest {
         final String simlarId = SimlarIdHelper.createSimlarId(telephoneNumber);
         final AccountCreationRequestCount before = accountCreationRepository.findBySimlarId(simlarId);
 
-        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
 
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
         assertEquals(before.getConfirmTries(), after.getConfirmTries());
@@ -238,7 +223,6 @@ public final class CreateAccountServiceTest {
         accountCreationRepository.save(after);
     }
 
-    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @DirtiesContext
     @Test
     public void testCreateAccountRequestIpLimitWithinOneHour() {
@@ -250,14 +234,14 @@ public final class CreateAccountServiceTest {
             reset(smsService);
             if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
-                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+                assertThrows(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
             } else {
                 assertCreateAccountRequestSuccess(telephoneNumber, ip);
             }
         }
 
         final String telephoneNumber = "+15005023049";
-        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
 
 
         /// check limit reset after an hour
@@ -266,7 +250,6 @@ public final class CreateAccountServiceTest {
         assertCreateAccountRequestSuccess(telephoneNumber, ip);
     }
 
-    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHour() {
@@ -280,7 +263,7 @@ public final class CreateAccountServiceTest {
             } else {
                 if (i % 2 == 0) {
                     //noinspection ObjectAllocationInLoop
-                    assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+                    assertThrows(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
                 } else {
                     assertCreateAccountRequestSuccess(telephoneNumber, ip);
                 }
@@ -288,7 +271,7 @@ public final class CreateAccountServiceTest {
         }
 
         final String telephoneNumber = "+15005022149";
-        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
 
 
         /// check limit reset after an hour
@@ -312,7 +295,7 @@ public final class CreateAccountServiceTest {
             } else {
                 if (i % 2 == 0) {
                     //noinspection ObjectAllocationInLoop
-                    assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+                    assertThrows(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
                 } else {
                     assertCreateAccountRequestSuccess(telephoneNumber, ip);
                 }
@@ -326,7 +309,7 @@ public final class CreateAccountServiceTest {
         }
 
         final String telephoneNumber = "+15005012149";
-        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
 
 
         /// check limit reset after a day
@@ -335,7 +318,6 @@ public final class CreateAccountServiceTest {
         assertCreateAccountRequestSuccess(telephoneNumber, "192.168.1.23");
     }
 
-    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHourRegionalLimit() {
@@ -347,14 +329,14 @@ public final class CreateAccountServiceTest {
 
             if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
-                assertException(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+                assertThrows(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
             } else {
                 assertCreateAccountRequestSuccess(telephoneNumber, ip);
             }
         }
 
         final String telephoneNumber = "+16005022140";
-        assertException(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
 
         /// check other numbers work
         assertCreateAccountRequestSuccess("+15005022149", "192.168.1.23");
@@ -410,7 +392,7 @@ public final class CreateAccountServiceTest {
 
     @SuppressWarnings("SameParameterValue")
     private void assertCreateAccountCallError(final Class<? extends XmlErrorException> error, final String telephoneNumber, final String password, final Instant timestamp) {
-        assertException(error, () -> createAccountService.call(telephoneNumber, password, timestamp));
+        assertThrows(error, () -> createAccountService.call(telephoneNumber, password, timestamp));
     }
 
     @DirtiesContext
