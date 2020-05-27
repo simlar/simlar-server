@@ -22,9 +22,7 @@
 package org.simlar.simlarserver.services.createaccountservice;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.simlar.simlarserver.SimlarServer;
@@ -48,11 +46,12 @@ import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 import java.util.Objects;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -83,47 +82,53 @@ public final class CreateAccountServiceTest {
     @Autowired
     private AccountCreationRequestCountRepository accountCreationRepository;
 
-    @Rule
-    public final ExpectedException expectedException = ExpectedException.none();
-
 
     @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @Test
     public void testCreateAccountRequestWithInvalidNumber() {
-        expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
-        expectedException.expectMessage("NO-NUMBER");
-        expectedException.expectMessage(not(containsString("libphonenumber")));
-        createAccountService.createAccountRequest("NO-NUMBER", "", "192.168.1.1");
+        final String message = assertThrows(XmlErrorInvalidTelephoneNumberException.class, () ->
+                createAccountService.createAccountRequest("NO-NUMBER", "", "192.168.1.1")
+        ).getMessage();
+
+        assertNotNull(message);
+        assertTrue(message.contains("NO-NUMBER"));
+        assertFalse(message.contains("libphonenumber"));
     }
 
     @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @Test
     public void testCreateAccountRequestWithInvalidNumberLibphonenumber() {
-        expectedException.expect(XmlErrorInvalidTelephoneNumberException.class);
-        expectedException.expectMessage("+49163123456");
-        expectedException.expectMessage("libphonenumber");
-        createAccountService.createAccountRequest("+49163123456", "", "192.168.1.1");
+        final String message = assertThrows(XmlErrorInvalidTelephoneNumberException.class, () ->
+            createAccountService.createAccountRequest("+49163123456", "", "192.168.1.1")
+        ).getMessage();
+
+        assertNotNull(message);
+        assertTrue(message.contains("+49163123456"));
+        assertTrue(message.contains("libphonenumber"));
     }
 
     @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @Test
     public void testCreateAccountRequestWithFailedSms() {
-        expectedException.expect(XmlErrorFailedToSendSmsException.class);
-        createAccountService.createAccountRequest("+15005550006", "", "192.168.1.1");
+        assertThrows(XmlErrorFailedToSendSmsException.class, () ->
+            createAccountService.createAccountRequest("+15005550006", "", "192.168.1.1")
+        );
     }
 
     @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @Test
     public void testCreateAccountRequestWithIpEmpty() {
-        expectedException.expect(XmlErrorNoIpException.class);
-        createAccountService.createAccountRequest("+15005550006", "", "");
+        assertThrows(XmlErrorNoIpException.class, () ->
+            createAccountService.createAccountRequest("+15005550006", "", "")
+        );
     }
 
     @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
     @Test
     public void testCreateAccountRequestWithIpNull() {
-        expectedException.expect(XmlErrorNoIpException.class);
-        createAccountService.createAccountRequest("+15005550006", "", null);
+        assertThrows(XmlErrorNoIpException.class, () ->
+            createAccountService.createAccountRequest("+15005550006", "", null)
+        );
     }
 
     private AccountRequest assertCreateAccountRequestSuccess(final String telephoneNumber, final String ip, final Instant timestamp) {
