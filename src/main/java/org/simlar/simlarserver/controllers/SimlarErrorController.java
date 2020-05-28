@@ -55,7 +55,7 @@ final class SimlarErrorController implements ErrorController {
     @SuppressWarnings({"deprecation", "RedundantSuppression"})
     @Override
     public String getErrorPath() {
-        return ERROR_PATH;
+        return null;
     }
 
     @SuppressFBWarnings("SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING")
