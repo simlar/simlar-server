@@ -60,7 +60,7 @@ dependencies {
     implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
     implementation("com.google.auth:google-auth-library-oauth2-http:0.20.0")
 
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.6.0")
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.6.1")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testImplementation("com.h2database:h2:1.4.200")
