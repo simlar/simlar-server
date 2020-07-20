@@ -10,4 +10,26 @@
         <packageUrl regex="true">^pkg:maven/org\.dom4j/dom4j@2\.1\.1$</packageUrl>
         <cve>CVE-2020-10683</cve>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file names: tomcat-embed-core-9.0.36.jar
+                TODO: remove once spring updates it.
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-core@.*$</packageUrl>
+        <cve>CVE-2020-13934</cve>
+        <cve>CVE-2020-13935</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file names: tomcat-embed-websocket-9.0.36.jar
+                TODO: remove once spring updates it.
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
+        <cve>CVE-2020-13934</cve>
+        <cve>CVE-2020-13935</cve>
+    </suppress>
 </suppressions>
