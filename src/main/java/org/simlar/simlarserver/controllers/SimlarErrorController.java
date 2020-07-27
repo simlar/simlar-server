@@ -50,7 +50,7 @@ final class SimlarErrorController implements ErrorController {
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_XML).body(new XmlError(response.getId(), response.getMessage()));
     }
 
-    // TODO: fix once spring introduces a proper solution
+    // TODO: wait until spring removes deprecated function
     // see: https://github.com/spring-projects/spring-boot/issues/19844
     @SuppressWarnings({"deprecation", "RedundantSuppression"})
     @Override
