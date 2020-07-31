@@ -17,7 +17,7 @@ In order to activate push notifications add the following files
 /etc/simlar-server/simlar-ios-voip.p12
 /etc/simlar-server/simlar-org-firebase-credentials.json
 ```
-and add these properties to ```/etc/simlar-server/config.properties```
+Furthermore, add these properties to ```/etc/simlar-server/config.properties```
 ```
 ## push notifications
 push.apiKey=

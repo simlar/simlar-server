@@ -42,6 +42,6 @@ public final class MessageResponse {
     @JsonProperty("message")
     private String errorMessage;
 
-    // We are not interested in every field of twilio's response. At least the following are ignored:
+    // We are not interested in every field of the twilio response. At least the following are ignored:
     //  account_sid, from, date_created, date_updated, date_sent, messaging_service_sid, body, num_segments, num_media, direction, api_version, uri, subresource_uris, media
 }

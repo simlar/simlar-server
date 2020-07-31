@@ -17,7 +17,7 @@ But after all this code runs in the simlar production environment.
 </div>
 
 You may start the simlar-server standalone e.g. for development.
-But for a useful setup you will at least need the following servers.
+For a useful setup you will at least need the following servers.
 Maybe some alternatives will work, too:
 * [Apache Tomcat](https://tomcat.apache.org/)
 * [Apache Web Server](https://httpd.apache.org/)
@@ -74,9 +74,10 @@ In order to quiet IntelliJ's inspection warnings import the dictionary.
 In Settings/Editor/Spelling choose the tab Dictionaries and add ```ides/intellij/dictionaries/simlar.dic``` to the list of Custom Dictionaries.
 
 ## Configuration
-In a production environment a configuration is needed to configure e.g. the domain and the database: ```/etc/simlar-server/config.properties```
+A production environment needs a configuration file ```/etc/simlar-server/config.properties```.
+E.g. to set the domain and the database.
 Have a look at the [example](examples/config.properties).
 
-For development you may place your configurations in ```src/main/resources/application-default.properties```.
-The [example](examples/application-default.properties) configures the database and sets a log pattern with filename and line number.
+For development, you may place your configurations in ```src/main/resources/application-default.properties```.
+The [example](examples/application-default.properties) configures the database and sets a log pattern with filenames and line numbers.
 If you do not want to set up a database for development you may change the dependency type of the h2 database to ```providedRuntime```.
