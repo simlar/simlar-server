@@ -40,7 +40,6 @@ public enum SmsText {
             "Welcome to Simlar! If the app asks for a registration code, use: *CODE*. Otherwise you do not need this SMS.",
             "Welcome to Simlar! If the app asks for a registration code, use: *CODE*. Otherwise you don't need this SMS.",
             "Simlar Registration Code:"),
-    @SuppressWarnings("SpellCheckingInspection")
     DE(
             "Willkommen bei Simlar! Wenn die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*.",
             "ANDROID_DE",
