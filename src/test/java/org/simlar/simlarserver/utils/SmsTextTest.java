@@ -26,6 +26,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public final class SmsTextTest {
+    @SuppressWarnings("ObjectAllocationInLoop")
     @Test
     public void testFormat() {
         for (int i = 0; i < 10; ++i) {
