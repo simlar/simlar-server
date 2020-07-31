@@ -67,7 +67,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.mockito:mockito-inline:${mockitoVersion}")
-    testImplementation("org.mock-server:mockserver-netty:5.10.0")
+    testImplementation("org.mock-server:mockserver-netty:5.11.1")
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
