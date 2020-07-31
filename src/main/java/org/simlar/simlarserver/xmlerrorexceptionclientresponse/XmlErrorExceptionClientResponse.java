@@ -79,7 +79,7 @@ public enum XmlErrorExceptionClientResponse {
     private final String message;
 
     private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP
-            = Arrays.stream(XmlErrorExceptionClientResponse.values()).collect(Collectors.toMap(response -> response.exceptionClass, response -> response, (class1, class2) -> class1));
+            = Arrays.stream(values()).collect(Collectors.toMap(response -> response.exceptionClass, response -> response, (class1, class2) -> class1));
 
     public static XmlErrorExceptionClientResponse fromException(final Class<? extends XmlErrorException> exceptionClass) {
         return EXCEPTION_CLIENT_RESPONSE_MAP.get(exceptionClass);

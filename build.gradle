@@ -34,7 +34,7 @@ plugins {
 
 ext {
     lombokVersion = "1.18.12"
-    spotbugsVersion = "4.0.3"
+    spotbugsVersion = "4.0.6"
     mockitoVersion = "3.4.6"
 }
 
@@ -78,7 +78,7 @@ repositories {
 }
 
 pmd {
-    toolVersion = "6.24.0"
+    toolVersion = "6.25.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = [ ]
 }
@@ -86,6 +86,9 @@ pmd {
 spotbugs {
     effort = "max"
     reportLevel = "low"
+    // implemented like the documentation suggests:
+    //   https://github.com/spotbugs/spotbugs-gradle-plugin#readme
+    //noinspection GroovyAssignabilityCheck,GrFinalVariableAccess
     excludeFilter = file("$rootProject.projectDir/ides/spotbugs/excludeFilter.xml")
 }
 
@@ -163,5 +166,6 @@ idea {
         excludeDirs += file("pmd-ruleset.xml")
         excludeDirs += file("owasp-dependency-check-suppression.xml")
         excludeDirs += file("gradlew.bat")
+        excludeDirs += file("gradlew")
     }
 }

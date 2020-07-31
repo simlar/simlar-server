@@ -52,7 +52,7 @@ final class SimlarErrorController implements ErrorController {
 
     // TODO: wait until spring removes deprecated function
     // see: https://github.com/spring-projects/spring-boot/issues/19844
-    @SuppressWarnings({"deprecation", "RedundantSuppression"})
+    @SuppressWarnings({"deprecation", "RedundantSuppression", "ReturnOfNull"})
     @Override
     public String getErrorPath() {
         return null;

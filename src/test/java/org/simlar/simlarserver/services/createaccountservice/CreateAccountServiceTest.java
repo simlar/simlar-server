@@ -57,7 +57,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods"})
+@SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods", "ObjectAllocationInLoop"})
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimlarServer.class, properties = {
         "create.account.alertSmsNumbers = 1234, 5678",

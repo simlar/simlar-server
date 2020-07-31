@@ -109,8 +109,10 @@ public final class CreateAccountService {
                 "too many total create account requests within one day");
 
         for (final RegionalSettings regional: createAccountSettings.getRegionalSettings()) {
+            //noinspection ObjectAllocationInLoop
             final String regionCode = '*' + regional.getRegionCode();
             if (StringUtils.isNotEmpty(regionCode) && simlarId.get().startsWith(regionCode)) {
+                //noinspection ObjectAllocationInLoop
                 checkRequestTriesLimit(accountCreationRepository.sumRequestTriesForRegion(regionCode + '%', anHourAgo), regional.getMaxRequestsPerHour(),
                         String.format("too many create account requests for region '%s' ", regional.getRegionCode()));
             }
