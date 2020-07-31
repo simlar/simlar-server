@@ -32,7 +32,6 @@ public final class SmsTextTest {
             final String code = Password.generateRegistrationCode();
 
             assertEquals("Welcome to Simlar! When the app asks for a registration code, use: " + code + '.', SmsText.EN.format(code));
-            //noinspection SpellCheckingInspection
             assertEquals("Willkommen bei Simlar! Wenn die App bei der Anmeldung nach einem Code fragt, benutze: " + code + '.', SmsText.DE.format(code));
         }
     }
@@ -62,7 +61,6 @@ public final class SmsTextTest {
         assertEquals(SmsText.EN, SmsText.fromString("Simlar Registration Code:"));
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testFromStringGerman() {
         assertEquals(SmsText.DE, SmsText.fromString("Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst brauchst du diese SMS nicht."));
