@@ -17,7 +17,7 @@ But after all this code runs in the simlar production environment.
 </div>
 
 You may start the simlar-server standalone e.g. for development.
-But for a useful setup you will at least need the following servers.
+For a useful setup you will at least need the following servers.
 Maybe some alternatives will work, too:
 * [Apache Tomcat](https://tomcat.apache.org/)
 * [Apache Web Server](https://httpd.apache.org/)
