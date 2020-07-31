@@ -1,7 +1,7 @@
 simlar-server
 ==============
 
-[![Build Status](https://travis-ci.org/simlar/simlar-server.svg?branch=master)](https://travis-ci.org/simlar/simlar-server)
+[![Build Status](https://travis-ci.com/simlar/simlar-server.svg?branch=master)](https://travis-ci.com/simlar/simlar-server)
 
 
 **This project is work in progress and not complete, yet.**
@@ -33,7 +33,7 @@ Java Development Kit 11
 ```
 
 ### Run ###
-As the simlar-server is a spring-boot application you may start it with an embed tomcat server and an in-memory database.
+As the simlar-server is a spring-boot application you may start it with an embedded tomcat server and an in-memory database.
 ```
 ./gradlew bootRun
 ```

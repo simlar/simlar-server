@@ -50,9 +50,12 @@ final class SimlarErrorController implements ErrorController {
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_XML).body(new XmlError(response.getId(), response.getMessage()));
     }
 
+    // TODO: wait until spring removes deprecated function
+    // see: https://github.com/spring-projects/spring-boot/issues/19844
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     @Override
     public String getErrorPath() {
-        return ERROR_PATH;
+        return null;
     }
 
     @SuppressFBWarnings("SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING")
@@ -64,7 +67,7 @@ final class SimlarErrorController implements ErrorController {
         final Throwable exception  = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
         log.warn("white label error on uri = '{}' with statusCode '{}' and message '{}'", uri, statusCode, message, exception);
-        return createXmlError(HttpStatus.NOT_FOUND, XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
+        return createXmlError(HttpStatus.INTERNAL_SERVER_ERROR, XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
     @SuppressFBWarnings("SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING")
