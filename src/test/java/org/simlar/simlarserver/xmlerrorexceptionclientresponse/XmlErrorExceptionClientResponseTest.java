@@ -52,6 +52,7 @@ public final class XmlErrorExceptionClientResponseTest {
         assertEquals(XmlErrorExceptionClientResponse.UNKNOWN_ERROR, XmlErrorExceptionClientResponse.fromException(null));
     }
 
+    @SuppressWarnings("ObjectAllocationInLoop")
     @Test
     public void testEveryXmlErrorExceptionIsRegistered() throws ClassNotFoundException {
         final ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
