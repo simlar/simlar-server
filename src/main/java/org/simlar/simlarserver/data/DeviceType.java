@@ -33,7 +33,7 @@ public enum DeviceType {
     IOS_VOIP_DEVELOPMENT(5);
 
     private static final Map<Integer, DeviceType> INTEGER_DEVICE_TYPE_MAP =
-            Arrays.stream(DeviceType.values()).collect(Collectors.toMap(DeviceType::toInt, type -> type));
+            Arrays.stream(values()).collect(Collectors.toMap(DeviceType::toInt, type -> type));
 
     private final int id;
 
