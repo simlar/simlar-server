@@ -9,7 +9,7 @@ install:
   - ./gradlew clean bootWar
 
 script:
-  - ./gradlew build
+  - ./gradlew build --info
   - ./gradlew dependencyUpdates
   - ./gradlew dependencyCheckAnalyze
 
