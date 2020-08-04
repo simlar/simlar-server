@@ -5,10 +5,9 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -y mono-runtime
 
-install:
-  - ./gradlew clean bootWar
-
 script:
+  - ./gradlew clean
+  - ./gradlew bootWar
   - ./gradlew build --info
   - ./gradlew dependencyUpdates
   - ./gradlew dependencyCheckAnalyze
