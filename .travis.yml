@@ -1,17 +1,12 @@
 language: java
 jdk: openjdk11
 
-before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y mono-runtime
-
-install:
-  - ./gradlew clean bootWar
-
 script:
-  - ./gradlew build
+  - ./gradlew clean
+  - ./gradlew bootWar
+  - ./gradlew build --info
   - ./gradlew dependencyUpdates
-  - ./gradlew dependencyCheckAnalyze --info
+  - ./gradlew dependencyCheckAnalyze
 
 cache:
   directories:
