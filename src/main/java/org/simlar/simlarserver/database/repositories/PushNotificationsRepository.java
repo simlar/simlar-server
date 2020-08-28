@@ -24,7 +24,7 @@ package org.simlar.simlarserver.database.repositories;
 import org.simlar.simlarserver.database.models.PushNotification;
 import org.springframework.data.repository.CrudRepository;
 
-@SuppressWarnings({"SameParameterValue", "unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
+@SuppressWarnings({"SameParameterValue", "unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant", "RedundantSuppression"})
 public interface PushNotificationsRepository extends CrudRepository<PushNotification, String> {
     PushNotification findBySimlarId(final String simlarId);
 }
