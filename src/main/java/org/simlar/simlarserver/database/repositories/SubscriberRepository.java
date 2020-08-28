@@ -27,7 +27,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-@SuppressWarnings({"SameParameterValue", "unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
+@SuppressWarnings({"SameParameterValue", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
 public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
     @Query("SELECT ha1 FROM Subscriber WHERE username = ?1 AND domain = ?2")
     List<String> findHa1ByUsernameAndDomain(final String username, final String domain);
