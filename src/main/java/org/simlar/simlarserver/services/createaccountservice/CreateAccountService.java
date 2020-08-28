@@ -79,7 +79,7 @@ public final class CreateAccountService {
         transactionTemplate = new TransactionTemplate(transactionManager);
         this.taskScheduler = taskScheduler;
 
-        for (final RegionalSettings regional: createAccountSettings.getRegionalSettings()) {
+        for (final RegionalSettings regional : createAccountSettings.getRegionalSettings()) {
             log.info("regional setting region code '{}' with max requests per hour '{}'", regional.getRegionCode(), regional.getMaxRequestsPerHour());
         }
 
@@ -108,7 +108,7 @@ public final class CreateAccountService {
                 createAccountSettings.getMaxRequestsTotalPerDay(),
                 "too many total create account requests within one day");
 
-        for (final RegionalSettings regional: createAccountSettings.getRegionalSettings()) {
+        for (final RegionalSettings regional : createAccountSettings.getRegionalSettings()) {
             //noinspection ObjectAllocationInLoop
             final String regionCode = '*' + regional.getRegionCode();
             if (StringUtils.isNotEmpty(regionCode) && simlarId.get().startsWith(regionCode)) {
@@ -190,7 +190,7 @@ public final class CreateAccountService {
     private void checkRequestTriesLimitWithAlert(final Integer requests, final int limit, final String message) {
         final int requestTries = ObjectUtils.defaultIfNull(requests, 0);
         if (requestTries == limit / 2) {
-            for (final String alertNumber: createAccountSettings.getAlertSmsNumbers()) {
+            for (final String alertNumber : createAccountSettings.getAlertSmsNumbers()) {
                 smsService.sendSms(alertNumber, String.format("50%% Alert for %s %d", message, requestTries));
             }
         } else {
@@ -221,7 +221,7 @@ public final class CreateAccountService {
             final Instant callTimeStamp = dbEntry.getCallTimestamp();
             if (callTimeStamp == null || Duration.between(callTimeStamp.plus(Duration.ofDays(1)), now).compareTo(Duration.ZERO) > 0) {
                 dbEntry.setCalls(1);
-            } else{
+            } else {
                 dbEntry.incrementCalls();
             }
 
