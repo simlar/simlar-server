@@ -26,7 +26,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-@SuppressWarnings("unused")
 @Getter
 @ToString
 @EqualsAndHashCode
