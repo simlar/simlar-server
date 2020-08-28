@@ -129,7 +129,7 @@ public final class ApplePushNotificationService {
 
             return sslContext.getSocketFactory();
         } catch (final NoSuchAlgorithmException | UnrecoverableKeyException | KeyStoreException | KeyManagementException e) {
-            throw new AppleKeyStoreException("failed to create SSLSocketFactory store from keystore with protocol; " + pushNotificationSettings.getSslProtocol(),  e);
+            throw new AppleKeyStoreException("failed to create SSLSocketFactory store from keystore with protocol; " + pushNotificationSettings.getSslProtocol(), e);
         }
     }
 
