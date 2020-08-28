@@ -42,11 +42,11 @@ import static org.mockito.Mockito.when;
 public final class SendPushNotificationControllerTest extends BaseControllerTest {
     private static final String API_KEY = "someApiKey";
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     @MockBean
     private PushNotificationService pushNotificationsService;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     @MockBean
     private PushNotificationSettings pushNotificationSettings;
 
