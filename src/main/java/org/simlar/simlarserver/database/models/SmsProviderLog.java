@@ -48,7 +48,6 @@ import java.time.Instant;
 @Entity
 @Table(name = "simlar_sms_provider_log")
 public final class SmsProviderLog {
-    @SuppressWarnings("unused")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
