@@ -55,15 +55,15 @@ public final class PushNotificationServiceTest {
     @Autowired
     private PushNotificationsRepository pushNotificationsRepository;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     @MockBean
     private ApplePushNotificationService applePushNotificationService;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     @MockBean
     private GooglePushNotificationService googlePushNotificationService;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     @MockBean
     private SubscriberService subscriberService;
 
