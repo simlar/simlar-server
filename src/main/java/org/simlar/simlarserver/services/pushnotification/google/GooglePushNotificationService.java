@@ -140,8 +140,8 @@ public final class GooglePushNotificationService {
 
         final GooglePushNotificationRequest request = new GooglePushNotificationRequest(
                 new GooglePushNotificationRequestDetails(
-                    new GooglePushNotificationAndroidDetails("60s", "call", "high"),
-                    token));
+                        new GooglePushNotificationAndroidDetails("60s", "call", "high"),
+                        token));
 
         try {
             final ResponseEntity<String> response = new RestTemplateBuilder()
