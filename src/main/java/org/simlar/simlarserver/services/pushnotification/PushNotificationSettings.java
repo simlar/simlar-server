@@ -27,7 +27,7 @@ import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "RedundantSuppression"})
 @AllArgsConstructor
 @Getter
 @ToString
