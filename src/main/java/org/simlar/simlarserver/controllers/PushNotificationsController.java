@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 final class PushNotificationsController {
-    public  static final String REQUEST_PATH = "/store-push-id.xml";
+    public static final String REQUEST_PATH = "/store-push-id.xml";
 
     private final SubscriberService           subscriberService;
     private final PushNotificationsRepository pushNotificationsRepository;
