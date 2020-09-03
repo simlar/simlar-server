@@ -26,6 +26,7 @@ libphonenumber
 lombok
 malformatted
 mktemp
+noninteractive
 nopmd
 nullable
 owasp
