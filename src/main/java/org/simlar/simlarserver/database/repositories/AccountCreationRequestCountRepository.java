@@ -29,7 +29,7 @@ import org.springframework.data.repository.CrudRepository;
 import javax.persistence.LockModeType;
 import java.time.Instant;
 
-@SuppressWarnings({"unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
+@SuppressWarnings({"InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
 public interface AccountCreationRequestCountRepository extends CrudRepository<AccountCreationRequestCount, Integer> {
     AccountCreationRequestCount findBySimlarId(final String simlarId);
 

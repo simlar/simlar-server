@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-@SuppressWarnings({"DesignForExtension", "unused", "MethodMayBeStatic"})
+@SuppressWarnings({"DesignForExtension", "unused", "MethodMayBeStatic", "RedundantSuppression"})
 @PropertySource("classpath:test.properties")
 @Configuration
 class TestConfiguration {

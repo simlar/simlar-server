@@ -85,7 +85,7 @@ final class StartUpService {
         }
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "RedundantSuppression"})
     @EventListener
     public void handleApplicationReadyEvent(final ApplicationReadyEvent event) {
         log.info("started on domain='{}', hibernateDdlAuto='{}', dataSource='{}', databaseProduct='{}' and version='{}'", sharedSettings.getDomain(), hibernateDdlAuto, datasourceUrl, databaseProduct, versionService.getVersion());
