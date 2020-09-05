@@ -97,7 +97,7 @@ public final class CreateAccountServiceTest {
     @Test
     public void testCreateAccountRequestWithInvalidNumberLibphonenumber() {
         final String message = assertThrows(XmlErrorInvalidTelephoneNumberException.class, () ->
-            createAccountService.createAccountRequest("+49163123456", "", "192.168.1.1")
+                createAccountService.createAccountRequest("+49163123456", "", "192.168.1.1")
         ).getMessage();
 
         assertNotNull(message);
@@ -109,7 +109,7 @@ public final class CreateAccountServiceTest {
     @Test
     public void testCreateAccountRequestWithFailedSms() {
         assertThrows(XmlErrorFailedToSendSmsException.class, () ->
-            createAccountService.createAccountRequest("+15005550006", "", "192.168.1.1")
+                createAccountService.createAccountRequest("+15005550006", "", "192.168.1.1")
         );
     }
 
@@ -117,7 +117,7 @@ public final class CreateAccountServiceTest {
     @Test
     public void testCreateAccountRequestWithIpEmpty() {
         assertThrows(XmlErrorNoIpException.class, () ->
-            createAccountService.createAccountRequest("+15005550006", "", "")
+                createAccountService.createAccountRequest("+15005550006", "", "")
         );
     }
 
@@ -125,7 +125,7 @@ public final class CreateAccountServiceTest {
     @Test
     public void testCreateAccountRequestWithIpNull() {
         assertThrows(XmlErrorNoIpException.class, () ->
-            createAccountService.createAccountRequest("+15005550006", "", null)
+                createAccountService.createAccountRequest("+15005550006", "", null)
         );
     }
 
@@ -157,14 +157,14 @@ public final class CreateAccountServiceTest {
 
     @SuppressWarnings("MethodWithMultipleLoops")
     private void assertCreateAccountRequestSuccessWithSmsAlert(final String telephoneNumber, final String ip) {
-        for (final String alertNumber: createAccountSettings.getAlertSmsNumbers()) {
+        for (final String alertNumber : createAccountSettings.getAlertSmsNumbers()) {
             when(smsService.sendSms(eq(alertNumber), anyString())).thenReturn(Boolean.TRUE);
         }
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
 
         createAccountService.createAccountRequest(telephoneNumber, "", ip);
 
-        for (final String alertNumber: createAccountSettings.getAlertSmsNumbers()) {
+        for (final String alertNumber : createAccountSettings.getAlertSmsNumbers()) {
             verify(smsService).sendSms(eq(alertNumber), anyString());
         }
         verify(smsService).sendSms(eq(telephoneNumber), anyString());

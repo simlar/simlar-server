@@ -90,13 +90,13 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
     }
 
     private void assertPostCreateAccountError(final int expectedErrorId, final boolean callSmsService, final String command, final String telephoneNumber, final String smsText) {
-        final XmlError response = postCreateAccount(XmlError.class, callSmsService, false, command,telephoneNumber, smsText);
+        final XmlError response = postCreateAccount(XmlError.class, callSmsService, false, command, telephoneNumber, smsText);
         assertNotNull(response);
         assertEquals(expectedErrorId, response.getId());
     }
 
     private String assertPostCreateAccountSuccess(final String expectedSimlarId, final String telephoneNumber, final String smsText) {
-        final XmlSuccessCreateAccountRequest success = postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST,telephoneNumber, smsText);
+        final XmlSuccessCreateAccountRequest success = postCreateAccount(XmlSuccessCreateAccountRequest.class, true, true, CreateAccountController.COMMAND_REQUEST, telephoneNumber, smsText);
         assertNotNull(success);
         assertEquals(expectedSimlarId, success.getSimlarId());
         assertNotNull(success.getPassword());
@@ -113,7 +113,7 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertNotNull(count);
         assertEquals(password, count.getPassword());
         assertNotNull(count.getRegistrationCode());
-        assertEquals("password '" + count.getRegistrationCode() + "' does not match expected size",6, count.getRegistrationCode().length());
+        assertEquals("password '" + count.getRegistrationCode() + "' does not match expected size", 6, count.getRegistrationCode().length());
         assertEquals(1, count.getRequestTries());
         assertEquals(0, count.getConfirmTries());
         assertEquals("127.0.0.1", count.getIp());//NOPMD.AvoidUsingHardCodedIP

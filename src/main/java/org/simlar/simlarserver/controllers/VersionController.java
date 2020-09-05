@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 final class VersionController {
-    public  static final String REQUEST_PATH = "/version";
+    public static final String REQUEST_PATH = "/version";
 
     private final VersionService versionService;
 

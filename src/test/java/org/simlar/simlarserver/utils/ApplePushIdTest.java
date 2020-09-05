@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("SpellCheckingInspection")
 public final class ApplePushIdTest {
-    private static final String APPLE_ID="7fd224670ab46d041e08101cd2bc3a5646c252a1dd5bfcb02f667203338f89a9";
+    private static final String APPLE_ID = "7fd224670ab46d041e08101cd2bc3a5646c252a1dd5bfcb02f667203338f89a9";
 
     @Test
     public void testApplePushIdCheckSuccess() {

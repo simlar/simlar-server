@@ -32,12 +32,12 @@ public final class AesUtilTest {
         assertEquals(16, Base64.decodeBase64(AesUtil.generateInitializationVector()).length);
     }
 
-    @Test (expected = AesUtilException.class)
+    @Test(expected = AesUtilException.class)
     public void testInitializationVectorToShort() {
         AesUtil.encrypt("*491761234567*", "", "ab977b3a12eff330413a17c263ae3115");
     }
 
-    @Test (expected = AesUtilException.class)
+    @Test(expected = AesUtilException.class)
     public void testPasswordToShort() {
         AesUtil.decrypt("*491761234567*", "1234567890123456", "12");
     }

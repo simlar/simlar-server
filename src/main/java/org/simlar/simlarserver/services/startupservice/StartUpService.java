@@ -76,7 +76,7 @@ final class StartUpService {
     }
 
     private void createTestData() {
-        for (final TestUser user: TestUser.values()) {
+        for (final TestUser user : TestUser.values()) {
             final SimlarId simlarId = SimlarId.create(user.getSimlarId());
             if (simlarId != null) {
                 subscriberService.save(simlarId, user.getPassword());

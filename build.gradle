@@ -80,7 +80,7 @@ repositories {
 pmd {
     toolVersion = "6.25.0"
     ruleSetFiles = files("pmd-ruleset.xml")
-    ruleSets = [ ]
+    ruleSets = []
 }
 
 spotbugs {
@@ -153,7 +153,7 @@ tasks.withType(AbstractArchiveTask) {
 springBoot {
     buildInfo {
         properties {
-             time = null
+            time = null
         }
     }
 }

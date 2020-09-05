@@ -43,14 +43,14 @@ import javax.persistence.UniqueConstraint;
 @ToString
 @Entity
 @Table(name = "subscriber",
-       uniqueConstraints = @UniqueConstraint(name = "account_idx", columnNames = {"username", "domain"}),
-       indexes = @Index(name = "username_idx", columnList = "username"))
+        uniqueConstraints = @UniqueConstraint(name = "account_idx", columnNames = {"username", "domain"}),
+        indexes = @Index(name = "username_idx", columnList = "username"))
 public class Subscriber {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, columnDefinition = "int(10)")
-    private Long   id;
+    private Long id;
 
     @Column(nullable = false, length = 64)
     private String username;

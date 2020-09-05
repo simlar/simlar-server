@@ -117,8 +117,8 @@ public final class SimlarIdTest {
         assertParsePipeSeparatedSimlarIds(Collections.singletonList(s1), s1);
         assertParsePipeSeparatedSimlarIds(Collections.singletonList(s1), s1 + '|' + s1);
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), s1 + '|' + s2);
-        assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), "sdfvbd|"  + s1 + " |" + s2);
-        assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), "  "  + s1 + " |" + s2);
+        assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), "sdfvbd|" + s1 + " |" + s2);
+        assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), "  " + s1 + " |" + s2);
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), s1 + " | " + s2 + ' ');
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), s1 + " | " + s2 + " | sdfas");
         assertParsePipeSeparatedSimlarIds(Arrays.asList(s1, s2), s1 + "| |" + s2 + " | sdfas");

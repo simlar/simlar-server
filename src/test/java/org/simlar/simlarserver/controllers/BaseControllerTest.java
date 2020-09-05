@@ -73,7 +73,7 @@ class BaseControllerTest {
         assertNotNull(parameters);
 
         final MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        for (final String[] parameter: parameters) {
+        for (final String[] parameter : parameters) {
             assertNotNull(parameter);
             assertEquals(2, parameter.length);
             map.add(parameter[0], parameter[1]);

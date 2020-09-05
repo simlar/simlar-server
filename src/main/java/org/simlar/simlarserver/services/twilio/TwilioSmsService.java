@@ -119,7 +119,7 @@ public final class TwilioSmsService implements SmsService {
                 return false;
             }
 
-            log.info("while sending '{}' request to '{}' received message response: '{}' ", type, telephoneNumber , messageResponse);
+            log.info("while sending '{}' request to '{}' received message response: '{}' ", type, telephoneNumber, messageResponse);
             smsProviderLogRepository.save(new SmsProviderLog(type, telephoneNumber, messageResponse.getSid(), messageResponse.getStatus(), text));
             return true;
         } catch (final JsonMappingException | JsonParseException e) {
