@@ -10,4 +10,4 @@ script:
 
 cache:
   directories:
-    - /home/travis/.gradle/dependency-check-data/4.0
+    - /home/travis/.gradle
