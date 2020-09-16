@@ -3,6 +3,32 @@ set -eu -o pipefail
 
 declare -r SERVER=${1:?"USAGE: $0 your.server.org"}
 
+
+declare -a WAR_FILES=()
+if [ -d build/libs ] ; then
+    for WAR_FILE in build/libs/simlar-server*.war; do
+        [ -f "${WAR_FILE}" ] && WAR_FILES+=(${WAR_FILE})
+    done
+fi
+declare -r WAR_FILES
+
+if [ ${#WAR_FILES[@]} == 0 ] ; then
+    echo "no war file found"
+    exit 1
+fi
+
+if [ ${#WAR_FILES[@]} != 1 ] ; then
+    echo "more than one war file found:"
+    for WAR_FILE in ${WAR_FILES[@]} ; do
+        echo "  ${WAR_FILE}"
+    done
+    exit 1
+fi
+
+declare -r WAR_FILE=${WAR_FILES[0]}
+echo "using war file: ${WAR_FILE}"
+
+
 declare -r REMOTE="root@${SERVER}"
 
 declare -r REMOTE_DIR=$(ssh ${REMOTE} "mktemp --directory --tmpdir simlar-server-XXXXXXXXXX")
@@ -20,7 +46,7 @@ echo "current version on server: ${VERSION_OLD}"
 
 
 echo "copy war file"
-scp build/libs/simlar-server*.war ${REMOTE}:"${REMOTE_DIR}/"
+scp "${WAR_FILE}" ${REMOTE}:"${REMOTE_DIR}/"
 
 
 echo "install war file"
