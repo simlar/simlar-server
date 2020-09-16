@@ -81,3 +81,18 @@ Have a look at the [example](examples/config.properties).
 For development, you may place your configurations in ```src/main/resources/application-default.properties```.
 The [example](examples/application-default.properties) configures the database and sets a log pattern with filenames and line numbers.
 If you do not want to set up a database for development you may change the dependency type of the h2 database to ```providedRuntime```.
+
+## Build with docker
+A docker file provides a defined build environment.
+You may create a simlar-server build container like this.
+```
+docker build --no-cache -t simlar-server-builder docker-files/
+```
+You may use the container to build the war file.
+```
+docker run -it --rm -v $(pwd):/pwd simlar-server-builder:latest bash -c "cd /pwd && ./gradlew clean build dependencyUpdates dependencyCheckAnalyze"
+```
+However, caching gradle downloads speeds up the build.
+```
+docker run -it --rm -v $(pwd)-docker-gradle-cache:/home/builder/.gradle -v $(pwd):/pwd simlar-server-builder:latest bash -c "cd /pwd && ./gradlew clean build dependencyUpdates dependencyCheckAnalyze"
+```
