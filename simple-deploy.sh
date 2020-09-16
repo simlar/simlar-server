@@ -19,11 +19,6 @@ declare -r VERSION_OLD=$(ssh ${REMOTE} "curl --silent http://127.0.0.1:8080/siml
 echo "current version on server: ${VERSION_OLD}"
 
 
-echo "build war file with version: $(git describe --tags --always)"
-./gradlew clean war
-
-
-echo -e "\n\n"
 echo "copy war file"
 scp build/libs/simlar-server*.war ${REMOTE}:"${REMOTE_DIR}/"
 
