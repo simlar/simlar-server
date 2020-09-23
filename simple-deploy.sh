@@ -5,7 +5,7 @@ declare -r SERVER=${1:?"USAGE: $0 your.server.org"}
 
 declare -r REMOTE="root@${SERVER}"
 
-declare -r REMOTE_DIR=$(ssh root@"${SERVER}" "mktemp --directory --tmpdir simlar-server-XXXXXXXXXX")
+declare -r REMOTE_DIR=$(ssh ${REMOTE} "mktemp --directory --tmpdir simlar-server-XXXXXXXXXX")
 echo "created temporary directory: ${REMOTE}:${REMOTE_DIR}"
 
 function cleanup {
@@ -29,7 +29,7 @@ scp build/libs/simlar-server*.war ${REMOTE}:"${REMOTE_DIR}/"
 
 
 echo "install war file"
-ssh ${REMOTE} "systemctl stop tomcat9.service ; rm -rf /var/lib/tomcat9/webapps/simlar-server* ; mv "${REMOTE_DIR}"/simlar-server*.war /var/lib/tomcat9/webapps/ ; systemctl start tomcat9.service"
+ssh ${REMOTE} "systemctl stop tomcat9.service ; rm -rf /var/lib/tomcat9/webapps/simlar-server* ; mv \"${REMOTE_DIR}\"/simlar-server*.war /var/lib/tomcat9/webapps/ ; systemctl start tomcat9.service"
 
 
 echo "waiting"
