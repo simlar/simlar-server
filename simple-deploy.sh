@@ -6,10 +6,10 @@ declare -r SERVER=${1:?"USAGE: $0 your.server.org"}
 declare -r REMOTE="root@${SERVER}"
 
 declare -r REMOTE_DIR=$(ssh ${REMOTE} "mktemp --directory --tmpdir simlar-server-XXXXXXXXXX")
-echo "created temporary directory: ${REMOTE}:${REMOTE_DIR}"
+echo "created temporary directory: ${SERVER}:${REMOTE_DIR}"
 
 function cleanup {
-    echo "removing temporary directory: ${REMOTE}:${REMOTE_DIR}"
+    echo "removing temporary directory: ${SERVER}:${REMOTE_DIR}"
     ssh ${REMOTE} "rm -rf \"${REMOTE_DIR}\""
 }
 trap cleanup EXIT
