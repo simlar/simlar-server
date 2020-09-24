@@ -59,14 +59,14 @@ final class StartUpService {
         hibernateDdlAuto       = hibernateProperties.getDdlAuto();
 
         //noinspection NullableProblems
-        datasourceUrl          = (String) extractDatabaseMetaData(dataSource, DatabaseMetaData::getURL);
+        datasourceUrl          = extractDatabaseMetaData(dataSource, DatabaseMetaData::getURL);
         //noinspection NullableProblems
         databaseProduct = String.format("%s %s",
                 extractDatabaseMetaData(dataSource, DatabaseMetaData::getDatabaseProductName),
                 extractDatabaseMetaData(dataSource, DatabaseMetaData::getDatabaseProductVersion));
     }
 
-    private static Object extractDatabaseMetaData(final DataSource dataSource, final DatabaseMetaDataCallback action) {
+    private static <T> T extractDatabaseMetaData(final DataSource dataSource, final DatabaseMetaDataCallback<T> action) {
         try {
             return JdbcUtils.extractDatabaseMetaData(dataSource, action);
         } catch (final MetaDataAccessException e) {
