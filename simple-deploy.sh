@@ -4,13 +4,8 @@ set -eu -o pipefail
 declare -r SERVER=${1:?"USAGE: $0 your.server.org"}
 
 
-declare -a WAR_FILES=()
-if [ -d build/libs ] ; then
-    for WAR_FILE in build/libs/simlar-server*.war; do
-        [ -f "${WAR_FILE}" ] && WAR_FILES+=(${WAR_FILE})
-    done
-fi
-declare -r WAR_FILES
+shopt -s nullglob
+declare -r WAR_FILES=(build/libs/simlar-server*.war)
 
 if [ ${#WAR_FILES[@]} == 0 ] ; then
     echo "no war file found"
