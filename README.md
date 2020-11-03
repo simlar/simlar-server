@@ -90,9 +90,9 @@ docker build --no-cache -t simlar-server-builder docker-files/
 ```
 You may use the container to build the war file.
 ```
-docker run -it --rm -v $(pwd):/pwd simlar-server-builder:latest bash -c "cd /pwd && ./gradlew clean build dependencyUpdates dependencyCheckAnalyze"
+docker run --cap-drop all --security-opt=no-new-privileges -it --rm -v $(pwd):/pwd simlar-server-builder:latest bash -c "cd /pwd && ./gradlew clean build dependencyUpdates dependencyCheckAnalyze"
 ```
 However, caching gradle downloads speeds up the build.
 ```
-docker run -it --rm -v $(pwd)-docker-gradle-cache:/home/builder/.gradle -v $(pwd):/pwd simlar-server-builder:latest bash -c "cd /pwd && ./gradlew clean build dependencyUpdates dependencyCheckAnalyze"
+docker run --cap-drop all --security-opt=no-new-privileges  -it --rm -v $(pwd)-docker-gradle-cache:/home/builder/.gradle -v $(pwd):/pwd simlar-server-builder:latest bash -c "cd /pwd && ./gradlew clean build dependencyUpdates dependencyCheckAnalyze"
 ```
