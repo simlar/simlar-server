@@ -4,11 +4,11 @@
         <notes>
             <![CDATA[
                 file name:
-                  tomcat-embed-core-9.0.38.jar
-                  tomcat-embed-websocket-9.0.38.jar
+                    kotlin-stdlib-1.4.10.jar
+                    kotlin-stdlib-common-1.4.10.jar
             ]]>
         </notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-.*@.*$</packageUrl>
-        <cve>CVE-2020-13943</cve>
+        <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib.*@.*$</packageUrl>
+        <cve>CVE-2020-15824</cve>
     </suppress>
 </suppressions>

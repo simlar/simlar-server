@@ -26,7 +26,7 @@ plugins {
     id "war"
     id "pmd"
     id "com.github.spotbugs" version "4.6.0"
-    id "org.springframework.boot" version "2.3.5.RELEASE"
+    id "org.springframework.boot" version "2.4.0"
     id "io.spring.dependency-management" version "1.0.10.RELEASE"
     id "com.github.ben-manes.versions" version "0.36.0"
     id "org.owasp.dependencycheck" version "6.0.3"
@@ -63,6 +63,7 @@ dependencies {
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.0")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
+    testImplementation("junit:junit:4.13.1")
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
