@@ -76,7 +76,7 @@ public final class GooglePushNotificationMockServerTest {
     }
 
     @Test
-    public void testRequestAppleVoipPushNotification() {
+    public void testRequestGooglePushNotification() {
         createMockServerRequest("someToken",
                 response()
                         .withStatusCode(200)
