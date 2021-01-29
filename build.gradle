@@ -59,7 +59,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation("com.google.auth:google-auth-library-oauth2-http:0.23.0")
 
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.1")
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.2")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testImplementation("junit:junit:4.13.1")
