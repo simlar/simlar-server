@@ -3,12 +3,13 @@
     <suppress>
         <notes>
             <![CDATA[
-                file name:
-                    kotlin-stdlib-1.4.10.jar
-                    kotlin-stdlib-common-1.4.10.jar
+                file names:
+                    kotlin-stdlib-1.4.21.jar
+                    kotlin-stdlib-common-1.4.21.jar
             ]]>
         </notes>
         <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib.*@.*$</packageUrl>
         <cve>CVE-2020-15824</cve>
+        <cve>CVE-2020-29582</cve>
     </suppress>
 </suppressions>
