@@ -34,7 +34,7 @@ plugins {
 
 ext {
     lombokVersion = "1.18.18"
-    spotbugsVersion = "4.2.1"
+    spotbugsVersion = "4.2.2"
     mockitoVersion = "3.8.0"
 }
 
@@ -78,7 +78,7 @@ repositories {
 }
 
 pmd {
-    toolVersion = "6.31.0"
+    toolVersion = "6.32.0"
     ruleSetFiles = files("pmd-ruleset.xml")
     ruleSets = []
 }
