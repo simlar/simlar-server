@@ -98,7 +98,7 @@ public final class ApplePushNotificationServiceTest {
                     .sslProtocol(pushNotificationSettings.getSslProtocol())
                     .voipCertificatePath(pushNotificationSettings.getVoipCertificatePath())
                     .voipCertificatePassword(pushNotificationSettings.getVoipCertificatePassword())
-                    .voipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=")
+                    .voipCertificatePinning(Collections.singletonList("sha256/_________WRONG_CERTIFICATE_PINNING_________="))
                     .build();
 
             final ApplePushNotificationRequestCaller caller = new ApplePushNotificationRequestCaller("initializationVector", "encryptedSimlarId");
