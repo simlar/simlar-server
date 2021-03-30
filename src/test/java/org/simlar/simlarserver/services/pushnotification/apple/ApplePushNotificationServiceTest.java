@@ -124,6 +124,18 @@ public final class ApplePushNotificationServiceTest {
     }
 
     @Test
+    public void testConnectToAppleProductionWithCertificateBadDeviceToken() {
+        try {
+            final ApplePushNotificationRequestCaller caller = new ApplePushNotificationRequestCaller("initializationVector", "encryptedSimlarId");
+            applePushNotificationService.requestVoipPushNotification(ApplePushServer.PRODUCTION, caller, "invalidDeviceToken");
+            fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
+        } catch (final HttpClientErrorException e) {
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
+            assertEquals("{\"reason\":\"BadDeviceToken\"}", e.getResponseBodyAsString());
+        }
+    }
+
+    @Test
     public void testRequestAppleVoipPushNotification() {
         final String deviceToken = pushNotificationSettings.getVoipTestDeviceToken();
         assumeTrue("This test needs a valid device token in the properties", StringUtils.isNotEmpty(deviceToken));
