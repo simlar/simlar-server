@@ -189,6 +189,7 @@ public final class SslPeerCertificatesChainTest {
                 "https://" + ApplePushServer.PRODUCTION.getBaseUrl()));
 
         assertEquals(3, certificates.size());
+        //noinspection SpellCheckingInspection
         assertTrue(Arrays.asList("tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=", "1CC6SL5QjEUUEr5JiV4Zw8QxiSkGVmp2CRJ4mm1IhKU=").contains(certificates.get(1).getPublicKeySha256()));
     }
 
@@ -207,6 +208,7 @@ public final class SslPeerCertificatesChainTest {
                 "https://fcm.googleapis.com/"));
 
         assertEquals(3, certificates.size());
+        //noinspection SpellCheckingInspection
         assertEquals("YZPgTZ+woNCCCIW3LH2CxQeLzB/1m42QcCTBSdgayjs=", certificates.get(1).getPublicKeySha256());
     }
 }
