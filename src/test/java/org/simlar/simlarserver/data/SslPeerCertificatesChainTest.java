@@ -200,4 +200,13 @@ public final class SslPeerCertificatesChainTest {
         assertEquals(3, certificates.size());
         assertEquals("1CC6SL5QjEUUEr5JiV4Zw8QxiSkGVmp2CRJ4mm1IhKU=", certificates.get(1).getPublicKeySha256());
     }
+
+    @Test
+    public void testGoogle() {
+        final List<ReadableCertificate> certificates = requestAndLogReadablePeerCertificates(URI.create(
+                "https://fcm.googleapis.com/"));
+
+        assertEquals(3, certificates.size());
+        assertEquals("YZPgTZ+woNCCCIW3LH2CxQeLzB/1m42QcCTBSdgayjs=", certificates.get(1).getPublicKeySha256());
+    }
 }
