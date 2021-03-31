@@ -37,6 +37,7 @@ import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushN
 import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationRequest;
 import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationRequestDetails;
 import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationResponse;
+import org.simlar.simlarserver.utils.CertificatePinnerUtil;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -112,25 +113,21 @@ public final class GooglePushNotificationService {
 
         return requestPushNotification(
                 GooglePushServer.URL,
-                GooglePushServer.BASE_URL,
-                pushNotificationSettings.getFirebaseCertificatePinning(),
+                CertificatePinnerUtil.createCertificatePinner(GooglePushServer.BASE_URL, pushNotificationSettings.getFirebaseCertificatePinning()),
                 pushNotificationSettings.getProjectId(),
                 bearer,
                 token);
     }
 
     @Nullable
-    @SuppressWarnings("MethodWithTooManyParameters")
     @SuppressFBWarnings({"MOM_MISLEADING_OVERLOAD_MODEL", "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"})
-    static String requestPushNotification(final String url, final String urlPin, final String certificatePinning, final String projectId, final String bearer, final String token) {
+    static String requestPushNotification(final String url, final CertificatePinner certificatePinner, final String projectId, final String bearer, final String token) {
         final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
-        if (StringUtils.isEmpty(certificatePinning)) {
+        if (certificatePinner.getPins().isEmpty()) {
             log.warn("certificate pinning disabled");
         } else {
-            clientBuilder.certificatePinner(new CertificatePinner.Builder()
-                    .add(urlPin, certificatePinning)
-                    .build());
+            clientBuilder.certificatePinner(certificatePinner);
         }
 
         final OkHttpClient client = clientBuilder.build();

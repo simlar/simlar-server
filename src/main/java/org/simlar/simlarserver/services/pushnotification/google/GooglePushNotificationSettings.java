@@ -29,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 @Builder
@@ -39,7 +41,7 @@ class GooglePushNotificationSettings {
     private final String credentialsJsonPath;
     private final String projectId;
     private final String testDeviceToken;
-    private final String firebaseCertificatePinning;
+    private final List<String> firebaseCertificatePinning;
 
     public final boolean isConfigured() {
         return StringUtils.isNoneEmpty(credentialsJsonPath, projectId);
