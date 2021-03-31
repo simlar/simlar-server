@@ -44,6 +44,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -51,6 +52,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @Slf4j
 public final class SslPeerCertificatesChainTest {
@@ -187,7 +189,7 @@ public final class SslPeerCertificatesChainTest {
                 "https://" + ApplePushServer.PRODUCTION.getBaseUrl()));
 
         assertEquals(3, certificates.size());
-        assertEquals("tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=", certificates.get(1).getPublicKeySha256());
+        assertTrue(Arrays.asList("tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=", "1CC6SL5QjEUUEr5JiV4Zw8QxiSkGVmp2CRJ4mm1IhKU=").contains(certificates.get(1).getPublicKeySha256()));
     }
 
     @Test
