@@ -21,13 +21,15 @@
 
 package org.simlar.simlarserver.services.pushnotification.google;
 
+import java.util.List;
+
 @SuppressWarnings("UtilityClass")
 final class GooglePushNotificationErrorResponse {
     private GooglePushNotificationErrorResponse() {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
-    static final String INVALID_TOKEN =
+    static final List<String> INVALID_TOKENS = List.of(
             "{\n" +
             "  \"error\": {\n" +
             "    \"code\": 400,\n" +
@@ -49,5 +51,18 @@ final class GooglePushNotificationErrorResponse {
             "      }\n" +
             "    ]\n" +
             "  }\n" +
-            "}\n";
+            "}\n",
+            "{\n" +
+            "  \"error\": {\n" +
+            "    \"code\": 400,\n" +
+            "    \"message\": \"The registration token is not a valid FCM registration token\",\n" +
+            "    \"status\": \"INVALID_ARGUMENT\",\n" +
+            "    \"details\": [\n" +
+            "      {\n" +
+            "        \"@type\": \"type.googleapis.com/google.firebase.fcm.v1.FcmError\",\n" +
+            "        \"errorCode\": \"INVALID_ARGUMENT\"\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  }\n" +
+            "}\n");
 }

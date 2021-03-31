@@ -89,18 +89,21 @@ public final class GooglePushNotificationMockServerTest {
                 requestPushNotification("someToken"));
     }
 
+    @SuppressWarnings("ObjectAllocationInLoop")
     @Test
     public void testRequestPushNotificationWithInvalidToken() {
-        createMockServerRequest("invalidToken",
-                response()
-                        .withStatusCode(400)
-                        .withBody(GooglePushNotificationErrorResponse.INVALID_TOKEN));
+        for(final String body : GooglePushNotificationErrorResponse.INVALID_TOKENS) {
+            createMockServerRequest("invalidToken",
+                    response()
+                            .withStatusCode(400)
+                            .withBody(body));
 
-        try {
-            requestPushNotification("invalidToken");
-            fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
-        } catch (final HttpClientErrorException e) {
-            assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
+            try {
+                requestPushNotification("invalidToken");
+                fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
+            } catch (final HttpClientErrorException e) {
+                assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
+            }
         }
     }
 
