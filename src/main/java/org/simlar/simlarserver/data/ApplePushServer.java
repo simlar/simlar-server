@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification.apple;
+package org.simlar.simlarserver.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public enum ApplePushServer {
 
     private final String baseUrl;
 
-    final String getUrl() {
+    public final String getUrl() {
         return "https://" + baseUrl + "/3/device/";
     }
 }
