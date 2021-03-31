@@ -205,7 +205,7 @@ public final class SslPeerCertificatesChainTest {
     @Test
     public void testGoogle() {
         final List<ReadableCertificate> certificates = requestAndLogReadablePeerCertificates(URI.create(
-                "https://fcm.googleapis.com/"));
+                GooglePushServer.URL));
 
         assertEquals(3, certificates.size());
         //noinspection SpellCheckingInspection

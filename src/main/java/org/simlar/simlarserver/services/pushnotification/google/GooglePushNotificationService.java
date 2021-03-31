@@ -32,6 +32,7 @@ import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.simlar.simlarserver.data.GooglePushServer;
 import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationAndroidDetails;
 import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationRequest;
 import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationRequestDetails;
@@ -110,8 +111,8 @@ public final class GooglePushNotificationService {
         }
 
         return requestPushNotification(
-                "https://fcm.googleapis.com/",
-                "fcm.googleapis.com",
+                GooglePushServer.URL,
+                GooglePushServer.BASE_URL,
                 pushNotificationSettings.getFirebaseCertificatePinning(),
                 pushNotificationSettings.getProjectId(),
                 bearer,
