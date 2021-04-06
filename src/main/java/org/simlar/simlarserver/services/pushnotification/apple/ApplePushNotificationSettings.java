@@ -29,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 @ToString
@@ -38,7 +40,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 class ApplePushNotificationSettings {
     private final String voipCertificatePath;
     private final String voipCertificatePassword;
-    private final String voipCertificatePinning;
+    private final List<String> voipCertificatePinning;
     private final String sslProtocol;
     private final String voipTestDeviceToken;
     private final String voipTestPasswordHash;

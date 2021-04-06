@@ -33,6 +33,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -65,7 +67,7 @@ public final class GooglePushNotificationServiceTest {
             final GooglePushNotificationSettings settings = GooglePushNotificationSettings.builder()
                     .credentialsJsonPath(pushNotificationSettings.getCredentialsJsonPath())
                     .projectId(pushNotificationSettings.getProjectId())
-                    .firebaseCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=")
+                    .firebaseCertificatePinning(Collections.singletonList("sha256/_________WRONG_CERTIFICATE_PINNING_________="))
                     .build();
 
             new GooglePushNotificationService(settings).requestPushNotification("invalidDeviceToken");

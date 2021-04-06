@@ -28,9 +28,11 @@ import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.simlar.simlarserver.data.ApplePushServer;
 import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequest;
 import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestCaller;
 import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestDetails;
+import org.simlar.simlarserver.utils.CertificatePinnerUtil;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -163,13 +165,11 @@ public final class ApplePushNotificationService {
                         createSSLSocketFactory(),
                         createTrustManager());
 
-        final String certificatePinning = pushNotificationSettings.getVoipCertificatePinning();
-        if (StringUtils.isEmpty(certificatePinning)) {
+        final CertificatePinner certificatePinner = CertificatePinnerUtil.createCertificatePinner(urlPin, pushNotificationSettings.getVoipCertificatePinning());
+        if (certificatePinner.getPins().isEmpty()) {
             log.warn("certificate pinning disabled");
         } else {
-            clientBuilder.certificatePinner(new CertificatePinner.Builder()
-                    .add(urlPin, certificatePinning)
-                    .build());
+            clientBuilder.certificatePinner(certificatePinner);
         }
 
         final OkHttpClient client = clientBuilder.build();

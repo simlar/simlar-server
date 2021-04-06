@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Simlar Authors.
+ * Copyright (C) 2016 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,31 +19,20 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification.google;
+package org.simlar.simlarserver.data;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Getter
-@Builder
-@ToString
-@ConstructorBinding
-@ConfigurationProperties(prefix = "push.google")
-class GooglePushNotificationSettings {
-    private final String credentialsJsonPath;
-    private final String projectId;
-    private final String testDeviceToken;
-    private final List<String> firebaseCertificatePinning;
+public enum ApplePushServer {
+    PRODUCTION("api.push.apple.com"),
+    SANDBOX("api.development.push.apple.com");
 
-    public final boolean isConfigured() {
-        return StringUtils.isNoneEmpty(credentialsJsonPath, projectId);
+    private final String baseUrl;
+
+    public final String getUrl() {
+        return "https://" + baseUrl + "/3/device/";
     }
 }

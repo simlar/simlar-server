@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestCaller;
+import org.simlar.simlarserver.data.ApplePushServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -98,7 +99,7 @@ public final class ApplePushNotificationServiceTest {
                     .sslProtocol(pushNotificationSettings.getSslProtocol())
                     .voipCertificatePath(pushNotificationSettings.getVoipCertificatePath())
                     .voipCertificatePassword(pushNotificationSettings.getVoipCertificatePassword())
-                    .voipCertificatePinning("sha256/_________WRONG_CERTIFICATE_PINNING_________=")
+                    .voipCertificatePinning(Collections.singletonList("sha256/_________WRONG_CERTIFICATE_PINNING_________="))
                     .build();
 
             final ApplePushNotificationRequestCaller caller = new ApplePushNotificationRequestCaller("initializationVector", "encryptedSimlarId");
@@ -116,6 +117,18 @@ public final class ApplePushNotificationServiceTest {
         try {
             final ApplePushNotificationRequestCaller caller = new ApplePushNotificationRequestCaller("initializationVector", "encryptedSimlarId");
             applePushNotificationService.requestVoipPushNotification(ApplePushServer.SANDBOX, caller, "invalidDeviceToken");
+            fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
+        } catch (final HttpClientErrorException e) {
+            assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
+            assertEquals("{\"reason\":\"BadDeviceToken\"}", e.getResponseBodyAsString());
+        }
+    }
+
+    @Test
+    public void testConnectToAppleProductionWithCertificateBadDeviceToken() {
+        try {
+            final ApplePushNotificationRequestCaller caller = new ApplePushNotificationRequestCaller("initializationVector", "encryptedSimlarId");
+            applePushNotificationService.requestVoipPushNotification(ApplePushServer.PRODUCTION, caller, "invalidDeviceToken");
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());

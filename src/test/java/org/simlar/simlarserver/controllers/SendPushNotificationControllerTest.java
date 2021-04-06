@@ -38,6 +38,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("ClassWithTooManyTransitiveDependencies")
 @RunWith(SpringRunner.class)
 public final class SendPushNotificationControllerTest extends BaseControllerTest {
     private static final String API_KEY = "someApiKey";

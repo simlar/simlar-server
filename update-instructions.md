@@ -33,3 +33,12 @@ push.google.projectId=
 ## expires on 2012/12/15 00:00:42 GMT
 push.google.firebaseCertificatePinning=sha256/YZPgTZ+woNCCCIW3LH2CxQeLzB/1m42QcCTBSdgayjs=
 ```
+
+
+### 0.12.7
+Update apple push server certificate pinning in ```/etc/simlar-server/config.properties```
+```
+## first expires on 2022/05/20 15:42:02 UTC
+## second expires on 2028/12/06 23:59:59 UTC
+push.apple.voipCertificatePinning=sha256/tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=, sha256/1CC6SL5QjEUUEr5JiV4Zw8QxiSkGVmp2CRJ4mm1IhKU=
+```

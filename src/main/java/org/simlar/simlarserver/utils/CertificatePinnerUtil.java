@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Simlar Authors.
+ * Copyright (C) 2021 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -16,34 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- *
  */
 
-package org.simlar.simlarserver.services.pushnotification.google;
+package org.simlar.simlarserver.utils;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import okhttp3.CertificatePinner;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 
-import java.util.List;
+@SuppressWarnings("UtilityClass")
+public final class CertificatePinnerUtil {
+    private CertificatePinnerUtil() {
+        throw new AssertionError("This class was not meant to be instantiated");
+    }
 
-@AllArgsConstructor
-@Getter
-@Builder
-@ToString
-@ConstructorBinding
-@ConfigurationProperties(prefix = "push.google")
-class GooglePushNotificationSettings {
-    private final String credentialsJsonPath;
-    private final String projectId;
-    private final String testDeviceToken;
-    private final List<String> firebaseCertificatePinning;
+    public static CertificatePinner createCertificatePinner(final String url, final Iterable<String> pins) {
+        final CertificatePinner.Builder certificatePinner = new CertificatePinner.Builder();
 
-    public final boolean isConfigured() {
-        return StringUtils.isNoneEmpty(credentialsJsonPath, projectId);
+        if (pins != null) {
+            for (final String pin : pins) {
+                if (StringUtils.isNotEmpty(pin)) {
+                    certificatePinner.add(url, pin);
+                }
+            }
+        }
+
+        return certificatePinner.build();
     }
 }

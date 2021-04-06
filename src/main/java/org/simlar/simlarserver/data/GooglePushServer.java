@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Simlar Authors.
+ * Copyright (C) 2021 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,20 +19,16 @@
  *
  */
 
-package org.simlar.simlarserver.services.pushnotification.apple;
+package org.simlar.simlarserver.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@AllArgsConstructor
-@Getter
-public enum ApplePushServer {
-    PRODUCTION("api.push.apple.com"),
-    SANDBOX("api.development.push.apple.com");
+@SuppressWarnings("UtilityClass")
+public final class GooglePushServer {
+    public static final String BASE_URL = "fcm.googleapis.com";
+    @SuppressWarnings("FieldNamingConvention")
+    public static final String URL = "https://" + BASE_URL;
 
-    private final String baseUrl;
-
-    final String getUrl() {
-        return "https://" + baseUrl + "/3/device/";
+    private GooglePushServer() {
+        throw new AssertionError("This class was not meant to be instantiated");
     }
 }
