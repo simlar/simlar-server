@@ -84,7 +84,7 @@ public final class GooglePushNotificationServiceTest {
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
         } catch (final HttpClientErrorException e) {
             assertEquals(HttpStatus.BAD_REQUEST, e.getStatusCode());
-            assertEquals(GooglePushNotificationErrorResponse.INVALID_TOKEN, e.getResponseBodyAsString());
+            assertTrue(GooglePushNotificationErrorResponse.INVALID_TOKENS.contains(e.getResponseBodyAsString()));
         }
     }
 
