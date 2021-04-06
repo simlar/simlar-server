@@ -28,7 +28,7 @@ jobs:
           ~/.gradle
         key: ${{ runner.os }}-dependencies
 
-    - name: Build app
+    - name: Build
       run: ./gradlew --no-daemon --warning-mode all clean build dependencyUpdates dependencyCheckAnalyze
 
     - name: Save artifacts
