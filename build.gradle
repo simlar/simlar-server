@@ -92,6 +92,15 @@ spotbugs {
     excludeFilter = file("$rootProject.projectDir/ides/spotbugs/excludeFilter.xml")
 }
 
+gradle.taskGraph.beforeTask { task ->
+    if (task.name.toLowerCase().contains('spotbugs')) {
+        task.reports {
+            html.enabled = true
+            xml.enabled = false
+        }
+    }
+}
+
 dependencyCheck {
     suppressionFile = "owasp-dependency-check-suppression.xml"
     failBuildOnCVSS = 0
