@@ -8,7 +8,7 @@ simlar-server
 But after all this code runs in the simlar production environment.
 
 
-[Simlar](https://www.simlar.org) is a cross platform VoIP App aiming to make ZRTP encrypted calls easy.
+[Simlar](https://www.simlar.org) is a cross-platform VoIP App aiming to make ZRTP encrypted calls easy.
 
 <!--suppress HtmlUnknownAttribute -->
 <div id="screenshots" align="center">
