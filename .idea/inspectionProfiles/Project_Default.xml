@@ -381,9 +381,6 @@
     <inspection_tool class="InstanceofInterfaces" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="InstanceofThis" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="IntLiteralMayBeLongLiteral" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="IntegerMultiplicationImplicitCastToLong" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="ignoreNonOverflowingCompileTimeConstants" value="true" />
-    </inspection_tool>
     <inspection_tool class="InterfaceMayBeAnnotatedFunctional" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="InterfaceNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_regex" value="[A-Z][A-Za-z\d]*" />
@@ -403,7 +400,6 @@
       <option name="insideTryAllowed" value="false" />
     </inspection_tool>
     <inspection_tool class="JUnit3MethodNamingConvention" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="JUnit3StyleTestMethodInJUnit4Class" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JUnit4MethodNamingConvention" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JUnitAbstractTestClassNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_regex" value="[A-Z][A-Za-z\d]*TestCase" />
@@ -945,7 +941,6 @@
     <inspection_tool class="UnnecessarySuperConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessarySuperQualifier" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryThis" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="UnnecessaryToStringCall" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryUnaryMinus" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryUnicodeEscape" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnqualifiedInnerClassAccess" enabled="true" level="WARNING" enabled_by_default="true">
