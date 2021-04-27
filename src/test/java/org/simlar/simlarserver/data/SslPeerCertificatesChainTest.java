@@ -170,7 +170,7 @@ public final class SslPeerCertificatesChainTest {
     private static List<ReadableCertificate> requestAndLogReadablePeerCertificates(final URI url) {
         final List<ReadableCertificate> certificates = requestReadablePeerCertificates(url);
         log.info("peer certificates for url '{}'\n{}", url,
-                String.join("%n%n", certificates.stream().map(certificate ->
+                certificates.stream().map(certificate ->
                         String.format("Subject: '%s'%n" +
                                         "SubjectAlternativeNames: '%s'%n" +
                                         "sha256: '%s'%n" +
@@ -179,7 +179,7 @@ public final class SslPeerCertificatesChainTest {
                                 String.join("', '", certificate.getSubjectAlternativeNames()),
                                 certificate.getPublicKeySha256(),
                                 certificate.getNotBefore(), certificate.getNotAfter())
-                ).collect(Collectors.toUnmodifiableList())));
+                ).collect(Collectors.joining("%n%n")));
         return certificates;
     }
 
