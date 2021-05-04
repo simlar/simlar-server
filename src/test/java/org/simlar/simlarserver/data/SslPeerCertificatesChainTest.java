@@ -208,7 +208,6 @@ public final class SslPeerCertificatesChainTest {
                 GooglePushServer.URL));
 
         assertEquals(4, certificates.size());
-        //noinspection SpellCheckingInspection
         assertEquals("zCTnfLwLKbS9S2sbp+uFz4KZOocFvXxkV06Ce9O5M2w=", certificates.get(1).getPublicKeySha256());
     }
 }
