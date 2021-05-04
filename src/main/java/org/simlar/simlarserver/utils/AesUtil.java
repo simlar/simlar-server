@@ -42,13 +42,15 @@ import java.security.spec.AlgorithmParameterSpec;
 
 @SuppressWarnings("UtilityClass")
 public final class AesUtil {
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     private AesUtil() {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
     public static String generateInitializationVector() {
         final byte[] initializationVector = new byte[16];
-        new SecureRandom().nextBytes(initializationVector);
+        SECURE_RANDOM.nextBytes(initializationVector);
 
         return Base64.encodeBase64String(initializationVector);
     }
