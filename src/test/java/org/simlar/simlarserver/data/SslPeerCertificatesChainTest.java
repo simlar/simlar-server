@@ -179,7 +179,7 @@ public final class SslPeerCertificatesChainTest {
                                 String.join("', '", certificate.getSubjectAlternativeNames()),
                                 certificate.getPublicKeySha256(),
                                 certificate.getNotBefore(), certificate.getNotAfter())
-                ).collect(Collectors.joining("%n%n")));
+                ).collect(Collectors.joining("\n\n")));
         return certificates;
     }
 
