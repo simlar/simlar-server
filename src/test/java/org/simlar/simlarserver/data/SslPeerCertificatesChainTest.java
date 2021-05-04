@@ -207,8 +207,8 @@ public final class SslPeerCertificatesChainTest {
         final List<ReadableCertificate> certificates = requestAndLogReadablePeerCertificates(URI.create(
                 GooglePushServer.URL));
 
-        assertEquals(3, certificates.size());
+        assertEquals(4, certificates.size());
         //noinspection SpellCheckingInspection
-        assertEquals("YZPgTZ+woNCCCIW3LH2CxQeLzB/1m42QcCTBSdgayjs=", certificates.get(1).getPublicKeySha256());
+        assertEquals("zCTnfLwLKbS9S2sbp+uFz4KZOocFvXxkV06Ce9O5M2w=", certificates.get(1).getPublicKeySha256());
     }
 }
