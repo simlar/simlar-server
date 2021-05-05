@@ -53,6 +53,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @Slf4j
 public final class SslPeerCertificatesChainTest {
@@ -207,7 +208,17 @@ public final class SslPeerCertificatesChainTest {
         final List<ReadableCertificate> certificates = requestAndLogReadablePeerCertificates(URI.create(
                 GooglePushServer.URL));
 
-        assertEquals(4, certificates.size());
-        assertEquals("zCTnfLwLKbS9S2sbp+uFz4KZOocFvXxkV06Ce9O5M2w=", certificates.get(1).getPublicKeySha256());
+        //noinspection SwitchStatement
+        switch (certificates.size()) {
+            case 3:
+                //noinspection SpellCheckingInspection
+                assertEquals("YZPgTZ+woNCCCIW3LH2CxQeLzB/1m42QcCTBSdgayjs=", certificates.get(1).getPublicKeySha256());
+                break;
+            case 4:
+                assertEquals("zCTnfLwLKbS9S2sbp+uFz4KZOocFvXxkV06Ce9O5M2w=", certificates.get(1).getPublicKeySha256());
+                break;
+            default:
+                fail("unexpected certificates list size: " + certificates.size());
+        }
     }
 }
