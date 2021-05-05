@@ -29,6 +29,7 @@ public final class Password {
     private static final int DEFAULT_LENGTH = 14;
     @SuppressWarnings("SpellCheckingInspection")
     private static final String ALPHABET = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKMLNPQRTUVWXY346789";
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     private Password() {
         throw new AssertionError("This class was not meant to be instantiated");
@@ -39,7 +40,7 @@ public final class Password {
     }
 
     static String generate(final int length) {
-        return new SecureRandom().ints(length, 0, ALPHABET.length())
+        return SECURE_RANDOM.ints(length, 0, ALPHABET.length())
                 .mapToObj(ALPHABET::charAt)
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
@@ -47,7 +48,7 @@ public final class Password {
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static String generateRegistrationCode() {
-        return new SecureRandom().ints(REGISTRATION_CODE_LENGTH, 0, 10)
+        return SECURE_RANDOM.ints(REGISTRATION_CODE_LENGTH, 0, 10)
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
     }
