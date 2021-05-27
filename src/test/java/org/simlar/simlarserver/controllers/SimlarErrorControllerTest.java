@@ -97,8 +97,8 @@ public final class SimlarErrorControllerTest extends BaseControllerTest {
     public void testHttpPostRequest() {
         assertHttpPost404("", null);
         assertHttpPost404(ContactsController.REQUEST_PATH + 'x', null);
-        assertHttpPost404("index", null);
-        assertHttpPost404("index.html", null);
+        assertHttpPost404("/index", null);
+        assertHttpPost404("/index.html", null);
 
         assertHttpPost404(ContactsController.REQUEST_PATH + 'x', createParameters(new String[][] {
                 { "login", "*0007*" },
