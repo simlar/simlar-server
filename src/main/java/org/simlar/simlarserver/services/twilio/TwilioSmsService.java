@@ -51,9 +51,9 @@ import org.springframework.web.client.RestClientException;
 @Slf4j
 @Component
 public final class TwilioSmsService implements SmsService {
-    public static final String REQUEST_PATH_DELIVERY    = "twilio/delivery-report.json";
-    public static final String REQUEST_PATH_CALL_STATUS = "twilio/call-status.json";
-    public static final String REQUEST_PATH_CALL        = "twilio/call.xml";
+    public static final String REQUEST_PATH_DELIVERY    = "/twilio/delivery-report.json";
+    public static final String REQUEST_PATH_CALL_STATUS = "/twilio/call-status.json";
+    public static final String REQUEST_PATH_CALL        = "/twilio/call.xml";
 
     private final SharedSettings sharedSettings;
     private final TwilioSettings twilioSettings;
@@ -62,7 +62,7 @@ public final class TwilioSmsService implements SmsService {
     private String createCallbackBaseUrl() {
         return "https://" +
                 twilioSettings.getCallbackUser() + ':' + twilioSettings.getCallbackPassword() + '@' +
-                sharedSettings.getDomain() + ':' + sharedSettings.getPort() + '/';
+                sharedSettings.getDomain() + ':' + sharedSettings.getPort();
     }
 
     private String postRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {
