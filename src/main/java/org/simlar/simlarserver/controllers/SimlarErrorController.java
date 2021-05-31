@@ -50,14 +50,6 @@ final class SimlarErrorController implements ErrorController {
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_XML).body(new XmlError(response.getId(), response.getMessage()));
     }
 
-    // TODO: wait until spring removes deprecated function
-    // see: https://github.com/spring-projects/spring-boot/issues/19844
-    @SuppressWarnings({"deprecation", "RedundantSuppression", "ReturnOfNull"})
-    @Override
-    public String getErrorPath() {
-        return null;
-    }
-
     @SuppressFBWarnings("SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING")
     @RequestMapping(path = ERROR_PATH)
     public static ResponseEntity<XmlError> whiteLabelErrorPage(final HttpServletRequest request) {
