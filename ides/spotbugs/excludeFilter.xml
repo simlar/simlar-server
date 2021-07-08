@@ -10,4 +10,9 @@
         <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING, PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS, CE_CLASS_ENVY"/>
         <Class name="~.*Test$"/>
     </Match>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+        <Field type="java.time.Instant"/> <!-- Instant is immutable -->
+        <package name="^org\.simlar\.simlarserver\.database\.models$"/>
+    </Match>
 </FindBugsFilter>
