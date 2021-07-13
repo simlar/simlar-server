@@ -1,4 +1,10 @@
-<FindBugsFilter>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter
+        xmlns="https://github.com/spotbugs/filter/3.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+
     <Match>
         <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING, FII_USE_FUNCTION_IDENTITY, AI_ANNOTATION_ISSUES_NEEDS_NULLABLE, CRLF_INJECTION_LOGS"/>
     </Match>
@@ -9,5 +15,10 @@
     <Match>
         <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING, PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS, CE_CLASS_ENVY"/>
         <Class name="~.*Test$"/>
+    </Match>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+        <Field type="java.time.Instant"/> <!-- Instant is immutable -->
+        <package name="^org\.simlar\.simlarserver\.database\.models$"/>
     </Match>
 </FindBugsFilter>
