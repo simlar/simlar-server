@@ -27,21 +27,17 @@ import java.util.Map;
 
 @SuppressWarnings("UtilityClass")
 public final class TwilioCallBackErrorCode {
-    private static final Map<String, String> KNOWN_ERROR_CODES = initKnownErrorCodes();
-
-    private static Map<String, String> initKnownErrorCodes() {
-        return Collections.synchronizedMap(Map.of(
-                "30001", "Queue overflow",
-                "30002", "Account suspended",
-                "30003", "Unreachable destination handset",
-                "30004", "Message blocked",
-                "30005", "Unknown destination handset",
-                "30006", "Landline or unreachable carrier",
-                "30007", "Carrier violation",
-                "30008", "Unknown error",
-                "30009", "Missing segment",
-                "30010", "Message price exceeds max price"));
-    }
+    private static final Map<String, String> KNOWN_ERROR_CODES = Collections.synchronizedMap(Map.of(
+            "30001", "Queue overflow",
+            "30002", "Account suspended",
+            "30003", "Unreachable destination handset",
+            "30004", "Message blocked",
+            "30005", "Unknown destination handset",
+            "30006", "Landline or unreachable carrier",
+            "30007", "Carrier violation",
+            "30008", "Unknown error",
+            "30009", "Missing segment",
+            "30010", "Message price exceeds max price"));
 
     private TwilioCallBackErrorCode() {
         throw new AssertionError("This class was not meant to be instantiated");
