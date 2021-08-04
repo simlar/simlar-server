@@ -60,7 +60,7 @@ final class PushNotificationsController {
      *            1 Android
      *            2..5 iOS
      * @param pushId
-     *            The Id to send push notifications to.
+     *            The push notification token identifing the device.
      * @return XmlError or XmlSuccessPushNotification
      *            error message or success message containing deviceType and pushId
      */
