@@ -27,6 +27,7 @@ import java.util.Map;
 
 @SuppressWarnings("UtilityClass")
 public final class TwilioCallBackErrorCode {
+    @SuppressWarnings("StaticCollection")
     private static final Map<String, String> KNOWN_ERROR_CODES = Collections.synchronizedMap(Map.of(
             "30001", "Queue overflow",
             "30002", "Account suspended",
