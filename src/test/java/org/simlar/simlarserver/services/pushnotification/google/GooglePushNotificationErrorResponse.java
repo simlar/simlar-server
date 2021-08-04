@@ -29,6 +29,7 @@ final class GooglePushNotificationErrorResponse {
         throw new AssertionError("This class was not meant to be instantiated");
     }
 
+    @SuppressWarnings("StaticCollection")
     static final List<String> INVALID_TOKENS = List.of(
             "{\n" +
             "  \"error\": {\n" +
