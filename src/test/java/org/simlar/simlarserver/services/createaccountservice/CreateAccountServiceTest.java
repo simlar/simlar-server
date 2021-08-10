@@ -29,6 +29,7 @@ import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.services.smsservice.SmsService;
+import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.utils.SimlarIdHelper;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorCallNotAllowedAtTheMomentException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
@@ -36,6 +37,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsExcepti
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -44,6 +46,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -55,6 +58,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings({"PMD.AvoidUsingHardCodedIP", "ClassWithTooManyMethods", "ObjectAllocationInLoop"})
@@ -66,7 +70,11 @@ import static org.mockito.Mockito.when;
         "create.account.maxRequestsTotalPerDay = 30",
         "create.account.regionalSettings[0].regionCode = 160",
         "create.account.regionalSettings[0].maxRequestsPerHour=4",
-        "create.account.registrationCodeExpirationMinutes=30"})
+        "create.account.registrationCodeExpirationMinutes=30",
+        "create.account.testAccounts[0].simlarId = *1*",
+        "create.account.testAccounts[0].registrationCode = 123456",
+        "create.account.testAccounts[1].simlarId = *2*",
+        "create.account.testAccounts[1].registrationCode = 654321" })
 public final class CreateAccountServiceTest {
     @Autowired
     private CreateAccountService createAccountService;
@@ -424,5 +432,25 @@ public final class CreateAccountServiceTest {
         final AccountRequest accountRequest3 = assertCreateAccountRequestSuccess(telephoneNumber, now);
         now = now.plusSeconds(createAccountSettings.getCallDelaySecondsMin() + 2);
         assertCreateAccountCallSuccess(telephoneNumber, accountRequest3.getPassword(), now);
+    }
+
+    @DirtiesContext
+    @Test
+    public void testTestAccounts() {
+        final List<TestAccount> testAccounts = createAccountSettings.getTestAccounts();
+        assertEquals(2, testAccounts.size());
+
+        for (final TestAccount testAccount: testAccounts) {
+            final String telephoneNumber = testAccount.getSimlarId();
+            final SimlarId simlarId = SimlarId.create(telephoneNumber);
+
+            createAccountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", Instant.now());
+            assertThrows(XmlErrorWrongRegistrationCodeException.class, () ->
+                    createAccountService.confirmAccount(telephoneNumber, "112233")
+            );
+            createAccountService.confirmAccount(telephoneNumber, testAccount.getRegistrationCode());
+        }
+
+        verifyNoMoreInteractions(smsService);
     }
 }
