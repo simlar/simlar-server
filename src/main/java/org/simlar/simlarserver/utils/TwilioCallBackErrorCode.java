@@ -22,13 +22,12 @@
 package org.simlar.simlarserver.utils;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.Map;
 
 @SuppressWarnings("UtilityClass")
 public final class TwilioCallBackErrorCode {
     @SuppressWarnings("StaticCollection")
-    private static final Map<String, String> KNOWN_ERROR_CODES = Collections.synchronizedMap(Map.of(
+    private static final Map<String, String> KNOWN_ERROR_CODES = Map.of(
             "30001", "Queue overflow",
             "30002", "Account suspended",
             "30003", "Unreachable destination handset",
@@ -38,7 +37,7 @@ public final class TwilioCallBackErrorCode {
             "30007", "Carrier violation",
             "30008", "Unknown error",
             "30009", "Missing segment",
-            "30010", "Message price exceeds max price"));
+            "30010", "Message price exceeds max price");
 
     private TwilioCallBackErrorCode() {
         throw new AssertionError("This class was not meant to be instantiated");
