@@ -211,8 +211,10 @@ public final class CreateAccountService {
     private void checkRequestTriesLimitWithAlert(final Integer requests, final int limit, final String message) {
         final int requestTries = ObjectUtils.defaultIfNull(requests, 0);
         if (requestTries == limit / 2) {
+            final String smsMessage = String.format("50%% Alert for %s %d", message, requestTries);
+            log.warn(smsMessage);
             for (final String alertNumber : createAccountSettings.getAlertSmsNumbers()) {
-                smsService.sendSms(alertNumber, String.format("50%% Alert for %s %d", message, requestTries));
+                smsService.sendSms(alertNumber, smsMessage);
             }
         } else {
             checkRequestTriesLimit(requestTries, limit, message);
