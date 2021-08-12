@@ -36,6 +36,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
 import java.util.List;
 
@@ -450,6 +452,42 @@ public final class CreateAccountServiceTest {
             );
             createAccountService.confirmAccount(telephoneNumber, testAccount.getRegistrationCode());
         }
+
+        verifyNoMoreInteractions(smsService);
+    }
+
+    @SuppressWarnings("MethodWithMultipleLoops")
+    @DirtiesContext
+    @Test
+    public void testTestAccountsLimits() {
+        final List<TestAccount> testAccounts = createAccountSettings.getTestAccounts();
+        assertEquals(2, testAccounts.size());
+
+        final String registrationCode = testAccounts.get(0).getRegistrationCode();
+        final String telephoneNumber = testAccounts.get(0).getSimlarId();
+        final SimlarId simlarId = SimlarId.create(telephoneNumber);
+        final Instant now = Instant.now();
+
+        final int maxRequests = createAccountSettings.getMaxRequestsPerSimlarIdPerDay();
+        final int maxConfirms = createAccountSettings.getMaxConfirms();
+        for (int i = 0; i < maxRequests; i++) {
+            createAccountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", now.plus(createAccountSettings.getRegistrationCodeExpirationMinutes() * i * 2L, ChronoUnit.MINUTES));
+
+            for (int j = 0; j < maxConfirms; j++) {
+                assertThrows(XmlErrorWrongRegistrationCodeException.class, () ->
+                        createAccountService.confirmAccount(telephoneNumber, "112233")
+                );
+            }
+            assertThrows(XmlErrorTooManyConfirmTriesException.class, () ->
+                    createAccountService.confirmAccount(telephoneNumber, registrationCode)
+            );
+        }
+
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () ->
+            createAccountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", now.plus(1, ChronoUnit.DAYS))
+        );
+
+        createAccountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", now.plus(3, ChronoUnit.DAYS));
 
         verifyNoMoreInteractions(smsService);
     }

@@ -126,13 +126,13 @@ public final class CreateAccountService {
         checkRequestTriesLimit(dbEntry.getRequestTries() - 1, createAccountSettings.getMaxRequestsPerSimlarIdPerDay(),
                 String.format("too many create account requests with number '%s'", telephoneNumber));
 
-        if (StringUtils.isEmpty(testAccountRegistrationCode)) {
-            if (Duration.between(dbEntry.getRegistrationCodeTimestamp().plus(Duration.ofMinutes(createAccountSettings.getRegistrationCodeExpirationMinutes())), now).compareTo(Duration.ZERO) > 0) {
-                dbEntry.setRegistrationCode(Password.generateRegistrationCode());
-                dbEntry.setRegistrationCodeTimestamp(now);
-                dbEntry.setConfirmTries(0);
-            }
+        if (Duration.between(dbEntry.getRegistrationCodeTimestamp().plus(Duration.ofMinutes(createAccountSettings.getRegistrationCodeExpirationMinutes())), now).compareTo(Duration.ZERO) > 0) {
+            dbEntry.setRegistrationCode(StringUtils.isNotEmpty(testAccountRegistrationCode) ? testAccountRegistrationCode : Password.generateRegistrationCode());
+            dbEntry.setRegistrationCodeTimestamp(now);
+            dbEntry.setConfirmTries(0);
+        }
 
+        if (StringUtils.isEmpty(testAccountRegistrationCode)) {
             final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
             if (!smsService.sendSms(telephoneNumber, smsMessage)) {
                 throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsMessage);
