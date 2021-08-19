@@ -70,6 +70,7 @@ import static org.mockito.Mockito.when;
         "create.account.maxRequestsPerIpPerHour = 12",
         "create.account.maxRequestsTotalPerHour = 15",
         "create.account.maxRequestsTotalPerDay = 30",
+        "create.account.maxRequestsPerSimlarIdPerDay = 7",
         "create.account.regionalSettings[0].regionCode = 160",
         "create.account.regionalSettings[0].maxRequestsPerHour=4",
         "create.account.registrationCodeExpirationMinutes=30",
