@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.data;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -32,8 +33,9 @@ public enum DeviceType {
     IOS_VOIP(4),
     IOS_VOIP_DEVELOPMENT(5);
 
+    @SuppressWarnings("StaticCollection")
     private static final Map<Integer, DeviceType> INTEGER_DEVICE_TYPE_MAP =
-            Arrays.stream(values()).collect(Collectors.toMap(DeviceType::toInt, type -> type));
+            Collections.unmodifiableMap(Arrays.stream(values()).collect(Collectors.toMap(DeviceType::toInt, type -> type)));
 
     private final int id;
 

@@ -45,6 +45,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongCredentialsExcept
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -78,8 +79,9 @@ public enum XmlErrorExceptionClientResponse {
     private final int id;
     private final String message;
 
-    private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP
-            = Arrays.stream(values()).collect(Collectors.toMap(response -> response.exceptionClass, response -> response, (class1, class2) -> class1));
+    @SuppressWarnings("StaticCollection")
+    private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionClientResponse> EXCEPTION_CLIENT_RESPONSE_MAP =
+            Collections.unmodifiableMap(Arrays.stream(values()).collect(Collectors.toMap(response -> response.exceptionClass, response -> response, (class1, class2) -> class1)));
 
     public static XmlErrorExceptionClientResponse fromException(final Class<? extends XmlErrorException> exceptionClass) {
         return EXCEPTION_CLIENT_RESPONSE_MAP.get(exceptionClass);
