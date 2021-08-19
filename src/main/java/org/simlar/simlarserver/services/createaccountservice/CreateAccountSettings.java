@@ -58,6 +58,8 @@ public final class CreateAccountSettings {
 
     private final List<RegionalSettings> regionalSettings;
 
+    private final List<TestAccount> testAccounts;
+
 
     @Autowired // fix IntelliJ inspection warning unused
     @SuppressWarnings("ConstructorWithTooManyParameters")
@@ -73,7 +75,8 @@ public final class CreateAccountSettings {
             @DefaultValue("600") final int callDelaySecondsMax,
             @SuppressWarnings("MethodParameterNamingConvention")
             @DefaultValue("15") final int registrationCodeExpirationMinutes,
-            final List<RegionalSettings> regionalSettings) {
+            final List<RegionalSettings> regionalSettings,
+            final List<TestAccount> testAccounts) {
         this.alertSmsNumbers = List.of(alertSmsNumbers);
         this.maxRequestsPerSimlarIdPerDay = maxRequestsPerSimlarIdPerDay;
         this.maxRequestsPerIpPerHour = maxRequestsPerIpPerHour;
@@ -85,5 +88,6 @@ public final class CreateAccountSettings {
         this.callDelaySecondsMax = callDelaySecondsMax;
         this.registrationCodeExpirationMinutes = registrationCodeExpirationMinutes;
         this.regionalSettings = regionalSettings == null ? Collections.emptyList() : Collections.unmodifiableList(regionalSettings);
+        this.testAccounts = testAccounts == null ? Collections.emptyList() : Collections.unmodifiableList(testAccounts);
     }
 }

@@ -91,8 +91,10 @@ public final class CreateAccountService {
     }
 
     AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip, final Instant now) {
-        final SimlarId simlarId = createValidatedSimlarId(telephoneNumber);
+        return createAccountRequest(createValidatedSimlarId(telephoneNumber), telephoneNumber, smsText, ip, now);
+    }
 
+    AccountRequest createAccountRequest(final SimlarId simlarId, final String telephoneNumber, final String smsText, final String ip, final Instant now) {
         if (StringUtils.isEmpty(ip)) {
             throw new XmlErrorNoIpException("request account creation with empty ip for telephone number:  " + telephoneNumber);
         }
@@ -118,19 +120,23 @@ public final class CreateAccountService {
             }
         }
 
-        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip, now);
+        //noinspection LocalVariableNamingConvention
+        final String testAccountRegistrationCode = searchTestAccountRegistrationCode(simlarId.get());
+        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip, now, testAccountRegistrationCode);
         checkRequestTriesLimit(dbEntry.getRequestTries() - 1, createAccountSettings.getMaxRequestsPerSimlarIdPerDay(),
                 String.format("too many create account requests with number '%s'", telephoneNumber));
 
         if (Duration.between(dbEntry.getRegistrationCodeTimestamp().plus(Duration.ofMinutes(createAccountSettings.getRegistrationCodeExpirationMinutes())), now).compareTo(Duration.ZERO) > 0) {
-            dbEntry.setRegistrationCode(Password.generateRegistrationCode());
+            dbEntry.setRegistrationCode(StringUtils.isNotEmpty(testAccountRegistrationCode) ? testAccountRegistrationCode : Password.generateRegistrationCode());
             dbEntry.setRegistrationCodeTimestamp(now);
             dbEntry.setConfirmTries(0);
         }
 
-        final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
-        if (!smsService.sendSms(telephoneNumber, smsMessage)) {
-            throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsMessage);
+        if (StringUtils.isEmpty(testAccountRegistrationCode)) {
+            final String smsMessage = SmsText.create(smsText, dbEntry.getRegistrationCode());
+            if (!smsService.sendSms(telephoneNumber, smsMessage)) {
+                throw new XmlErrorFailedToSendSmsException("failed to send sms to '" + telephoneNumber + "' with text: " + smsMessage);
+            }
         }
 
         dbEntry.setPassword(Password.generate());
@@ -146,6 +152,16 @@ public final class CreateAccountService {
         return new AccountRequest(simlarId, dbEntry.getPassword());
     }
 
+    private String searchTestAccountRegistrationCode(final CharSequence simlarId) {
+        for (final TestAccount testAccount: createAccountSettings.getTestAccounts()) {
+            if (StringUtils.equals(simlarId, testAccount.getSimlarId())) {
+                return testAccount.getRegistrationCode();
+            }
+        }
+
+        return null;
+    }
+
     private static SimlarId createValidatedSimlarId(final String telephoneNumber) {
         final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
         if (simlarId == null) {
@@ -159,11 +175,16 @@ public final class CreateAccountService {
         return simlarId;
     }
 
-    private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip, final Instant now) {
+    private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip, final Instant now, final String registrationCode) {
         return transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get());
             if (dbEntry == null) {
-                return accountCreationRepository.save(new AccountCreationRequestCount(simlarId, Password.generate(), Password.generateRegistrationCode(), now, ip));
+                return accountCreationRepository.save(new AccountCreationRequestCount(
+                        simlarId,
+                        Password.generate(),
+                        StringUtils.isNotEmpty(registrationCode) ? registrationCode : Password.generateRegistrationCode(),
+                        now,
+                        ip));
             }
 
             final Instant savedTimestamp = dbEntry.getTimestamp();
@@ -190,8 +211,10 @@ public final class CreateAccountService {
     private void checkRequestTriesLimitWithAlert(final Integer requests, final int limit, final String message) {
         final int requestTries = ObjectUtils.defaultIfNull(requests, 0);
         if (requestTries == limit / 2) {
+            final String smsMessage = String.format("50%% Alert for %s %d", message, requestTries);
+            log.warn(smsMessage);
             for (final String alertNumber : createAccountSettings.getAlertSmsNumbers()) {
-                smsService.sendSms(alertNumber, String.format("50%% Alert for %s %d", message, requestTries));
+                smsService.sendSms(alertNumber, smsMessage);
             }
         } else {
             checkRequestTriesLimit(requestTries, limit, message);
