@@ -38,6 +38,8 @@ ext {
     mockitoVersion = "4.1.0"
 }
 
+ext['log4j2.version'] = '2.15.0'
+
 dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
