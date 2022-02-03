@@ -9,4 +9,15 @@
         <packageUrl regex="true">^pkg:maven/commons\-io/commons\-io@.*$</packageUrl>
         <cve>CVE-2021-29425</cve>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name:
+                    tomcat-embed-core-9.0.56.jar
+                    tomcat-embed-websocket-9.0.56.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-.*@.*$</packageUrl>
+        <cve>CVE-2022-23181</cve>
+    </suppress>
 </suppressions>
