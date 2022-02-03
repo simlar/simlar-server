@@ -64,7 +64,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:${logbackVersion}")
     implementation("ch.qos.logback:logback-core:${logbackVersion}")
 
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.4")
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.5")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testImplementation("junit:junit:4.13.2")
