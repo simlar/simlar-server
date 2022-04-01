@@ -20,4 +20,18 @@
         <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-.*@.*$</packageUrl>
         <cve>CVE-2022-23181</cve>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name:
+                    mariadb-java-client-2.7.5.jar
+                    mariadb-java-client-3.0.4.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org\.mariadb\.jdbc/mariadb\-java\-client@.*$</packageUrl>
+        <cve>CVE-2021-46666</cve>
+        <cve>CVE-2021-46667</cve>
+        <cve>CVE-2021-46669</cve>
+        <cve>CVE-2020-28912</cve>
+    </suppress>
 </suppressions>
