@@ -26,7 +26,7 @@ plugins {
     id "war"
     id "pmd"
     id "com.github.spotbugs" version "5.0.6"
-    id "org.springframework.boot" version "2.6.3"
+    id "org.springframework.boot" version "2.6.6"
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
     id "com.github.ben-manes.versions" version "0.42.0"
     id "org.owasp.dependencycheck" version "6.5.3"
@@ -36,7 +36,6 @@ ext {
     lombokVersion = "1.18.22"
     spotbugsVersion = "4.5.3"
     mockitoVersion = "4.3.1"
-    logbackVersion = "1.2.10" /// TODO: remove this once transitional dependencies are new enough
 }
 
 ext['log4j2.version'] = '2.17.1'
@@ -61,8 +60,6 @@ dependencies {
     implementation("com.googlecode.libphonenumber:libphonenumber:8.12.43")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.4.0")
-    implementation("ch.qos.logback:logback-classic:${logbackVersion}")
-    implementation("ch.qos.logback:logback-core:${logbackVersion}")
 
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.5")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
