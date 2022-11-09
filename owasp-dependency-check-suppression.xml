@@ -3,68 +3,11 @@
     <suppress>
         <notes>
             <![CDATA[
-                file name: commons-io-2.6.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/commons\-io/commons\-io@.*$</packageUrl>
-        <cve>CVE-2021-29425</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name:
-                    mariadb-java-client-2.7.5.jar
-                    mariadb-java-client-3.0.4.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/org\.mariadb\.jdbc/mariadb\-java\-client@.*$</packageUrl>
-        <cve>CVE-2022-27380</cve>
-        <cve>CVE-2022-27381</cve>
-        <cve>CVE-2022-27382</cve>
-        <cve>CVE-2022-27383</cve>
-        <cve>CVE-2022-27384</cve>
-        <cve>CVE-2022-27385</cve>
-        <cve>CVE-2022-27386</cve>
-        <cve>CVE-2022-27387</cve>
-        <cve>CVE-2022-27457</cve>
-        <cve>CVE-2022-27458</cve>
-        <cve>CVE-2022-27451</cve>
-        <cve>CVE-2022-27452</cve>
-        <cve>CVE-2022-27376</cve>
-        <cve>CVE-2022-27377</cve>
-        <cve>CVE-2022-27378</cve>
-        <cve>CVE-2022-27455</cve>
-        <cve>CVE-2022-27379</cve>
-        <cve>CVE-2022-27456</cve>
-        <cve>CVE-2022-27446</cve>
-        <cve>CVE-2022-27447</cve>
-        <cve>CVE-2022-27448</cve>
-        <cve>CVE-2022-27449</cve>
-        <cve>CVE-2022-27444</cve>
-        <cve>CVE-2022-27445</cve>
-        <cve>CVE-2022-22968</cve>
-        <cve>CVE-2021-46666</cve>
-        <cve>CVE-2021-46667</cve>
-        <cve>CVE-2021-46669</cve>
-        <cve>CVE-2020-28912</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
                 file name: spring-web-5.3.23.jar
             ]]>
         </notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-web@.*$</packageUrl>
         <cve>CVE-2016-1000027</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: jackson-databind-2.13.4.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
-        <cve>CVE-2022-42003</cve>
     </suppress>
     <suppress>
         <notes>
@@ -78,5 +21,14 @@
         <cve>CVE-2022-38751</cve>
         <cve>CVE-2022-38750</cve>
         <cve>CVE-2022-38749</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: bcel-6.5.0.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.bcel/bcel@.*$</packageUrl>
+        <cve>CVE-2022-42920</cve>
     </suppress>
 </suppressions>
