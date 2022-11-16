@@ -60,6 +60,7 @@ dependencies {
     implementation("com.googlecode.libphonenumber:libphonenumber:8.13.0")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.12.1")
+    implementation("org.yaml:snakeyaml:1.33") /// TODO: remove this once tranisitive dependency passes owasp checker
 
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.7")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
