@@ -16,11 +16,6 @@
             ]]>
         </notes>
         <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
-        <cve>CVE-2022-25857</cve>
-        <cve>CVE-2022-38752</cve>
-        <cve>CVE-2022-38751</cve>
-        <cve>CVE-2022-38750</cve>
-        <cve>CVE-2022-38749</cve>
         <cve>CVE-2022-1471</cve>
     </suppress>
     <suppress>
