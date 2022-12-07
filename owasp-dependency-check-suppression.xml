@@ -27,4 +27,22 @@
         <packageUrl regex="true">^pkg:maven/org\.apache\.bcel/bcel@.*$</packageUrl>
         <cve>CVE-2022-42920</cve>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: commons-codec-1.15.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/commons\-codec/commons\-codec@.*$</packageUrl>
+        <cve>CVE-2021-37533</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: commons-text-1.10.0.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.commons/commons\-text@.*$</packageUrl>
+        <cve>CVE-2021-37533</cve>
+    </suppress>
 </suppressions>
