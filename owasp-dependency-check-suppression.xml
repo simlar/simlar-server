@@ -29,13 +29,4 @@
         <packageUrl regex="true">^pkg:maven/org\.apache\.bcel/bcel@.*$</packageUrl>
         <cve>CVE-2022-42920</cve>
     </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: LatencyUtils-2.0.3.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/org\.latencyutils/LatencyUtils@.*$</packageUrl>
-        <cve>CVE-2021-4277</cve>
-    </suppress>
 </suppressions>
