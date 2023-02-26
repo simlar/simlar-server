@@ -29,4 +29,22 @@
         <packageUrl regex="true">^pkg:maven/org\.apache\.bcel/bcel@.*$</packageUrl>
         <cve>CVE-2022-42920</cve>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: google-http-client-gson-1.42.3.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.http\-client/google\-http\-client\-gson@.*$</packageUrl>
+        <cve>CVE-2022-45688</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: jackson-core-2.13.5.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-core@.*$</packageUrl>
+        <cve>CVE-2022-45688</cve>
+    </suppress>
 </suppressions>
