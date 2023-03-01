@@ -29,4 +29,13 @@
         <packageUrl regex="true">^pkg:maven/org\.apache\.bcel/bcel@.*$</packageUrl>
         <cve>CVE-2022-42920</cve>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: guava-31.0.1-android.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
+        <vulnerabilityName>CVE-2020-8908</vulnerabilityName>
+    </suppress>
 </suppressions>
