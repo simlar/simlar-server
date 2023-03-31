@@ -110,7 +110,7 @@ dependencyCheck {
 }
 
 //noinspection GroovyAssignabilityCheck
-task dependencyChecks {
+tasks.register('dependencyChecks') {
 }
 dependencyChecks.dependsOn dependencyCheckAnalyze
 dependencyChecks.dependsOn dependencyUpdates
@@ -157,7 +157,7 @@ bootWar {
     }
 }
 
-tasks.withType(AbstractArchiveTask) {
+tasks.withType(AbstractArchiveTask).configureEach {
     preserveFileTimestamps = false
     reproducibleFileOrder = true
 }
