@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 @ControllerAdvice
 @Order(10000)
 final class BinderControllerAdvice {
-    @SuppressWarnings("MethodMayBeStatic")
+    @SuppressWarnings({"MethodMayBeStatic", "GrazieInspection"})
     @InitBinder
     public void setAllowedFields(final WebDataBinder dataBinder) {
         // spring4shell mitigation  see: https://www.lunasec.io/docs/blog/spring-rce-vulnerabilities/
