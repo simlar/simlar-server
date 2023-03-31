@@ -201,14 +201,14 @@ public final class CreateAccountControllerTest extends BaseControllerTest {
         assertPostCallError(expectedErrorId, false, true, telephoneNumber, password);
     }
 
-    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
+    @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "TestMethodWithoutAssertion"})
     @Test
     public void testCallWithInvalidTelephoneNumber() {
         assertPostCallError(22, "NO-NUMBER", "password1");
         assertPostCallError(22, "+49163123456", "password2");
     }
 
-    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
+    @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "TestMethodWithoutAssertion"})
     @Test
     public void testCallWithInvalidCredentials() {
         final String telephoneNumber = "+15005023025";
