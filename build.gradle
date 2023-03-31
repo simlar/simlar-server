@@ -75,8 +75,8 @@ dependencies {
     testImplementation("org.mock-server:mockserver-netty:5.15.0")
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
