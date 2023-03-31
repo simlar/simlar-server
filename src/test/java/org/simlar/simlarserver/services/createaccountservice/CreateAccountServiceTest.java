@@ -182,7 +182,7 @@ public final class CreateAccountServiceTest {
     }
 
     @DirtiesContext
-    @SuppressWarnings("JUnitTestMethodWithNoAssertions")
+    @SuppressWarnings({"JUnitTestMethodWithNoAssertions", "TestMethodWithoutAssertion"})
     @Test
     public void testCreateAccountRequestSuccess() {
         assertCreateAccountRequestSuccess("+15005510001");
