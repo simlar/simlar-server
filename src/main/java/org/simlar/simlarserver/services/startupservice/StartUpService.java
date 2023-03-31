@@ -58,9 +58,7 @@ final class StartUpService {
         this.subscriberService = subscriberService;
         hibernateDdlAuto       = hibernateProperties.getDdlAuto();
 
-        //noinspection NullableProblems
         datasourceUrl          = extractDatabaseMetaData(dataSource, DatabaseMetaData::getURL);
-        //noinspection NullableProblems
         databaseProduct = String.format("%s %s",
                 extractDatabaseMetaData(dataSource, DatabaseMetaData::getDatabaseProductName),
                 extractDatabaseMetaData(dataSource, DatabaseMetaData::getDatabaseProductVersion));
