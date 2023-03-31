@@ -40,7 +40,6 @@ public final class PushNotificationsControllerTest extends BaseControllerTest {
     private static final String ANDROID_PUSH_ID_1 = "APAB1bE6JDTGtpHlM4b8K4Z4qst214PdaiZs5rhfk03iFhnwz6wVgMJN01l2homL7gBeE7EuC8ohfxqrDYgkknPY1VurG-5zzuiWQmgrhjhaptOC2LlQi2g9o7aG5gPP7ZmVWyLEL6DrZwN52OvB0egGu5fN3PDKAw";
     @SuppressWarnings("SpellCheckingInspection")
     private static final String ANDROID_PUSH_ID_2 = "APA91bHpBzJWqeBkFyEwnzeISsYN8I7ni_aMn8xthy-0Y_MSVrs5wPHzJfmldK8LkkoEmeu0-Ud2rvDri2pdcuhH89-vhTd_Fw7gF5HB6YnXyYfWruLPeJU";
-    @SuppressWarnings("SpellCheckingInspection")
     private static final String IOS_PUSH_ID       = "7fd224670ab46d041e08101cd2bc3a5646c252a1dd5bfcb02f667203338f89a9";
 
     @Autowired
