@@ -103,6 +103,7 @@ public final class SimlarId implements Comparable<SimlarId> {
         return DigestUtils.sha256Hex(simlarIds.stream().map(SimlarId::get).collect(Collectors.joining()));
     }
 
+    @SuppressWarnings("RedundantSuppression")
     @Override
     public boolean equals(final Object obj) {
         //noinspection ConstantConditions // false positive class cast warning
