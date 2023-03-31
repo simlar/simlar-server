@@ -125,7 +125,6 @@ public final class SubscriberServiceTest {
         assertNull(subscriberService.getHa1(simlarIdSaved));
         assertNull(subscriberService.getHa1(simlarIdNotSaved));
         subscriberService.save(simlarIdSaved, "xxxxxx");
-        //noinspection SpellCheckingInspection
         assertEquals("9efee90fe330da22762a2493e6805a69", subscriberService.getHa1(simlarIdSaved));
         assertNull(subscriberService.getHa1(simlarIdNotSaved));
         subscriberService.save(simlarIdSaved, "as234f2dsd");
