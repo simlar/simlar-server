@@ -10,7 +10,7 @@ But after all this code runs in the simlar production environment.
 
 [Simlar](https://www.simlar.org) is a cross-platform VoIP App aiming to make ZRTP encrypted calls easy.
 
-<!--suppress HtmlUnknownAttribute -->
+<!--suppress HtmlUnknownAttribute, HtmlDeprecatedAttribute -->
 <div id="screenshots" align="center">
 <img src="https://www.simlar.org/press/screenshots/Android/en/talking-to-so.png" alt="Screenshot call" text-align="center" width="200" margin="15">
 <img src="https://www.simlar.org/press/screenshots/iOS/ongoing_call.png" alt="Screenshot call" text-align="center" width="200">
