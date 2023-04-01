@@ -21,15 +21,5 @@
 
 package org.simlar.simlarserver.services.pushnotification.google.json;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
-@Getter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public final class GooglePushNotificationRequest {
-    private final GooglePushNotificationRequestDetails message;
+public record GooglePushNotificationRequest(GooglePushNotificationRequestDetails message) {
 }
