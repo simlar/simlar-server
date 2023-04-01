@@ -24,7 +24,6 @@ package org.simlar.simlarserver.services.createaccountservice;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.Collections;
@@ -32,7 +31,6 @@ import java.util.List;
 
 @SuppressWarnings("ClassWithTooManyFields")
 @Getter
-@ConstructorBinding
 @ConfigurationProperties(prefix = "create.account")
 public final class CreateAccountSettings {
     private final List<String> alertSmsNumbers;
