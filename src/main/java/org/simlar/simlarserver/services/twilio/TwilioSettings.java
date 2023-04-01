@@ -21,23 +21,17 @@
 
 package org.simlar.simlarserver.services.twilio;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@AllArgsConstructor
-@Getter
-@ToString
 @ConfigurationProperties(prefix = "twilio")
-final class TwilioSettings {
-    private final String smsSourceNumber;
-    private final String sid;
-    private final String authToken;
-    private final String callbackUser;
-    private final String callbackPassword;
-
+public record TwilioSettings(
+        String smsSourceNumber,
+        String sid,
+        String authToken,
+        String callbackUser,
+        String callbackPassword
+) {
     public boolean isConfigured() {
         return StringUtils.isNoneEmpty(
                 smsSourceNumber,
