@@ -22,7 +22,9 @@
 package org.simlar.simlarserver.services.pushnotification.google.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({"ttl", "priority", "collapse_key"})
 public record GooglePushNotificationAndroidDetails(
         String ttl,
         @JsonProperty("collapse_key")
