@@ -80,9 +80,11 @@ public final class GooglePushNotificationMockServerTest {
         createMockServerRequest("someToken",
                 response()
                         .withStatusCode(200)
-                        .withBody("{\n" +
-                                "  \"name\": \"projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e\"\n" +
-                                "}\n"));
+                        .withBody("""
+                                {
+                                  "name": "projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e"
+                                }
+                                """));
 
         assertEquals(
                 "projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e",
