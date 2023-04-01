@@ -145,8 +145,8 @@ public final class CreateAccountServiceTest {
         final AccountRequest accountRequest = createAccountService.createAccountRequest(telephoneNumber, "", ip, timestamp);
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
         assertNotNull(accountRequest);
-        assertNotNull(accountRequest.getSimlarId());
-        assertNotNull(accountRequest.getPassword());
+        assertNotNull(accountRequest.simlarId());
+        assertNotNull(accountRequest.password());
 
         reset(smsService);
 
@@ -416,25 +416,25 @@ public final class CreateAccountServiceTest {
         for (int i = 0; i < max; ++i) {
             final AccountRequest accountRequest = assertCreateAccountRequestSuccess(telephoneNumber, now);
             now = now.plusSeconds(createAccountSettings.getCallDelaySecondsMin() + 2);
-            assertCreateAccountCallSuccess(telephoneNumber, accountRequest.getPassword(), now);
+            assertCreateAccountCallSuccess(telephoneNumber, accountRequest.password(), now);
         }
 
         final AccountRequest accountRequest = assertCreateAccountRequestSuccess(telephoneNumber, now);
         now = now.plusSeconds(createAccountSettings.getCallDelaySecondsMin() + 2);
-        assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest.getPassword(), now);
+        assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest.password(), now);
 
 
         // wait 12 hours and try again
         now = now.plus(Duration.ofHours(12)).plusSeconds(2);
         final AccountRequest accountRequest2 = assertCreateAccountRequestSuccess(telephoneNumber, now);
         now = now.plusSeconds(createAccountSettings.getCallDelaySecondsMin() + 2);
-        assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest2.getPassword(), now);
+        assertCreateAccountCallError(XmlErrorCallNotAllowedAtTheMomentException.class, telephoneNumber, accountRequest2.password(), now);
 
         // wait 12 hours and try again with success
         now = now.plus(Duration.ofHours(12)).plusSeconds(2);
         final AccountRequest accountRequest3 = assertCreateAccountRequestSuccess(telephoneNumber, now);
         now = now.plusSeconds(createAccountSettings.getCallDelaySecondsMin() + 2);
-        assertCreateAccountCallSuccess(telephoneNumber, accountRequest3.getPassword(), now);
+        assertCreateAccountCallSuccess(telephoneNumber, accountRequest3.password(), now);
     }
 
     @DirtiesContext
