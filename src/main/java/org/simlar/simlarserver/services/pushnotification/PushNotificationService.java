@@ -77,8 +77,12 @@ public final class PushNotificationService {
                         createCaller(caller, callee),
                         pushNotification.getPushId());
             }
-            default -> {
+            case IOS, IOS_DEVELOPMENT -> {
                 log.error("unsupported device type '{}'", deviceType);
+                return null;
+            }
+            default -> {
+                log.error("unknown device type '{}'", deviceType);
                 return null;
             }
         }
