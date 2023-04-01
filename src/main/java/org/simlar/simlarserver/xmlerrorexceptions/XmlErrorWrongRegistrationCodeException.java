@@ -21,7 +21,10 @@
 
 package org.simlar.simlarserver.xmlerrorexceptions;
 
+import java.io.Serial;
+
 public final class XmlErrorWrongRegistrationCodeException extends XmlErrorException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public XmlErrorWrongRegistrationCodeException(final String message) {

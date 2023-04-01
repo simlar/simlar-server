@@ -21,7 +21,10 @@
 
 package org.simlar.simlarserver.xmlerrorexceptions;
 
+import java.io.Serial;
+
 public final class XmlErrorFailedToTriggerCallException extends XmlErrorException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public XmlErrorFailedToTriggerCallException(final String message) {

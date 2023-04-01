@@ -28,6 +28,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 
+import java.io.Serial;
 import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
@@ -39,6 +40,7 @@ import static org.junit.Assert.assertTrue;
 public final class XmlErrorExceptionClientResponseTest {
 
     private static final class XmlErrorNoResponseRegisteredException extends XmlErrorException {
+        @Serial
         private static final long serialVersionUID = 1L;
 
         private XmlErrorNoResponseRegisteredException(final String message) {

@@ -21,7 +21,10 @@
 
 package org.simlar.simlarserver.xmlerrorexceptions;
 
+import java.io.Serial;
+
 public final class XmlErrorUnknownStructureException extends XmlErrorException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public XmlErrorUnknownStructureException(final String message) {
