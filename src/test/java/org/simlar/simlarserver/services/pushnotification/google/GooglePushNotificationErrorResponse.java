@@ -30,40 +30,42 @@ final class GooglePushNotificationErrorResponse {
     }
 
     @SuppressWarnings("StaticCollection")
-    static final List<String> INVALID_TOKENS = List.of(
-            "{\n" +
-            "  \"error\": {\n" +
-            "    \"code\": 400,\n" +
-            "    \"message\": \"The registration token is not a valid FCM registration token\",\n" +
-            "    \"status\": \"INVALID_ARGUMENT\",\n" +
-            "    \"details\": [\n" +
-            "      {\n" +
-            "        \"@type\": \"type.googleapis.com/google.firebase.fcm.v1.FcmError\",\n" +
-            "        \"errorCode\": \"INVALID_ARGUMENT\"\n" +
-            "      },\n" +
-            "      {\n" +
-            "        \"@type\": \"type.googleapis.com/google.rpc.BadRequest\",\n" +
-            "        \"fieldViolations\": [\n" +
-            "          {\n" +
-            "            \"field\": \"message.token\",\n" +
-            "            \"description\": \"The registration token is not a valid FCM registration token\"\n" +
-            "          }\n" +
-            "        ]\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }\n" +
-            "}\n",
-            "{\n" +
-            "  \"error\": {\n" +
-            "    \"code\": 400,\n" +
-            "    \"message\": \"The registration token is not a valid FCM registration token\",\n" +
-            "    \"status\": \"INVALID_ARGUMENT\",\n" +
-            "    \"details\": [\n" +
-            "      {\n" +
-            "        \"@type\": \"type.googleapis.com/google.firebase.fcm.v1.FcmError\",\n" +
-            "        \"errorCode\": \"INVALID_ARGUMENT\"\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }\n" +
-            "}\n");
+    static final List<String> INVALID_TOKENS = List.of("""
+            {
+              "error": {
+                "code": 400,
+                "message": "The registration token is not a valid FCM registration token",
+                "status": "INVALID_ARGUMENT",
+                "details": [
+                  {
+                    "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+                    "errorCode": "INVALID_ARGUMENT"
+                  },
+                  {
+                    "@type": "type.googleapis.com/google.rpc.BadRequest",
+                    "fieldViolations": [
+                      {
+                        "field": "message.token",
+                        "description": "The registration token is not a valid FCM registration token"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+            """, """
+            {
+              "error": {
+                "code": 400,
+                "message": "The registration token is not a valid FCM registration token",
+                "status": "INVALID_ARGUMENT",
+                "details": [
+                  {
+                    "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+                    "errorCode": "INVALID_ARGUMENT"
+                  }
+                ]
+              }
+            }
+            """);
 }
