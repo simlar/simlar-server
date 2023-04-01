@@ -100,7 +100,7 @@ public final class PushNotificationServiceTest {
         assertEquals("someMessageId", pushNotificationService.sendPushNotification(caller, callee));
         verify(applePushNotificationService).requestVoipPushNotification(
                 eq(ApplePushServer.PRODUCTION),
-                argThat(arg -> AesUtil.decrypt(arg.getEncryptedSimlarId(), arg.getInitializationVector(), "somePasswordHash").equals(caller.get())),
+                argThat(arg -> AesUtil.decrypt(arg.encryptedSimlarId(), arg.initializationVector(), "somePasswordHash").equals(caller.get())),
                 eq("someToken"));
     }
 
@@ -117,7 +117,7 @@ public final class PushNotificationServiceTest {
         assertEquals("otherMessageId", pushNotificationService.sendPushNotification(caller, callee));
         verify(applePushNotificationService).requestVoipPushNotification(
                 eq(ApplePushServer.SANDBOX),
-                argThat(arg -> AesUtil.decrypt(arg.getEncryptedSimlarId(), arg.getInitializationVector(), "otherPasswordHash").equals(caller.get())),
+                argThat(arg -> AesUtil.decrypt(arg.encryptedSimlarId(), arg.initializationVector(), "otherPasswordHash").equals(caller.get())),
                 eq("otherToken"));
     }
 
