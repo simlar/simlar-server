@@ -36,9 +36,9 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.HttpStatusCodeException;
 
+import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.net.URI;
-import java.security.Principal;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateParsingException;
@@ -115,10 +115,12 @@ public final class SslPeerCertificatesChainTest {
 
         @Nullable
         public String getSubject() {
-            final Principal subject = x509Certificate.getSubjectDN();
+            final X500Principal subject = x509Certificate.getIssuerX500Principal();
             return subject == null
                     ? null
                     : subject.getName();
+
+
         }
 
         public List<String> getSubjectAlternativeNames() {
