@@ -26,12 +26,10 @@ import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 
 @AllArgsConstructor
 @Getter
 @ToString
-@ConstructorBinding
 @ConfigurationProperties(prefix = "twilio")
 final class TwilioSettings {
     private final String smsSourceNumber;

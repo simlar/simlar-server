@@ -25,13 +25,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 @AllArgsConstructor
 @Getter
 @ToString
-@ConstructorBinding
 @ConfigurationProperties(prefix = "push")
 public class PushNotificationSettings {
     private final String apiKey;
