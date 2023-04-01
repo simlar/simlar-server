@@ -74,13 +74,13 @@ public final class SubscriberServiceTest {
     public void testSaveSuccess() {
         final String simlarId = "*2000*";
 
-        assertTrue(subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain()).isEmpty());
+        assertTrue(subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).isEmpty());
         subscriberService.save(SimlarId.create(simlarId), "sdflkj34gd3F");
-        assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain()).size());
-        assertEquals("988395d60155f38eae4bb15657275d13", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain()).get(0));
+        assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).size());
+        assertEquals("988395d60155f38eae4bb15657275d13", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).get(0));
         subscriberService.save(SimlarId.create(simlarId), "FdUfFjH34gd3");
-        assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain()).size());
-        assertEquals("fb14b3adf050f0e9b71bf866702188b5", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.getDomain()).get(0));
+        assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).size());
+        assertEquals("fb14b3adf050f0e9b71bf866702188b5", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).get(0));
     }
 
     @SuppressWarnings("TooBroadScope")
