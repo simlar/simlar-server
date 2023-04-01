@@ -21,7 +21,10 @@
 
 package org.simlar.simlarserver.services.pushnotification.apple;
 
+import java.io.Serial;
+
 final class AppleKeyStoreException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     AppleKeyStoreException(final String message) {
