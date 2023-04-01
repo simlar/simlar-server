@@ -62,7 +62,7 @@ public final class TwilioSmsService implements SmsService {
     private String createCallbackBaseUrl() {
         return "https://" +
                 twilioSettings.getCallbackUser() + ':' + twilioSettings.getCallbackPassword() + '@' +
-                sharedSettings.getDomain() + ':' + sharedSettings.getPort();
+                sharedSettings.domain() + ':' + sharedSettings.port();
     }
 
     private String postRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {

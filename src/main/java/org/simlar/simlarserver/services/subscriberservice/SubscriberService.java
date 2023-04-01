@@ -60,7 +60,7 @@ public final class SubscriberService {
             throw new IllegalArgumentException("simlarId=" + simlarId + " password=" + password);
         }
 
-        final Subscriber subscriber = new Subscriber(simlarId.get(), sharedSettings.getDomain(), password);
+        final Subscriber subscriber = new Subscriber(simlarId.get(), sharedSettings.domain(), password);
 
         //noinspection AnonymousInnerClass
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -75,7 +75,7 @@ public final class SubscriberService {
 
     @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD") // false positive
     private Long findSubscriberId(final SimlarId simlarId) {
-        final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), sharedSettings.getDomain());
+        final List<Long> ids = subscriberRepository.findIdByUsernameAndDomain(simlarId.get(), sharedSettings.domain());
         if (CollectionUtils.isEmpty(ids)) {
             return null;
         }
@@ -105,7 +105,7 @@ public final class SubscriberService {
             return null;
         }
 
-        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), sharedSettings.getDomain());
+        final List<String> savedHa1s = subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), sharedSettings.domain());
         if (CollectionUtils.isEmpty(savedHa1s)) {
             return null;
         }
@@ -129,6 +129,6 @@ public final class SubscriberService {
             return 0;
         }
 
-        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), sharedSettings.getDomain()).isEmpty() ? 0 : 1;
+        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), sharedSettings.domain()).isEmpty() ? 0 : 1;
     }
 }
