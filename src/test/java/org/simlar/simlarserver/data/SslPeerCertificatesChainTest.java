@@ -128,7 +128,7 @@ public final class SslPeerCertificatesChainTest {
                         ? Collections.emptyList()
                         : alternativeNames.stream()
                             .map(an -> an.get(1).toString())
-                            .collect(Collectors.toUnmodifiableList());
+                            .toList();
             } catch (final CertificateParsingException e) {
                 log.error("error parsing certificate '{}'", x509Certificate, e);
                 return Collections.emptyList();
@@ -164,7 +164,7 @@ public final class SslPeerCertificatesChainTest {
     private static List<ReadableCertificate> requestReadablePeerCertificates(final URI url) {
         return requestPeerCertificates(url).stream()
                 .map(ReadableCertificate::new)
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 
     private static List<ReadableCertificate> requestAndLogReadablePeerCertificates(final URI url) {
@@ -205,7 +205,7 @@ public final class SslPeerCertificatesChainTest {
     @Test
     public void testGoogle() {
         final List<String> hashes = requestAndLogReadablePeerCertificates(URI.create(GooglePushServer.URL))
-                .stream().map(ReadableCertificate::getPublicKeySha256).collect(Collectors.toList());
+                .stream().map(ReadableCertificate::getPublicKeySha256).toList();
 
         //noinspection SpellCheckingInspection
         assertTrue(hashes.contains("hxqRlPTu1bMS/0DITB1SSu0vd4u/8l8TjPgfaAp63Gc="));
