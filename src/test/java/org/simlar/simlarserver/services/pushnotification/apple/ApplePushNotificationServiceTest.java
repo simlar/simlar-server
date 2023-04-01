@@ -66,7 +66,7 @@ public final class ApplePushNotificationServiceTest {
     public void testConnectToAppleWithoutCertificateForbidden() {
         try {
             new RestTemplateBuilder()
-                    .requestFactory(OkHttp3ClientHttpRequestFactory::new)
+                    .requestFactory(() -> new OkHttp3ClientHttpRequestFactory())
                     .build()
                     .postForObject(ApplePushServer.SANDBOX.getUrl() + "deviceToken", null, String.class);
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
