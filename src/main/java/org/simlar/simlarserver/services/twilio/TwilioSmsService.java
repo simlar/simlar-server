@@ -61,14 +61,14 @@ public final class TwilioSmsService implements SmsService {
 
     private String createCallbackBaseUrl() {
         return "https://" +
-                twilioSettings.getCallbackUser() + ':' + twilioSettings.getCallbackPassword() + '@' +
+                twilioSettings.callbackUser() + ':' + twilioSettings.callbackPassword() + '@' +
                 sharedSettings.domain() + ':' + sharedSettings.port();
     }
 
     private String postRequest(final TwilioRequestType type, final String telephoneNumber, final String text) {
         final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("To", telephoneNumber);
-        parameters.add("From", twilioSettings.getSmsSourceNumber());
+        parameters.add("From", twilioSettings.smsSourceNumber());
         //noinspection SwitchStatement
         switch (type) { // NOPMD.SwitchStmtsShouldHaveDefault
             case SMS -> {
@@ -82,7 +82,7 @@ public final class TwilioSmsService implements SmsService {
         }
 
         try {
-            final String response = new RestTemplateBuilder().basicAuthentication(twilioSettings.getSid(), twilioSettings.getAuthToken()).build()
+            final String response = new RestTemplateBuilder().basicAuthentication(twilioSettings.sid(), twilioSettings.authToken()).build()
                     .postForObject(twilioSettings.getUrl() + type.getUrlPostfix(), parameters, String.class);
 
             log.info("response to '{}' request: '{}'", type, response);
