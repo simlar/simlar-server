@@ -21,8 +21,10 @@
 
 package org.simlar.simlarserver.services.pushnotification.apple.json;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.simlar.simlarserver.utils.AesUtil;
 
+@SuppressFBWarnings("OPM_OVERLY_PERMISSIVE_METHOD")
 @SuppressWarnings("ClassWithTooManyDependents")
 public record ApplePushNotificationRequestCaller(
         String initializationVector,
