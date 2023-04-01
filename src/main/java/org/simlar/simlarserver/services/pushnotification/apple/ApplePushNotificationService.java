@@ -37,6 +37,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
@@ -193,7 +194,7 @@ public final class ApplePushNotificationService {
                 log.warn("request with device token '{}' received unexpected body '{}'", deviceToken, response.getBody());
             }
 
-            final HttpStatus statusCode = response.getStatusCode();
+            final HttpStatusCode statusCode = response.getStatusCode();
             if (statusCode != HttpStatus.OK) {
                 log.warn("request with device token '{}' received unexpected response status '{}'", deviceToken, statusCode);
             }
