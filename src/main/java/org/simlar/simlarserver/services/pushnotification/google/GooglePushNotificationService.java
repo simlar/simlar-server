@@ -136,12 +136,12 @@ public final class GooglePushNotificationService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + bearer);
 
-        final GooglePushNotificationRequest request = new GooglePushNotificationRequest(
-                new GooglePushNotificationRequestDetails(
-                        new GooglePushNotificationAndroidDetails("60s", "call", "high"),
-                        token));
-
         try {
+            final GooglePushNotificationRequest request = new GooglePushNotificationRequest(
+                    new GooglePushNotificationRequestDetails(
+                            new GooglePushNotificationAndroidDetails("60s", "call", "high"),
+                            token));
+
             final ResponseEntity<String> response = new RestTemplateBuilder()
                     .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
                     .build()
