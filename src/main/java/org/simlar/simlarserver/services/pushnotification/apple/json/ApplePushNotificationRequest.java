@@ -22,18 +22,9 @@
 package org.simlar.simlarserver.services.pushnotification.apple.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public final class ApplePushNotificationRequest {
-    @JsonProperty("aps")
-    private final ApplePushNotificationRequestDetails details;
-
-    private final ApplePushNotificationRequestCaller caller;
+public record ApplePushNotificationRequest(
+        @JsonProperty("aps")
+        ApplePushNotificationRequestDetails details,
+        ApplePushNotificationRequestCaller caller) {
 }
