@@ -154,8 +154,8 @@ public final class CreateAccountService {
 
     private String searchTestAccountRegistrationCode(final CharSequence simlarId) {
         for (final TestAccount testAccount: createAccountSettings.getTestAccounts()) {
-            if (StringUtils.equals(simlarId, testAccount.getSimlarId())) {
-                return testAccount.getRegistrationCode();
+            if (StringUtils.equals(simlarId, testAccount.simlarId())) {
+                return testAccount.registrationCode();
             }
         }
 
