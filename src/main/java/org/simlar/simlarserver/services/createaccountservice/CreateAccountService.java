@@ -52,7 +52,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -146,7 +145,7 @@ public final class CreateAccountService {
             if (!subscriberService.checkCredentials(dbEntry.getSimlarId(), dbEntry.getPassword())) {
                 log.warn("no confirmation after '{}' for number '{}'", WARN_TIMEOUT, telephoneNumber);
             }
-        }, Date.from(now.plus(WARN_TIMEOUT)));
+        }, now.plus(WARN_TIMEOUT));
 
         log.info("created account request for simlarId '{}'", simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
