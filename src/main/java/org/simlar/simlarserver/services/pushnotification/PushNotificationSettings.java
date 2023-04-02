@@ -21,16 +21,10 @@
 
 package org.simlar.simlarserver.services.pushnotification;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
-@AllArgsConstructor
-@Getter
-@ToString
 @ConfigurationProperties(prefix = "push")
-public class PushNotificationSettings {
-    private final String apiKey;
+public record PushNotificationSettings(
+        String apiKey) {
 }
