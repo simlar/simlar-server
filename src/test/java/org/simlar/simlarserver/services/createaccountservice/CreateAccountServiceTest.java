@@ -332,7 +332,7 @@ public final class CreateAccountServiceTest {
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHourRegionalLimit() {
-        final int max = createAccountSettings.getRegionalSettings().get(0).getMaxRequestsPerHour();
+        final int max = createAccountSettings.getRegionalSettings().get(0).maxRequestsPerHour();
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = "+1600502214" + i % 10;
             final String ip = "192.168.23." + (i % 255 + 1);

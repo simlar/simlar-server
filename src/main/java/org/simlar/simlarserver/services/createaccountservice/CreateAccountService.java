@@ -80,7 +80,7 @@ public final class CreateAccountService {
         this.taskScheduler = taskScheduler;
 
         for (final RegionalSettings regional : createAccountSettings.getRegionalSettings()) {
-            log.info("regional setting region code '{}' with max requests per hour '{}'", regional.getRegionCode(), regional.getMaxRequestsPerHour());
+            log.info("regional setting region code '{}' with max requests per hour '{}'", regional.regionCode(), regional.maxRequestsPerHour());
         }
 
         log.info("alert sms numbers '{}'", String.join(", ", createAccountSettings.getAlertSmsNumbers()));
@@ -112,11 +112,11 @@ public final class CreateAccountService {
 
         for (final RegionalSettings regional : createAccountSettings.getRegionalSettings()) {
             //noinspection ObjectAllocationInLoop
-            final String regionCode = '*' + regional.getRegionCode();
+            final String regionCode = '*' + regional.regionCode();
             if (StringUtils.isNotEmpty(regionCode) && simlarId.get().startsWith(regionCode)) {
                 //noinspection ObjectAllocationInLoop
-                checkRequestTriesLimit(accountCreationRepository.sumRequestTriesForRegion(regionCode + '%', anHourAgo), regional.getMaxRequestsPerHour(),
-                        String.format("too many create account requests for region '%s' ", regional.getRegionCode()));
+                checkRequestTriesLimit(accountCreationRepository.sumRequestTriesForRegion(regionCode + '%', anHourAgo), regional.maxRequestsPerHour(),
+                        String.format("too many create account requests for region '%s' ", regional.regionCode()));
             }
         }
 
