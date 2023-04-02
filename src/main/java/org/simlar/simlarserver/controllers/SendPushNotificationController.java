@@ -63,7 +63,7 @@ final class SendPushNotificationController {
     public XmlSuccessSendPushNotification sendPushNotification(@RequestParam final String apiKey, @RequestParam final String caller, @RequestParam final String callee) {
         log.info("push notification requested with caller '{}' inviting callee '{}'", caller, callee);
 
-        final String configuredApiKey = pushNotificationsSettings.getApiKey();
+        final String configuredApiKey = pushNotificationsSettings.apiKey();
         if (StringUtils.isBlank(configuredApiKey)) {
             throw new XmlErrorWrongCredentialsException("received apiKey '" + apiKey + "' but none configured");
         }
