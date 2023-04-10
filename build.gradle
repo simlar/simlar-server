@@ -66,6 +66,7 @@ dependencies {
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     testImplementation("junit:junit:4.13.2")
+    //noinspection VulnerableLibrariesLocal
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
