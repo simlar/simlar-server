@@ -71,6 +71,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.mockito:mockito-inline:${mockitoVersion}")
+    //noinspection VulnerableLibrariesLocal
     testImplementation("org.mock-server:mockserver-netty:5.15.0")
 }
 
