@@ -46,6 +46,7 @@ public final class DelayCalculatorService {
     private final ContactsRequestCountRepository contactsRequestCountRepository;
     private final TransactionTemplate transactionTemplate;
 
+    @SuppressWarnings("unused")
     private DelayCalculatorService(final ContactsRequestCountRepository contactsRequestCountRepository, final PlatformTransactionManager transactionManager) {
         this.contactsRequestCountRepository = contactsRequestCountRepository;
         transactionTemplate = new TransactionTemplate(transactionManager);
