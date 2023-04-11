@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
+@SuppressWarnings("unused")
 @AllArgsConstructor
 @Getter
 @ConstructorBinding
