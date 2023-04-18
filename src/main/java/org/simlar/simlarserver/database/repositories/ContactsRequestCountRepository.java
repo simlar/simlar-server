@@ -26,5 +26,6 @@ import org.springframework.data.repository.CrudRepository;
 
 @SuppressWarnings({"InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
 public interface ContactsRequestCountRepository extends CrudRepository<ContactsRequestCount, String> {
+    @SuppressWarnings("unused")
     ContactsRequestCount findBySimlarId(final String simlarId);
 }

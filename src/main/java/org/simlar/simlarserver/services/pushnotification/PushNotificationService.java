@@ -46,6 +46,7 @@ public final class PushNotificationService {
     private final ApplePushNotificationService applePushNotificationService;
     private final GooglePushNotificationService googlePushNotificationService;
 
+    @SuppressWarnings("unused")
     @Nullable
     public String sendPushNotification(final SimlarId caller, final SimlarId callee) {
         if (callee == null) {

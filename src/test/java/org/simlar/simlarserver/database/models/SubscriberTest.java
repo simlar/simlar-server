@@ -26,7 +26,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public final class SubscriberTest {
-    @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testCreateHashHa1() {
         assertEquals("1a4e8a6d2bdc2864d4c4164ba47391cb", Subscriber.createHashHa1(null, null, null));
@@ -35,7 +34,6 @@ public final class SubscriberTest {
         assertEquals("5abdc6343ca3b039fc5ae1c1c68b22ab", Subscriber.createHashHa1("*2343*", "", "53cur4"));
     }
 
-    @SuppressWarnings("SpellCheckingInspection")
     @Test
     public void testCreateHashHa1b() {
         assertEquals("dd336acb901359d7f13bb823dbc95607", Subscriber.createHashHa1b(null, null, null));

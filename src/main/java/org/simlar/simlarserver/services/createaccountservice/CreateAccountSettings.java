@@ -62,7 +62,7 @@ public final class CreateAccountSettings {
 
 
     @Autowired // fix IntelliJ inspection warning unused
-    @SuppressWarnings("ConstructorWithTooManyParameters")
+    @SuppressWarnings({"ConstructorWithTooManyParameters", "unused"})
     public CreateAccountSettings(
             @DefaultValue("") final String[] alertSmsNumbers,
             @DefaultValue("10") final int maxRequestsPerSimlarIdPerDay,
