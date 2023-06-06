@@ -68,7 +68,6 @@ dependencies {
     //noinspection VulnerableLibrariesLocal
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito:mockito-inline") // TODO: remove once we update to spring boot 3
     //noinspection VulnerableLibrariesLocal
     testImplementation("org.mock-server:mockserver-netty:5.15.0")
 }
