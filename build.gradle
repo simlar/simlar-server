@@ -68,8 +68,6 @@ dependencies {
     //noinspection VulnerableLibrariesLocal
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito:mockito-core:5.3.1")
-    testImplementation("org.mockito:mockito-inline:5.2.0")
     //noinspection VulnerableLibrariesLocal
     testImplementation("org.mock-server:mockserver-netty:5.15.0")
 }
