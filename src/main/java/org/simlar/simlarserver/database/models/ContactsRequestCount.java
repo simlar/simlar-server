@@ -46,7 +46,7 @@ public final class ContactsRequestCount {
     @Column(nullable = false, length = 64)
     private String simlarId;
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Instant timestamp;
 
     @Column(nullable = false, length = 64)
