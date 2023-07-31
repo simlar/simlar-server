@@ -119,8 +119,6 @@ public final class SslPeerCertificatesChainTest {
             return subject == null
                     ? null
                     : subject.getName();
-
-
         }
 
         public List<String> getSubjectAlternativeNames() {
