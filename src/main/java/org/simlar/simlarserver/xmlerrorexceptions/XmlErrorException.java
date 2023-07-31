@@ -21,8 +21,11 @@
 
 package org.simlar.simlarserver.xmlerrorexceptions;
 
+import java.io.Serial;
+
 @SuppressWarnings({"AbstractClassExtendsConcreteClass", "AbstractClassWithoutAbstractMethods", "ClassWithTooManyDependents", "ClassWithTooManyTransitiveDependents"})
 public abstract class XmlErrorException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     protected XmlErrorException(final String message) {

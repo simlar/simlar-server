@@ -20,7 +20,10 @@
 
 package org.simlar.simlarserver.utils;
 
+import java.io.Serial;
+
 public final class AesUtilException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public AesUtilException(final String message) {

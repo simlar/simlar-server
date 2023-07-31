@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.utils;
 
 import java.security.SecureRandom;
+import java.util.random.RandomGenerator;
 
 @SuppressWarnings("UtilityClass")
 public final class Password {
@@ -29,7 +30,7 @@ public final class Password {
     private static final int DEFAULT_LENGTH = 14;
     @SuppressWarnings("SpellCheckingInspection")
     private static final String ALPHABET = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKMLNPQRTUVWXY346789";
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final RandomGenerator SECURE_RANDOM = new SecureRandom();
 
     private Password() {
         throw new AssertionError("This class was not meant to be instantiated");

@@ -70,17 +70,18 @@ public final class ApplePushNotificationServiceMockServerTest {
                                 .withHeader("apns-push-type", "voip")
                                 .withHeader("apns-topic", "org.simlar.Simlar.voip")
                                 .withHeader("apns-expiration", Long.toString(expiration))
-                                .withBody(new JsonBody(
-                                        "{\n" +
-                                        "  \"caller\" : {\n" +
-                                        "    \"initializationVector\" : \"someInitializationVector\",\n" +
-                                        "    \"encryptedSimlarId\" : \"someEncryptedSimlarId\"\n" +
-                                        "  },\n" +
-                                        "  \"aps\" : {\n" +
-                                        "    \"alert\" : \"Simlar Call\",\n" +
-                                        "    \"sound\" : \"ringtone.wav\"\n" +
-                                        "  }\n" +
-                                        "}\n"))
+                                .withBody(new JsonBody("""
+                                        {
+                                          "caller" : {
+                                            "initializationVector" : "someInitializationVector",
+                                            "encryptedSimlarId" : "someEncryptedSimlarId"
+                                          },
+                                          "aps" : {
+                                            "alert" : "Simlar Call",
+                                            "sound" : "ringtone.wav"
+                                          }
+                                        }
+                                        """))
                 ).respond(response);
     }
 

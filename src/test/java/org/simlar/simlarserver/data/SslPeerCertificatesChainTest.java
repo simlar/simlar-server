@@ -36,9 +36,9 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.HttpStatusCodeException;
 
+import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.net.URI;
-import java.security.Principal;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateParsingException;
@@ -115,10 +115,12 @@ public final class SslPeerCertificatesChainTest {
 
         @Nullable
         public String getSubject() {
-            final Principal subject = x509Certificate.getSubjectDN();
+            final X500Principal subject = x509Certificate.getIssuerX500Principal();
             return subject == null
                     ? null
                     : subject.getName();
+
+
         }
 
         public List<String> getSubjectAlternativeNames() {
@@ -128,7 +130,7 @@ public final class SslPeerCertificatesChainTest {
                         ? Collections.emptyList()
                         : alternativeNames.stream()
                             .map(an -> an.get(1).toString())
-                            .collect(Collectors.toUnmodifiableList());
+                            .toList();
             } catch (final CertificateParsingException e) {
                 log.error("error parsing certificate '{}'", x509Certificate, e);
                 return Collections.emptyList();
@@ -164,7 +166,7 @@ public final class SslPeerCertificatesChainTest {
     private static List<ReadableCertificate> requestReadablePeerCertificates(final URI url) {
         return requestPeerCertificates(url).stream()
                 .map(ReadableCertificate::new)
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 
     private static List<ReadableCertificate> requestAndLogReadablePeerCertificates(final URI url) {
@@ -205,7 +207,7 @@ public final class SslPeerCertificatesChainTest {
     @Test
     public void testGoogle() {
         final List<String> hashes = requestAndLogReadablePeerCertificates(URI.create(GooglePushServer.URL))
-                .stream().map(ReadableCertificate::getPublicKeySha256).collect(Collectors.toList());
+                .stream().map(ReadableCertificate::getPublicKeySha256).toList();
 
         //noinspection SpellCheckingInspection
         assertTrue(hashes.contains("hxqRlPTu1bMS/0DITB1SSu0vd4u/8l8TjPgfaAp63Gc="));

@@ -62,23 +62,29 @@ public final class PushNotificationService {
 
         //noinspection SwitchStatement
         switch (deviceType) {
-            case ANDROID:
+            case ANDROID -> {
                 return googlePushNotificationService.requestPushNotification(pushNotification.getPushId());
-            case IOS_VOIP:
+            }
+            case IOS_VOIP -> {
                 return applePushNotificationService.requestVoipPushNotification(
                         ApplePushServer.PRODUCTION,
                         createCaller(caller, callee),
                         pushNotification.getPushId());
-            case IOS_VOIP_DEVELOPMENT:
+            }
+            case IOS_VOIP_DEVELOPMENT -> {
                 return applePushNotificationService.requestVoipPushNotification(
                         ApplePushServer.SANDBOX,
                         createCaller(caller, callee),
                         pushNotification.getPushId());
-            case IOS:
-            case IOS_DEVELOPMENT:
-            default:
+            }
+            case IOS, IOS_DEVELOPMENT -> {
                 log.error("unsupported device type '{}'", deviceType);
                 return null;
+            }
+            default -> {
+                log.error("unknown device type '{}'", deviceType);
+                return null;
+            }
         }
     }
 

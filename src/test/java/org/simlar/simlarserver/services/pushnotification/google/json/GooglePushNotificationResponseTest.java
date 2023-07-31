@@ -34,9 +34,11 @@ public final class GooglePushNotificationResponseTest {
     @Test
     public void testDeserializationPrettyPrint() throws JsonProcessingException {
 
-        final String str = "{\n" +
-                "  \"name\": \"projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e\"\n" +
-                "}\n";
+        final String str = """
+                {
+                  "name": "projects/simlar-org/messages/0:1572168901680225%09814fb0002e7a5e"
+                }
+                """;
 
         assertNotNull(new ObjectMapper().readValue(str, GooglePushNotificationResponse.class));
     }

@@ -21,7 +21,10 @@
 
 package org.simlar.simlarserver.xmlerrorexceptions;
 
+import java.io.Serial;
+
 public final class XmlErrorInvalidTelephoneNumberException extends XmlErrorException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public XmlErrorInvalidTelephoneNumberException(final String message) {
