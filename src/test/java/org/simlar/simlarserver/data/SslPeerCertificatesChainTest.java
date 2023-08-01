@@ -119,8 +119,6 @@ public final class SslPeerCertificatesChainTest {
             return subject == null
                     ? null
                     : subject.getName();
-
-
         }
 
         public List<String> getSubjectAlternativeNames() {
@@ -206,8 +204,9 @@ public final class SslPeerCertificatesChainTest {
 
     @Test
     public void testGoogle() {
-        final List<String> hashes = requestAndLogReadablePeerCertificates(URI.create(GooglePushServer.URL))
-                .stream().map(ReadableCertificate::getPublicKeySha256).toList();
+        final List<String> hashes = requestAndLogReadablePeerCertificates(URI.create(GooglePushServer.URL)).stream()
+                .map(ReadableCertificate::getPublicKeySha256)
+                .toList();
 
         //noinspection SpellCheckingInspection
         assertTrue(hashes.contains("hxqRlPTu1bMS/0DITB1SSu0vd4u/8l8TjPgfaAp63Gc="));

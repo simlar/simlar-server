@@ -61,31 +61,25 @@ public final class PushNotificationService {
         }
 
         //noinspection SwitchStatement
-        switch (deviceType) {
-            case ANDROID -> {
-                return googlePushNotificationService.requestPushNotification(pushNotification.getPushId());
-            }
-            case IOS_VOIP -> {
-                return applePushNotificationService.requestVoipPushNotification(
-                        ApplePushServer.PRODUCTION,
-                        createCaller(caller, callee),
-                        pushNotification.getPushId());
-            }
-            case IOS_VOIP_DEVELOPMENT -> {
-                return applePushNotificationService.requestVoipPushNotification(
-                        ApplePushServer.SANDBOX,
-                        createCaller(caller, callee),
-                        pushNotification.getPushId());
-            }
+        return switch (deviceType) {
+            case ANDROID -> googlePushNotificationService.requestPushNotification(pushNotification.getPushId());
+            case IOS_VOIP -> applePushNotificationService.requestVoipPushNotification(
+                    ApplePushServer.PRODUCTION,
+                    createCaller(caller, callee),
+                    pushNotification.getPushId());
+            case IOS_VOIP_DEVELOPMENT -> applePushNotificationService.requestVoipPushNotification(
+                    ApplePushServer.SANDBOX,
+                    createCaller(caller, callee),
+                    pushNotification.getPushId());
             case IOS, IOS_DEVELOPMENT -> {
                 log.error("unsupported device type '{}'", deviceType);
-                return null;
+                yield null;
             }
             default -> {
                 log.error("unknown device type '{}'", deviceType);
-                return null;
+                yield null;
             }
-        }
+        };
     }
 
     private ApplePushNotificationRequestCaller createCaller(final SimlarId caller, final SimlarId callee) {
