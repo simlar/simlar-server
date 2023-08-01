@@ -33,6 +33,6 @@ public final class ApplePushNotificationRequestCallerTest {
         final String passwordHash = "3e05c148ee4f6e5bcb2bbad98c43d704";
 
         final ApplePushNotificationRequestCaller caller = ApplePushNotificationRequestCaller.create(simlarId, passwordHash);
-        assertEquals(simlarId, AesUtil.decrypt(caller.getEncryptedSimlarId(), caller.getInitializationVector(), passwordHash));
+        assertEquals(simlarId, AesUtil.decrypt(caller.encryptedSimlarId(), caller.initializationVector(), passwordHash));
     }
 }

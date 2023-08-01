@@ -22,20 +22,12 @@
 package org.simlar.simlarserver.services.pushnotification.google.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public final class GooglePushNotificationAndroidDetails {
-    private final String ttl;
-
-    @JsonProperty("collapse_key")
-    private final String collapseKey;
-
-    private final String priority;
+@JsonPropertyOrder({"ttl", "priority", "collapse_key"})
+public record GooglePushNotificationAndroidDetails(
+        String ttl,
+        @JsonProperty("collapse_key")
+        String collapseKey,
+        String priority) {
 }

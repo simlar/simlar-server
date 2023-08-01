@@ -77,7 +77,7 @@ final class CreateAccountController {
 
         final AccountRequest accountRequest = createAccountService.createAccountRequest(telephoneNumber, smsText, request.getRemoteAddr());
 
-        return new XmlSuccessCreateAccountRequest(accountRequest.getSimlarId().get(), accountRequest.getPassword());
+        return new XmlSuccessCreateAccountRequest(accountRequest.simlarId().get(), accountRequest.password());
     }
 
     /**

@@ -21,19 +21,14 @@
 
 package org.simlar.simlarserver.services.pushnotification.apple.json;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.simlar.simlarserver.utils.AesUtil;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public final class ApplePushNotificationRequestCaller {
-    private final String initializationVector;
-    private final String encryptedSimlarId;
+@SuppressFBWarnings("OPM_OVERLY_PERMISSIVE_METHOD")
+@SuppressWarnings("ClassWithTooManyDependents")
+public record ApplePushNotificationRequestCaller(
+        String initializationVector,
+        String encryptedSimlarId) {
 
     public static ApplePushNotificationRequestCaller create(final String callerSimlarId, final String calleePasswordHash) {
         final String initializationVector = AesUtil.generateInitializationVector();

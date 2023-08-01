@@ -21,16 +21,7 @@
 
 package org.simlar.simlarserver.services.pushnotification.apple.json;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
-@Getter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-public final class ApplePushNotificationRequestDetails {
-    private final String alert;
-    private final String sound;
+public record ApplePushNotificationRequestDetails(
+        String alert,
+        String sound) {
 }

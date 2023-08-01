@@ -21,17 +21,9 @@
 
 package org.simlar.simlarserver.services.createaccountservice;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 import org.simlar.simlarserver.utils.SimlarId;
 
-@AllArgsConstructor
-@Getter
-@ToString
-@EqualsAndHashCode
-public final class AccountRequest {
-    private final SimlarId simlarId;
-    private final String password;
+public record AccountRequest(
+        SimlarId simlarId,
+        String password) {
 }
