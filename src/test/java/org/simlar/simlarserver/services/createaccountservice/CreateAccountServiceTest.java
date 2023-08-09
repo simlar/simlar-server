@@ -332,7 +332,7 @@ public final class CreateAccountServiceTest {
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHourRegionalLimit() {
-        final int max = createAccountSettings.getRegionalSettings().get(0).getMaxRequestsPerHour();
+        final int max = createAccountSettings.getRegionalSettings().get(0).maxRequestsPerHour();
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = "+1600502214" + i % 10;
             final String ip = "192.168.23." + (i % 255 + 1);
@@ -444,14 +444,14 @@ public final class CreateAccountServiceTest {
         assertEquals(2, testAccounts.size());
 
         for (final TestAccount testAccount: testAccounts) {
-            final String telephoneNumber = testAccount.getSimlarId();
+            final String telephoneNumber = testAccount.simlarId();
             final SimlarId simlarId = SimlarId.create(telephoneNumber);
 
             createAccountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", Instant.now());
             assertThrows(XmlErrorWrongRegistrationCodeException.class, () ->
                     createAccountService.confirmAccount(telephoneNumber, "112233")
             );
-            createAccountService.confirmAccount(telephoneNumber, testAccount.getRegistrationCode());
+            createAccountService.confirmAccount(telephoneNumber, testAccount.registrationCode());
         }
 
         verifyNoMoreInteractions(smsService);
@@ -464,8 +464,8 @@ public final class CreateAccountServiceTest {
         final List<TestAccount> testAccounts = createAccountSettings.getTestAccounts();
         assertEquals(2, testAccounts.size());
 
-        final String registrationCode = testAccounts.get(0).getRegistrationCode();
-        final String telephoneNumber = testAccounts.get(0).getSimlarId();
+        final String registrationCode = testAccounts.get(0).registrationCode();
+        final String telephoneNumber = testAccounts.get(0).simlarId();
         final SimlarId simlarId = SimlarId.create(telephoneNumber);
         final Instant now = Instant.now();
 

@@ -24,7 +24,7 @@ package org.simlar.simlarserver.xml;
 import org.junit.Test;
 import org.simlar.simlarserver.utils.MarshalUtil;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import static org.junit.Assert.assertEquals;
 

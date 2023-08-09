@@ -61,12 +61,12 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
 
     @Before
     public void mockSettings() {
-        when(pushNotificationSettings.getApiKey()).thenReturn(API_KEY);
+        when(pushNotificationSettings.apiKey()).thenReturn(API_KEY);
     }
 
     @Test
     public void testSendPushNotificationWithNoApiKeyConfigured() {
-        when(pushNotificationSettings.getApiKey()).thenReturn(null);
+        when(pushNotificationSettings.apiKey()).thenReturn(null);
         final XmlError response = postSendPushNotification(XmlError.class, null, "NoSimlarId", "NoSimlarId2");
 
         assertNotNull(response);

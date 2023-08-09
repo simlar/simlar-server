@@ -86,7 +86,7 @@ final class StartUpService {
     @SuppressWarnings({"unused", "RedundantSuppression"})
     @EventListener
     public void handleApplicationReadyEvent(final ApplicationReadyEvent event) {
-        log.info("started on domain='{}', hibernateDdlAuto='{}', dataSource='{}', databaseProduct='{}' and version='{}'", sharedSettings.getDomain(), hibernateDdlAuto, datasourceUrl, databaseProduct, versionService.getVersion());
+        log.info("started on domain='{}', hibernateDdlAuto='{}', dataSource='{}', databaseProduct='{}' and version='{}'", sharedSettings.domain(), hibernateDdlAuto, datasourceUrl, databaseProduct, versionService.getVersion());
 
         if (event.getApplicationContext() instanceof WebApplicationContext && ("create-drop".equals(hibernateDdlAuto) || StringUtils.contains(datasourceUrl, "h2:mem"))) {
             createTestData();

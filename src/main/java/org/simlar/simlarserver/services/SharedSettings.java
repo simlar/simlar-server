@@ -21,26 +21,14 @@
 
 package org.simlar.simlarserver.services;
 
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
-@SuppressWarnings("PMD.AvoidUsingShortType")
-@Getter
-@ConstructorBinding
 @ConfigurationProperties
-public final class SharedSettings {
-    private final String domain;
-    private final short port;
+public record SharedSettings(
+        @DefaultValue("")
+        String domain,
 
-    @Autowired // fix IntelliJ inspection warning unused
-    public SharedSettings(
-            @DefaultValue("") final String domain,
-            @DefaultValue("6161") final short port
-    ) {
-        this.domain = domain;
-        this.port = port;
-    }
+        @DefaultValue("6161")
+        short port) {
 }

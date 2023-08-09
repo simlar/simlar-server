@@ -52,7 +52,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -80,7 +79,7 @@ public final class CreateAccountService {
         this.taskScheduler = taskScheduler;
 
         for (final RegionalSettings regional : createAccountSettings.getRegionalSettings()) {
-            log.info("regional setting region code '{}' with max requests per hour '{}'", regional.getRegionCode(), regional.getMaxRequestsPerHour());
+            log.info("regional setting region code '{}' with max requests per hour '{}'", regional.regionCode(), regional.maxRequestsPerHour());
         }
 
         log.info("alert sms numbers '{}'", String.join(", ", createAccountSettings.getAlertSmsNumbers()));
@@ -112,11 +111,11 @@ public final class CreateAccountService {
 
         for (final RegionalSettings regional : createAccountSettings.getRegionalSettings()) {
             //noinspection ObjectAllocationInLoop
-            final String regionCode = '*' + regional.getRegionCode();
+            final String regionCode = '*' + regional.regionCode();
             if (StringUtils.isNotEmpty(regionCode) && simlarId.get().startsWith(regionCode)) {
                 //noinspection ObjectAllocationInLoop
-                checkRequestTriesLimit(accountCreationRepository.sumRequestTriesForRegion(regionCode + '%', anHourAgo), regional.getMaxRequestsPerHour(),
-                        String.format("too many create account requests for region '%s' ", regional.getRegionCode()));
+                checkRequestTriesLimit(accountCreationRepository.sumRequestTriesForRegion(regionCode + '%', anHourAgo), regional.maxRequestsPerHour(),
+                        String.format("too many create account requests for region '%s' ", regional.regionCode()));
             }
         }
 
@@ -146,16 +145,16 @@ public final class CreateAccountService {
             if (!subscriberService.checkCredentials(dbEntry.getSimlarId(), dbEntry.getPassword())) {
                 log.warn("no confirmation after '{}' for number '{}'", WARN_TIMEOUT, telephoneNumber);
             }
-        }, Date.from(now.plus(WARN_TIMEOUT)));
+        }, now.plus(WARN_TIMEOUT));
 
         log.info("created account request for simlarId '{}'", simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
     }
 
     private String searchTestAccountRegistrationCode(final CharSequence simlarId) {
-        for (final TestAccount testAccount: createAccountSettings.getTestAccounts()) {
-            if (StringUtils.equals(simlarId, testAccount.getSimlarId())) {
-                return testAccount.getRegistrationCode();
+        for (final TestAccount testAccount : createAccountSettings.getTestAccounts()) {
+            if (StringUtils.equals(simlarId, testAccount.simlarId())) {
+                return testAccount.registrationCode();
             }
         }
 

@@ -29,6 +29,7 @@ import org.simlar.simlarserver.xmlerrorexceptionclientresponse.XmlErrorException
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,8 +38,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Slf4j
 @ControllerAdvice
@@ -46,7 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 final class SimlarErrorController implements ErrorController {
     private static final String ERROR_PATH = "/error";
 
-    private static ResponseEntity<XmlError> createXmlError(final HttpStatus status, final XmlErrorExceptionClientResponse response) {
+    private static ResponseEntity<XmlError> createXmlError(final HttpStatusCode status, final XmlErrorExceptionClientResponse response) {
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_XML).body(new XmlError(response.getId(), response.getMessage()));
     }
 

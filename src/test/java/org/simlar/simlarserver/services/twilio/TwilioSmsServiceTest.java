@@ -61,7 +61,7 @@ public final class TwilioSmsServiceTest {
     @Before
     public void setup() {
         assumeTrue("This test needs a Twilio configuration with Twilio test credentials", twilioSettings.isConfigured());
-        assertEquals("Twilio test credentials", "+15005550006", twilioSettings.getSmsSourceNumber());
+        assertEquals("Twilio test credentials", "+15005550006", twilioSettings.smsSourceNumber());
 
         sharedSettings = new SharedSettings("sip.simlar.org", (short)6161);
         twilioSmsService = new TwilioSmsService(sharedSettings, twilioSettings, smsProviderLogRepository);
@@ -101,11 +101,11 @@ public final class TwilioSmsServiceTest {
         final TwilioSettings mockedSettings = mock(TwilioSettings.class);
         when(mockedSettings.isConfigured()).thenReturn(Boolean.TRUE);
         when(mockedSettings.getUrl()).thenReturn("https://no.example.com/index");
-        when(mockedSettings.getSmsSourceNumber()).thenReturn("+1");
-        when(mockedSettings.getSid()).thenReturn("007");
-        when(mockedSettings.getAuthToken()).thenReturn("secret");
-        when(mockedSettings.getCallbackUser()).thenReturn("user");
-        when(mockedSettings.getCallbackPassword()).thenReturn("password");
+        when(mockedSettings.smsSourceNumber()).thenReturn("+1");
+        when(mockedSettings.sid()).thenReturn("007");
+        when(mockedSettings.authToken()).thenReturn("secret");
+        when(mockedSettings.callbackUser()).thenReturn("user");
+        when(mockedSettings.callbackPassword()).thenReturn("password");
 
         final SmsService service = new TwilioSmsService(sharedSettings, mockedSettings, smsProviderLogRepository);
         assertFalse(service.sendSms(telephoneNumber, message));

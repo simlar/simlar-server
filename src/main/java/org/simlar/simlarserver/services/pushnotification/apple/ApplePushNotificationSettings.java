@@ -27,7 +27,6 @@ import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 
 import java.util.List;
 
@@ -35,7 +34,6 @@ import java.util.List;
 @Getter
 @ToString
 @Builder
-@ConstructorBinding
 @ConfigurationProperties(prefix = "push.apple")
 class ApplePushNotificationSettings {
     private final String voipCertificatePath;
