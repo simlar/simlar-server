@@ -59,7 +59,7 @@ dependencies {
     implementation("com.googlecode.libphonenumber:libphonenumber:8.13.17")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
-    implementation("org.yaml:snakeyaml:2.0") /// TODO: remove this once transitive dependency passes owasp checker
+    implementation("org.yaml:snakeyaml:2.1") /// TODO: remove this once transitive dependency passes owasp checker
 
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.9")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
