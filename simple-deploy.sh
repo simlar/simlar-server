@@ -45,7 +45,7 @@ scp "${WAR_FILE}" ${REMOTE}:"${REMOTE_DIR}/"
 
 
 echo "install war file"
-ssh ${REMOTE} "systemctl stop tomcat9.service ; rm -rf /var/lib/tomcat9/webapps/simlar-server* ; mv \"${REMOTE_DIR}\"/simlar-server*.war /var/lib/tomcat9/webapps/ ; systemctl start tomcat9.service"
+ssh ${REMOTE} "systemctl stop tomcat10.service ; rm -rf /var/lib/tomcat10/webapps/simlar-server* ; mv \"${REMOTE_DIR}\"/simlar-server*.war /var/lib/tomcat10/webapps/ ; systemctl start tomcat10.service"
 
 
 echo "waiting"
