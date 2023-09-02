@@ -22,15 +22,6 @@
     <suppress>
         <notes>
             <![CDATA[
-                file name: spring-expression-*.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring\-expression@.*$</packageUrl>
-        <vulnerabilityName>CVE-2023-20863</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
                 file name: grpc-context-1.27.2.jar
             ]]>
         </notes>
