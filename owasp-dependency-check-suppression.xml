@@ -12,16 +12,6 @@
     <suppress>
         <notes>
             <![CDATA[
-                file name: guava-31.0.1-android.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
-        <vulnerabilityName>CVE-2020-8908</vulnerabilityName>
-        <vulnerabilityName>CVE-2023-2976</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
                 file name: grpc-context-1.27.2.jar
             ]]>
         </notes>
