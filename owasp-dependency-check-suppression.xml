@@ -18,6 +18,7 @@
         <packageUrl regex="true">^pkg:maven/io\.grpc/grpc\-context@.*$</packageUrl>
         <cve>CVE-2023-32732</cve>
         <cve>CVE-2023-33953</cve>
+        <cve>CVE-2023-4785</cve>
     </suppress>
     <suppress>
         <notes>
