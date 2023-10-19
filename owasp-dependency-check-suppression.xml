@@ -39,13 +39,4 @@
         <packageUrl regex="true">^pkg:maven/com\.squareup\.okio/okio\-jvm@.*$</packageUrl>
         <cve>CVE-2023-3635</cve>
     </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: tomcat-embed-*-10.1.12.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed.*$</packageUrl>
-        <cve>CVE-2023-41080</cve>
-    </suppress>
 </suppressions>
