@@ -44,7 +44,8 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Table(name = "subscriber",
         uniqueConstraints = @UniqueConstraint(name = "account_idx", columnNames = {"username", "domain"}),
-        indexes = @Index(name = "username_idx", columnList = "username"))
+        indexes = @Index(name = "username_idx", columnList = "username, domain")
+)
 public class Subscriber {
 
     @Id
