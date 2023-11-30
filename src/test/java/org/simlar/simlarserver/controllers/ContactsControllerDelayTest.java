@@ -94,6 +94,6 @@ public final class ContactsControllerDelayTest extends ContactsControllerBaseTes
         assertRequestContactListSuccess(TestUser.U3, 6000);
         final long elapsed = System.currentTimeMillis() - begin;
         assertLessEquals(1000, elapsed);
-        assertLessEquals(elapsed, 6000); /// running this test alone takes longer as the server needs to start
+        assertLessEquals(elapsed, 6000);
     }
 }
