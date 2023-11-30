@@ -39,7 +39,10 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -124,11 +127,9 @@ public final class SubscriberService {
         }
     }
 
-    public int getStatus(final SimlarId simlarId) {
-        if (simlarId == null) {
-            return 0;
-        }
-
-        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), sharedSettings.domain()).isEmpty() ? 0 : 1;
+    public List<SimlarId> filterSimlarIdsRegistered(final Collection<SimlarId> simlarIds) {
+        final Set<String> usernames = simlarIds.stream().map(SimlarId::get).collect(Collectors.toSet());
+        return subscriberRepository.findUsernameByDomainAndUsernameIn(sharedSettings.domain(), usernames)
+                .stream().map(SimlarId::create).toList();
     }
 }

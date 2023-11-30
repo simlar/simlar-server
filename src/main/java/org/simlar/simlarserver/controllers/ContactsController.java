@@ -101,9 +101,10 @@ final class ContactsController {
                 log.info("executing getContactStatus scheduled to '{}'", formatInstant(scheduledTime));
 
                 final Instant begin = Instant.now();
+                final List<SimlarId> registeredSimlarIds = subscriberService.filterSimlarIdsRegistered(simlarIds);
                 deferredResult.setResult(
                         new XmlContacts(simlarIds.stream()
-                                .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
+                                .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), registeredSimlarIds.contains(contactSimlarId) ? 1 : 0))
                                 .collect(Collectors.toList()))
                 );
                 log.info("contact status detection took '{}' ms", Duration.between(begin, Instant.now()).toMillis());

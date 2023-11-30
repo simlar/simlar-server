@@ -33,9 +33,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -102,21 +106,6 @@ public final class SubscriberServiceTest {
     }
 
     @Test
-    public void testGetStatus() {
-        final SimlarId simlarIdSaved = SimlarId.create("*2002*");
-        final SimlarId simlarIdNotSaved = SimlarId.create("*2003*");
-
-        assertEquals(0, subscriberService.getStatus(null));
-        assertEquals(0, subscriberService.getStatus(simlarIdSaved));
-        assertEquals(0, subscriberService.getStatus(simlarIdNotSaved));
-        subscriberService.save(simlarIdSaved, "xxxxxx");
-        assertEquals(1, subscriberService.getStatus(simlarIdSaved));
-        assertEquals(0, subscriberService.getStatus(simlarIdNotSaved));
-        subscriberService.save(simlarIdSaved, "as234f2dsd");
-        assertEquals(1, subscriberService.getStatus(simlarIdSaved));
-    }
-
-    @Test
     public void testGetHa1() {
         final SimlarId simlarIdSaved = SimlarId.create("*2004*");
         final SimlarId simlarIdNotSaved = SimlarId.create("*2005*");
@@ -129,6 +118,22 @@ public final class SubscriberServiceTest {
         assertNull(subscriberService.getHa1(simlarIdNotSaved));
         subscriberService.save(simlarIdSaved, "as234f2dsd");
         assertEquals("234f6f5d04f73725a14c8f3f3a664e11", subscriberService.getHa1(simlarIdSaved));
+    }
+
+    @Test
+    public void testFilterSimlarIdsRegistered() {
+        final SimlarId simlarIdSaved = SimlarId.create("*2002*");
+        assertNotNull(simlarIdSaved);
+        final SimlarId simlarIdNotSaved = SimlarId.create("*2003*");
+        assertNotNull(simlarIdNotSaved);
+
+        assertEquals(Collections.emptyList(), subscriberService.filterSimlarIdsRegistered(List.of(simlarIdNotSaved, simlarIdSaved, simlarIdSaved)));
+
+        subscriberService.save(simlarIdSaved, "xxxxxx");
+        assertEquals(List.of(simlarIdSaved), subscriberService.filterSimlarIdsRegistered(List.of(simlarIdSaved, simlarIdNotSaved, simlarIdSaved)));
+
+        subscriberService.save(simlarIdSaved, "as234f2dsd");
+        assertEquals(List.of(simlarIdSaved), subscriberService.filterSimlarIdsRegistered(List.of(simlarIdSaved, simlarIdSaved, simlarIdNotSaved)));
     }
 
     @DirtiesContext
