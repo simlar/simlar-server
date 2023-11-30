@@ -99,11 +99,14 @@ final class ContactsController {
                 log.error("deferred result already set or expired simlarId '{}' delay '{}'", login, delay);
             } else {
                 log.info("executing getContactStatus scheduled to '{}'", formatInstant(scheduledTime));
+
+                final Instant begin = Instant.now();
                 deferredResult.setResult(
                         new XmlContacts(simlarIds.stream()
                                 .map(contactSimlarId -> new XmlContact(contactSimlarId.get(), subscriberService.getStatus(contactSimlarId)))
                                 .collect(Collectors.toList()))
                 );
+                log.info("contact status detection took '{}' ms", Duration.between(begin, Instant.now()).toMillis());
             }
         }, scheduledTime);
 
