@@ -23,6 +23,7 @@ package org.simlar.simlarserver.services.subscriberservice;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.simlar.simlarserver.database.models.Subscriber;
@@ -39,7 +40,6 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -127,9 +127,11 @@ public final class SubscriberService {
         }
     }
 
-    public List<SimlarId> filterSimlarIdsRegistered(final Collection<SimlarId> simlarIds) {
-        final Set<String> usernames = simlarIds.stream().map(SimlarId::get).collect(Collectors.toSet());
-        return subscriberRepository.findUsernameByDomainAndUsernameIn(sharedSettings.domain(), usernames)
-                .stream().map(SimlarId::create).toList();
+    public List<SimlarId> filterSimlarIdsRegistered(final List<SimlarId> simlarIds) {
+        return ListUtils.partition(simlarIds, 100).stream().map(list -> {
+            final Set<String> usernames = list.stream().map(SimlarId::get).collect(Collectors.toSet());
+            return subscriberRepository.findUsernameByDomainAndUsernameIn(sharedSettings.domain(), usernames)
+                    .stream().map(SimlarId::create).toList();
+        }).flatMap(List::stream).collect(Collectors.toList());
     }
 }

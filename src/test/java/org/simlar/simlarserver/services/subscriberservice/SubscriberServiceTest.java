@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simlar.simlarserver.SimlarServer;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
+import org.simlar.simlarserver.helper.SimlarIds;
 import org.simlar.simlarserver.services.SharedSettings;
 import org.simlar.simlarserver.testdata.TestUser;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -134,6 +135,14 @@ public final class SubscriberServiceTest {
 
         subscriberService.save(simlarIdSaved, "as234f2dsd");
         assertEquals(List.of(simlarIdSaved), subscriberService.filterSimlarIdsRegistered(List.of(simlarIdSaved, simlarIdSaved, simlarIdNotSaved)));
+    }
+
+    @Test
+    public void testFilterSimlarIdsRegisteredWithLargeList() {
+        subscriberService.save(SimlarId.create("*1*"), "xxxxxx");
+        subscriberService.save(SimlarId.create("*1000000*"), "xxxxxx");
+        final List<SimlarId> simlarIds = SimlarIds.createContacts(1000000).stream().toList();
+        assertEquals(2, subscriberService.filterSimlarIdsRegistered(simlarIds).size());
     }
 
     @DirtiesContext
