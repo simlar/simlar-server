@@ -23,6 +23,7 @@ package org.simlar.simlarserver.services.subscriberservice;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.simlar.simlarserver.database.models.Subscriber;
@@ -39,6 +40,8 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -124,11 +127,14 @@ public final class SubscriberService {
         }
     }
 
-    public int getStatus(final SimlarId simlarId) {
-        if (simlarId == null) {
-            return 0;
-        }
-
-        return subscriberRepository.findHa1ByUsernameAndDomain(simlarId.get(), sharedSettings.domain()).isEmpty() ? 0 : 1;
+    public List<SimlarId> filterSimlarIdsRegistered(final Collection<SimlarId> simlarIds) {
+        return ListUtils.partition(simlarIds.stream()
+                        .map(SimlarId::get)
+                        .toList(), 100).stream()
+                .map(HashSet::new)
+                .map(usernames -> subscriberRepository.findUsernameByDomainAndUsernameIn(sharedSettings.domain(), usernames))
+                .flatMap(List::stream)
+                .map(SimlarId::create)
+                .toList();
     }
 }

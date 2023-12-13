@@ -26,6 +26,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings({"SameParameterValue", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant"})
 public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
@@ -34,4 +35,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 
     @Query("SELECT id FROM Subscriber WHERE username = ?1 AND domain = ?2")
     List<Long> findIdByUsernameAndDomain(final String username, final String domain);
+
+    @Query("SELECT username FROM Subscriber WHERE domain = ?1 AND username IN ?2")
+    List<String> findUsernameByDomainAndUsernameIn(final String domain, final Set<String> usernames);
 }
