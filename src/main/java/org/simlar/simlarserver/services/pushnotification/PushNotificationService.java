@@ -60,7 +60,6 @@ public final class PushNotificationService {
             return null;
         }
 
-        //noinspection SwitchStatement
         return switch (deviceType) {
             case ANDROID -> googlePushNotificationService.requestPushNotification(pushNotification.getPushId());
             case IOS_VOIP -> applePushNotificationService.requestVoipPushNotification(
