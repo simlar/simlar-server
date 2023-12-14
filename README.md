@@ -94,5 +94,5 @@ docker run --rm -v $(pwd):/pwd simlar-server-builder:latest bash -c "cd /pwd && 
 ```
 However, caching gradle downloads speeds up the build, and some security options do not hurt.
 ```
-docker run --cap-drop all --security-opt=no-new-privileges --rm -v $(pwd)-docker-gradle-cache:/home/builder/.gradle -v $(pwd):/pwd simlar-server-builder:latest bash -c "cd /pwd && ./gradlew --no-daemon --warning-mode all clean build dependencyUpdates dependencyCheckAnalyze"
+docker run --cap-drop all --security-opt=no-new-privileges --rm -v $(pwd)-docker-gradle-cache:/home/builder/.gradle -v $(pwd):/pwd -e SIMLAR_NVD_API_KEY simlar-server-builder:latest bash -c "cd /pwd && ./gradlew --no-daemon --warning-mode all clean build dependencyUpdates dependencyCheckAnalyze"
 ```
