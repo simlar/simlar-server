@@ -1,7 +1,7 @@
 simlar-server
 ==============
 
-[![Build Status](https://github.com/simlar/simlar-server/workflows/simlar-server-ci/badge.svg?branch=master)](https://github.com/simlar/simlar-server/actions)
+[![Build Status](https://github.com/simlar/simlar-server/actions/workflows/simlar-server-ci.yml/badge.svg?branch=master)](https://github.com/simlar/simlar-server/actions)
 
 
 **This project is work in progress and not complete, yet.**
