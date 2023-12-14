@@ -74,10 +74,6 @@ public final class PushNotificationService {
                 log.error("unsupported device type '{}'", deviceType);
                 yield null;
             }
-            default -> {
-                log.error("unknown device type '{}'", deviceType);
-                yield null;
-            }
         };
     }
 
