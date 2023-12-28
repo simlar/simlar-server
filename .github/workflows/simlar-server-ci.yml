@@ -35,7 +35,7 @@ jobs:
       run: ./gradlew --no-daemon --warning-mode all clean build dependencyUpdates dependencyCheckAnalyze
 
     - name: Save artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: static code analysis
