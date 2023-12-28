@@ -112,6 +112,7 @@ dependencyCheck {
         println("This product uses the NVD API but is not endorsed or certified by the NVD.")
         nvd {
             apiKey = "${nvdApiKey}"
+            delay = 16000
         }
     }
 }
