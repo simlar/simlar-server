@@ -77,6 +77,7 @@ final class ContactsController {
      * @return XmlError or XmlContacts
      *            error message or contact list in xml
      */
+    @SuppressWarnings("GrazieInspection")
     @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE)
     public DeferredResult<XmlContacts> getContactStatus(@RequestParam final String login, @RequestParam final String password, @RequestParam final String contacts) {
         log.info("'{}' requested with login '{}'", REQUEST_PATH, login);
