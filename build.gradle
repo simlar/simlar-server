@@ -73,8 +73,10 @@ dependencies {
     testImplementation("org.mock-server:mockserver-netty:5.15.0")
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 repositories {
     mavenCentral()
@@ -138,7 +140,9 @@ test {
 
 def getGitVersion = { ->
     try {
-        return "git -C ${rootDir} describe --tags --always --dirty".execute().text.trim()
+        return providers.exec {
+            commandLine("git", "describe", "--tags", "--always", "--dirty")
+        }.standardOutput.asText.get().trim()
     }
     catch (ignored) {
         return "git-not-found"
@@ -147,18 +151,16 @@ def getGitVersion = { ->
 
 version = getGitVersion()
 
-war {
+tasks.named("war") {
     enabled = true
-    archivesBaseName = "simlar-server"
-    archiveFileName = "${archivesBaseName}##${project.version}.war"
+    archiveFileName = "simlar-server##${project.version}.war"
     rootSpec.exclude("application-default.properties")
     manifest {
         attributes("Implementation-Version": project.version)
     }
 }
 
-bootWar {
-    classifier = 'boot'
+tasks.named("bootWar") {
     rootSpec.exclude("application-default.properties")
     manifest {
         attributes("Implementation-Version": project.version)
@@ -173,7 +175,7 @@ tasks.withType(AbstractArchiveTask).configureEach {
 springBoot {
     buildInfo {
         properties {
-            time = null
+            excludes = ['time']
         }
     }
 }
