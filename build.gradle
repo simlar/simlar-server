@@ -176,7 +176,7 @@ tasks.withType(AbstractArchiveTask).configureEach {
 springBoot {
     buildInfo {
         properties {
-            time = null
+            excludes = ['time']
         }
     }
 }
