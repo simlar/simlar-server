@@ -153,8 +153,7 @@ version = getGitVersion()
 
 tasks.named("war") {
     enabled = true
-    archivesBaseName = "simlar-server"
-    archiveFileName = "${archivesBaseName}##${project.version}.war"
+    archiveFileName = "simlar-server##${project.version}.war"
     rootSpec.exclude("application-default.properties")
     manifest {
         attributes("Implementation-Version": project.version)
