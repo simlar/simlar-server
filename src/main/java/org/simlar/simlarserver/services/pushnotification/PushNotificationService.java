@@ -60,7 +60,6 @@ public final class PushNotificationService {
             return null;
         }
 
-        //noinspection SwitchStatement
         return switch (deviceType) {
             case ANDROID -> googlePushNotificationService.requestPushNotification(pushNotification.getPushId());
             case IOS_VOIP -> applePushNotificationService.requestVoipPushNotification(
@@ -73,10 +72,6 @@ public final class PushNotificationService {
                     pushNotification.getPushId());
             case IOS, IOS_DEVELOPMENT -> {
                 log.error("unsupported device type '{}'", deviceType);
-                yield null;
-            }
-            default -> {
-                log.error("unknown device type '{}'", deviceType);
                 yield null;
             }
         };
