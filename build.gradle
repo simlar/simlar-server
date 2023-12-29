@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  */
+//file:noinspection UnnecessaryQualifiedReference
 
 plugins {
     id "java"
@@ -87,8 +88,8 @@ pmd {
 }
 
 spotbugs {
-    effort = "max"
-    reportLevel = "low"
+    effort = com.github.spotbugs.snom.Effort.MAX
+    reportLevel = com.github.spotbugs.snom.Confidence.valueOf("LOW")
     // implemented like the documentation suggests:
     //   https://github.com/spotbugs/spotbugs-gradle-plugin#readme
     //noinspection GroovyAssignabilityCheck,GrFinalVariableAccess
