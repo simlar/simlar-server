@@ -64,7 +64,7 @@ final class PushNotificationsController {
      * @return XmlError or XmlSuccessPushNotification
      *            error message or success message containing deviceType and pushId
      */
-    @SuppressWarnings("SpellCheckingInspection")
+    @SuppressWarnings({"SpellCheckingInspection", "GrazieInspection"})
     @PostMapping(value = REQUEST_PATH, produces = MediaType.APPLICATION_XML_VALUE)
     public XmlSuccessPushNotification storePushId(@RequestParam final String login, @RequestParam final String password, @RequestParam final int deviceType, @RequestParam final String pushId) {
         log.info("'{}' requested with login '{}'", REQUEST_PATH, login);
