@@ -4,12 +4,14 @@ blockquote
 csrf
 datasource
 dccb
+dependencycheck
 fcbl
 fcff
 fdfad
 fdfho
 ferf
 fgklgor
+findsecbugs
 firebase
 gnomovision
 googleapis
@@ -25,6 +27,7 @@ landline
 libphonenumber
 lombok
 malformatted
+mebigfatguy
 mktemp
 noninteractive
 nopmd
@@ -41,6 +44,7 @@ redistributors
 ringtone
 ritzerfeld
 rpid
+ruleset
 sartor
 screenshot
 sdfas
@@ -53,6 +57,7 @@ springframework
 stmts
 subresource
 systemctl
+tmpdir
 twilio
 twodividedbyzero
 ucpm
@@ -63,6 +68,7 @@ voip
 webapps
 whoami
 xldfdsf
+xstream
 xxxxxx
 xxxxxxx
 xxxxxxxxxx
