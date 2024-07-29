@@ -56,7 +56,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web-services")
     //noinspection GradlePackageVersionRange, GradlePackageUpdate /// managed by spring boot bom
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.apache.commons:commons-lang3:3.14.0")
+    implementation("org.apache.commons:commons-lang3:3.15.0")
     implementation("org.apache.commons:commons-text:1.12.0")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("commons-codec:commons-codec:1.17.1")
