@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver.services.createaccountservice;
+package org.simlar.simlarserver.services.accountservice;
 
 import org.simlar.simlarserver.utils.SimlarId;
 

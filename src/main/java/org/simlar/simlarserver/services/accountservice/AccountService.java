@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver.services.createaccountservice;
+package org.simlar.simlarserver.services.accountservice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @Component
-public final class CreateAccountService {
+public final class AccountService {
     private static final Duration WARN_TIMEOUT = Duration.ofSeconds(180);
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{" + Password.REGISTRATION_CODE_LENGTH + '}');
 
@@ -70,7 +70,7 @@ public final class CreateAccountService {
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
     @Autowired // fix IntelliJ inspection warning unused
-    private CreateAccountService(final SmsService smsService, final CreateAccountSettings createAccountSettings, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
+    private AccountService(final SmsService smsService, final CreateAccountSettings createAccountSettings, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
         this.smsService = smsService;
         this.createAccountSettings = createAccountSettings;
         this.accountCreationRepository = accountCreationRepository;

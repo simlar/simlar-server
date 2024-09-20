@@ -23,8 +23,8 @@ package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.simlar.simlarserver.services.createaccountservice.AccountRequest;
-import org.simlar.simlarserver.services.createaccountservice.CreateAccountService;
+import org.simlar.simlarserver.services.accountservice.AccountRequest;
+import org.simlar.simlarserver.services.accountservice.AccountService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
@@ -46,7 +46,7 @@ final class CreateAccountController {
     public static final String COMMAND_REQUEST   = "request";
     public static final String COMMAND_CONFIRM   = "confirm";
 
-    private final CreateAccountService createAccountService;
+    private final AccountService accountService;
 
     /**
      * This method handles http post requests. You may test it with:
@@ -75,7 +75,7 @@ final class CreateAccountController {
             throw new XmlErrorUnknownStructureException("create account request with command: " + command);
         }
 
-        final AccountRequest accountRequest = createAccountService.createAccountRequest(telephoneNumber, smsText, request.getRemoteAddr());
+        final AccountRequest accountRequest = accountService.createAccountRequest(telephoneNumber, smsText, request.getRemoteAddr());
 
         return new XmlSuccessCreateAccountRequest(accountRequest.simlarId().get(), accountRequest.password());
     }
@@ -98,7 +98,7 @@ final class CreateAccountController {
     public XmlSuccessCreateAccountRequest createAccountCall(@RequestParam final String telephoneNumber, @RequestParam final String password) {
         log.info("'{}' requested with telephoneNumber= '{}'", REQUEST_PATH_CALL, telephoneNumber);
 
-        final SimlarId simlarId = createAccountService.call(telephoneNumber, password);
+        final SimlarId simlarId = accountService.call(telephoneNumber, password);
 
         return new XmlSuccessCreateAccountRequest(simlarId.get(), password);
     }
@@ -127,7 +127,7 @@ final class CreateAccountController {
             throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);
         }
 
-        createAccountService.confirmAccount(simlarId, registrationCode);
+        accountService.confirmAccount(simlarId, registrationCode);
 
         return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
     }

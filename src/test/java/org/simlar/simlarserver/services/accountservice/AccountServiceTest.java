@@ -19,7 +19,7 @@
  *
  */
 
-package org.simlar.simlarserver.services.createaccountservice;
+package org.simlar.simlarserver.services.accountservice;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Test;
@@ -78,9 +78,9 @@ import static org.mockito.Mockito.when;
         "create.account.testAccounts[0].registrationCode = 123456",
         "create.account.testAccounts[1].simlarId = *2*",
         "create.account.testAccounts[1].registrationCode = 654321" })
-public final class CreateAccountServiceTest {
+public final class AccountServiceTest {
     @Autowired
-    private CreateAccountService createAccountService;
+    private AccountService accountService;
 
     @Autowired
     private SmsService smsService;
@@ -96,7 +96,7 @@ public final class CreateAccountServiceTest {
     @Test
     public void testCreateAccountRequestWithInvalidNumber() {
         final String message = assertThrows(XmlErrorInvalidTelephoneNumberException.class, () ->
-                createAccountService.createAccountRequest("NO-NUMBER", "", "192.168.1.1")
+                accountService.createAccountRequest("NO-NUMBER", "", "192.168.1.1")
         ).getMessage();
 
         assertNotNull(message);
@@ -108,7 +108,7 @@ public final class CreateAccountServiceTest {
     @Test
     public void testCreateAccountRequestWithInvalidNumberLibphonenumber() {
         final String message = assertThrows(XmlErrorInvalidTelephoneNumberException.class, () ->
-                createAccountService.createAccountRequest("+49163123456", "", "192.168.1.1")
+                accountService.createAccountRequest("+49163123456", "", "192.168.1.1")
         ).getMessage();
 
         assertNotNull(message);
@@ -120,7 +120,7 @@ public final class CreateAccountServiceTest {
     @Test
     public void testCreateAccountRequestWithFailedSms() {
         assertThrows(XmlErrorFailedToSendSmsException.class, () ->
-                createAccountService.createAccountRequest("+15005550006", "", "192.168.1.1")
+                accountService.createAccountRequest("+15005550006", "", "192.168.1.1")
         );
     }
 
@@ -128,7 +128,7 @@ public final class CreateAccountServiceTest {
     @Test
     public void testCreateAccountRequestWithIpEmpty() {
         assertThrows(XmlErrorNoIpException.class, () ->
-                createAccountService.createAccountRequest("+15005550006", "", "")
+                accountService.createAccountRequest("+15005550006", "", "")
         );
     }
 
@@ -136,13 +136,13 @@ public final class CreateAccountServiceTest {
     @Test
     public void testCreateAccountRequestWithIpNull() {
         assertThrows(XmlErrorNoIpException.class, () ->
-                createAccountService.createAccountRequest("+15005550006", "", null)
+                accountService.createAccountRequest("+15005550006", "", null)
         );
     }
 
     private AccountRequest assertCreateAccountRequestSuccess(final String telephoneNumber, final String ip, final Instant timestamp) {
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
-        final AccountRequest accountRequest = createAccountService.createAccountRequest(telephoneNumber, "", ip, timestamp);
+        final AccountRequest accountRequest = accountService.createAccountRequest(telephoneNumber, "", ip, timestamp);
         verify(smsService).sendSms(eq(telephoneNumber), anyString());
         assertNotNull(accountRequest);
         assertNotNull(accountRequest.simlarId());
@@ -173,7 +173,7 @@ public final class CreateAccountServiceTest {
         }
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
 
-        createAccountService.createAccountRequest(telephoneNumber, "", ip);
+        accountService.createAccountRequest(telephoneNumber, "", ip);
 
         for (final String alertNumber : createAccountSettings.getAlertSmsNumbers()) {
             verify(smsService).sendSms(eq(alertNumber), anyString());
@@ -198,7 +198,7 @@ public final class CreateAccountServiceTest {
             reset(smsService);
             if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
-                assertThrows(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
+                assertThrows(XmlErrorFailedToSendSmsException.class, () -> accountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
             } else {
                 assertCreateAccountRequestSuccess(telephoneNumber);
             }
@@ -207,7 +207,7 @@ public final class CreateAccountServiceTest {
         final String simlarId = SimlarIdHelper.createSimlarId(telephoneNumber);
         final AccountCreationRequestCount before = accountCreationRepository.findBySimlarId(simlarId);
 
-        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> accountService.createAccountRequest(telephoneNumber, "", "192.168.1.1"));
 
         final AccountCreationRequestCount after = accountCreationRepository.findBySimlarId(simlarId);
         assertEquals(before.getConfirmTries(), after.getConfirmTries());
@@ -245,14 +245,14 @@ public final class CreateAccountServiceTest {
             reset(smsService);
             if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
-                assertThrows(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+                assertThrows(XmlErrorFailedToSendSmsException.class, () -> accountService.createAccountRequest(telephoneNumber, "", ip));
             } else {
                 assertCreateAccountRequestSuccess(telephoneNumber, ip);
             }
         }
 
         final String telephoneNumber = "+15005023049";
-        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> accountService.createAccountRequest(telephoneNumber, "", ip));
 
 
         /// check limit reset after an hour
@@ -274,7 +274,7 @@ public final class CreateAccountServiceTest {
             } else {
                 if (i % 2 == 0) {
                     //noinspection ObjectAllocationInLoop
-                    assertThrows(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+                    assertThrows(XmlErrorFailedToSendSmsException.class, () -> accountService.createAccountRequest(telephoneNumber, "", ip));
                 } else {
                     assertCreateAccountRequestSuccess(telephoneNumber, ip);
                 }
@@ -282,7 +282,7 @@ public final class CreateAccountServiceTest {
         }
 
         final String telephoneNumber = "+15005022149";
-        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> accountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
 
 
         /// check limit reset after an hour
@@ -306,7 +306,7 @@ public final class CreateAccountServiceTest {
             } else {
                 if (i % 2 == 0) {
                     //noinspection ObjectAllocationInLoop
-                    assertThrows(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+                    assertThrows(XmlErrorFailedToSendSmsException.class, () -> accountService.createAccountRequest(telephoneNumber, "", ip));
                 } else {
                     assertCreateAccountRequestSuccess(telephoneNumber, ip);
                 }
@@ -320,7 +320,7 @@ public final class CreateAccountServiceTest {
         }
 
         final String telephoneNumber = "+15005012149";
-        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> accountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
 
 
         /// check limit reset after a day
@@ -340,14 +340,14 @@ public final class CreateAccountServiceTest {
 
             if (i % 2 == 0) {
                 //noinspection ObjectAllocationInLoop
-                assertThrows(XmlErrorFailedToSendSmsException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", ip));
+                assertThrows(XmlErrorFailedToSendSmsException.class, () -> accountService.createAccountRequest(telephoneNumber, "", ip));
             } else {
                 assertCreateAccountRequestSuccess(telephoneNumber, ip);
             }
         }
 
         final String telephoneNumber = "+16005022140";
-        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> createAccountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
+        assertThrows(XmlErrorTooManyRequestTriesException.class, () -> accountService.createAccountRequest(telephoneNumber, "", "192.168.1.23"));
 
         /// check other numbers work
         assertCreateAccountRequestSuccess("+15005022149", "192.168.1.23");
@@ -360,7 +360,7 @@ public final class CreateAccountServiceTest {
 
     private String createAccountRequestReceiveSms(final String telephoneNumber, final Instant timestamp) {
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
-        assertNotNull(createAccountService.createAccountRequest(telephoneNumber, "", "192.168.23.42", timestamp));
+        assertNotNull(accountService.createAccountRequest(telephoneNumber, "", "192.168.23.42", timestamp));
         final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(smsService).sendSms(eq(telephoneNumber), argumentCaptor.capture());
         reset(smsService);
@@ -396,14 +396,14 @@ public final class CreateAccountServiceTest {
     private void assertCreateAccountCallSuccess(final String telephoneNumber, final String password, final Instant timestamp) {
         when(smsService.call(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
 
-        createAccountService.call(telephoneNumber, password, timestamp);
+        accountService.call(telephoneNumber, password, timestamp);
 
         verify(smsService).call(eq(telephoneNumber), anyString());
     }
 
     @SuppressWarnings("SameParameterValue")
     private void assertCreateAccountCallError(final Class<? extends XmlErrorException> error, final String telephoneNumber, final String password, final Instant timestamp) {
-        assertThrows(error, () -> createAccountService.call(telephoneNumber, password, timestamp));
+        assertThrows(error, () -> accountService.call(telephoneNumber, password, timestamp));
     }
 
     @DirtiesContext
@@ -447,11 +447,11 @@ public final class CreateAccountServiceTest {
             final String telephoneNumber = testAccount.simlarId();
             final SimlarId simlarId = SimlarId.create(telephoneNumber);
 
-            createAccountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", Instant.now());
+            accountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", Instant.now());
             assertThrows(XmlErrorWrongRegistrationCodeException.class, () ->
-                    createAccountService.confirmAccount(telephoneNumber, "112233")
+                    accountService.confirmAccount(telephoneNumber, "112233")
             );
-            createAccountService.confirmAccount(telephoneNumber, testAccount.registrationCode());
+            accountService.confirmAccount(telephoneNumber, testAccount.registrationCode());
         }
 
         verifyNoMoreInteractions(smsService);
@@ -472,23 +472,23 @@ public final class CreateAccountServiceTest {
         final int maxRequests = createAccountSettings.getMaxRequestsPerSimlarIdPerDay();
         final int maxConfirms = createAccountSettings.getMaxConfirms();
         for (int i = 0; i < maxRequests; i++) {
-            createAccountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", now.plus(createAccountSettings.getRegistrationCodeExpirationMinutes() * i * 2L, ChronoUnit.MINUTES));
+            accountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", now.plus(createAccountSettings.getRegistrationCodeExpirationMinutes() * i * 2L, ChronoUnit.MINUTES));
 
             for (int j = 0; j < maxConfirms; j++) {
                 assertThrows(XmlErrorWrongRegistrationCodeException.class, () ->
-                        createAccountService.confirmAccount(telephoneNumber, "112233")
+                        accountService.confirmAccount(telephoneNumber, "112233")
                 );
             }
             assertThrows(XmlErrorTooManyConfirmTriesException.class, () ->
-                    createAccountService.confirmAccount(telephoneNumber, registrationCode)
+                    accountService.confirmAccount(telephoneNumber, registrationCode)
             );
         }
 
         assertThrows(XmlErrorTooManyRequestTriesException.class, () ->
-            createAccountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", now.plus(1, ChronoUnit.DAYS))
+            accountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", now.plus(1, ChronoUnit.DAYS))
         );
 
-        createAccountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", now.plus(3, ChronoUnit.DAYS));
+        accountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", now.plus(3, ChronoUnit.DAYS));
 
         verifyNoMoreInteractions(smsService);
     }
