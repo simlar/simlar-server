@@ -94,11 +94,22 @@ public final class AccountService {
         return createAccountRequest(telephoneNumber, smsText, ip, Instant.now());
     }
 
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+    public boolean deleteAccountRequest(final String telephoneNumber, final String ip) {
+        accountRequest(AccountRequestType.DELETE, createValidatedSimlarId(telephoneNumber), telephoneNumber, "DELETE_EN", ip, Instant.now());
+        return true;
+    }
+
     AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip, final Instant now) {
         return createAccountRequest(createValidatedSimlarId(telephoneNumber), telephoneNumber, smsText, ip, now);
     }
 
     AccountRequest createAccountRequest(final SimlarId simlarId, final String telephoneNumber, final String smsText, final String ip, final Instant now) {
+        return accountRequest(AccountRequestType.CREATE, simlarId, telephoneNumber, smsText, ip, now);
+    }
+
+    @SuppressWarnings("MethodWithTooManyParameters")
+    private AccountRequest accountRequest(final AccountRequestType type, final SimlarId simlarId, final String telephoneNumber, final String smsText, final String ip, final Instant now) {
         if (StringUtils.isEmpty(ip)) {
             throw new XmlErrorNoIpException("request account creation with empty ip for telephone number:  " + telephoneNumber);
         }
@@ -126,7 +137,7 @@ public final class AccountService {
 
         //noinspection LocalVariableNamingConvention
         final String testAccountRegistrationCode = searchTestAccountRegistrationCode(simlarId.get());
-        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, AccountRequestType.CREATE, ip, now, testAccountRegistrationCode);
+        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, type, ip, now, testAccountRegistrationCode);
         checkRequestTriesLimit(dbEntry.getRequestTries() - 1, createAccountSettings.getMaxRequestsPerSimlarIdPerDay(),
                 String.format("too many create account requests with number '%s'", telephoneNumber));
 
@@ -152,7 +163,7 @@ public final class AccountService {
             }
         }, now.plus(WARN_TIMEOUT));
 
-        log.info("created account request for simlarId '{}'", simlarId);
+        log.info("created account request with type '{}' for simlarId '{}'", type, simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
     }
 
@@ -200,6 +211,7 @@ public final class AccountService {
             }
             dbEntry.setTimestamp(now);
             dbEntry.setIp(ip);
+            dbEntry.setType(type);
             return accountCreationRepository.save(dbEntry);
         });
     }

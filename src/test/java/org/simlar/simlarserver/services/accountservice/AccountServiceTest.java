@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.simlar.simlarserver.SimlarServer;
+import org.simlar.simlarserver.data.AccountRequestType;
 import org.simlar.simlarserver.data.DeviceType;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.models.PushNotification;
@@ -54,6 +55,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -522,5 +524,44 @@ public final class AccountServiceTest {
         assertEquals(0, subscribers.size());
 
         assertNull(pushNotificationsRepository.findBySimlarId(simlarId));
+    }
+
+    private static void assertRegExMatches(final String expectedRegEx, final CharSequence actual) {
+        assertTrue(
+                "expectedRegEx: " + expectedRegEx + " but was: " + actual,
+                Pattern.compile(expectedRegEx).matcher(actual).matches()
+        );
+    }
+
+    @Test
+    public void testDeleteAccountRequestSmsSendingFailed() {
+        assertThrows(XmlErrorFailedToSendSmsException.class, () ->
+                accountService.deleteAccountRequest("+15005510009", "192.168.23.45")
+        );
+    }
+
+    @Test
+    public void testDeleteAccountRequestSuccess() {
+        @SuppressWarnings("TooBroadScope")
+        final String telephoneNumber = "+15005510009";
+        final String simlarId = "*15005510009*";
+        when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
+
+        assertTrue(accountService.deleteAccountRequest(telephoneNumber, "192.168.23.45"));
+        final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(smsService).sendSms(eq(telephoneNumber), argumentCaptor.capture());
+        reset(smsService);
+        final String smsMessage = argumentCaptor.getValue();
+        assertRegExMatches("Simlar Deletion Code: \\d{6}", smsMessage);
+
+        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId);
+        assertEquals(simlarId, dbEntry.getSimlarId());
+        assertEquals(AccountRequestType.DELETE, dbEntry.getType());
+        assertEquals("192.168.23.45", dbEntry.getIp());
+        assertEquals(1, dbEntry.getRequestTries());
+        assertEquals(0, dbEntry.getConfirmTries());
+        assertEquals(0, dbEntry.getCalls());
+        assertEquals(14, dbEntry.getPassword().length());
+        assertRegExMatches("\\d{6}", dbEntry.getRegistrationCode());
     }
 }
