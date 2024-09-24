@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS simlar_account_creation_request (
     `simlarId` varchar(64) NOT NULL,
+    `type` varchar(64) DEFAULT NULL,
     `password` varchar(64) NOT NULL,
     `registrationCode` varchar(64) NOT NULL,
     `registrationCodeTimestamp` timestamp NOT NULL DEFAULT current_timestamp(),

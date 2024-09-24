@@ -24,6 +24,7 @@ package org.simlar.simlarserver.services.accountservice;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.simlar.simlarserver.data.AccountRequestType;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
@@ -125,7 +126,7 @@ public final class AccountService {
 
         //noinspection LocalVariableNamingConvention
         final String testAccountRegistrationCode = searchTestAccountRegistrationCode(simlarId.get());
-        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip, now, testAccountRegistrationCode);
+        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, AccountRequestType.CREATE, ip, now, testAccountRegistrationCode);
         checkRequestTriesLimit(dbEntry.getRequestTries() - 1, createAccountSettings.getMaxRequestsPerSimlarIdPerDay(),
                 String.format("too many create account requests with number '%s'", telephoneNumber));
 
@@ -178,12 +179,13 @@ public final class AccountService {
         return simlarId;
     }
 
-    private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip, final Instant now, final String registrationCode) {
+    private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final AccountRequestType type, final String ip, final Instant now, final String registrationCode) {
         return transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get());
             if (dbEntry == null) {
                 return accountCreationRepository.save(new AccountCreationRequestCount(
                         simlarId,
+                        type,
                         Password.generate(),
                         StringUtils.isNotEmpty(registrationCode) ? registrationCode : Password.generateRegistrationCode(),
                         now,
