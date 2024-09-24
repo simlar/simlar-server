@@ -299,7 +299,7 @@ public final class AccountService {
         return simlarId;
     }
 
-    public void confirmAccount(final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
+    public void confirmAccount(final String simlarIdString, final String registrationCode) {
         final SimlarId simlarId = SimlarId.create(simlarIdString);
         if (simlarId == null) {
             throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);
