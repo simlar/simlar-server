@@ -553,6 +553,7 @@ public final class AccountServiceTest {
         final String telephoneNumber = "+15005510009";
         final String simlarId = "*15005510009*";
         subscriberRepository.save(new Subscriber(simlarId, "", ""));
+        pushNotificationsRepository.save(new PushNotification(simlarId, DeviceType.ANDROID, "somePushId"));
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
 
         assertTrue(accountService.deleteAccountRequest(telephoneNumber, "192.168.23.45"));
@@ -571,6 +572,14 @@ public final class AccountServiceTest {
         assertEquals(0, dbEntry.getCalls());
         assertEquals(14, dbEntry.getPassword().length());
         assertRegExMatches("\\d{6}", dbEntry.getRegistrationCode());
+
+        accountService.confirmAccountDeletion(telephoneNumber, dbEntry.getRegistrationCode());
+
+        final List<Long> subscribers = subscriberRepository.findIdByUsernameAndDomain(simlarId, "");
+        assertEquals(0, subscribers.size());
+
+        final PushNotification pushNotification = pushNotificationsRepository.findBySimlarId(simlarId);
+        assertNull(pushNotification);
     }
 
     @Test

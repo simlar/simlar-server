@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.services.accountservice;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -299,15 +300,21 @@ public final class AccountService {
     }
 
     public void confirmAccount(final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
-        confirmAccountRequest(AccountRequestType.CREATE, simlarIdString, registrationCode);
-    }
-
-    private void confirmAccountRequest(final AccountRequestType type, final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
         final SimlarId simlarId = SimlarId.create(simlarIdString);
         if (simlarId == null) {
             throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);
         }
 
+        confirmAccountRequest(AccountRequestType.CREATE, simlarId, registrationCode);
+    }
+
+    public void confirmAccountDeletion(final String telephoneNumber, final String registrationCode) {
+        confirmAccountRequest(AccountRequestType.DELETE, createValidatedSimlarId(telephoneNumber), registrationCode);
+    }
+
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_EXCEPTION") // false positive
+    @SuppressWarnings("OverlyComplexMethod")
+    private void confirmAccountRequest(final AccountRequestType type, final SimlarId simlarId, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
         if (!checkRegistrationCodeFormat(registrationCode)) {
             throw new XmlErrorNoRegistrationCodeException("confirm account request with simlarId: " + simlarId + " and registrationCode: " + registrationCode);
         }
@@ -323,7 +330,11 @@ public final class AccountService {
         });
 
         if (creationRequest == null) {
-            throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
+            //noinspection SwitchStatement
+            switch (type) { // NOPMD.TooFewBranchesForASwitchStatement
+                case CREATE -> throw new XmlErrorNoSimlarIdException("confirm account creation request with no request in db for simlarId: " + simlarId);
+                case DELETE -> throw new XmlErrorWrongRegistrationCodeException("confirm account deletion request with no request in db for simlarId: " + simlarId);
+            }
         }
 
         final int confirmTries = creationRequest.getConfirmTries();
@@ -335,9 +346,14 @@ public final class AccountService {
             throw new XmlErrorWrongRegistrationCodeException("confirm account request with wrong registration code: " + registrationCode + " for simlarId: " + simlarId);
         }
 
-        subscriberService.save(simlarId, creationRequest.getPassword());
-
-        log.info("confirmed account with simlarId '{}'", simlarId);
+        //noinspection SwitchStatement
+        switch (type) { // NOPMD.TooFewBranchesForASwitchStatement
+            case CREATE -> {
+                subscriberService.save(simlarId, creationRequest.getPassword());
+                log.info("confirmed account with simlarId '{}'", simlarId);
+            }
+            case DELETE -> deleteAccount(simlarId);
+        }
     }
 
     private static boolean checkRegistrationCodeFormat(final CharSequence input) {
