@@ -96,7 +96,13 @@ public final class AccountService {
 
     @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
     public boolean deleteAccountRequest(final String telephoneNumber, final String ip) {
-        accountRequest(AccountRequestType.DELETE, createValidatedSimlarId(telephoneNumber), telephoneNumber, "DELETE_EN", ip, Instant.now());
+        final SimlarId simlarId = createValidatedSimlarId(telephoneNumber);
+        if (!subscriberService.isRegistered(simlarId)) {
+            log.info("skip creation of delete account request as simlarId '{}' is not registered", simlarId);
+            return false;
+        }
+
+        accountRequest(AccountRequestType.DELETE, simlarId, telephoneNumber, "DELETE_EN", ip, Instant.now());
         return true;
     }
 

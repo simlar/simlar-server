@@ -534,7 +534,13 @@ public final class AccountServiceTest {
     }
 
     @Test
+    public void testDeleteAccountRequestWithoutAccount() {
+        assertFalse(accountService.deleteAccountRequest("+15005510009", "192.168.23.45"));
+    }
+
+    @Test
     public void testDeleteAccountRequestSmsSendingFailed() {
+        subscriberRepository.save(new Subscriber("*15005510009*", "", ""));
         assertThrows(XmlErrorFailedToSendSmsException.class, () ->
                 accountService.deleteAccountRequest("+15005510009", "192.168.23.45")
         );
@@ -545,6 +551,7 @@ public final class AccountServiceTest {
         @SuppressWarnings("TooBroadScope")
         final String telephoneNumber = "+15005510009";
         final String simlarId = "*15005510009*";
+        subscriberRepository.save(new Subscriber(simlarId, "", ""));
         when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
 
         assertTrue(accountService.deleteAccountRequest(telephoneNumber, "192.168.23.45"));
