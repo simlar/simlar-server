@@ -42,6 +42,7 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorFailedToSendSmsException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorInvalidTelephoneNumberException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoIpException;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorNoSimlarIdException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyConfirmTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesException;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
@@ -570,5 +571,25 @@ public final class AccountServiceTest {
         assertEquals(0, dbEntry.getCalls());
         assertEquals(14, dbEntry.getPassword().length());
         assertRegExMatches("\\d{6}", dbEntry.getRegistrationCode());
+    }
+
+    @Test
+    public void testDeletionCodeCanNotBeUsedForCreationConfirmation() {
+        @SuppressWarnings("TooBroadScope")
+        final String telephoneNumber = "+15005510009";
+        final String simlarId = "*15005510009*";
+        subscriberRepository.save(new Subscriber(simlarId, "", ""));
+        when(smsService.sendSms(eq(telephoneNumber), anyString())).thenReturn(Boolean.TRUE);
+
+        assertTrue(accountService.deleteAccountRequest(telephoneNumber, "192.168.23.45"));
+        reset(smsService);
+
+        final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarId(simlarId);
+        assertEquals(AccountRequestType.DELETE, dbEntry.getType());
+        final String deletionCode = dbEntry.getRegistrationCode();
+
+        assertThrows(XmlErrorNoSimlarIdException.class, () ->
+                accountService.confirmAccount(simlarId, deletionCode)
+        );
     }
 }

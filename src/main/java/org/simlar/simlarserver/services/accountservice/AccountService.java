@@ -299,6 +299,10 @@ public final class AccountService {
     }
 
     public void confirmAccount(final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
+        confirmAccountRequest(AccountRequestType.CREATE, simlarIdString, registrationCode);
+    }
+
+    private void confirmAccountRequest(final AccountRequestType type, final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
         final SimlarId simlarId = SimlarId.create(simlarIdString);
         if (simlarId == null) {
             throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);
@@ -310,7 +314,7 @@ public final class AccountService {
 
         final AccountCreationRequestCount creationRequest = transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get());
-            if (dbEntry == null) {
+            if (dbEntry == null || dbEntry.getType() != type) {
                 return null;
             }
 
