@@ -21,11 +21,16 @@
 
 package org.simlar.simlarserver.webcontrollers.deleteaccountcontroller;
 
+import jakarta.servlet.ServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.simlar.simlarserver.services.accountservice.AccountService;
+import org.simlar.simlarserver.webcontrollers.deleteaccountcontroller.models.DeleteAccountRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @SuppressWarnings({"SameReturnValue", "ClassWithTooManyTransitiveDependencies"})
 @AllArgsConstructor
@@ -33,9 +38,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 final class DeleteAccountController {
     public static final String REQUEST_PATH_REQUEST = "/delete-account/request";
+    public static final String REQUEST_PATH_CONFIRM = "/delete-account/confirm";
+
+    private final AccountService accountService;
 
     @GetMapping(REQUEST_PATH_REQUEST)
     public static String requestForm(final Model model) {
+        model.addAttribute("request", new DeleteAccountRequest());
         return "delete-account/request";
+    }
+
+    @PostMapping(REQUEST_PATH_CONFIRM)
+    public String requestSubmit(final ServletRequest request, @ModelAttribute final DeleteAccountRequest deleteAccountRequest, final Model model) {
+        log.info("account deletion request with telephoneNumber '{}'", deleteAccountRequest.getTelephoneNumber());
+        accountService.deleteAccountRequest(deleteAccountRequest.getTelephoneNumber(), request.getRemoteAddr());
+        return "delete-account/confirm";
     }
 }
