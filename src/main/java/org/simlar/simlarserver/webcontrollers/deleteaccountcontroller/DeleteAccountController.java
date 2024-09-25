@@ -62,6 +62,7 @@ final class DeleteAccountController {
     public String confirmSubmit(@ModelAttribute final DeleteAccountConfirm deleteAccountConfirm, final Model model) {
         log.info("account deletion confirm with telephoneNumber '{}' and code '{}'", deleteAccountConfirm.getTelephoneNumber(), deleteAccountConfirm.getDeletionCode());
         accountService.confirmAccountDeletion(deleteAccountConfirm.getTelephoneNumber(), deleteAccountConfirm.getDeletionCode());
+        model.addAttribute("telephoneNumber", deleteAccountConfirm.getTelephoneNumber());
         return "delete-account/result";
     }
 }

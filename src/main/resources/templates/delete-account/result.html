@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simlar Account Deletion</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <img src="logo.svg" alt="Simlar Logo" class="image-logo">
+    <h2>Simlar Account Deletion</h2>
+
+    <h4>Success</h4>
+    <p th:if="${telephoneNumber}" th:text="|The account with the telephone number ${telephoneNumber} has been deleted successfully.|"></p>
+    <p th:unless="${telephoneNumber}">The account has been deleted successfully.</p>
+</body>
+</html>
