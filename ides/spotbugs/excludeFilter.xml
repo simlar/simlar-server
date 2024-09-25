@@ -10,7 +10,16 @@
     </Match>
     <Match>
         <Bug pattern="SPRING_ENDPOINT"/>
-        <Class name="~org\.simlar\.simlarserver\.controllers\.[^\.]*Controller$"/>
+        <or>
+            <Class name="~org\.simlar\.simlarserver\.controllers\.[^\.]*Controller$"/>
+            <Class name="~org\.simlar\.simlarserver\.webcontrollers\.[^\.]*.[^\.]*Controller$"/>
+        </or>
+    </Match>
+    <Match>
+        <Bug pattern="MRC_METHOD_RETURNS_CONSTANT"/>
+        <or>
+            <Class name="~org\.simlar\.simlarserver\.webcontrollers\.[^\.]*.[^\.]*Controller$"/>
+        </or>
     </Match>
     <Match>
         <Bug pattern="IMC_IMMATURE_CLASS_NO_TOSTRING, PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS, CE_CLASS_ENVY"/>
