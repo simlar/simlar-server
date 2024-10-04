@@ -34,6 +34,7 @@ import org.simlar.simlarserver.utils.SimlarIdHelper;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
+import org.simlar.simlarserver.xml.XmlSuccessDeleteAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -41,6 +42,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -452,7 +454,7 @@ public final class AccountControllerTest extends BaseControllerTest {
         assertCompleteAccountCreation(telephoneNumber);
     }
 
-    private void assertCompleteAccountCreation(final String telephoneNumber) {
+    private String assertCompleteAccountCreation(final String telephoneNumber) {
         final SimlarId simlarId = SimlarId.createWithTelephoneNumber(telephoneNumber);
         assertNotNull(simlarId);
 
@@ -468,11 +470,49 @@ public final class AccountControllerTest extends BaseControllerTest {
         assertEquals(dbEntry.getRegistrationCode(), response.getRegistrationCode());
 
         // check
-        assertTrue(subscriberService.checkCredentials(simlarId.get(), new Subscriber(simlarId.get(), "", password).getHa1()));
+        final String hashedPassword = new Subscriber(simlarId.get(), "", password).getHa1();
+        assertTrue(subscriberService.checkCredentials(simlarId.get(), hashedPassword));
+
+        return hashedPassword;
     }
 
     @Test
     public void testCompleteAccountCreation() {
         assertCompleteAccountCreation("+15005042023");
+    }
+
+    @Test
+    public void testAccountDeletionWithUnknownLogin() {
+        final XmlError error = postRequest(XmlError.class, AccountController.REQUEST_PATH_DELETE, createParameters(new String[][] {
+                { "login", "*15005042024*" },
+                { "password", "wrongPassword" }
+        }));
+        assertNotNull(error);
+        assertEquals(10, error.getId());
+    }
+
+    @Test
+    public void testAccountDeletion() {
+        final SimlarId simlarId = SimlarId.create("*15005042024*");
+        assertNotNull(simlarId);
+        final String telephoneNumber = "+15005042024";
+
+        final String password = assertCompleteAccountCreation(telephoneNumber);
+        assertTrue(subscriberService.isRegistered(simlarId));
+
+        final XmlError error = postRequest(XmlError.class, AccountController.REQUEST_PATH_DELETE, createParameters(new String[][] {
+                { "login", simlarId.get() },
+                { "password", "wrongPassword" }
+        }));
+        assertNotNull(error);
+        assertEquals(10, error.getId());
+
+        final XmlSuccessDeleteAccount response = postRequest(XmlSuccessDeleteAccount.class, AccountController.REQUEST_PATH_DELETE, createParameters(new String[][] {
+                { "login", simlarId.get() },
+                { "password", password }
+        }));
+        assertEquals(simlarId.get(), response.getSimlarId());
+
+        assertFalse(subscriberService.isRegistered(simlarId));
     }
 }
