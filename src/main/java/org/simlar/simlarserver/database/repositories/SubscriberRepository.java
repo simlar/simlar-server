@@ -24,6 +24,7 @@ package org.simlar.simlarserver.database.repositories;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -38,4 +39,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 
     @Query("SELECT username FROM Subscriber WHERE domain = ?1 AND username IN ?2")
     List<String> findUsernameByDomainAndUsernameIn(final String domain, final Set<String> usernames);
+
+    @Transactional
+    void deleteByUsernameAndDomain(final String username, final String domain);
 }
