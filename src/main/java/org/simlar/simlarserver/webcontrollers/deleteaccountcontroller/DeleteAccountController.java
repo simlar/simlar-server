@@ -25,6 +25,7 @@ import jakarta.servlet.ServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.accountservice.AccountService;
+import org.simlar.simlarserver.webcontrollers.deleteaccountcontroller.models.DeleteAccountConfirm;
 import org.simlar.simlarserver.webcontrollers.deleteaccountcontroller.models.DeleteAccountRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 final class DeleteAccountController {
     public static final String REQUEST_PATH_REQUEST = "/delete-account/request";
     public static final String REQUEST_PATH_CONFIRM = "/delete-account/confirm";
+    public static final String REQUEST_PATH_RESULT  = "/delete-account/result";
 
     private final AccountService accountService;
 
@@ -52,6 +54,14 @@ final class DeleteAccountController {
     public String requestSubmit(final ServletRequest request, @ModelAttribute final DeleteAccountRequest deleteAccountRequest, final Model model) {
         log.info("account deletion request with telephoneNumber '{}'", deleteAccountRequest.getTelephoneNumber());
         accountService.deleteAccountRequest(deleteAccountRequest.getTelephoneNumber(), request.getRemoteAddr());
+        model.addAttribute("confirm", new DeleteAccountConfirm(deleteAccountRequest.getTelephoneNumber(), null));
         return "delete-account/confirm";
+    }
+
+    @PostMapping(REQUEST_PATH_RESULT)
+    public String confirmSubmit(@ModelAttribute final DeleteAccountConfirm deleteAccountConfirm, final Model model) {
+        log.info("account deletion confirm with telephoneNumber '{}' and code '{}'", deleteAccountConfirm.getTelephoneNumber(), deleteAccountConfirm.getDeletionCode());
+        accountService.confirmAccountDeletion(deleteAccountConfirm.getTelephoneNumber(), deleteAccountConfirm.getDeletionCode());
+        return "delete-account/result";
     }
 }
