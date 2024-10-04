@@ -22,13 +22,17 @@
 package org.simlar.simlarserver.webcontrollers.deleteaccountcontroller;
 
 import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.simlar.simlarserver.services.accountservice.AccountService;
+import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.simlar.simlarserver.webcontrollers.deleteaccountcontroller.models.DeleteAccountConfirm;
 import org.simlar.simlarserver.webcontrollers.deleteaccountcontroller.models.DeleteAccountRequest;
+import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,5 +68,13 @@ final class DeleteAccountController {
         accountService.confirmAccountDeletion(deleteAccountConfirm.getTelephoneNumber(), deleteAccountConfirm.getDeletionCode());
         model.addAttribute("telephoneNumber", deleteAccountConfirm.getTelephoneNumber());
         return "delete-account/result";
+    }
+
+    @ExceptionHandler(XmlErrorException.class)
+    public static String handleXmlErrorException(final HttpServletRequest request, final XmlErrorException xmlErrorException, final Model model) {
+        final String message = XmlErrorExceptionMessage.fromException(xmlErrorException.getClass()).getMessage();
+        log.warn("'{}' => XmlError('{}') {} with request='{}'", xmlErrorException.getClass().getSimpleName(), message, xmlErrorException.getMessage(), new RequestLogMessage(request));
+        model.addAttribute("message", message);
+        return "delete-account/error";
     }
 }
