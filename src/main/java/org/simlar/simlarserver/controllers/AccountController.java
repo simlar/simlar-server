@@ -40,7 +40,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Slf4j
 @RestController
-final class CreateAccountController {
+final class AccountController {
     public static final String REQUEST_PATH      = "/create-account.xml";
     public static final String REQUEST_PATH_CALL = "/create-account-call.xml";
     public static final String COMMAND_REQUEST   = "request";
