@@ -26,8 +26,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.simlar.simlarserver.SimlarServer;
+import org.simlar.simlarserver.data.DeviceType;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
+import org.simlar.simlarserver.database.models.PushNotification;
+import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
+import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
+import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.utils.SimlarIdHelper;
@@ -54,6 +59,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -90,6 +96,12 @@ public final class AccountServiceTest {
 
     @Autowired
     private AccountCreationRequestCountRepository accountCreationRepository;
+
+    @Autowired
+    private SubscriberRepository subscriberRepository;
+
+    @Autowired
+    private PushNotificationsRepository pushNotificationsRepository;
 
 
     @SuppressFBWarnings("UTAO_JUNIT_ASSERTION_ODDITIES_NO_ASSERT")
@@ -491,5 +503,24 @@ public final class AccountServiceTest {
         accountService.createAccountRequest(simlarId, telephoneNumber, "", "192.168.23.42", now.plus(3, ChronoUnit.DAYS));
 
         verifyNoMoreInteractions(smsService);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteAccountWithNoSimlarId() {
+        accountService.deleteAccount(SimlarId.create(null));
+    }
+
+    @Test
+    public void testDeleteAccount() {
+        final String simlarId = "*15005510009*";
+        subscriberRepository.save(new Subscriber(simlarId, "", ""));
+        pushNotificationsRepository.save(new PushNotification(simlarId, DeviceType.ANDROID, "somePushId"));
+
+        accountService.deleteAccount(SimlarId.create(simlarId));
+
+        final List<Long> subscribers = subscriberRepository.findIdByUsernameAndDomain(simlarId, "");
+        assertEquals(0, subscribers.size());
+
+        assertNull(pushNotificationsRepository.findBySimlarId(simlarId));
     }
 }
