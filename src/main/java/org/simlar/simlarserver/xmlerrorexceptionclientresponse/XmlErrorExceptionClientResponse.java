@@ -68,7 +68,7 @@ public enum XmlErrorExceptionClientResponse {
         REQUESTED_TOO_MANY_CONTACTS(XmlErrorRequestedTooManyContactsException.class,        50, "You have requested too many contacts. Try again in 24 hours."),
         NO_CALL_SESSION            (XmlErrorNoCallSessionException.class,                   64, "unknown call session"),
         FAILED_TO_TRIGGER_CALL     (XmlErrorFailedToTriggerCallException.class,             65, "failed to call you"),
-        CALL_NPT_ALLOWED_ATM       (XmlErrorCallNotAllowedAtTheMomentException.class,       68, "call not allowed at the moment"),
+        CALL_NOT_ALLOWED_ATM       (XmlErrorCallNotAllowedAtTheMomentException.class,       68, "call not allowed at the moment"),
         PUSH_NOTIFICATION_FAILED   (XmlErrorFailedToRequestPushNotificationException.class, 98, "failed to request push notification")
     ;
 
