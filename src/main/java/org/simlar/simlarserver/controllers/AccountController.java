@@ -40,6 +40,7 @@ import jakarta.servlet.ServletRequest;
 
 import java.util.Objects;
 
+@SuppressWarnings("ClassWithTooManyTransitiveDependencies")
 @AllArgsConstructor
 @Slf4j
 @RestController
