@@ -48,4 +48,16 @@
         <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
         <vulnerabilityName>CVE-2023-35116</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file names:
+                  jaxb-core-4.0.5.jar
+                  jaxb-runtime-4.0.5.jar
+                  txw2-4.0.5.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org\.glassfish\.jaxb/.*$</packageUrl>
+        <cve>CVE-2024-9329</cve>
+    </suppress>
 </suppressions>
