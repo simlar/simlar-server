@@ -36,7 +36,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.time.Instant;
 
-@SuppressWarnings("ClassWithTooManyMethods")
 @NoArgsConstructor
 @Getter
 @Setter

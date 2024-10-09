@@ -37,6 +37,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("unused")
 @AllArgsConstructor
 @Slf4j
 @Component
