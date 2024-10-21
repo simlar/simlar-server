@@ -54,6 +54,8 @@ dependencies {
 
     //noinspection GradlePackageVersionRange, GradlePackageUpdate /// managed by spring boot bom
     implementation("org.springframework.boot:spring-boot-starter-web-services")
+    /// TODO: remove this once spring boot bom passes owasp checker
+    implementation("org.springframework:spring-webmvc:6.1.14")
     //noinspection GradlePackageVersionRange, GradlePackageUpdate /// managed by spring boot bom
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.apache.commons:commons-lang3:3.17.0")
