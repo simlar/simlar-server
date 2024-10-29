@@ -153,4 +153,17 @@ public final class SubscriberServiceTest {
             assertTrue(subscriberService.checkCredentials(user.getSimlarId(), user.getPasswordHash()));
         }
     }
+
+    @Test
+    public void testIsRegisteredWithNoSimlarId() {
+        assertFalse(subscriberService.isRegistered(null));
+    }
+
+    @Test
+    public void testIsRegistered() {
+        final SimlarId simlarId = SimlarId.create("*2003*");
+        assertFalse(subscriberService.isRegistered(simlarId));
+        subscriberService.save(simlarId, "somePassword");
+        assertTrue(subscriberService.isRegistered(simlarId));
+    }
 }

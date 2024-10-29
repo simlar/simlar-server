@@ -90,6 +90,10 @@ public final class SubscriberService {
         return ids.get(0);
     }
 
+    public boolean isRegistered(final SimlarId simlarId) {
+        return simlarId != null && findSubscriberId(simlarId) != null;
+    }
+
     public boolean checkCredentials(final String simlarId, final String ha1) {
         return checkCredentials(SimlarId.create(simlarId), ha1);
     }
