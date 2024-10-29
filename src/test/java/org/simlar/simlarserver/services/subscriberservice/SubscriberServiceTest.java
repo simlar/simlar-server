@@ -166,4 +166,20 @@ public final class SubscriberServiceTest {
         subscriberService.save(simlarId, "somePassword");
         assertTrue(subscriberService.isRegistered(simlarId));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteBySimlarIdWithNoSimlarId() {
+        subscriberService.deleteBySimlarId(null);
+    }
+
+    @Test
+    public void testDeleteBySimlarId() {
+        final SimlarId simlarId = SimlarId.create("*2004*");
+
+        subscriberService.save(simlarId, "somePassword");
+        assertTrue(subscriberService.isRegistered(simlarId));
+
+        subscriberService.deleteBySimlarId(simlarId);
+        assertFalse(subscriberService.isRegistered(simlarId));
+    }
 }

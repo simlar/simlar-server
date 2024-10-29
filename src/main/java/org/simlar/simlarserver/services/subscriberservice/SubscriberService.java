@@ -141,4 +141,12 @@ public final class SubscriberService {
                 .map(SimlarId::create)
                 .toList();
     }
+
+    public void deleteBySimlarId(final SimlarId simlarId) {
+        if (simlarId == null) {
+            throw new IllegalArgumentException("simlarId=" + null);
+        }
+
+        subscriberRepository.deleteByUsernameAndDomain(simlarId.get(), sharedSettings.domain());
+    }
 }
