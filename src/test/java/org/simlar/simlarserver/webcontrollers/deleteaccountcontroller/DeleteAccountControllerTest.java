@@ -58,6 +58,18 @@ public final class DeleteAccountControllerTest {
     }
 
     @Test
+    public void testSubmitRequestSuccessWithSpacesInTelephoneNumber() throws Exception {
+        final String telephoneNumber = " + 49 \t 176   123 4567 8 ";
+        mockMvc.perform(post(DeleteAccountController.REQUEST_PATH_CONFIRM).param("telephoneNumber", telephoneNumber))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Step 2: Confirm Account Deletion")))
+                .andExpect(content().string(containsString(telephoneNumber)))
+                .andExpect(content().string(containsString("Deletion Code")))
+                .andExpect(content().string(containsString("<input type=\"submit\" value=\"Confirm Deletion\">")));
+        verify(accountService).deleteAccountRequest(eq("+4917612345678"), eq("127.0.0.1")); //NOPMD.AvoidUsingHardCodedIP
+    }
+
+    @Test
     public void testSubmitRequestError() throws Exception {
         when(accountService.deleteAccountRequest(anyString(), anyString())).thenThrow(XmlErrorFailedToSendSmsException.class);
         mockMvc.perform(post(DeleteAccountController.REQUEST_PATH_CONFIRM).param("telephoneNumber", "+4917612345678"))
@@ -73,6 +85,16 @@ public final class DeleteAccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Success")))
                 .andExpect(content().string(containsString("The account with the telephone number +4917612345678 has been deleted successfully.")));
+        verify(accountService).confirmAccountDeletion(eq("+4917612345678"), eq("123456"));
+    }
+
+    @Test
+    public void testSubmitConfirmSuccessWithSpacesInTelephoneNumber() throws Exception {
+        final String telephoneNumber = " + 49 \t 176   123 4567 8 ";
+        mockMvc.perform(post(DeleteAccountController.REQUEST_PATH_RESULT).param("telephoneNumber", telephoneNumber).param("deletionCode", "123456"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Success")))
+                .andExpect(content().string(containsString("The account with the telephone number " + telephoneNumber + " has been deleted successfully.")));
         verify(accountService).confirmAccountDeletion(eq("+4917612345678"), eq("123456"));
     }
 

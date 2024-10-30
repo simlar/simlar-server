@@ -25,6 +25,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.services.accountservice.AccountService;
 import org.simlar.simlarserver.utils.RequestLogMessage;
 import org.simlar.simlarserver.webcontrollers.deleteaccountcontroller.models.DeleteAccountConfirm;
@@ -57,7 +58,7 @@ final class DeleteAccountController {
     @PostMapping(REQUEST_PATH_CONFIRM)
     public String requestSubmit(final ServletRequest request, @ModelAttribute final DeleteAccountRequest deleteAccountRequest, final Model model) {
         log.info("account deletion request with telephoneNumber '{}'", deleteAccountRequest.getTelephoneNumber());
-        accountService.deleteAccountRequest(deleteAccountRequest.getTelephoneNumber(), request.getRemoteAddr());
+        accountService.deleteAccountRequest(StringUtils.deleteWhitespace(deleteAccountRequest.getTelephoneNumber()), request.getRemoteAddr());
         model.addAttribute("confirm", new DeleteAccountConfirm(deleteAccountRequest.getTelephoneNumber(), null));
         return "delete-account/confirm";
     }
@@ -65,7 +66,7 @@ final class DeleteAccountController {
     @PostMapping(REQUEST_PATH_RESULT)
     public String confirmSubmit(@ModelAttribute final DeleteAccountConfirm deleteAccountConfirm, final Model model) {
         log.info("account deletion confirm with telephoneNumber '{}' and code '{}'", deleteAccountConfirm.getTelephoneNumber(), deleteAccountConfirm.getDeletionCode());
-        accountService.confirmAccountDeletion(deleteAccountConfirm.getTelephoneNumber(), deleteAccountConfirm.getDeletionCode());
+        accountService.confirmAccountDeletion(StringUtils.deleteWhitespace(deleteAccountConfirm.getTelephoneNumber()), deleteAccountConfirm.getDeletionCode());
         model.addAttribute("telephoneNumber", deleteAccountConfirm.getTelephoneNumber());
         return "delete-account/result";
     }
