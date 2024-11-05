@@ -505,7 +505,7 @@ public final class AccountServiceTest {
         verifyNoMoreInteractions(smsService);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testDeleteAccountWithNoSimlarId() {
         accountService.deleteAccount(SimlarId.create(null));
     }

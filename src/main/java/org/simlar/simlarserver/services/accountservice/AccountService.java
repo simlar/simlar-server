@@ -321,9 +321,7 @@ public final class AccountService {
     }
 
     public void deleteAccount(final SimlarId simlarId) {
-        if (simlarId == null) {
-            throw new IllegalArgumentException("simlarId=" + null);
-        }
+        Objects.requireNonNull(simlarId, "simlarId=" + null);
 
         subscriberService.deleteBySimlarId(simlarId);
         pushNotificationsRepository.deleteBySimlarId(simlarId.get());
