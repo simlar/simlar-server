@@ -167,7 +167,7 @@ public final class SubscriberServiceTest {
         assertTrue(subscriberService.isRegistered(simlarId));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void testDeleteBySimlarIdWithNoSimlarId() {
         subscriberService.deleteBySimlarId(null);
     }

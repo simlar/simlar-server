@@ -43,6 +43,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -143,9 +144,7 @@ public final class SubscriberService {
     }
 
     public void deleteBySimlarId(final SimlarId simlarId) {
-        if (simlarId == null) {
-            throw new IllegalArgumentException("simlarId=" + null);
-        }
+        Objects.requireNonNull(simlarId, "simlarId=" + null);
 
         subscriberRepository.deleteByUsernameAndDomain(simlarId.get(), sharedSettings.domain());
     }
