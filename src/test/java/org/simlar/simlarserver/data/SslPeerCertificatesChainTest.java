@@ -49,6 +49,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -102,9 +103,7 @@ public final class SslPeerCertificatesChainTest {
 
         @SuppressFBWarnings("WEM_WEAK_EXCEPTION_MESSAGING")
         ReadableCertificate(final Certificate certificate) {
-            if (certificate == null) {
-                throw new IllegalArgumentException("certificate null");
-            }
+            Objects.requireNonNull(certificate, "certificate=" + null);
 
             if (!(certificate instanceof X509Certificate)) {
                 throw new IllegalArgumentException("certificate of unknown type '" + certificate.getType() + '\'');
