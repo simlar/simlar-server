@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Simlar Authors.
+ * Copyright (C) 2017 The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,16 +19,11 @@
  *
  */
 
-package org.simlar.simlarserver.database.repositories;
+package org.simlar.simlarserver.services.accountservice;
 
-import org.simlar.simlarserver.database.models.PushNotification;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
+import org.simlar.simlarserver.utils.SimlarId;
 
-@SuppressWarnings({"SameParameterValue", "unused", "InterfaceNeverImplemented", "MethodReturnAlwaysConstant", "RedundantSuppression"})
-public interface PushNotificationsRepository extends CrudRepository<PushNotification, String> {
-    PushNotification findBySimlarId(final String simlarId);
-
-    @Transactional
-    void deleteBySimlarId(final String simlarId);
+public record AccountRequest(
+        SimlarId simlarId,
+        String password) {
 }

@@ -153,4 +153,33 @@ public final class SubscriberServiceTest {
             assertTrue(subscriberService.checkCredentials(user.getSimlarId(), user.getPasswordHash()));
         }
     }
+
+    @Test
+    public void testIsRegisteredWithNoSimlarId() {
+        assertFalse(subscriberService.isRegistered(null));
+    }
+
+    @Test
+    public void testIsRegistered() {
+        final SimlarId simlarId = SimlarId.create("*2003*");
+        assertFalse(subscriberService.isRegistered(simlarId));
+        subscriberService.save(simlarId, "somePassword");
+        assertTrue(subscriberService.isRegistered(simlarId));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testDeleteBySimlarIdWithNoSimlarId() {
+        subscriberService.deleteBySimlarId(null);
+    }
+
+    @Test
+    public void testDeleteBySimlarId() {
+        final SimlarId simlarId = SimlarId.create("*2004*");
+
+        subscriberService.save(simlarId, "somePassword");
+        assertTrue(subscriberService.isRegistered(simlarId));
+
+        subscriberService.deleteBySimlarId(simlarId);
+        assertFalse(subscriberService.isRegistered(simlarId));
+    }
 }

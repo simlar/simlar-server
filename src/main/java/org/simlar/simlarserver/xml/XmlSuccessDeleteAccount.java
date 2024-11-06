@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Simlar Authors.
+ * Copyright The Simlar Authors.
  *
  * This file is part of Simlar. (https://www.simlar.org)
  *
@@ -19,11 +19,33 @@
  *
  */
 
-package org.simlar.simlarserver.services.createaccountservice;
+package org.simlar.simlarserver.xml;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.simlar.simlarserver.utils.SimlarId;
 
-public record AccountRequest(
-        SimlarId simlarId,
-        String password) {
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "success")
+public final class XmlSuccessDeleteAccount {
+    public XmlSuccessDeleteAccount(final SimlarId simlarId) {
+        this.simlarId = simlarId == null ? "" : simlarId.get();
+    }
+
+    @XmlAttribute
+    private String simlarId;
 }

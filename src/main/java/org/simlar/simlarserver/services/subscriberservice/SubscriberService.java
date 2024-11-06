@@ -43,6 +43,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -88,6 +89,10 @@ public final class SubscriberService {
         }
 
         return ids.get(0);
+    }
+
+    public boolean isRegistered(final SimlarId simlarId) {
+        return simlarId != null && findSubscriberId(simlarId) != null;
     }
 
     public boolean checkCredentials(final String simlarId, final String ha1) {
@@ -136,5 +141,11 @@ public final class SubscriberService {
                 .flatMap(List::stream)
                 .map(SimlarId::create)
                 .toList();
+    }
+
+    public void deleteBySimlarId(final SimlarId simlarId) {
+        Objects.requireNonNull(simlarId, "simlarId=" + null);
+
+        subscriberRepository.deleteByUsernameAndDomain(simlarId.get(), sharedSettings.domain());
     }
 }

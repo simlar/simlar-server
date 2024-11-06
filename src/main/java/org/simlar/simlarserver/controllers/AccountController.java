@@ -23,11 +23,13 @@ package org.simlar.simlarserver.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.simlar.simlarserver.services.createaccountservice.AccountRequest;
-import org.simlar.simlarserver.services.createaccountservice.CreateAccountService;
+import org.simlar.simlarserver.services.accountservice.AccountRequest;
+import org.simlar.simlarserver.services.accountservice.AccountService;
+import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountConfirm;
 import org.simlar.simlarserver.xml.XmlSuccessCreateAccountRequest;
+import org.simlar.simlarserver.xml.XmlSuccessDeleteAccount;
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorUnknownStructureException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,18 +37,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.ServletRequest;
+
 import java.util.Objects;
 
 @AllArgsConstructor
 @Slf4j
 @RestController
-final class CreateAccountController {
-    public static final String REQUEST_PATH      = "/create-account.xml";
-    public static final String REQUEST_PATH_CALL = "/create-account-call.xml";
-    public static final String COMMAND_REQUEST   = "request";
-    public static final String COMMAND_CONFIRM   = "confirm";
+final class AccountController {
+    public static final String REQUEST_PATH        = "/create-account.xml";
+    public static final String REQUEST_PATH_CALL   = "/create-account-call.xml";
+    public static final String COMMAND_REQUEST     = "request";
+    public static final String COMMAND_CONFIRM     = "confirm";
+    public static final String REQUEST_PATH_DELETE = "/delete-account.xml";
 
-    private final CreateAccountService createAccountService;
+    private final AccountService accountService;
+    private final SubscriberService subscriberService;
 
     /**
      * This method handles http post requests. You may test it with:
@@ -75,7 +80,7 @@ final class CreateAccountController {
             throw new XmlErrorUnknownStructureException("create account request with command: " + command);
         }
 
-        final AccountRequest accountRequest = createAccountService.createAccountRequest(telephoneNumber, smsText, request.getRemoteAddr());
+        final AccountRequest accountRequest = accountService.createAccountRequest(telephoneNumber, smsText, request.getRemoteAddr());
 
         return new XmlSuccessCreateAccountRequest(accountRequest.simlarId().get(), accountRequest.password());
     }
@@ -98,7 +103,7 @@ final class CreateAccountController {
     public XmlSuccessCreateAccountRequest createAccountCall(@RequestParam final String telephoneNumber, @RequestParam final String password) {
         log.info("'{}' requested with telephoneNumber= '{}'", REQUEST_PATH_CALL, telephoneNumber);
 
-        final SimlarId simlarId = createAccountService.call(telephoneNumber, password);
+        final SimlarId simlarId = accountService.call(telephoneNumber, password);
 
         return new XmlSuccessCreateAccountRequest(simlarId.get(), password);
     }
@@ -127,8 +132,34 @@ final class CreateAccountController {
             throw new XmlErrorUnknownStructureException("confirm account request with command: " + command);
         }
 
-        createAccountService.confirmAccount(simlarId, registrationCode);
+        accountService.confirmAccount(simlarId, registrationCode);
 
         return new XmlSuccessCreateAccountConfirm(simlarId, registrationCode);
+    }
+
+    /**
+     * This method handles http post requests. You may test it with:
+     * <blockquote>
+     * curl --data "login=*0001*&password=5c3d66f5a3928cca2821d711a2c016bb" http://localhost:8080/delete-account.xml
+     * </blockquote>
+     *
+     * @param login
+     *            the requesting user's simlarId
+     * @param password
+     *            the hash of the requesting user's password
+     *            md5(simlarId + ":" + domain + ":" + password);
+     *
+     * @return XmlError or XmlSuccessDeleteAccount
+     *            error message or success message containing simlarId
+     */
+    @PostMapping(value = REQUEST_PATH_DELETE, produces = MediaType.APPLICATION_XML_VALUE)
+    public XmlSuccessDeleteAccount deleteAccount(@RequestParam final String login, @RequestParam final String password) {
+        log.info("'{}' requested with login '{}'", REQUEST_PATH_DELETE, login);
+        subscriberService.checkCredentialsWithException(login, password);
+
+        final SimlarId simlarId = SimlarId.create(login);
+        accountService.deleteAccount(simlarId);
+
+        return new XmlSuccessDeleteAccount(simlarId);
     }
 }

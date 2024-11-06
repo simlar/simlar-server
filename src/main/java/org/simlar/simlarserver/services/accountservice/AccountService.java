@@ -19,13 +19,14 @@
  *
  */
 
-package org.simlar.simlarserver.services.createaccountservice;
+package org.simlar.simlarserver.services.accountservice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
+import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
 import org.simlar.simlarserver.services.smsservice.SmsService;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.utils.CallText;
@@ -55,9 +56,10 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("ClassWithTooManyDependencies")
 @Slf4j
 @Component
-public final class CreateAccountService {
+public final class AccountService {
     private static final Duration WARN_TIMEOUT = Duration.ofSeconds(180);
     private static final Pattern REGEX_REGISTRATION_CODE = Pattern.compile("\\d{" + Password.REGISTRATION_CODE_LENGTH + '}');
 
@@ -67,16 +69,18 @@ public final class CreateAccountService {
     private final SubscriberService subscriberService;
     private final TransactionTemplate transactionTemplate;
     private final TaskScheduler taskScheduler;
+    private final PushNotificationsRepository pushNotificationsRepository;
 
     @SuppressWarnings("ConstructorWithTooManyParameters")
     @Autowired // fix IntelliJ inspection warning unused
-    private CreateAccountService(final SmsService smsService, final CreateAccountSettings createAccountSettings, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler) {
+    private AccountService(final SmsService smsService, final CreateAccountSettings createAccountSettings, final AccountCreationRequestCountRepository accountCreationRepository, final SubscriberService subscriberService, final PlatformTransactionManager transactionManager, final TaskScheduler taskScheduler, final PushNotificationsRepository pushNotificationsRepository) {
         this.smsService = smsService;
         this.createAccountSettings = createAccountSettings;
         this.accountCreationRepository = accountCreationRepository;
         this.subscriberService = subscriberService;
         transactionTemplate = new TransactionTemplate(transactionManager);
         this.taskScheduler = taskScheduler;
+        this.pushNotificationsRepository = pushNotificationsRepository;
 
         for (final RegionalSettings regional : createAccountSettings.getRegionalSettings()) {
             log.info("regional setting region code '{}' with max requests per hour '{}'", regional.regionCode(), regional.maxRequestsPerHour());
@@ -314,5 +318,13 @@ public final class CreateAccountService {
 
     private static boolean checkRegistrationCodeFormat(final CharSequence input) {
         return input != null && REGEX_REGISTRATION_CODE.matcher(input).matches();
+    }
+
+    public void deleteAccount(final SimlarId simlarId) {
+        Objects.requireNonNull(simlarId, "simlarId=" + null);
+
+        subscriberService.deleteBySimlarId(simlarId);
+        pushNotificationsRepository.deleteBySimlarId(simlarId.get());
+        log.info("deleted account with simlarId '{}'", simlarId);
     }
 }
