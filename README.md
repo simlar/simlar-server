@@ -96,3 +96,4 @@ However, caching gradle downloads speeds up the build, and some security options
 ```
 docker run --cap-drop all --security-opt=no-new-privileges --rm -v $(pwd)-docker-gradle-cache:/home/builder/.gradle -v $(pwd):/pwd -e SIMLAR_NVD_API_KEY simlar-server-builder:latest bash -c "cd /pwd && ./gradlew --no-daemon --warning-mode all clean build dependencyUpdates dependencyCheckAnalyze"
 ```
+When using podman add ```--userns=keep-id``` to the ```run``` commands.

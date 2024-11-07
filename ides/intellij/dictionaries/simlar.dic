@@ -38,6 +38,7 @@ parsable
 pinner
 pipefail
 pkcs
+podman
 prmc
 readlink
 redistributors
