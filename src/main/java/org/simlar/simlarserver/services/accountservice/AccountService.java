@@ -118,7 +118,7 @@ public final class AccountService {
     @SuppressWarnings("MethodWithTooManyParameters")
     private AccountRequest accountRequest(final AccountRequestType type, final SimlarId simlarId, final String telephoneNumber, final String smsText, final String ip, final Instant now) {
         if (StringUtils.isEmpty(ip)) {
-            throw new XmlErrorNoIpException("request account creation with empty ip for telephone number:  " + telephoneNumber);
+            throw new XmlErrorNoIpException("request account creation with empty ip for telephone number: " + telephoneNumber);
         }
 
         final Instant anHourAgo = now.minus(Duration.ofHours(1));
