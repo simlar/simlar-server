@@ -320,8 +320,8 @@ public final class AccountService {
         }
 
         final AccountCreationRequestCount creationRequest = transactionTemplate.execute(status -> {
-            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get());
-            if (dbEntry == null || dbEntry.getType() != type) {
+            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get(), type);
+            if (dbEntry == null) {
                 return null;
             }
 

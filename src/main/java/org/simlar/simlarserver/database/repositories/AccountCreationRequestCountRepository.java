@@ -21,6 +21,7 @@
 
 package org.simlar.simlarserver.database.repositories;
 
+import org.simlar.simlarserver.data.AccountRequestType;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -37,6 +38,10 @@ public interface AccountCreationRequestCountRepository extends CrudRepository<Ac
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("FROM AccountCreationRequestCount WHERE simlarId = ?1")
     AccountCreationRequestCount findBySimlarIdForUpdate(final String simlarId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("FROM AccountCreationRequestCount WHERE simlarId = ?1 and type = ?2")
+    AccountCreationRequestCount findBySimlarIdForUpdate(final String simlarId, final AccountRequestType type);
 
     @Query("SELECT SUM(requestTries) FROM AccountCreationRequestCount WHERE ip = ?1 AND timestamp >= ?2")
     Integer sumRequestTries(final String ip, final Instant timestamp);
