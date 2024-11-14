@@ -27,15 +27,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
+import org.simlar.simlarserver.data.AccountRequestType;
 import org.simlar.simlarserver.utils.SimlarId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.time.Instant;
 
+@SuppressWarnings("ClassWithTooManyFields")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -49,6 +53,10 @@ public final class AccountCreationRequestCount {
     @Id
     @Column(nullable = false, length = 64)
     private String simlarId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 64)
+    private AccountRequestType type;
 
     @Column(nullable = false, length = 64)
     private String password;
@@ -80,9 +88,10 @@ public final class AccountCreationRequestCount {
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Instant registrationCodeTimestamp;
 
-    @SuppressWarnings("UnnecessaryThis")
-    public AccountCreationRequestCount(final String simlarId, final String password, final String registrationCode, final Instant timestamp, final String ip) {
+    @SuppressWarnings({"UnnecessaryThis", "ConstructorWithTooManyParameters"})
+    public AccountCreationRequestCount(final String simlarId, final AccountRequestType type, final String password, final String registrationCode, final Instant timestamp, final String ip) {
         this.simlarId                  = simlarId;
+        this.type                      = type;
         this.password                  = password;
         this.registrationCode          = registrationCode;
         this.requestTries              = 1;
@@ -94,8 +103,9 @@ public final class AccountCreationRequestCount {
         this.registrationCodeTimestamp = timestamp;
     }
 
-    public AccountCreationRequestCount(final SimlarId simlarId, final String password, final String registrationCode, final Instant timestamp, final String ip) {
-        this(simlarId.get(), password, registrationCode, timestamp, ip);
+    @SuppressWarnings("ConstructorWithTooManyParameters")
+    public AccountCreationRequestCount(final SimlarId simlarId, final AccountRequestType type, final String password, final String registrationCode, final Instant timestamp, final String ip) {
+        this(simlarId.get(), type, password, registrationCode, timestamp, ip);
     }
 
     public void incrementRequestTries() {

@@ -44,7 +44,10 @@ public enum SmsText {
             "Willkommen bei Simlar! Wenn die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*.",
             "ANDROID_DE",
             "Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst brauchst du diese SMS nicht.",
-            "Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst benötigst du diese SMS nicht.");
+            "Willkommen bei Simlar! Falls die App bei der Anmeldung nach einem Code fragt, benutze: *CODE*. Sonst benötigst du diese SMS nicht."),
+    DELETE_EN(
+            "Simlar Deletion Code: *CODE*",
+            "DELETE_EN");
 
     private static final Pattern REGEX_PATTERN_CODE = Pattern.compile("\\*CODE\\*");
 

@@ -34,6 +34,7 @@ public final class SmsTextTest {
 
             assertEquals("Welcome to Simlar! When the app asks for a registration code, use: " + code + '.', SmsText.EN.format(code));
             assertEquals("Willkommen bei Simlar! Wenn die App bei der Anmeldung nach einem Code fragt, benutze: " + code + '.', SmsText.DE.format(code));
+            assertEquals("Simlar Deletion Code: " + code, SmsText.DELETE_EN.format(code));
         }
     }
 
@@ -52,6 +53,8 @@ public final class SmsTextTest {
         assertEquals(SmsText.EN, SmsText.fromString("iOS_En"));
         assertEquals(SmsText.DE, SmsText.fromString("android_de"));
         assertEquals(SmsText.EN, SmsText.fromString("android_en"));
+        assertEquals(SmsText.DELETE_EN, SmsText.fromString("DELETE_EN"));
+        assertEquals(SmsText.DELETE_EN, SmsText.fromString("DeLeTe_eN"));
     }
 
     @Test

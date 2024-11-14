@@ -21,9 +21,11 @@
 
 package org.simlar.simlarserver.services.accountservice;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.simlar.simlarserver.data.AccountRequestType;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
 import org.simlar.simlarserver.database.repositories.PushNotificationsRepository;
@@ -93,13 +95,30 @@ public final class AccountService {
         return createAccountRequest(telephoneNumber, smsText, ip, Instant.now());
     }
 
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+    public boolean deleteAccountRequest(final String telephoneNumber, final String ip) {
+        final SimlarId simlarId = createValidatedSimlarId(telephoneNumber);
+        if (!subscriberService.isRegistered(simlarId)) {
+            log.info("skip creation of delete account request as simlarId '{}' is not registered", simlarId);
+            return false;
+        }
+
+        accountRequest(AccountRequestType.DELETE, simlarId, telephoneNumber, "DELETE_EN", ip, Instant.now());
+        return true;
+    }
+
     AccountRequest createAccountRequest(final String telephoneNumber, final String smsText, final String ip, final Instant now) {
         return createAccountRequest(createValidatedSimlarId(telephoneNumber), telephoneNumber, smsText, ip, now);
     }
 
     AccountRequest createAccountRequest(final SimlarId simlarId, final String telephoneNumber, final String smsText, final String ip, final Instant now) {
+        return accountRequest(AccountRequestType.CREATE, simlarId, telephoneNumber, smsText, ip, now);
+    }
+
+    @SuppressWarnings("MethodWithTooManyParameters")
+    private AccountRequest accountRequest(final AccountRequestType type, final SimlarId simlarId, final String telephoneNumber, final String smsText, final String ip, final Instant now) {
         if (StringUtils.isEmpty(ip)) {
-            throw new XmlErrorNoIpException("request account creation with empty ip for telephone number:  " + telephoneNumber);
+            throw new XmlErrorNoIpException("request account creation with empty ip for telephone number: " + telephoneNumber);
         }
 
         final Instant anHourAgo = now.minus(Duration.ofHours(1));
@@ -125,7 +144,7 @@ public final class AccountService {
 
         //noinspection LocalVariableNamingConvention
         final String testAccountRegistrationCode = searchTestAccountRegistrationCode(simlarId.get());
-        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, ip, now, testAccountRegistrationCode);
+        final AccountCreationRequestCount dbEntry = updateRequestTries(simlarId, type, ip, now, testAccountRegistrationCode);
         checkRequestTriesLimit(dbEntry.getRequestTries() - 1, createAccountSettings.getMaxRequestsPerSimlarIdPerDay(),
                 String.format("too many create account requests with number '%s'", telephoneNumber));
 
@@ -151,7 +170,7 @@ public final class AccountService {
             }
         }, now.plus(WARN_TIMEOUT));
 
-        log.info("created account request for simlarId '{}'", simlarId);
+        log.info("created account request with type '{}' for simlarId '{}'", type, simlarId);
         return new AccountRequest(simlarId, dbEntry.getPassword());
     }
 
@@ -178,12 +197,13 @@ public final class AccountService {
         return simlarId;
     }
 
-    private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final String ip, final Instant now, final String registrationCode) {
+    private AccountCreationRequestCount updateRequestTries(final SimlarId simlarId, final AccountRequestType type, final String ip, final Instant now, final String registrationCode) {
         return transactionTemplate.execute(status -> {
             final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get());
             if (dbEntry == null) {
                 return accountCreationRepository.save(new AccountCreationRequestCount(
                         simlarId,
+                        type,
                         Password.generate(),
                         StringUtils.isNotEmpty(registrationCode) ? registrationCode : Password.generateRegistrationCode(),
                         now,
@@ -198,6 +218,7 @@ public final class AccountService {
             }
             dbEntry.setTimestamp(now);
             dbEntry.setIp(ip);
+            dbEntry.setType(type);
             return accountCreationRepository.save(dbEntry);
         });
     }
@@ -278,18 +299,28 @@ public final class AccountService {
         return simlarId;
     }
 
-    public void confirmAccount(final String simlarIdString, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
+    public void confirmAccount(final String simlarIdString, final String registrationCode) {
         final SimlarId simlarId = SimlarId.create(simlarIdString);
         if (simlarId == null) {
             throw new XmlErrorNoSimlarIdException("confirm account request with simlarId: " + simlarIdString);
         }
 
+        confirmAccountRequest(AccountRequestType.CREATE, simlarId, registrationCode);
+    }
+
+    public void confirmAccountDeletion(final String telephoneNumber, final String registrationCode) {
+        confirmAccountRequest(AccountRequestType.DELETE, createValidatedSimlarId(telephoneNumber), registrationCode);
+    }
+
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_EXCEPTION") // false positive
+    @SuppressWarnings("OverlyComplexMethod")
+    private void confirmAccountRequest(final AccountRequestType type, final SimlarId simlarId, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
         if (!checkRegistrationCodeFormat(registrationCode)) {
             throw new XmlErrorNoRegistrationCodeException("confirm account request with simlarId: " + simlarId + " and registrationCode: " + registrationCode);
         }
 
         final AccountCreationRequestCount creationRequest = transactionTemplate.execute(status -> {
-            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get());
+            final AccountCreationRequestCount dbEntry = accountCreationRepository.findBySimlarIdForUpdate(simlarId.get(), type);
             if (dbEntry == null) {
                 return null;
             }
@@ -299,7 +330,11 @@ public final class AccountService {
         });
 
         if (creationRequest == null) {
-            throw new XmlErrorNoSimlarIdException("confirm account request with no creation request in db for simlarId: " + simlarId);
+            //noinspection SwitchStatement
+            switch (type) { // NOPMD.TooFewBranchesForASwitchStatement
+                case CREATE -> throw new XmlErrorNoSimlarIdException("confirm account creation request with no request in db for simlarId: " + simlarId);
+                case DELETE -> throw new XmlErrorWrongRegistrationCodeException("confirm account deletion request with no request in db for simlarId: " + simlarId);
+            }
         }
 
         final int confirmTries = creationRequest.getConfirmTries();
@@ -311,9 +346,14 @@ public final class AccountService {
             throw new XmlErrorWrongRegistrationCodeException("confirm account request with wrong registration code: " + registrationCode + " for simlarId: " + simlarId);
         }
 
-        subscriberService.save(simlarId, creationRequest.getPassword());
-
-        log.info("confirmed account with simlarId '{}'", simlarId);
+        //noinspection SwitchStatement
+        switch (type) { // NOPMD.TooFewBranchesForASwitchStatement
+            case CREATE -> {
+                subscriberService.save(simlarId, creationRequest.getPassword());
+                log.info("confirmed account with simlarId '{}'", simlarId);
+            }
+            case DELETE -> deleteAccount(simlarId);
+        }
     }
 
     private static boolean checkRegistrationCodeFormat(final CharSequence input) {

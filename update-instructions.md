@@ -42,3 +42,11 @@ Update apple push server certificate pinning in ```/etc/simlar-server/config.pro
 ## second expires on 2028/12/06 23:59:59 UTC
 push.apple.voipCertificatePinning=sha256/tc+C1H75gj+ap48SMYbFLoh56oSw+CLJHYPgQnm3j9U=, sha256/1CC6SL5QjEUUEr5JiV4Zw8QxiSkGVmp2CRJ4mm1IhKU=
 ```
+
+
+### 0.18.0
+The table ```simlar_account_creation_request``` gets a new field ```type```:
+```
+ALTER TABLE `simlar_account_creation_request` ADD COLUMN `type` varchar(64) DEFAULT NULL AFTER `simlarId`;
+UPDATE `simlar_account_creation_request` SET `type` = "CREATE";
+```
