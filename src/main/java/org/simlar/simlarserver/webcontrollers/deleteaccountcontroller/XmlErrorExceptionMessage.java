@@ -35,8 +35,8 @@ import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorTooManyRequestTriesExc
 import org.simlar.simlarserver.xmlerrorexceptions.XmlErrorWrongRegistrationCodeException;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -53,14 +53,14 @@ public enum XmlErrorExceptionMessage {
     ;
 
 
-    @Getter(AccessLevel.NONE)
+    @Getter(AccessLevel.PRIVATE)
     private final Class<? extends XmlErrorException> exceptionClass;
 
     private final String message;
 
     @SuppressWarnings("StaticCollection")
     private static final Map<Class<? extends XmlErrorException>, XmlErrorExceptionMessage> EXCEPTION_CLIENT_RESPONSE_MAP =
-            Collections.unmodifiableMap(Arrays.stream(values()).collect(Collectors.toMap(response -> response.exceptionClass, response -> response, (class1, class2) -> class1)));
+            Arrays.stream(values()).collect(Collectors.toUnmodifiableMap(XmlErrorExceptionMessage::getExceptionClass, Function.identity(), (c1, c2) -> c1));
 
     public static XmlErrorExceptionMessage fromException(final Class<? extends XmlErrorException> exceptionClass) {
         return EXCEPTION_CLIENT_RESPONSE_MAP.getOrDefault(exceptionClass, UNKNOWN_ERROR);
