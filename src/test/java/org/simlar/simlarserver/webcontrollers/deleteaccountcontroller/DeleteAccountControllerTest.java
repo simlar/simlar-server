@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -46,27 +47,22 @@ public final class DeleteAccountControllerTest {
                 .andExpect(content().string(containsString("<input type=\"submit\" value=\"Request Code\">")));
     }
 
-    @Test
-    public void testSubmitRequestSuccess() throws Exception {
-        mockMvc.perform(post(DeleteAccountController.REQUEST_PATH_CONFIRM).param("telephoneNumber", "+4917612345678"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Step 2: Confirm Account Deletion")))
-                .andExpect(content().string(containsString("+4917612345678")))
-                .andExpect(content().string(containsString("Deletion Code")))
-                .andExpect(content().string(containsString("<input type=\"submit\" value=\"Confirm Deletion\">")));
-        verify(accountService).deleteAccountRequest(eq("+4917612345678"), eq("127.0.0.1")); //NOPMD.AvoidUsingHardCodedIP
-    }
-
-    @Test
-    public void testSubmitRequestSuccessWithSpacesInTelephoneNumber() throws Exception {
-        final String telephoneNumber = " + 49 \t 176   123 4567 8 ";
+    private void assertSubmitRequest(final String telephoneNumber, final String telephoneNumberUnified) throws Exception {
+        reset(accountService);
         mockMvc.perform(post(DeleteAccountController.REQUEST_PATH_CONFIRM).param("telephoneNumber", telephoneNumber))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Step 2: Confirm Account Deletion")))
                 .andExpect(content().string(containsString(telephoneNumber)))
                 .andExpect(content().string(containsString("Deletion Code")))
                 .andExpect(content().string(containsString("<input type=\"submit\" value=\"Confirm Deletion\">")));
-        verify(accountService).deleteAccountRequest(eq("+4917612345678"), eq("127.0.0.1")); //NOPMD.AvoidUsingHardCodedIP
+        verify(accountService).deleteAccountRequest(eq(telephoneNumberUnified), eq("127.0.0.1")); //NOPMD.AvoidUsingHardCodedIP
+    }
+
+    @Test
+    public void testSubmitRequestSuccess() throws Exception {
+        assertSubmitRequest("+4917612345678", "+4917612345678");
+        assertSubmitRequest("+4917612345679", "+4917612345679");
+        assertSubmitRequest(" + 49 \t 176   123 4567 8 ", "+4917612345678");
     }
 
     @Test
@@ -79,23 +75,20 @@ public final class DeleteAccountControllerTest {
         verify(accountService).deleteAccountRequest(eq("+4917612345678"), eq("127.0.0.1")); //NOPMD.AvoidUsingHardCodedIP
     }
 
-    @Test
-    public void testSubmitConfirmSuccess() throws Exception {
-        mockMvc.perform(post(DeleteAccountController.REQUEST_PATH_RESULT).param("telephoneNumber", "+4917612345678").param("deletionCode", "123456"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Success")))
-                .andExpect(content().string(containsString("The account with the telephone number +4917612345678 has been deleted successfully.")));
-        verify(accountService).confirmAccountDeletion(eq("+4917612345678"), eq("123456"));
-    }
-
-    @Test
-    public void testSubmitConfirmSuccessWithSpacesInTelephoneNumber() throws Exception {
-        final String telephoneNumber = " + 49 \t 176   123 4567 8 ";
+    private void assertSubmitConfirm(final String telephoneNumber, final String telephoneNumberUnified) throws Exception {
+        reset(accountService);
         mockMvc.perform(post(DeleteAccountController.REQUEST_PATH_RESULT).param("telephoneNumber", telephoneNumber).param("deletionCode", "123456"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Success")))
                 .andExpect(content().string(containsString("The account with the telephone number " + telephoneNumber + " has been deleted successfully.")));
-        verify(accountService).confirmAccountDeletion(eq("+4917612345678"), eq("123456"));
+        verify(accountService).confirmAccountDeletion(eq(telephoneNumberUnified), eq("123456"));
+    }
+
+    @Test
+    public void testSubmitConfirmSuccess() throws Exception {
+        assertSubmitConfirm("+4917612345678", "+4917612345678");
+        assertSubmitConfirm("+4917612345679", "+4917612345679");
+        assertSubmitConfirm(" + 49 \t 176   123 4567 8 ", "+4917612345678");
     }
 
     @Test
