@@ -110,7 +110,7 @@ public final class TwilioSmsServiceTest {
         final SmsService service = new TwilioSmsService(sharedSettings, mockedSettings, smsProviderLogRepository);
         assertFalse(service.sendSms(telephoneNumber, message));
         assertAlmostEqualsContainsError(message,
-                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnknownHostException: no.example.com:", message),
+                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "SimlarServerException", "UnresolvedAddressException: ", message),
                 smsProviderLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
