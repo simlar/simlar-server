@@ -33,6 +33,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @ControllerAdvice
@@ -63,8 +65,7 @@ final class SimlarErrorController implements ErrorController {
         return createXmlError(HttpStatus.INTERNAL_SERVER_ERROR, XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);
     }
 
-    @SuppressFBWarnings("SPRING_CSRF_UNRESTRICTED_REQUEST_MAPPING")
-    @RequestMapping(path = "*")
+    @ExceptionHandler({NoResourceFoundException.class, HttpRequestMethodNotSupportedException.class})
     public static ResponseEntity<XmlError> handle(final HttpServletRequest request) {
         log.warn("Request Error with request='{}'", new RequestLogMessage(request));
         return createXmlError(HttpStatus.NOT_FOUND, XmlErrorExceptionClientResponse.UNKNOWN_STRUCTURE);

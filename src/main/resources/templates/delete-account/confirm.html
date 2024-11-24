@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simlar Account Deletion</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <img src="logo.svg" alt="Simlar Logo" class="image-logo">
+    <h2>Simlar Account Deletion</h2>
+
+    <p>If your phone number is registered, you will receive an SMS code. If it is not, no error will occur, and you will not receive an SMS.</p>
+
+    <h4>Step 2: Confirm Account Deletion</h4>
+    <form action="#" th:action="@{result}" th:object="${confirm}" method="post">
+        <label for="phone">Phone Number:</label>
+
+        <input type="tel" id="phone" name="phone" required
+               th:field="*{telephoneNumber}"
+               readonly
+               value="${confirm.telephoneNumber}">
+
+        <label for="code">Deletion Code:</label>
+        <input type="number" id="code" name="code" required
+               th:field="*{deletionCode}"
+               pattern="^[0-9]{6}$"
+               placeholder="123456"
+               aria-label="Enter your deletion code">
+
+        <input type="submit" value="Confirm Deletion">
+    </form>
+</body>
+</html>

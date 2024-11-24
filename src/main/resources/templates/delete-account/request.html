@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simlar Account Deletion</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <img src="logo.svg" alt="Simlar Logo" class="image-logo">
+    <h2>Simlar Account Deletion</h2>
+
+    <h4>Step 1: Request SMS Deletion Code</h4>
+    <form action="#" th:action="@{confirm}" th:object="${request}" method="post">
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required
+               th:field="*{telephoneNumber}"
+               pattern="^\+?[0-9\s]{10,20}$"
+               placeholder="+49 176 1234567"
+               aria-label="Enter your phone number">
+        <input type="submit" value="Request Code">
+    </form>
+</body>
+</html>
