@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public final class DeleteAccountControllerTest {
     @Autowired
-	private MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @SuppressWarnings("unused")
     @MockBean
