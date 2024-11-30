@@ -313,7 +313,6 @@ public final class AccountService {
     }
 
     @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_EXCEPTION") // false positive
-    @SuppressWarnings("OverlyComplexMethod")
     private void confirmAccountRequest(final AccountRequestType type, final SimlarId simlarId, @SuppressWarnings("TypeMayBeWeakened") final String registrationCode) {
         if (!checkRegistrationCodeFormat(registrationCode)) {
             throw new XmlErrorNoRegistrationCodeException("confirm account request with simlarId: " + simlarId + " and registrationCode: " + registrationCode);
