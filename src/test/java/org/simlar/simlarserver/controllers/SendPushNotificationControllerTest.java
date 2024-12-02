@@ -29,7 +29,7 @@ import org.simlar.simlarserver.services.pushnotification.PushNotificationSetting
 import org.simlar.simlarserver.utils.SimlarId;
 import org.simlar.simlarserver.xml.XmlError;
 import org.simlar.simlarserver.xml.XmlSuccessSendPushNotification;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
@@ -44,11 +44,11 @@ public final class SendPushNotificationControllerTest extends BaseControllerTest
     private static final String API_KEY = "someApiKey";
 
     @SuppressWarnings({"unused", "RedundantSuppression"})
-    @MockBean
+    @MockitoBean
     private PushNotificationService pushNotificationsService;
 
     @SuppressWarnings({"unused", "RedundantSuppression"})
-    @MockBean
+    @MockitoBean
     private PushNotificationSettings pushNotificationSettings;
 
     private <T> T postSendPushNotification(final Class<T> responseClass, final String apiKey, final String caller, final String callee) {
