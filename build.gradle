@@ -62,7 +62,7 @@ dependencies {
     implementation("org.apache.commons:commons-text:1.12.0")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("commons-codec:commons-codec:1.17.1")
-    implementation("com.googlecode.libphonenumber:libphonenumber:8.13.51")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.13.52")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.30.0")
     implementation("org.yaml:snakeyaml:2.3") /// TODO: remove this once transitive dependency passes owasp checker
