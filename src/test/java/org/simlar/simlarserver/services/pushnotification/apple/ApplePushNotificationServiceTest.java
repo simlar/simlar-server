@@ -104,7 +104,7 @@ public final class ApplePushNotificationServiceTest {
             new ApplePushNotificationService(settings).requestVoipPushNotification(ApplePushServer.SANDBOX, caller, "invalidDeviceToken");
             fail("expected exception not thrown: " + ResourceAccessException.class.getSimpleName());
         } catch (final ResourceAccessException e) {
-            assertEquals("SSLPeerUnverifiedException", e.getCause().getClass().getSimpleName());
+            assertEquals("SSLHandshakeException", e.getCause().getClass().getSimpleName());
             assertNotNull(e.getMessage());
             assertTrue(e.getMessage().contains("Certificate pinning failure!"));
         }
