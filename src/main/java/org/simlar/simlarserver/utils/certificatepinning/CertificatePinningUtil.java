@@ -25,6 +25,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import java.net.http.HttpClient;
@@ -39,24 +40,28 @@ public final class CertificatePinningUtil {
     }
 
     @SuppressFBWarnings("EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS")
-    private static HttpClient createHttpClient(final Collection<String> certificatePinnings) {
+    private static HttpClient createHttpClient(final Collection<String> certificatePinnings, final String sslProtocol, final KeyManager... keyManagers) {
         try {
-            final SSLContext sslContext = SSLContext.getInstance("TLSv1.3");
+            final SSLContext sslContext = SSLContext.getInstance(sslProtocol);
 
             final TrustManager[] tm = { new Pinning509TrustManager(certificatePinnings) };
-            sslContext.init(null, tm, null);
+            sslContext.init(keyManagers, tm, null);
 
             return HttpClient.newBuilder()
                     .sslContext(sslContext)
                     .build();
         } catch (final NoSuchAlgorithmException | KeyManagementException e) {
-            throw new CertificatePinningException("failed to create HttpClient", e);
+            throw new CertificatePinningException(String.format("failed to create HttpClient with sslProtocol '%s'", sslProtocol), e);
         }
     }
 
     public static RestTemplate createRestTemplate(final Collection<String> certificatePinnings) {
+        return createRestTemplate(certificatePinnings, "TLSv1.3");
+    }
+
+    public static RestTemplate createRestTemplate(final Collection<String> certificatePinnings, final String sslProtocol, final KeyManager... keyManagers) {
         return new RestTemplateBuilder()
-                .requestFactory(() -> new JdkClientHttpRequestFactory(createHttpClient(certificatePinnings)))
+                .requestFactory(() -> new JdkClientHttpRequestFactory(createHttpClient(certificatePinnings, sslProtocol, keyManagers)))
                 .build();
     }
 }
