@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -66,7 +65,6 @@ public final class ApplePushNotificationServiceTest {
     public void testConnectToAppleWithoutCertificateForbidden() {
         try {
             new RestTemplateBuilder()
-                    .requestFactory(OkHttp3ClientHttpRequestFactory.class)
                     .build()
                     .postForObject(ApplePushServer.SANDBOX.getUrl() + "deviceToken", null, String.class);
             fail("expected exception not thrown: " + HttpClientErrorException.class.getSimpleName());
