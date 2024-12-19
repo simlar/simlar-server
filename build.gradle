@@ -104,11 +104,10 @@ spotbugs {
     excludeFilter = file("$rootProject.projectDir/ides/spotbugs/excludeFilter.xml")
 }
 
-gradle.taskGraph.beforeTask { task ->
-    if (task.name.toLowerCase().contains('spotbugs')) {
-        task.reports {
-            html.enabled = true
-            xml.enabled = false
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+    reports {
+        html {
+            required.set(true)
         }
     }
 }
