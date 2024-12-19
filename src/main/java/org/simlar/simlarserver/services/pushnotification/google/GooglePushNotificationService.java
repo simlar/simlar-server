@@ -59,12 +59,12 @@ import java.util.Collections;
 public final class GooglePushNotificationService {
     private final GooglePushNotificationSettings pushNotificationSettings;
 
-    @Nullable
     private final GoogleCredentials googleCredentials;
 
     GooglePushNotificationService(final GooglePushNotificationSettings pushNotificationSettings) {
         this.pushNotificationSettings = pushNotificationSettings;
 
+        //noinspection AssignmentToNull
         googleCredentials = pushNotificationSettings.isConfigured()
                 ? createGoogleCredentials(pushNotificationSettings.getCredentialsJsonPath())
                 : null;
