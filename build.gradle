@@ -49,7 +49,7 @@ dependencies {
     compileOnly("com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}")
     testCompileOnly("com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}")
     spotbugs("com.github.spotbugs:spotbugs:${spotbugsVersion}")
-    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.8") { transitive = false }
+    spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.9") { transitive = false }
     spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0")
 
     //noinspection GradlePackageVersionRange, GradlePackageUpdate /// managed by spring boot bom
