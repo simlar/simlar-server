@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.simlar.simlarserver.utils.AesUtil;
 
 @SuppressFBWarnings("OPM_OVERLY_PERMISSIVE_METHOD")
-@SuppressWarnings("ClassWithTooManyDependents")
+@SuppressWarnings({"ClassWithTooManyDependents", "unused"})
 public record ApplePushNotificationRequestCaller(
         String initializationVector,
         String encryptedSimlarId) {

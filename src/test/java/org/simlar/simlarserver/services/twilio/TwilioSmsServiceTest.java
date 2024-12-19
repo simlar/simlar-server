@@ -120,7 +120,7 @@ public final class TwilioSmsServiceTest {
         final String message         = "Test invalid number";
         assertFalse(twilioSmsService.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,
-                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "400", "null - The 'To' number " + telephoneNumber + " is not a valid phone number.", message),
+                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "400", "null - Invalid 'To' Phone Number: +1500555XXXX", message),
                 smsProviderLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 
@@ -130,7 +130,7 @@ public final class TwilioSmsServiceTest {
         final String message         = "Number not reachable";
         assertFalse(twilioSmsService.sendSms(telephoneNumber, message));
         assertAlmostEquals(message,
-                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "400", "null - The 'To' phone number: " + telephoneNumber + ", is not currently reachable using the 'From' phone number: +15005550006 via SMS.", message),
+                new SmsProviderLog(TwilioRequestType.SMS, telephoneNumber, null, "400", "null - Message cannot be sent with the current combination of 'To' (+1500555XXXX) and/or 'From' (+15005550006) parameters", message),
                 smsProviderLogRepository.findByTelephoneNumber(telephoneNumber));
     }
 

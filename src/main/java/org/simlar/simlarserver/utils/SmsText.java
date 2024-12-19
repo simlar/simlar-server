@@ -62,7 +62,7 @@ public enum SmsText {
     }
 
     private static int calculateDistance(final String s1, final String s2) {
-        return new LevenshteinDistance().apply(s1.toUpperCase(Locale.ENGLISH), s2.toUpperCase(Locale.ENGLISH)) * 100 / (s1.length() + s2.length());
+        return LevenshteinDistance.getDefaultInstance().apply(s1.toUpperCase(Locale.ENGLISH), s2.toUpperCase(Locale.ENGLISH)) * 100 / (s1.length() + s2.length());
     }
 
     private int calculateLowestDistance(final String text) {
