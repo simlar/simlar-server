@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpResponse;
-import org.simlar.simlarserver.utils.CertificatePinnerUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -69,7 +68,7 @@ public final class GooglePushNotificationMockServerTest {
     private String requestPushNotification(final String deviceToken) {
         return GooglePushNotificationService.requestPushNotification(
                 "http://localhost:" + mockServer.getLocalPort(),
-                CertificatePinnerUtil.createCertificatePinner("localhost", null),
+                null,
                 "simlar-org",
                 "someBearer",
                 deviceToken);

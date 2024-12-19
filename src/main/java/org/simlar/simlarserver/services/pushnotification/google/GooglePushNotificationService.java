@@ -27,8 +27,6 @@ import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.CertificatePinner;
-import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -37,13 +35,11 @@ import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushN
 import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationRequest;
 import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationRequestDetails;
 import org.simlar.simlarserver.services.pushnotification.google.json.GooglePushNotificationResponse;
-import org.simlar.simlarserver.utils.CertificatePinnerUtil;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.simlar.simlarserver.utils.certificatepinning.CertificatePinningUtil;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
@@ -52,6 +48,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Collections;
 
 @Slf4j
@@ -113,7 +110,7 @@ public final class GooglePushNotificationService {
 
         return requestPushNotification(
                 GooglePushServer.URL,
-                CertificatePinnerUtil.createCertificatePinner(GooglePushServer.BASE_URL, pushNotificationSettings.getFirebaseCertificatePinning()),
+                pushNotificationSettings.getFirebaseCertificatePinning(),
                 pushNotificationSettings.getProjectId(),
                 bearer,
                 token);
@@ -121,16 +118,10 @@ public final class GooglePushNotificationService {
 
     @Nullable
     @SuppressFBWarnings({"MOM_MISLEADING_OVERLOAD_MODEL", "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"})
-    static String requestPushNotification(final String url, final CertificatePinner certificatePinner, final String projectId, final String bearer, final String token) {
-        final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-
-        if (certificatePinner.getPins().isEmpty()) {
+    static String requestPushNotification(final String url, final Collection<String> certificatePinnings, final String projectId, final String bearer, final String token) {
+        if (certificatePinnings == null || certificatePinnings.isEmpty()) {
             log.warn("certificate pinning disabled");
-        } else {
-            clientBuilder.certificatePinner(certificatePinner);
         }
-
-        final OkHttpClient client = clientBuilder.build();
 
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -142,9 +133,7 @@ public final class GooglePushNotificationService {
                             new GooglePushNotificationAndroidDetails("60s", "call", "high"),
                             token));
 
-            final ResponseEntity<String> response = new RestTemplateBuilder()
-                    .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
-                    .build()
+            final ResponseEntity<String> response = CertificatePinningUtil.createRestTemplate(certificatePinnings)
                     .postForEntity(url + "/v1/projects/" + projectId + "/messages:send",
                             new HttpEntity<>(request, headers),
                             String.class);

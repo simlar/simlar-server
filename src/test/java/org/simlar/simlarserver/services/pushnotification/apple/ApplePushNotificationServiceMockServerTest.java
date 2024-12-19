@@ -90,7 +90,6 @@ public final class ApplePushNotificationServiceMockServerTest {
                 "http://localhost:" + mockServer.getLocalPort() + '/',
                 new ApplePushNotificationRequestCaller("someInitializationVector", "someEncryptedSimlarId"),
                 deviceToken,
-                "localhost",
                 Instant.ofEpochSecond(expiration));
     }
 
