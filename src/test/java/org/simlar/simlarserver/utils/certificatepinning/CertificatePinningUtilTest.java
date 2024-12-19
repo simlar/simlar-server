@@ -22,6 +22,7 @@
 package org.simlar.simlarserver.utils.certificatepinning;
 
 import org.junit.Test;
+import org.simlar.simlarserver.data.ApplePushServer;
 import org.simlar.simlarserver.data.GooglePushServer;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
@@ -37,6 +38,7 @@ import static org.junit.Assert.assertTrue;
 public final class CertificatePinningUtilTest {
     @SuppressWarnings("SpellCheckingInspection")
     public static final String GOOGLE_CERTIFICATE_CHECKSUM = "hxqRlPTu1bMS/0DITB1SSu0vd4u/8l8TjPgfaAp63Gc=";
+    public static final String APPLE_CERTIFICATE_CHECKSUM = "1CC6SL5QjEUUEr5JiV4Zw8QxiSkGVmp2CRJ4mm1IhKU=";
 
     private static void request(final URI url, final Collection<String> certificatePinnings) {
         try {
@@ -67,5 +69,43 @@ public final class CertificatePinningUtilTest {
         ).getMessage();
 
         assertTrue(message.contains(GOOGLE_CERTIFICATE_CHECKSUM));
+    }
+
+    private static void requestAppleProduction(final Collection<String> certificatePinnings) {
+        request(URI.create("https://" + ApplePushServer.PRODUCTION.getBaseUrl()), certificatePinnings);
+    }
+
+    private static void requestAppleDevelopment(final Collection<String> certificatePinnings) {
+        request(URI.create("https://" + ApplePushServer.SANDBOX.getBaseUrl()), certificatePinnings);
+    }
+
+    @Test
+    public void testAppleWithoutCertificatePinning() {
+        requestAppleProduction(null);
+        requestAppleDevelopment(null);
+    }
+
+    @Test
+    public void testAppleWithCertificatePinning() {
+        requestAppleProduction(List.of("sha256/InvalidCertificateChecksum=", "sha256/" + APPLE_CERTIFICATE_CHECKSUM));
+        requestAppleDevelopment(List.of("sha256/InvalidCertificateChecksum=", "sha256/" + APPLE_CERTIFICATE_CHECKSUM));
+    }
+
+    @Test
+    public void testAppleProductionWithInvalidCertificatePinning() {
+        final String message = assertThrows(ResourceAccessException.class, () ->
+                requestAppleProduction(List.of("sha256/InvalidCertificateChecksum1=", "sha256/InvalidCertificateChecksum2="))
+        ).getMessage();
+
+        assertTrue(message, message.contains(APPLE_CERTIFICATE_CHECKSUM));
+    }
+
+    @Test
+    public void testAppleDevelopmentWithInvalidCertificatePinning() {
+        final String message = assertThrows(ResourceAccessException.class, () ->
+                requestAppleDevelopment(List.of("sha256/InvalidCertificateChecksum="))
+        ).getMessage();
+
+        assertTrue(message, message.contains(APPLE_CERTIFICATE_CHECKSUM));
     }
 }
