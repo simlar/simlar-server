@@ -104,11 +104,10 @@ spotbugs {
     excludeFilter = file("$rootProject.projectDir/ides/spotbugs/excludeFilter.xml")
 }
 
-gradle.taskGraph.beforeTask { task ->
-    if (task.name.toLowerCase().contains('spotbugs')) {
-        task.reports {
-            html.enabled = true
-            xml.enabled = false
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+    reports {
+        html {
+            required.set(true)
         }
     }
 }
@@ -119,10 +118,8 @@ dependencyCheck {
     def nvdApiKey = System.getenv("SIMLAR_NVD_API_KEY")
     if (nvdApiKey != null) {
         println("This product uses the NVD API but is not endorsed or certified by the NVD.")
-        nvd {
-            apiKey = "${nvdApiKey}"
-            delay = 16000
-        }
+        nvd.apiKey = "${nvdApiKey}"
+        nvd.delay = 16000
     }
 }
 
