@@ -24,38 +24,29 @@ package org.simlar.simlarserver.services.pushnotification.apple;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.CertificatePinner;
-import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.simlar.simlarserver.data.ApplePushServer;
 import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequest;
 import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestCaller;
 import org.simlar.simlarserver.services.pushnotification.apple.json.ApplePushNotificationRequestDetails;
-import org.simlar.simlarserver.utils.CertificatePinnerUtil;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.simlar.simlarserver.utils.certificatepinning.CertificatePinningUtil;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
 import javax.annotation.Nullable;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 import java.io.File;
 import java.io.IOException;
 import java.security.Key;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -65,6 +56,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -120,60 +112,29 @@ public final class ApplePushNotificationService {
     }
 
     @SuppressFBWarnings("EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS")
-    private SSLSocketFactory createSSLSocketFactory() {
+    private KeyManager[] createKeyManagers() {
         final KeyStore keyStore = createKeyStore();
 
         try {
             final KeyManagerFactory keyFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyFactory.init(keyStore, pushNotificationSettings.getVoipCertificatePassword().toCharArray());
 
-            final SSLContext sslContext = SSLContext.getInstance(pushNotificationSettings.getSslProtocol());
-            sslContext.init(keyFactory.getKeyManagers(), null, null);
-
-            return sslContext.getSocketFactory();
-        } catch (final NoSuchAlgorithmException | UnrecoverableKeyException | KeyStoreException | KeyManagementException e) {
-            throw new AppleKeyStoreException("failed to create SSLSocketFactory store from keystore with protocol; " + pushNotificationSettings.getSslProtocol(), e);
+            return keyFactory.getKeyManagers();
+        } catch (final NoSuchAlgorithmException | UnrecoverableKeyException | KeyStoreException e) {
+            throw new AppleKeyStoreException("failed to create KeyManagers from keystore with protocol: " + pushNotificationSettings.getSslProtocol(), e);
         }
-    }
-
-    @SuppressFBWarnings({"WEM_WEAK_EXCEPTION_MESSAGING", "EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS"})
-    private static TrustManagerFactory createTrustManagerFactory() {
-        try {
-            final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            trustManagerFactory.init((KeyStore) null);
-            return trustManagerFactory;
-        } catch (final NoSuchAlgorithmException | KeyStoreException e) {
-            throw new AppleKeyStoreException("failed to create TrustManagerFactory", e);
-        }
-    }
-
-    private static X509TrustManager createTrustManager() {
-        final TrustManager trustManager = createTrustManagerFactory().getTrustManagers()[0];
-        if (!(trustManager instanceof X509TrustManager)) {
-            throw new AppleKeyStoreException("first trust manager of invalid type: " + trustManager.getClass().getSimpleName());
-        }
-        return (X509TrustManager) trustManager;
     }
 
     public String requestVoipPushNotification(final ApplePushServer server, final ApplePushNotificationRequestCaller caller, final String deviceToken) {
-        return requestVoipPushNotification(server.getUrl(), caller, deviceToken, server.getBaseUrl(), Instant.now().plusSeconds(60));
+        return requestVoipPushNotification(server.getUrl(), caller, deviceToken, Instant.now().plusSeconds(60));
     }
 
     @SuppressFBWarnings("EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS")
-    String requestVoipPushNotification(final String url, final ApplePushNotificationRequestCaller caller, final String deviceToken, final String urlPin, final Instant expiration) {
-        final OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
-                .sslSocketFactory(
-                        createSSLSocketFactory(),
-                        createTrustManager());
-
-        final CertificatePinner certificatePinner = CertificatePinnerUtil.createCertificatePinner(urlPin, pushNotificationSettings.getVoipCertificatePinning());
-        if (certificatePinner.getPins().isEmpty()) {
+    String requestVoipPushNotification(final String url, final ApplePushNotificationRequestCaller caller, final String deviceToken, final Instant expiration) {
+        final List<String> certificatePinnings = pushNotificationSettings.getVoipCertificatePinning();
+        if (certificatePinnings == null || certificatePinnings.isEmpty()) {
             log.warn("certificate pinning disabled");
-        } else {
-            clientBuilder.certificatePinner(certificatePinner);
         }
-
-        final OkHttpClient client = clientBuilder.build();
 
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -185,9 +146,8 @@ public final class ApplePushNotificationService {
         final HttpEntity<ApplePushNotificationRequest> entity = new HttpEntity<>(request, headers);
 
         try {
-            final ResponseEntity<String> response = new RestTemplateBuilder()
-                    .requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client))
-                    .build()
+            final ResponseEntity<String> response =
+                    CertificatePinningUtil.createRestTemplate(certificatePinnings, pushNotificationSettings.getSslProtocol(), createKeyManagers())
                     .postForEntity(url + deviceToken, entity, String.class);
 
             if (response.hasBody()) {
