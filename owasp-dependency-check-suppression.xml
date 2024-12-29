@@ -60,4 +60,14 @@
         <packageUrl regex="true">^pkg:maven/org\.glassfish\.jaxb/.*$</packageUrl>
         <cve>CVE-2024-9329</cve>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: logback-core-1.5.12.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/ch\.qos\.logback/logback-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2024-12798</vulnerabilityName>
+        <vulnerabilityName>CVE-2024-12801</vulnerabilityName>
+    </suppress>
 </suppressions>
