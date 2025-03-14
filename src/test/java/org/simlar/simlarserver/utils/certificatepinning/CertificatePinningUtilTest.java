@@ -36,9 +36,10 @@ import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings({"TestMethodWithoutAssertion", "PMD.JUnitTestsShouldIncludeAssert"})
 public final class CertificatePinningUtilTest {
-    @SuppressWarnings("SpellCheckingInspection")
-    public static final String GOOGLE_CERTIFICATE_CHECKSUM = "hxqRlPTu1bMS/0DITB1SSu0vd4u/8l8TjPgfaAp63Gc=";
-    public static final String APPLE_CERTIFICATE_CHECKSUM = "1CC6SL5QjEUUEr5JiV4Zw8QxiSkGVmp2CRJ4mm1IhKU=";
+    @SuppressWarnings({"SpellCheckingInspection", "StaticCollection"})
+    public static final List<String> GOOGLE_CERTIFICATE_CHECKSUMS = List.of("sha256/zCTnfLwLKbS9S2sbp+uFz4KZOocFvXxkV06Ce9O5M2w=", "sha256/hxqRlPTu1bMS/0DITB1SSu0vd4u/8l8TjPgfaAp63Gc=", "sha256/vh78KSg1Ry4NaqGDV10w/cTb9VH3BQUZoCWNa93W/EY=", "sha256/YPtHaftLw6/0vnc2BnNKGF54xiCA28WFcccjkA4ypCM=", "sha256/InvalidCertificateChecksum=");
+    @SuppressWarnings({"SpellCheckingInspection", "StaticCollection"})
+    public static final List<String> APPLE_CERTIFICATE_CHECKSUMS = List.of("sha256/1CC6SL5QjEUUEr5JiV4Zw8QxiSkGVmp2CRJ4mm1IhKU=", "sha256/piwIbt4Hf3u1n9lkgUEzu3UlcXomKKirJ0NmgMppc04=", "sha256/xXDXs35ozcjwk0JgHOmIO+JXQxta1bb9rQ14FVEqdWE=", "sha256/InvalidCertificateChecksum=");
 
     private static void request(final URI url, final Collection<String> certificatePinnings) {
         try {
@@ -59,7 +60,7 @@ public final class CertificatePinningUtilTest {
 
     @Test
     public void testGoogleWithCertificatePinning() {
-        requestGoogle(List.of("sha256/" + GOOGLE_CERTIFICATE_CHECKSUM));
+        requestGoogle(GOOGLE_CERTIFICATE_CHECKSUMS);
     }
 
     @Test
@@ -68,7 +69,7 @@ public final class CertificatePinningUtilTest {
                 requestGoogle(List.of("sha256/InvalidCertificateChecksum="))
         ).getMessage();
 
-        assertTrue(message.contains(GOOGLE_CERTIFICATE_CHECKSUM));
+        assertTrue(message, GOOGLE_CERTIFICATE_CHECKSUMS.stream().anyMatch(message::contains));
     }
 
     private static void requestAppleProduction(final Collection<String> certificatePinnings) {
@@ -87,8 +88,8 @@ public final class CertificatePinningUtilTest {
 
     @Test
     public void testAppleWithCertificatePinning() {
-        requestAppleProduction(List.of("sha256/InvalidCertificateChecksum=", "sha256/" + APPLE_CERTIFICATE_CHECKSUM));
-        requestAppleDevelopment(List.of("sha256/InvalidCertificateChecksum=", "sha256/" + APPLE_CERTIFICATE_CHECKSUM));
+        requestAppleProduction(APPLE_CERTIFICATE_CHECKSUMS);
+        requestAppleDevelopment(APPLE_CERTIFICATE_CHECKSUMS);
     }
 
     @Test
@@ -97,7 +98,7 @@ public final class CertificatePinningUtilTest {
                 requestAppleProduction(List.of("sha256/InvalidCertificateChecksum1=", "sha256/InvalidCertificateChecksum2="))
         ).getMessage();
 
-        assertTrue(message, message.contains(APPLE_CERTIFICATE_CHECKSUM));
+        assertTrue(message, APPLE_CERTIFICATE_CHECKSUMS.stream().anyMatch(message::contains));
     }
 
     @Test
@@ -106,6 +107,6 @@ public final class CertificatePinningUtilTest {
                 requestAppleDevelopment(List.of("sha256/InvalidCertificateChecksum="))
         ).getMessage();
 
-        assertTrue(message, message.contains(APPLE_CERTIFICATE_CHECKSUM));
+        assertTrue(message, APPLE_CERTIFICATE_CHECKSUMS.stream().anyMatch(message::contains));
     }
 }
