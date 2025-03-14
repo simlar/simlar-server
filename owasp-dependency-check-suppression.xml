@@ -70,4 +70,13 @@
         <vulnerabilityName>CVE-2024-12798</vulnerabilityName>
         <vulnerabilityName>CVE-2024-12801</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: pmd-core-6.55.0.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/net\.sourceforge\.pmd/pmd-core@.*$</packageUrl>
+        <vulnerabilityName>CVE-2025-23215</vulnerabilityName>
+    </suppress>
 </suppressions>
