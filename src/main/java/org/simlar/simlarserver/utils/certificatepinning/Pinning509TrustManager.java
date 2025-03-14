@@ -34,9 +34,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -96,14 +99,23 @@ final class Pinning509TrustManager implements X509TrustManager {
         final boolean certificateMatch = Arrays.stream(chain).anyMatch(x509Certificate -> certificatePinnings.contains("sha256/" + getPublicKeySha256(x509Certificate)));
         if (!certificateMatch) {
             throw new CertificateException("Certificate pinning failure! None of the following certificates matches:\n" +
-                    Arrays.stream(chain).map(x509Certificate -> String.format("  '%s' issuer: '%s' validFrom: '%s' validTil: '%s'%n",
+                    Arrays.stream(chain).map(x509Certificate -> String.format("  'sha256/%s' issuer: '%s' validFrom: '%s' validTil: '%s'%n",
                             getPublicKeySha256(x509Certificate),
                             x509Certificate.getIssuerX500Principal(),
-                            x509Certificate.getNotBefore(),
-                            x509Certificate.getNotAfter()
+                            formatDate(x509Certificate.getNotBefore()),
+                            formatDate(x509Certificate.getNotAfter())
                     )).collect(Collectors.joining())
             );
         }
+    }
+
+    @SuppressWarnings("UseOfObsoleteDateTimeApi")
+    private static String formatDate(final Date date) {
+        if (date == null) {
+            return null;
+        }
+
+        return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss z", Locale.US).format(date);
     }
 
     private static String getPublicKeySha256(final X509Certificate x509Certificate) {
