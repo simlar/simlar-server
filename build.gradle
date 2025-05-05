@@ -50,7 +50,7 @@ dependencies {
     testCompileOnly("com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}")
     spotbugs("com.github.spotbugs:spotbugs:${spotbugsVersion}")
     spotbugsPlugins("com.mebigfatguy.sb-contrib:sb-contrib:7.6.9") { transitive = false }
-    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0")
+    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
 
     //noinspection GradlePackageVersionRange, GradlePackageUpdate /// managed by spring boot bom
     implementation("org.springframework.boot:spring-boot-starter-web-services")
