@@ -3,80 +3,19 @@
     <suppress>
         <notes>
             <![CDATA[
-                file name: bcel-6.5.0.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.bcel/bcel@.*$</packageUrl>
-        <vulnerabilityName>CVE-2022-42920</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: grpc-context-1.27.2.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/io\.grpc/grpc\-context@.*$</packageUrl>
-        <cve>CVE-2023-32732</cve>
-        <cve>CVE-2023-33953</cve>
-        <cve>CVE-2023-4785</cve>
-        <cve>CVE-2023-44487</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: okio-jvm-3.2.0.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/com\.squareup\.okio/okio\-jvm@.*$</packageUrl>
-        <cve>CVE-2023-3635</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: logback-core-1.4.11.jar and logback-classic-1.4.11.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/ch\.qos\.logback/logback.*$</packageUrl>
-        <vulnerabilityName>CVE-2023-6378</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: jackson-databind-2.15.3.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
-        <vulnerabilityName>CVE-2023-35116</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file names:
-                  jaxb-core-4.0.5.jar
-                  jaxb-runtime-4.0.5.jar
-                  txw2-4.0.5.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/org\.glassfish\.jaxb/.*$</packageUrl>
-        <cve>CVE-2024-9329</cve>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
-                file name: logback-core-1.5.12.jar
-            ]]>
-        </notes>
-        <packageUrl regex="true">^pkg:maven/ch\.qos\.logback/logback-core@.*$</packageUrl>
-        <vulnerabilityName>CVE-2024-12798</vulnerabilityName>
-        <vulnerabilityName>CVE-2024-12801</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes>
-            <![CDATA[
                 file name: pmd-core-6.55.0.jar
             ]]>
         </notes>
         <packageUrl regex="true">^pkg:maven/net\.sourceforge\.pmd/pmd-core@.*$</packageUrl>
         <vulnerabilityName>CVE-2025-23215</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes>
+            <![CDATA[
+                file name: commons-lang3-3.17.0.jar
+            ]]>
+        </notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.commons/commons-lang3@.*$</packageUrl>
+        <vulnerabilityName>CVE-2025-48924</vulnerabilityName>
     </suppress>
 </suppressions>
