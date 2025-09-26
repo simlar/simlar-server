@@ -88,7 +88,7 @@ public final class SubscriberService {
             log.error("found more than 1 subscriber for simlarID={}", simlarId);
         }
 
-        return ids.get(0);
+        return ids.getFirst();
     }
 
     public boolean isRegistered(final SimlarId simlarId) {
@@ -122,7 +122,7 @@ public final class SubscriberService {
             log.error("found more than 1 subscriber for simlarId={}", simlarId);
         }
 
-        return savedHa1s.get(0);
+        return savedHa1s.getFirst();
     }
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
