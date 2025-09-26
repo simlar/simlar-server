@@ -23,7 +23,7 @@ package org.simlar.simlarserver.services.delaycalculatorservice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.simlar.simlarserver.database.models.ContactsRequestCount;
 import org.simlar.simlarserver.database.repositories.ContactsRequestCountRepository;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -59,14 +59,14 @@ public final class DelayCalculatorService {
     int calculateTotalRequestedContacts(final SimlarId simlarId, final Collection<SimlarId> contacts, final Instant now) {
         final SortedSet<SimlarId> sortedContacts = SimlarId.sortAndUnifySimlarIds(contacts);
         final Integer count = calculateTotalRequestedContacts(simlarId, now, SimlarId.hashSimlarIds(sortedContacts), sortedContacts.size());
-        return ObjectUtils.defaultIfNull(count, Integer.MAX_VALUE);
+        return ObjectUtils.getIfNull(count, Integer.MAX_VALUE);
     }
 
     private Integer calculateTotalRequestedContacts(final SimlarId simlarId, final Instant now, final String hash, final int count) {
         return transactionTemplate.execute(status -> {
             final ContactsRequestCount saved = contactsRequestCountRepository.findBySimlarId(simlarId.get());
 
-            if (saved != null && count == 1 && !StringUtils.equals(saved.getHash(), hash)) {
+            if (saved != null && count == 1 && !Strings.CS.equals(saved.getHash(), hash)) {
                 saved.incrementCount();
                 saved.setTimestamp(now);
                 contactsRequestCountRepository.save(saved);
@@ -87,7 +87,7 @@ public final class DelayCalculatorService {
 
         final boolean enoughTimeElapsed = Duration.between(saved.getTimestamp().plus(RESET_COUNTER), now).compareTo(Duration.ZERO) > 0;
 
-        return calculateTotalRequestedContactsStatic(enoughTimeElapsed, StringUtils.equals(hash, saved.getHash()), saved.getCount(), count);
+        return calculateTotalRequestedContactsStatic(enoughTimeElapsed, Strings.CS.equals(hash, saved.getHash()), saved.getCount(), count);
     }
 
     private static int calculateTotalRequestedContactsStatic(final boolean enoughTimeElapsed, final boolean hashIsEqual, final int savedCount, final int count) {
