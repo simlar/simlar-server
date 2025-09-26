@@ -82,10 +82,10 @@ public final class SubscriberServiceTest {
         assertTrue(subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).isEmpty());
         subscriberService.save(SimlarId.create(simlarId), "sdflkj34gd3F");
         assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).size());
-        assertEquals("988395d60155f38eae4bb15657275d13", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).get(0));
+        assertEquals("988395d60155f38eae4bb15657275d13", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).getFirst());
         subscriberService.save(SimlarId.create(simlarId), "FdUfFjH34gd3");
         assertEquals(1, subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).size());
-        assertEquals("fb14b3adf050f0e9b71bf866702188b5", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).get(0));
+        assertEquals("fb14b3adf050f0e9b71bf866702188b5", subscriberRepository.findHa1ByUsernameAndDomain(simlarId, sharedSettings.domain()).getFirst());
     }
 
     @SuppressWarnings("TooBroadScope")
