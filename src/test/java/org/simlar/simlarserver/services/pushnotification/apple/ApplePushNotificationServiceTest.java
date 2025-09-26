@@ -81,7 +81,7 @@ public final class ApplePushNotificationServiceTest {
         final List<String> aliases = Collections.list(keyStore.aliases());
         assertEquals(1, aliases.size());
 
-        final String alias = aliases.get(0);
+        final String alias = aliases.getFirst();
         assertNotNull(ApplePushNotificationService.getKey(keyStore, alias, pushNotificationSettings.getVoipCertificatePassword()));
 
         final String certificateSubject = ApplePushNotificationService.getCertificateSubject(keyStore, alias);

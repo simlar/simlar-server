@@ -58,7 +58,7 @@ public enum SmsText {
     }
 
     String format(final String registrationCode) {
-        return REGEX_PATTERN_CODE.matcher(texts.get(0)).replaceAll(registrationCode);
+        return REGEX_PATTERN_CODE.matcher(texts.getFirst()).replaceAll(registrationCode);
     }
 
     private static int calculateDistance(final String s1, final String s2) {

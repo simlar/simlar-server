@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsProviderLog;
@@ -154,7 +155,7 @@ public final class TwilioSmsService implements SmsService {
         return doPostRequest(TwilioRequestType.CALL, telephoneNumber, text);
     }
 
-    public void handleStatusReport(final TwilioRequestType type, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
+    public void handleStatusReport(final TwilioRequestType type, final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
         final SmsProviderLog smsProviderLog = smsProviderLogRepository.findBySessionId(messageSid);
         if (smsProviderLog == null) {
             log.error("no db entry");
@@ -162,7 +163,7 @@ public final class TwilioSmsService implements SmsService {
         }
 
         final String savedTelephoneNumber = smsProviderLog.getTelephoneNumber();
-        if (!StringUtils.equals(savedTelephoneNumber, telephoneNumber)) {
+        if (!Strings.CS.equals(savedTelephoneNumber, telephoneNumber)) {
             log.warn("status report with unequal telephone numbers: saved='{}' received='{}'", savedTelephoneNumber, telephoneNumber);
         }
 
@@ -177,7 +178,7 @@ public final class TwilioSmsService implements SmsService {
         smsProviderLogRepository.save(smsProviderLog);
     }
 
-    public XmlTwilioCallResponse handleCall(final String callSid, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String callStatus) {
+    public XmlTwilioCallResponse handleCall(final String callSid, final String telephoneNumber, final String callStatus) {
         final SmsProviderLog smsProviderLog = smsProviderLogRepository.findBySessionId(callSid);
         if (smsProviderLog == null) {
             log.error("no db entry");
@@ -190,7 +191,7 @@ public final class TwilioSmsService implements SmsService {
         }
 
         final String savedTelephoneNumber = smsProviderLog.getTelephoneNumber();
-        if (!StringUtils.equals(savedTelephoneNumber, telephoneNumber)) {
+        if (!Strings.CS.equals(savedTelephoneNumber, telephoneNumber)) {
             log.warn("call with unequal telephone numbers: saved='{}' received '{}'", savedTelephoneNumber, telephoneNumber);
         }
 

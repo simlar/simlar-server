@@ -24,6 +24,7 @@ package org.simlar.simlarserver.controllers;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.simlar.simlarserver.services.pushnotification.PushNotificationService;
 import org.simlar.simlarserver.services.pushnotification.PushNotificationSettings;
 import org.simlar.simlarserver.utils.SimlarId;
@@ -68,7 +69,7 @@ final class SendPushNotificationController {
             throw new XmlErrorWrongCredentialsException("received apiKey '" + apiKey + "' but none configured");
         }
 
-        if (!StringUtils.equals(apiKey, configuredApiKey)) {
+        if (!Strings.CS.equals(apiKey, configuredApiKey)) {
             throw new XmlErrorWrongCredentialsException("wrong apiKey '" + apiKey + '\'');
         }
 

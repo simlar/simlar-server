@@ -25,6 +25,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.SharedSettings;
@@ -88,7 +89,7 @@ public final class SubscriberService {
             log.error("found more than 1 subscriber for simlarID={}", simlarId);
         }
 
-        return ids.get(0);
+        return ids.getFirst();
     }
 
     public boolean isRegistered(final SimlarId simlarId) {
@@ -99,12 +100,12 @@ public final class SubscriberService {
         return checkCredentials(SimlarId.create(simlarId), ha1);
     }
 
-    private boolean checkCredentials(final SimlarId simlarId, @SuppressWarnings("TypeMayBeWeakened") final String ha1) {
+    private boolean checkCredentials(final SimlarId simlarId, final String ha1) {
         if (StringUtils.isEmpty(ha1)) {
             return false;
         }
 
-        return StringUtils.equals(ha1, getHa1(simlarId));
+        return Strings.CS.equals(ha1, getHa1(simlarId));
     }
 
     @Nullable
@@ -122,7 +123,7 @@ public final class SubscriberService {
             log.error("found more than 1 subscriber for simlarId={}", simlarId);
         }
 
-        return savedHa1s.get(0);
+        return savedHa1s.getFirst();
     }
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
