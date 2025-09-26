@@ -155,7 +155,7 @@ public final class TwilioSmsService implements SmsService {
         return doPostRequest(TwilioRequestType.CALL, telephoneNumber, text);
     }
 
-    public void handleStatusReport(final TwilioRequestType type, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
+    public void handleStatusReport(final TwilioRequestType type, final String telephoneNumber, final String messageSid, final String messageStatus, final String errorCode) {
         final SmsProviderLog smsProviderLog = smsProviderLogRepository.findBySessionId(messageSid);
         if (smsProviderLog == null) {
             log.error("no db entry");
@@ -178,7 +178,7 @@ public final class TwilioSmsService implements SmsService {
         smsProviderLogRepository.save(smsProviderLog);
     }
 
-    public XmlTwilioCallResponse handleCall(final String callSid, @SuppressWarnings("TypeMayBeWeakened") final String telephoneNumber, final String callStatus) {
+    public XmlTwilioCallResponse handleCall(final String callSid, final String telephoneNumber, final String callStatus) {
         final SmsProviderLog smsProviderLog = smsProviderLogRepository.findBySessionId(callSid);
         if (smsProviderLog == null) {
             log.error("no db entry");
