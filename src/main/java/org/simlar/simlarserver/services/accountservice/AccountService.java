@@ -25,6 +25,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.simlar.simlarserver.data.AccountRequestType;
 import org.simlar.simlarserver.database.models.AccountCreationRequestCount;
 import org.simlar.simlarserver.database.repositories.AccountCreationRequestCountRepository;
@@ -176,7 +177,7 @@ public final class AccountService {
 
     private String searchTestAccountRegistrationCode(final CharSequence simlarId) {
         for (final TestAccount testAccount : createAccountSettings.getTestAccounts()) {
-            if (StringUtils.equals(simlarId, testAccount.simlarId())) {
+            if (Strings.CS.equals(simlarId, testAccount.simlarId())) {
                 return testAccount.registrationCode();
             }
         }
@@ -225,7 +226,7 @@ public final class AccountService {
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
     private static void checkRequestTriesLimit(final Integer requests, final int limit, final String message) {
-        final int requestTries = ObjectUtils.defaultIfNull(requests, 0);
+        final int requestTries = ObjectUtils.getIfNull(requests, 0);
         if (requestTries >= limit) {
             throw new XmlErrorTooManyRequestTriesException(String.format("%s %d <= %d", message, requestTries, limit));
         }
@@ -233,7 +234,7 @@ public final class AccountService {
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
     private void checkRequestTriesLimitWithAlert(final Integer requests, final int limit, final String message) {
-        final int requestTries = ObjectUtils.defaultIfNull(requests, 0);
+        final int requestTries = ObjectUtils.getIfNull(requests, 0);
         if (requestTries == limit / 2) {
             final String smsMessage = String.format("50%% Alert for %s %d", message, requestTries);
             log.warn(smsMessage);
