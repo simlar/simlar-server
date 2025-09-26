@@ -77,29 +77,29 @@ final class Pinning509TrustManager implements X509TrustManager {
     }
 
     @Override
-    public void checkClientTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
-        defaultTrustManager.checkClientTrusted(chain, authType);
+    public void checkClientTrusted(final X509Certificate[] x509Certificates, final String s) throws CertificateException {
+        defaultTrustManager.checkClientTrusted(x509Certificates, s);
     }
 
     @SuppressFBWarnings("WEM_WEAK_EXCEPTION_MESSAGING")
     @Override
-    public void checkServerTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
-        defaultTrustManager.checkServerTrusted(chain, authType);
+    public void checkServerTrusted(final X509Certificate[] x509Certificates, final String s) throws CertificateException {
+        defaultTrustManager.checkServerTrusted(x509Certificates, s);
 
         if (certificatePinnings.isEmpty()) {
             log.warn("no certificates for pinning configured");
             return;
         }
 
-        if (chain == null || chain.length == 0) {
+        if (x509Certificates == null || x509Certificates.length == 0) {
             throw new CertificateException("certificate chain is empty");
         }
 
         //noinspection BooleanVariableAlwaysNegated
-        final boolean certificateMatch = Arrays.stream(chain).anyMatch(x509Certificate -> certificatePinnings.contains("sha256/" + getPublicKeySha256(x509Certificate)));
+        final boolean certificateMatch = Arrays.stream(x509Certificates).anyMatch(x509Certificate -> certificatePinnings.contains("sha256/" + getPublicKeySha256(x509Certificate)));
         if (!certificateMatch) {
             throw new CertificateException("Certificate pinning failure! None of the following certificates matches:\n" +
-                    Arrays.stream(chain).map(x509Certificate -> String.format("  'sha256/%s' issuer: '%s' validFrom: '%s' validTil: '%s'%n",
+                    Arrays.stream(x509Certificates).map(x509Certificate -> String.format("  'sha256/%s' issuer: '%s' validFrom: '%s' validTil: '%s'%n",
                             getPublicKeySha256(x509Certificate),
                             x509Certificate.getIssuerX500Principal(),
                             formatDate(x509Certificate.getNotBefore()),
