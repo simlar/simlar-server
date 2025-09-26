@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.simlar.simlarserver.data.TwilioRequestType;
 import org.simlar.simlarserver.database.models.SmsProviderLog;
@@ -162,7 +163,7 @@ public final class TwilioSmsService implements SmsService {
         }
 
         final String savedTelephoneNumber = smsProviderLog.getTelephoneNumber();
-        if (!StringUtils.equals(savedTelephoneNumber, telephoneNumber)) {
+        if (!Strings.CS.equals(savedTelephoneNumber, telephoneNumber)) {
             log.warn("status report with unequal telephone numbers: saved='{}' received='{}'", savedTelephoneNumber, telephoneNumber);
         }
 
@@ -190,7 +191,7 @@ public final class TwilioSmsService implements SmsService {
         }
 
         final String savedTelephoneNumber = smsProviderLog.getTelephoneNumber();
-        if (!StringUtils.equals(savedTelephoneNumber, telephoneNumber)) {
+        if (!Strings.CS.equals(savedTelephoneNumber, telephoneNumber)) {
             log.warn("call with unequal telephone numbers: saved='{}' received '{}'", savedTelephoneNumber, telephoneNumber);
         }
 
