@@ -100,7 +100,7 @@ public final class SubscriberService {
         return checkCredentials(SimlarId.create(simlarId), ha1);
     }
 
-    private boolean checkCredentials(final SimlarId simlarId, @SuppressWarnings("TypeMayBeWeakened") final String ha1) {
+    private boolean checkCredentials(final SimlarId simlarId, final String ha1) {
         if (StringUtils.isEmpty(ha1)) {
             return false;
         }
