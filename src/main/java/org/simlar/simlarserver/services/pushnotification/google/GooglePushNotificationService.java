@@ -160,7 +160,7 @@ public final class GooglePushNotificationService {
     private static String parseResponse(final String response) {
         try {
             return new ObjectMapper().readValue(
-                    ObjectUtils.defaultIfNull(response, ""),
+                    ObjectUtils.getIfNull(response, ""),
                     GooglePushNotificationResponse.class)
                     .getName();
         } catch (final JsonProcessingException e) {
