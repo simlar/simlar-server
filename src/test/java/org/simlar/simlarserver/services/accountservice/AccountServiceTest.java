@@ -347,7 +347,7 @@ public final class AccountServiceTest {
     @DirtiesContext
     @Test
     public void testCreateAccountRequestTotalLimitWithinOneHourRegionalLimit() {
-        final int max = createAccountSettings.getRegionalSettings().get(0).maxRequestsPerHour();
+        final int max = createAccountSettings.getRegionalSettings().getFirst().maxRequestsPerHour();
         for (int i = 0; i < max; i++) {
             final String telephoneNumber = "+1600502214" + i % 10;
             final String ip = "192.168.23." + (i % 255 + 1);
@@ -479,8 +479,8 @@ public final class AccountServiceTest {
         final List<TestAccount> testAccounts = createAccountSettings.getTestAccounts();
         assertEquals(2, testAccounts.size());
 
-        final String registrationCode = testAccounts.get(0).registrationCode();
-        final String telephoneNumber = testAccounts.get(0).simlarId();
+        final String registrationCode = testAccounts.getFirst().registrationCode();
+        final String telephoneNumber = testAccounts.getFirst().simlarId();
         final SimlarId simlarId = SimlarId.create(telephoneNumber);
         final Instant now = Instant.now();
 
