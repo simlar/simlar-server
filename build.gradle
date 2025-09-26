@@ -71,7 +71,7 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     //noinspection VulnerableLibrariesLocal
-    testImplementation("com.h2database:h2:1.4.200")
+    testImplementation("com.h2database:h2:2.4.240")
     //noinspection GradlePackageVersionRange, GradlePackageUpdate /// managed by spring boot bom
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     //noinspection VulnerableLibrariesLocal
