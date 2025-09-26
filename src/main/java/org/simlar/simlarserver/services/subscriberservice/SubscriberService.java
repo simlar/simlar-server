@@ -25,6 +25,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.simlar.simlarserver.database.models.Subscriber;
 import org.simlar.simlarserver.database.repositories.SubscriberRepository;
 import org.simlar.simlarserver.services.SharedSettings;
@@ -104,7 +105,7 @@ public final class SubscriberService {
             return false;
         }
 
-        return StringUtils.equals(ha1, getHa1(simlarId));
+        return Strings.CS.equals(ha1, getHa1(simlarId));
     }
 
     @Nullable
