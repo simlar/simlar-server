@@ -22,7 +22,7 @@
 package org.simlar.simlarserver.services.startupservice;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.simlar.simlarserver.services.SharedSettings;
 import org.simlar.simlarserver.services.subscriberservice.SubscriberService;
 import org.simlar.simlarserver.services.versionservice.VersionService;
@@ -88,7 +88,7 @@ final class StartUpService {
     public void handleApplicationReadyEvent(final ApplicationReadyEvent event) {
         log.info("started on domain='{}', hibernateDdlAuto='{}', dataSource='{}', databaseProduct='{}' and version='{}'", sharedSettings.domain(), hibernateDdlAuto, datasourceUrl, databaseProduct, versionService.getVersion());
 
-        if (event.getApplicationContext() instanceof WebApplicationContext && ("create-drop".equals(hibernateDdlAuto) || StringUtils.contains(datasourceUrl, "h2:mem"))) {
+        if (event.getApplicationContext() instanceof WebApplicationContext && ("create-drop".equals(hibernateDdlAuto) || Strings.CS.contains(datasourceUrl, "h2:mem"))) {
             createTestData();
         }
     }
