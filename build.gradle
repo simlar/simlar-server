@@ -35,7 +35,7 @@ plugins {
 
 ext {
     lombokVersion = "1.18.42"
-    spotbugsVersion = "4.8.6"
+    spotbugsVersion = "4.9.8"
 }
 
 ext['log4j2.version'] = '2.17.1'
