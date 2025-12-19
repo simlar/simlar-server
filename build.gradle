@@ -65,7 +65,7 @@ dependencies {
     implementation("com.googlecode.libphonenumber:libphonenumber:9.0.21")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.41.0")
 
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.12")
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.13")
     //noinspection GradlePackageVersionRange, GradlePackageUpdate /// managed by spring boot bom
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
